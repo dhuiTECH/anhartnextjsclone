@@ -1,14 +1,13 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Sample Page',
-  description: 'Sample Page page - Access and manage your content',
+  title: 'Page',
 };
 
 export default function Page() {
   return (
     <div>
-      {/* Placeholder Page */}
+      <h1>Placeholder Page</h1>
     </div>
   );
 }
