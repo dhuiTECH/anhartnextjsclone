@@ -29,9 +29,7 @@ pressReleases // @source: src/pages/Media.tsx - pressReleases variable
 // All media asset imports moved to @/data/media.ts
 
 //promotional video imports
-import promotionalVideo from "@/assets/Anhart Affordable Housing 1 minute Promotional Video.mp4";
 import promotionalVideoThumbnail from "@/assets/promotionalVideoThumbnail.jpg";
-import anhart4Steps from "@/assets/media/anhart4steps.mp4";
 
 /**
  * Media Page Component

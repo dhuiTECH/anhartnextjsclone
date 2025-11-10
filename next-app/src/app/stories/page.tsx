@@ -1,10 +1,13 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Stories',
-  description: 'Stories page - Access and manage your content',
+  title: 'Stories', // You can change this
 };
 
-export default function Navigate to="Page() {
-  return <Navigate to=" />;
+export default function Page() {
+  return (
+    <div>
+      <h1>Placeholder Page</h1>
+    </div>
+  );
 }
