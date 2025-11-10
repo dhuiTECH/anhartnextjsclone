@@ -1,0 +1,89 @@
+/* Partner with Us Button CSS Hover Effect */
+.partner-button {
+  background-color: #FF0000;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  transform: scale(1);
+  text-shadow: none;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.partner-button:hover {
+  background-color: #FF4444;
+  color: #FFFFFF;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.partner-button:focus {
+  outline: 2px solid #FF6666;
+  outline-offset: 2px;
+}
+
+.partner-button:active {
+  transform: scale(1.02);
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+  .partner-button {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .partner-button:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .partner-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .partner-button {
+    padding: 8px 16px;
+    font-size: 13px;
+    width: 100%;
+  }
+}
+
+/* Accessibility improvements */
+.partner-button:disabled {
+  background-color: #CCCCCC;
+  color: #666666;
+  cursor: not-allowed;
+  transform: none;
+  text-shadow: none;
+}
+
+.partner-button:disabled:hover {
+  background-color: #CCCCCC;
+  transform: none;
+  text-shadow: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* For better performance on mobile devices */
+@media (hover: hover) and (pointer: fine) {
+  .partner-button:hover {
+    background-color: #FF4444;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+  }
+}

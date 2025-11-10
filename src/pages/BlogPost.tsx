@@ -1,0 +1,222 @@
+import { useParams, Link, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import SEO from "@/components/SEO";
+import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Calendar, Clock, ArrowLeft, ArrowRight } from "lucide-react";
+import { getPostBySlug, getRelatedPosts, BlogPost as BlogPostType } from "@/data/blog";
+
+/**
+ * Individual Blog Post Page
+ *
+ * Displays full blog post content with SEO optimization,
+ * featured image, and related posts.
+ */
+const BlogPost = () => {
+  const { slug } = useParams<{ slug: string }>();
+  const [post, setPost] = useState<BlogPostType | undefined>();
+  const [relatedPosts, setRelatedPosts] = useState<BlogPostType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      if (!slug) {
+        console.log("No slug provided");
+        setLoading(false);
+        return;
+      }
+
+      console.log("BlogPost component: Starting fetch for slug:", slug);
+      setLoading(true);
+      
+      try {
+        const fetchedPost = await getPostBySlug(slug);
+        console.log("BlogPost component: Post fetched:", fetchedPost?.title || "null");
+        setPost(fetchedPost);
+
+        if (fetchedPost) {
+          const related = await getRelatedPosts(fetchedPost);
+          console.log("BlogPost component: Related posts count:", related.length);
+          setRelatedPosts(related);
+        }
+      } catch (error) {
+        console.error("BlogPost component: Error fetching post:", error);
+      } finally {
+        setLoading(false);
+        window.scrollTo(0, 0);
+      }
+    };
+
+    fetchPost();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!post) {
+    return <Navigate to="/blog" replace />;
+  }
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <SEO
+        title={post.seo.metaTitle}
+        description={post.seo.metaDescription}
+        keywords={post.seo.keywords.join(", ")}
+        url={`/blog/${post.slug}`}
+        image={post.featuredImage}
+      />
+      <Header />
+      <main>
+        {/* Hero Section with Featured Image */}
+        <section className="relative h-[60vh] min-h-[400px] overflow-hidden">
+          <div className="absolute inset-0 bg-muted">
+            <img 
+              src={post.featuredImage} 
+              alt={post.title} 
+              className="w-full h-full object-cover"
+              loading="eager"
+              onError={(e) => {
+                console.error('Failed to load blog header image:', post.featuredImage);
+                // Set a fallback background color if image fails
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+          </div>
+          <div className="relative h-full flex items-end">
+            <div className="mx-auto max-w-4xl px-6 lg:px-8 pb-16 w-full">
+              <ScrollAnimationWrapper direction="bottom">
+                <Link
+                  to="/blog"
+                  className="inline-flex items-center text-white hover:text-primary mb-6 transition-colors group"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                  Back to Blog
+                </Link>
+
+                {/* New flex container for badge and date */}
+                <div className="flex items-center gap-4 mb-6">
+                  <Badge className="bg-primary text-primary-foreground">{post.category}</Badge>
+                  <div className="flex items-center text-white/90">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    <span>{formatDate(post.publishDate)}</span>
+                  </div>
+                </div>
+
+                <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{post.title}</h1>
+                <p className="text-xl text-white/90 max-w-3xl">{post.excerpt}</p>
+              </ScrollAnimationWrapper>
+            </div>
+          </div>
+        </section>
+
+        {/* Article Content */}
+        <section className="py-16 bg-background">
+          <div className="mx-auto max-w-4xl px-6 lg:px-8">
+            <ScrollAnimationWrapper direction="bottom">
+              <article className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary hover:prose-a:text-primary-dark prose-strong:text-foreground">
+                <div dangerouslySetInnerHTML={{ __html: post.content }} />
+              </article>
+
+              {/* Author and Reading Time - REMOVED from here */}
+            </ScrollAnimationWrapper>
+          </div>
+        </section>
+
+        {/* Related Posts */}
+        {relatedPosts.length > 0 && (
+          <section className="py-16 bg-muted/30">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8">
+              <ScrollAnimationWrapper direction="bottom">
+                <h2 className="text-3xl font-bold text-foreground mb-8">Related Articles</h2>
+              </ScrollAnimationWrapper>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {relatedPosts.map((relatedPost, index) => (
+                  <ScrollAnimationWrapper key={relatedPost.id} direction="bottom" delay={index * 0.1}>
+                    <Link to={`/blog/${relatedPost.slug}`}>
+                      <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-border bg-card">
+                        <div className="relative h-48 overflow-hidden">
+                          <img
+                            src={relatedPost.featuredImage}
+                            alt={relatedPost.title}
+                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                            loading="lazy"
+                          />
+                        </div>
+                        <CardContent className="p-6">
+                          <Badge className="mb-3 bg-primary text-primary-foreground">{relatedPost.category}</Badge>
+                          <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-2 hover:text-primary transition-colors">
+                            {relatedPost.title}
+                          </h3>
+                          <p className="text-muted-foreground line-clamp-2 mb-4">{relatedPost.excerpt}</p>
+                          <div className="flex items-center text-primary font-semibold hover:gap-3 transition-all">
+                            Read More
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </ScrollAnimationWrapper>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* CTA Section */}
+        <section className="py-16 bg-background">
+          <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
+            <ScrollAnimationWrapper direction="bottom">
+              <h2 className="text-3xl font-bold text-foreground mb-4">Learn More About Our Work</h2>
+              <p className="text-lg text-muted-foreground mb-8">
+                Discover how Anhart is creating quality affordable housing across British Columbia
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  to="/portfolio"
+                  onClick={() => window.scrollTo(0, 0)}
+                  className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-base font-semibold text-primary-foreground hover:bg-primary-dark transition-colors"
+                >
+                  View Our Projects
+                </Link>
+                <Link
+                  to="/contact"
+                  onClick={() => window.scrollTo(0, 0)}
+                  className="inline-flex items-center justify-center rounded-md border border-border bg-background px-6 py-3 text-base font-semibold text-foreground hover:bg-muted transition-colors"
+                >
+                  Get in Touch
+                </Link>
+              </div>
+            </ScrollAnimationWrapper>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default BlogPost;
