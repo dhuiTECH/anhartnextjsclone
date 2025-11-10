@@ -1,0 +1,3 @@
+module.exports=[9840,a=>{"use strict";var b=a.i(34602),c=a.i(61689);function d({error:a,reset:d}){return(0,c.useEffect)(()=>{console.error(a)},[a]),(0,b.jsx)("div",{className:"min-h-screen flex items-center justify-center",children:(0,b.jsxs)("div",{className:"text-center",children:[(0,b.jsx)("h2",{className:"text-2xl font-bold mb-4",children:"Something went wrong!"}),(0,b.jsx)("button",{onClick:d,className:"bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600",children:"Try again"})]})})}a.s(["default",()=>d])}];
+
+//# sourceMappingURL=Downloads_anhartca-main_anhartca-main_next-app_src_app_error_tsx_d25b6af3._.js.map

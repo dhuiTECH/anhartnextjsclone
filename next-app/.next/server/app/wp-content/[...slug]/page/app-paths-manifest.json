@@ -1,0 +1,3 @@
+{
+  "/wp-content/[...slug]/page": "app/wp-content/[...slug]/page.js"
+}
