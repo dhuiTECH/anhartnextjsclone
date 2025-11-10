@@ -6,6 +6,10 @@ export const metadata: Metadata = {
   description: 'About page - Access and manage your content',
 };
 
-export default function AboutPage() {
-  return <About />;
+export default function Page() {
+  return (
+    <div>
+      {/* Placeholder Page */}
+    </div>
+  );
 }
