@@ -14,12 +14,13 @@ This is a Next.js web application for Anhart Affordable Housing, showcasing thei
   - Login page uses router.refresh() to ensure cookies are synced after authentication
   - Admin and member portals now fully functional with proper authentication
 
-- **Blog Database Setup**
+- **Blog Database Setup & Content Migration**
   - Created `blog_posts` table in Supabase with complete schema (title, slug, content, images, SEO fields)
   - Copied blog images from `src/assets/blog/` to `public/blog/` for serving via Next.js
   - Blog images now accessible at `/blog/*.jpg` paths
-  - Database ready to receive blog content from admin dashboard or seeding scripts
-  - Note: Legacy blog posts in `src/data/blog.ts` need to be migrated to database for display
+  - Seeded 1 blog post: "Why Affordable Housing Matters: Building Inclusive Communities in Vancouver"
+  - Remaining 4 blog posts from `src/data/blog.ts` can be added via admin dashboard edit interface
+  - Migration script available at `scripts/migrate-blog-posts.mjs` for reference
 
 - **Admin & Member Portal System**
   - Created complete admin dashboard with TipTap rich text editor for blog publishing at `/admin/dashboard`
@@ -101,9 +102,14 @@ The `.env` file in the `next-app/` directory contains Supabase credentials that 
 
 ### Admin & Member Portals
 - **Admin Login**: `/admin/login` - Authenticate as admin (requires role='admin' in profiles table)
-- **Admin Dashboard**: `/admin/dashboard` - Rich text blog editor with TipTap, publishes to `blog_posts` table
+- **Admin Dashboard**: `/admin/dashboard` - Features:
+  - Create new blog posts with TipTap rich text editor
+  - Edit existing blog posts (dropdown selector loads posts for editing)
+  - Toggle between "New Post" and "Edit" modes
+  - Auto-saves to `blog_posts` table in Supabase
+  - Categories: Housing Resources, Community Impact, Housing Innovation, Insights, News, Updates, Community
 - **Member Dashboard**: `/member/dashboard` - View and download files from `member-files` storage bucket
-- **Blog Updates**: Run `node update-blogs.js` to update existing blog post content
+- **Blog Migration**: Script at `scripts/migrate-blog-posts.mjs` (dry-run mode works, live mode blocked by RLS policies)
 
 ### Database Requirements
 The portals require these Supabase database tables:
