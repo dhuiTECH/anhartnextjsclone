@@ -7,12 +7,14 @@ This is a Next.js web application for Anhart Affordable Housing, showcasing thei
 - **Admin & Member Portal System Added**
   - Created complete admin dashboard with TipTap rich text editor for blog publishing at `/admin/dashboard`
   - Implemented secure admin login at `/admin/login` with Supabase authentication
-  - Built member portal at `/member/dashboard` with file download capabilities
+  - Built member portal at `/member/dashboard` with file download capabilities  
   - Added role-based access control (RBAC) using Supabase profiles table
   - Installed TipTap editor dependencies (@tiptap/react, @tiptap/starter-kit, extensions)
+  - Installed @supabase/ssr package for cookie-based authentication
   - Created blog update script (`update-blogs.js`) for managing blog post content
   - All portals use server-side rendering (SSR) with server/client component split pattern
   - Fixed Next.js 15+ async cookies() API - properly await cookies() in server components
+  - Login page uses router.refresh() to ensure cookies are synced after authentication
 
 - **Supabase Configuration Fixes**
   - Standardized environment variable naming to use `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Supabase standard)

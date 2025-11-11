@@ -14,8 +14,12 @@ export default function AdminLogin() {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
-    if (!error) router.push('/admin/dashboard');
-    else alert('Login failed: ' + error.message);
+    if (!error) {
+      router.refresh();
+      router.push('/admin/dashboard');
+    } else {
+      alert('Login failed: ' + error.message);
+    }
   };
 
   return (
