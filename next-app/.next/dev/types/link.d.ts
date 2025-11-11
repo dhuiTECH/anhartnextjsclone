@@ -33,18 +33,25 @@ declare namespace __next_route_internal_types__ {
 
   type StaticRoutes = 
     | `/`
-    | `/_app`
-    | `/_document`
     | `/about`
-    | `/admin-login`
-    | `/admin/dashboard`
+    | `/about-us`
     | `/blog`
     | `/contact`
-    | `/login`
-    | `/member/dashboard`
+    | `/contact-us`
+    | `/limited-partnership`
+    | `/media`
+    | `/member-login`
     | `/partner`
+    | `/partners`
+    | `/portfolio`
+    | `/sample-page`
+    | `/stories`
+    | `/this-is-us`
+    | `/what-is-anhart`
+    | `/wp-admin`
   type DynamicRoutes<T extends string = string> = 
     | `/blog/${SafeSlug<T>}`
+    | `/wp-content/${CatchAllSlug<T>}`
 
   type RouteImpl<T> = 
     | StaticRoutes
