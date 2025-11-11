@@ -1,5 +1,8 @@
 'use client';
 
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import SEO from "@/components/SEO";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +14,9 @@ import { useFormSubmission } from "@/hooks/useFormSubmission";
 import { CONTACT_INFO, AddressUtils } from "@/config/address";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import React, { useState } from "react";
+import contactHeroImg from "@/assets/baseAssets/contact-hero-1280x720.webp";
+
+const contactHero = typeof contactHeroImg === 'string' ? contactHeroImg : contactHeroImg?.src || '';
 
 // Contact information using centralized address configuration
 const contactInfo = [
@@ -92,17 +98,45 @@ export const Contact = () => {
     }
   };
   return (
-    <section id="contact" className="py-24 bg-muted/30 sm:py-[50px]">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <ScrollAnimationWrapper direction="top" delay={0}>
-          <div className="mx-auto max-w-2xl lg:text-center">
-            <p className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Connect With Us Today</p>
-            <p className="mt-6 leading-8 text-muted-foreground text-xl">
-              Chat with us about anything, from housing dreams to community ideas. Reach out for an open conversation
-              with Anhart's team or call us at <a href="tel:604-529-6259" className="font-bold text-foreground hover:text-primary transition-colors">604-529-6259</a>
-            </p>
+    <div className="min-h-screen bg-background">
+      <SEO 
+        title="Contact Us - Anhart Affordable Housing"
+        description="Get in touch with Anhart Affordable Housing. Contact us for inquiries about affordable housing solutions, partnerships, or investment opportunities."
+        keywords="contact anhart, affordable housing contact, housing inquiries, anhart team"
+        url="/contact"
+      />
+      <Header />
+      
+      <main>
+        {/* Hero Banner */}
+        <section className="relative h-80 overflow-hidden">
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
+            style={{ backgroundImage: `url(${contactHero})` }} 
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-red-400/80" />
+          <div 
+            className="absolute inset-0" 
+            style={{ background: `linear-gradient(135deg, transparent 40%, #E57373cc 40%)` }} 
+          />
+          <div className="relative z-10 flex items-center justify-end h-full px-6 pr-12">
+            <h1 className="text-4xl md:text-5xl font-bold text-white text-center max-w-md animate-slide-in-right">
+              Connect With Us Today
+            </h1>
           </div>
-        </ScrollAnimationWrapper>
+        </section>
+
+        {/* Contact Section */}
+        <section id="contact" className="py-24 bg-muted/30 sm:py-[50px]">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <ScrollAnimationWrapper direction="top" delay={0}>
+              <div className="mx-auto max-w-2xl lg:text-center">
+                <p className="mt-6 leading-8 text-muted-foreground text-xl">
+                  Chat with us about anything, from housing dreams to community ideas. Reach out for an open conversation
+                  with Anhart's team or call us at <a href="tel:604-529-6259" className="font-bold text-foreground hover:text-primary transition-colors">604-529-6259</a>
+                </p>
+              </div>
+            </ScrollAnimationWrapper>
 
         <div className="mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Contact Information + Newsletter */}
@@ -264,5 +298,8 @@ export const Contact = () => {
         </ScrollAnimationWrapper>
       </div>
     </section>
+      </main>
+      <Footer />
+    </div>
   );
 };

@@ -12,7 +12,10 @@ import { DollarSign, Users, Award } from "lucide-react";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
 import { ThreeCardSection } from "@/components/shared/ThreeCardSection";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
-import partnerHero from "@/assets/partner-hero-friendly.jpg";
+import partnerHeroImg from "@/assets/partner-hero-friendly.jpg";
+
+const partnerHero = typeof partnerHeroImg === 'string' ? partnerHeroImg : partnerHeroImg?.src || '';
+
 const Partner = () => {
   const {
     submitForm,

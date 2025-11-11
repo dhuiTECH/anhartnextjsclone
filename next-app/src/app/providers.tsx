@@ -21,7 +21,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <TooltipProvider>
       <QueryClientProvider client={queryClient}>
-        // HelmetProvider removed - Next.js handles head content without providers<AuthProvider>
+        <AuthProvider>
           {children}
         </AuthProvider>
       </QueryClientProvider>
