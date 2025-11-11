@@ -4,23 +4,31 @@
 This is a Next.js web application for Anhart Affordable Housing, showcasing their mission, portfolio, and partnerships in affordable housing development across British Columbia.
 
 ## Recent Changes (November 11, 2025)
-- **Admin & Member Portal System Added**
+- **Authentication System Fixed**
+  - Migrated from mixed Supabase packages to unified `@supabase/ssr` for both client and server
+  - Fixed cookie parsing errors by using consistent cookie format across all auth flows
+  - Updated admin login to use `createBrowserClient` from `@supabase/ssr`
+  - Updated admin and member dashboards to use `createServerClient` from `@supabase/ssr`
+  - Fixed Next.js 15+ async cookies() API - properly await cookies() in server components
+  - Added `immediatelyRender: false` to TipTap editor to fix SSR hydration mismatch
+  - Login page uses router.refresh() to ensure cookies are synced after authentication
+  - Admin and member portals now fully functional with proper authentication
+
+- **Blog Database Setup**
+  - Created `blog_posts` table in Supabase with complete schema (title, slug, content, images, SEO fields)
+  - Copied blog images from `src/assets/blog/` to `public/blog/` for serving via Next.js
+  - Blog images now accessible at `/blog/*.jpg` paths
+  - Database ready to receive blog content from admin dashboard or seeding scripts
+  - Note: Legacy blog posts in `src/data/blog.ts` need to be migrated to database for display
+
+- **Admin & Member Portal System**
   - Created complete admin dashboard with TipTap rich text editor for blog publishing at `/admin/dashboard`
   - Implemented secure admin login at `/admin/login` with Supabase authentication
   - Built member portal at `/member/dashboard` with file download capabilities  
   - Added role-based access control (RBAC) using Supabase profiles table
   - Installed TipTap editor dependencies (@tiptap/react, @tiptap/starter-kit, extensions)
   - Installed @supabase/ssr package for cookie-based authentication
-  - Created blog update script (`update-blogs.js`) for managing blog post content
   - All portals use server-side rendering (SSR) with server/client component split pattern
-  - Fixed Next.js 15+ async cookies() API - properly await cookies() in server components
-  - Login page uses router.refresh() to ensure cookies are synced after authentication
-
-- **Supabase Configuration Fixes**
-  - Standardized environment variable naming to use `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Supabase standard)
-  - Updated client.ts to use consistent variable names across client and server
-  - Fixed async cookies() handling in admin and member dashboard pages for Next.js 15+ compatibility
-  - All Supabase authentication now working correctly
 
 - **Vercel to Replit Migration Completed**
   - Configured Next.js development server to run on port 5000 with host 0.0.0.0
