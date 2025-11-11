@@ -5,7 +5,8 @@ import MemberClient from './MemberClient';
 export const dynamic = 'force-dynamic';
 
 export default async function MemberDashboard() {
-  const supabase = createServerComponentClient({ cookies });
+  const cookieStore = await cookies();
+  const supabase = createServerComponentClient({ cookies: () => cookieStore });
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return <p className="p-8">Redirecting to login...</p>;
 

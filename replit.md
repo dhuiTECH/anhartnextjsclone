@@ -12,20 +12,30 @@ This is a Next.js web application for Anhart Affordable Housing, showcasing thei
   - Installed TipTap editor dependencies (@tiptap/react, @tiptap/starter-kit, extensions)
   - Created blog update script (`update-blogs.js`) for managing blog post content
   - All portals use server-side rendering (SSR) with server/client component split pattern
+  - Fixed Next.js 15+ async cookies() API - properly await cookies() in server components
+
+- **Supabase Configuration Fixes**
+  - Standardized environment variable naming to use `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Supabase standard)
+  - Updated client.ts to use consistent variable names across client and server
+  - Fixed async cookies() handling in admin and member dashboard pages for Next.js 15+ compatibility
+  - All Supabase authentication now working correctly
 
 - **Vercel to Replit Migration Completed**
   - Configured Next.js development server to run on port 5000 with host 0.0.0.0
-  - Fixed Supabase client configuration to use environment variables (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)
   - Fixed Google Analytics component to use Next.js environment variable syntax (process.env.NEXT_PUBLIC_GA_TRACKING_ID)
   - Installed Node.js 20 runtime
   - Configured development workflow
   - Configured production deployment settings (autoscale)
 
-- **Image Path Fixes**
+- **Image and Media Fixes**
   - Fixed all "[object Object]" errors by extracting `.src` property from Next.js static import objects
-  - Updated components: Footer, Hero, About, GlobalPartners, ClientCarousel, OurFocusSection, ProjectModal, ProjectGalleryModal, PDFViewer
+  - Fixed HeroBanner and OptimizedImage component TypeScript interfaces to accept proper props
+  - Fixed hero banner images on `/media` and `/limited-partnership` pages
+  - Fixed promotional video playback by renaming video file to `promotional-video.mp4`
+  - Fixed video thumbnail to extract `.src` from Next.js static import
+  - Updated components: Footer, Hero, About, GlobalPartners, ClientCarousel, OurFocusSection, ProjectModal, ProjectGalleryModal, PDFViewer, HeroBanner, OptimizedImage
   - Created `getImageSrc()` helper function for consistent image path handling
-  - All images now render correctly across home, about, and contact pages
+  - All images and videos now render correctly across all pages
 
 ## Project Architecture
 - **Framework**: Next.js 16 (App Router)
@@ -64,7 +74,7 @@ The `.env` file in the `next-app/` directory contains Supabase credentials that 
 
 ### Required Environment Variables:
 - `NEXT_PUBLIC_SUPABASE_URL`: Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: Supabase anonymous/public key  
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Supabase anonymous/public key (standard Supabase naming)
 - `NEXT_PUBLIC_SUPABASE_PROJECT_ID`: Supabase project identifier
 - `NEXT_PUBLIC_GA_TRACKING_ID`: Google Analytics tracking ID (optional)
 
