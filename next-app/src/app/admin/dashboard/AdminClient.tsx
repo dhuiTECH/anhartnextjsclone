@@ -25,6 +25,7 @@ export default function AdminClient({ user }: { user: any }) {
   const [meta, setMeta] = useState('');
   const [image, setImage] = useState('');
   const [category, setCategory] = useState('Insights');
+  const [publishDate, setPublishDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<'new' | 'edit'>('new');
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -61,6 +62,12 @@ export default function AdminClient({ user }: { user: any }) {
     setImage(post.featured_image || '');
     setCategory(post.category || 'Insights');
     setSlug(post.slug);
+    
+    // Convert ISO timestamp to YYYY-MM-DD format for date input
+    const dateObj = new Date(post.updated_at);
+    const dateString = dateObj.toISOString().split('T')[0];
+    setPublishDate(dateString);
+    
     editor.commands.setContent(post.content || '');
   };
 
@@ -72,6 +79,11 @@ export default function AdminClient({ user }: { user: any }) {
     setImage('');
     setCategory('Insights');
     setSlug('');
+    
+    // Set default publish date to today
+    const today = new Date().toISOString().split('T')[0];
+    setPublishDate(today);
+    
     if (editor) editor.commands.clearContent();
   };
 
@@ -165,7 +177,9 @@ export default function AdminClient({ user }: { user: any }) {
           <input placeholder="Article Title" value={title} onChange={e=>setTitle(e.target.value)} className="w-full text-2xl p-3 border rounded" required />
           <input placeholder="Meta Description (160 chars)" value={meta} onChange={e=>setMeta(e.target.value)} maxLength={160} className="w-full p-3 border rounded" />
           <input placeholder="Featured Image URL" value={image} onChange={e=>setImage(e.target.value)} className="w-full p-3 border rounded" />
-          <select value={category} onChange={e=>setCategory(e.target.value)} className="w-full p-3 border rounded">
+          
+          <div className="grid grid-cols-2 gap-4">
+            <select value={category} onChange={e=>setCategory(e.target.value)} className="w-full p-3 border rounded">
             <option value="Insights">Insights</option>
             <option value="News">News</option>
             <option value="Updates">Updates</option>
@@ -173,8 +187,89 @@ export default function AdminClient({ user }: { user: any }) {
             <option value="Housing Resources">Housing Resources</option>
             <option value="Community Impact">Community Impact</option>
             <option value="Housing Innovation">Housing Innovation</option>
-          </select>
-          <div className="border-2 border-dashed p-4 min-h-96 bg-gray-50"><EditorContent editor={editor} /></div>
+            </select>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Publish Date</label>
+              <input 
+                type="date" 
+                value={publishDate} 
+                onChange={e=>setPublishDate(e.target.value)} 
+                className="w-full p-3 border rounded" 
+                required 
+              />
+            </div>
+          </div>
+          
+          <div className="border rounded-lg overflow-hidden">
+            {editor && (
+              <div className="bg-gray-100 border-b p-2 flex flex-wrap gap-1">
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                  className={`px-3 py-1 rounded text-sm font-semibold ${editor.isActive('heading', { level: 1 }) ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}`}
+                >
+                  H1
+                </button>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                  className={`px-3 py-1 rounded text-sm font-semibold ${editor.isActive('heading', { level: 2 }) ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}`}
+                >
+                  H2
+                </button>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+                  className={`px-3 py-1 rounded text-sm font-semibold ${editor.isActive('heading', { level: 3 }) ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}`}
+                >
+                  H3
+                </button>
+                <div className="w-px bg-gray-300 mx-1"></div>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleBold().run()}
+                  className={`px-3 py-1 rounded text-sm font-bold ${editor.isActive('bold') ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}`}
+                >
+                  B
+                </button>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleItalic().run()}
+                  className={`px-3 py-1 rounded text-sm italic ${editor.isActive('italic') ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}`}
+                >
+                  I
+                </button>
+                <div className="w-px bg-gray-300 mx-1"></div>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleBulletList().run()}
+                  className={`px-3 py-1 rounded text-sm ${editor.isActive('bulletList') ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}`}
+                >
+                  • List
+                </button>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                  className={`px-3 py-1 rounded text-sm ${editor.isActive('orderedList') ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}`}
+                >
+                  1. List
+                </button>
+                <div className="w-px bg-gray-300 mx-1"></div>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().setParagraph().run()}
+                  className={`px-3 py-1 rounded text-sm ${editor.isActive('paragraph') ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}`}
+                >
+                  P
+                </button>
+              </div>
+            )}
+            <div className="p-4 min-h-96 bg-white prose max-w-none">
+              <EditorContent editor={editor} />
+            </div>
+          </div>
+          
           <button type="submit" disabled={loading} className="bg-green-600 text-white px-8 py-3 rounded font-bold">
             {loading ? (mode === 'edit' ? 'Updating...' : 'Publishing...') : (mode === 'edit' ? 'Update Article' : 'Publish Article')}
           </button>
