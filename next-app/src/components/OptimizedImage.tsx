@@ -20,9 +20,7 @@ interface OptimizedImageProps {
   onError?: () => void;
 }
 
-export const OptimizedImage: React.FC<{
-  children?: React.ReactNode;
-}> = ({
+export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   imageName,
   alt,
   category = 'project',
@@ -34,8 +32,7 @@ export const OptimizedImage: React.FC<{
   aspectRatio,
   sizes,
   onLoad,
-  onError,
-  children
+  onError
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);

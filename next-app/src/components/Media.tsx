@@ -474,7 +474,7 @@ const Media = () => {
         
             <ScrollAnimationWrapper direction="bottom" delay={200}>
               <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-sm sm:shadow-lg">
-                <video ref={videoRef} poster={promotionalVideoThumbnail} className="w-full h-full object-cover" controls>
+                <video ref={videoRef} poster={promotionalVideoThumbnail.src} className="w-full h-full object-cover" controls>
                   <source src="/promotional-video.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>

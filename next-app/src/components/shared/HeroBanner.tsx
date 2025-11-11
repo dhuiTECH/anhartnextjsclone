@@ -21,15 +21,12 @@ interface HeroBannerProps {
   contentPosition?: 'left' | 'center' | 'right';
   className?: string;
 }
-export const HeroBanner: React.FC<{
-  children?: React.ReactNode;
-}> = ({
+export const HeroBanner: React.FC<HeroBannerProps> = ({
   backgroundImage,
   title,
   subtitle,
   contentPosition = 'right',
-  className = '',
-  children
+  className = ''
 }) => {
   const getContentAlignment = () => {
     switch (contentPosition) {
