@@ -1,14 +1,11 @@
 import { Metadata } from 'next';
+import { Contact } from '@/components/Contact';
 
 export const metadata: Metadata = {
-  title: 'Contact Us',
+  title: 'Contact Us - Anhart Affordable Housing',
+  description: 'Get in touch with Anhart Affordable Housing. Contact us for inquiries about affordable housing solutions, partnerships, or investment opportunities.',
 };
 
 export default function Page() {
-  return (
-    <div>
-      <h1>Contact Us Page</h1>
-      {/* This is a placeholder */}
-    </div>
-  );
+  return <Contact />;
 }
