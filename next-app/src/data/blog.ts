@@ -57,6 +57,8 @@ interface DbBlogPost {
 }
 
 function transformDbPost(dbPost: DbBlogPost): BlogPost {
+  console.log("transformDbPost - content length:", dbPost.content?.length);
+  console.log("transformDbPost - content start:", dbPost.content?.substring(0, 100));
   return {
     id: dbPost.id,
     slug: dbPost.slug,
@@ -1124,6 +1126,9 @@ export const getPostBySlug = async (slug: string): Promise<BlogPost | undefined>
     .eq("is_published", true)
     .maybeSingle();
 
+  console.log("Supabase query result - error:", error);
+  console.log("Supabase query result - data:", data);
+
   if (error) {
     console.error("Error fetching blog post:", error);
     return undefined;
@@ -1131,6 +1136,14 @@ export const getPostBySlug = async (slug: string): Promise<BlogPost | undefined>
 
   if (!data) {
     console.log("No blog post found with slug:", slug);
+    
+    // Fallback to static blog data
+    const staticPost = blogPosts.find(p => p.slug === slug);
+    if (staticPost) {
+      console.log("Found in static data:", staticPost.title);
+      return staticPost;
+    }
+    
     return undefined;
   }
 

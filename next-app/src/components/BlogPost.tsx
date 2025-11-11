@@ -38,6 +38,8 @@ const BlogPost = () => {
       try {
         const fetchedPost = await getPostBySlug(slug);
         console.log("BlogPost component: Post fetched:", fetchedPost?.title || "null");
+        console.log("BlogPost component: Content length:", fetchedPost?.content?.length || 0);
+        console.log("BlogPost component: Full post object:", fetchedPost);
         setPost(fetchedPost);
 
         if (fetchedPost) {
@@ -69,7 +71,20 @@ const BlogPost = () => {
   }
 
   if (!post) {
-    return <Navigate to="/blog" replace />;
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="text-center">
+            <p className="text-muted-foreground mb-4">Blog post not found</p>
+            <Link href="/blog" className="text-primary hover:underline">
+              Return to Blog
+            </Link>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
   }
 
   const formatDate = (dateString: string) => {
