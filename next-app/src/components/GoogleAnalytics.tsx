@@ -4,7 +4,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
 // Google Analytics configuration
-const GA_TRACKING_ID = import.meta.env.VITE_GA_TRACKING_ID || 'G-XXXXXXXXXX';
+const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID || 'G-XXXXXXXXXX';
 
 // Initialize Google Analytics - deferred to improve performance
 export const initGA = () => {
@@ -62,11 +62,14 @@ export const trackEvent = (action: string, category: string, label?: string, val
 
 // Component to track page views on route changes
 export const GoogleAnalytics = () => {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   useEffect(() => {
     if (GA_TRACKING_ID) {
       trackPageView(pathname + searchParams.toString());
     }
-  }, [location]);
+  }, [pathname, searchParams]);
 
   return null;
 };
@@ -78,5 +81,3 @@ declare global {
     dataLayer: any[];
   }
 }
-const pathname = usePathname();
-const searchParams = useSearchParams();
