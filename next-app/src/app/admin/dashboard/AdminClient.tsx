@@ -17,6 +17,7 @@ interface BlogPost {
   content: string;
   excerpt: string;
   category: string;
+  publish_date: string;
   updated_at: string;
 }
 
@@ -46,7 +47,7 @@ export default function AdminClient({ user }: { user: any }) {
   const loadPosts = async () => {
     const { data } = await supabase
       .from('blog_posts')
-      .select('id, title, slug, meta_title, meta_description, featured_image, content, excerpt, category, updated_at')
+      .select('id, title, slug, meta_title, meta_description, featured_image, content, excerpt, category, publish_date, updated_at')
       .order('updated_at', { ascending: false });
     if (data) setPosts(data);
   };
@@ -63,10 +64,17 @@ export default function AdminClient({ user }: { user: any }) {
     setCategory(post.category || 'Insights');
     setSlug(post.slug);
     
-    // Convert ISO timestamp to YYYY-MM-DD format for date input
-    const dateObj = new Date(post.updated_at);
-    const dateString = dateObj.toISOString().split('T')[0];
-    setPublishDate(dateString);
+    // Use publish_date if available, otherwise use updated_at
+    // Always format to YYYY-MM-DD for date input compatibility
+    if (post.publish_date) {
+      const dateObj = new Date(post.publish_date);
+      const dateString = dateObj.toISOString().split('T')[0];
+      setPublishDate(dateString);
+    } else {
+      const dateObj = new Date(post.updated_at);
+      const dateString = dateObj.toISOString().split('T')[0];
+      setPublishDate(dateString);
+    }
     
     editor.commands.setContent(post.content || '');
   };
@@ -103,6 +111,7 @@ export default function AdminClient({ user }: { user: any }) {
           content,
           excerpt,
           category,
+          publish_date: publishDate,
           updated_at: new Date().toISOString(),
         })
         .eq('id', selectedPostId);
@@ -124,6 +133,7 @@ export default function AdminClient({ user }: { user: any }) {
         content,
         excerpt,
         category,
+        publish_date: publishDate,
         author_name: user.email || 'Admin',
         is_published: true,
       });
@@ -266,6 +276,59 @@ export default function AdminClient({ user }: { user: any }) {
               </div>
             )}
             <div className="p-4 min-h-96 bg-white prose max-w-none">
+              <style jsx global>{`
+                .ProseMirror {
+                  outline: none;
+                  min-height: 24rem;
+                }
+                .ProseMirror h1 {
+                  font-size: 2em;
+                  font-weight: 700;
+                  margin-top: 1em;
+                  margin-bottom: 0.5em;
+                  line-height: 1.2;
+                }
+                .ProseMirror h2 {
+                  font-size: 1.5em;
+                  font-weight: 600;
+                  margin-top: 1em;
+                  margin-bottom: 0.5em;
+                  line-height: 1.3;
+                }
+                .ProseMirror h3 {
+                  font-size: 1.25em;
+                  font-weight: 600;
+                  margin-top: 0.8em;
+                  margin-bottom: 0.4em;
+                  line-height: 1.4;
+                }
+                .ProseMirror p {
+                  margin-bottom: 1em;
+                  line-height: 1.6;
+                }
+                .ProseMirror ul, .ProseMirror ol {
+                  padding-left: 1.5em;
+                  margin-bottom: 1em;
+                }
+                .ProseMirror ul li {
+                  list-style-type: disc;
+                  margin-bottom: 0.5em;
+                }
+                .ProseMirror ol li {
+                  list-style-type: decimal;
+                  margin-bottom: 0.5em;
+                }
+                .ProseMirror strong {
+                  font-weight: 700;
+                }
+                .ProseMirror em {
+                  font-style: italic;
+                }
+                .ProseMirror a {
+                  color: #4f46e5;
+                  text-decoration: underline;
+                }
+              `}</style>
               <EditorContent editor={editor} />
             </div>
           </div>
