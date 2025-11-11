@@ -2,18 +2,21 @@
 
 import React, { useState, useEffect, useRef } from "react";
 
-import comBuild from "@/assets/partnercarousel/communitybuilder.jpg";
-import AAC from "@/assets/partnercarousel/AAC.png";
-import cleanStart from "@/assets/partnercarousel/cleanstart.png";
-import GWA from "@/assets/partnercarousel/gwa_architecture.png";
-import smartant from "@/assets/partnercarousel/smartant.png";
-import FISH from "@/assets/FISH.png";
-import PURPOSE from "@/assets/Purpose.jpg";
-import QUIXULIN from "@/assets/QUIXULIN.png";
-import OTTVAL from "@/assets/OTTVAL.png";
-import SV from "@/assets/SV.png";
-import TPOS from "@/assets/TPOS.png";
-import GLC from "@/assets/GLC.png";
+import comBuildImg from "@/assets/partnercarousel/communitybuilder.jpg";
+import AACImg from "@/assets/partnercarousel/AAC.png";
+import cleanStartImg from "@/assets/partnercarousel/cleanstart.png";
+import GWAImg from "@/assets/partnercarousel/gwa_architecture.png";
+import smartantImg from "@/assets/partnercarousel/smartant.png";
+import FISHImg from "@/assets/FISH.png";
+import PURPOSEImg from "@/assets/Purpose.jpg";
+import QUIXULINImg from "@/assets/QUIXULIN.png";
+import OTTVALImg from "@/assets/OTTVAL.png";
+import SVImg from "@/assets/SV.png";
+import TPOSImg from "@/assets/TPOS.png";
+import GLCImg from "@/assets/GLC.png";
+
+// Helper to extract .src from Next.js static imports
+const getImageSrc = (img: any): string => typeof img === 'string' ? img : img?.src || '';
 
 interface Client {
   id: number;
@@ -55,84 +58,84 @@ export const ClientCarousel: React.FC<{
     {
       id: 1,
       name: "Community Builders",
-      logo: comBuild,
+      logo: getImageSrc(comBuildImg),
       alt: "Community Builders Logo",
       website: "https://www.communitybuilders.ca/",
     },
     {
       id: 2,
       name: "Anhart Constructions",
-      logo: AAC,
+      logo: getImageSrc(AACImg),
       alt: "Anhart Constructions Logo",
       website: "https://anhartconstruction.ca/",
     },
     {
       id: 3,
       name: "CleanStart",
-      logo: cleanStart,
+      logo: getImageSrc(cleanStartImg),
       alt: "CleanStart Logo",
       website: "https://cleanstartbc.ca/",
     },
     {
       id: 4,
       name: "GWA_Architecture",
-      logo: GWA,
+      logo: getImageSrc(GWAImg),
       alt: "GWA_Architecture logo",
       website: "https://www.gwaarchitecture.com/",
     },
     {
       id: 5,
       name: "SmartAnt",
-      logo: smartant,
+      logo: getImageSrc(smartantImg),
       alt: "SmartAnt logo",
       website: "https://smartant.ca/",
     },
     {
       id: 6,
       name: "Fraser Inclusive and Supportive Housing",
-      logo: FISH,
+      logo: getImageSrc(FISHImg),
       alt: "Fraser Inclusive and Supportive Housing",
       website: "https://www.facebook.com/p/Fraser-Inclusive-and-Supportive-Housing-Society-100068298222053/",
     },
     {
       id: 7,
       name: "Purpose Construction",
-      logo: PURPOSE,
+      logo: getImageSrc(PURPOSEImg),
       alt: "Purpose Construction",
       website: "https://www.purposeconstruction.ca/",
     },
     {
       id: 8,
       name: "Quixulin - Better Health Society",
-      logo: QUIXULIN,
+      logo: getImageSrc(QUIXULINImg),
       alt: "Quixulin - Better Health Society",
       website: "https://quixulin.com/",
     },
     {
       id: 9,
       name: "Affordable Housing Alliance of the Ottawa Valley",
-      logo: OTTVAL,
+      logo: getImageSrc(OTTVALImg),
       alt: "Ottawa Valley Affordable Housing",
       website: "https://www.ahaov.com/",
     },
     {
       id: 10,
       name: "Sustainable Villages",
-      logo: SV,
+      logo: getImageSrc(SVImg),
       alt: "Sustainable Villages",
       website: "https://sustainable-villages.org/",
     },
     {
       id: 11,
       name: "The Power of Small",
-      logo: TPOS,
+      logo: getImageSrc(TPOSImg),
       alt: "The Power of Small",
       website: "https://thepowerofsmall.net/",
     },
     {
       id: 12,
       name: "gotta love Canada",
-      logo: GLC,
+      logo: getImageSrc(GLCImg),
       alt: "gottaloveCanada",
       website: "https://gottalovecanada.ca/",
     },

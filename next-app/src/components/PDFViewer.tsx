@@ -8,15 +8,9 @@ import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download } from 'lucide-rea
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 
-// Set up PDF.js worker (use local worker to avoid CDN/CORS issues in bundlers like Vite)
-try {
-  // Prefer a locally bundled worker; works reliably in modern build setups
-  // @ts-ignore: import.meta is provided by the bundler
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.js', import.meta.url).toString();
-} catch (_err) {
-  // Fallback to CDN if the bundler URL resolution fails
-  pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-}
+// Set up PDF.js worker for Next.js
+// Use CDN worker as it's most reliable across different environments
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 interface PDFViewerProps {
   file: string;

@@ -12,6 +12,19 @@ import { ImageSize, ImageFormat, ImageCategory } from '@/types/images';
 
 export class ImageService {
   /**
+   * Helper to extract string URL from Next.js static import or string
+   */
+  private static getUrlString(value: any): string {
+    if (typeof value === 'string') {
+      return value;
+    }
+    if (value && typeof value === 'object' && 'src' in value) {
+      return value.src;
+    }
+    return String(value || '');
+  }
+
+  /**
    * Get image source for specific format and size
    */
   static getImageSrc(
@@ -26,10 +39,10 @@ export class ImageService {
     }
     
     if (format === 'fallback') {
-      return image.fallback;
+      return this.getUrlString(image.fallback);
     }
     
-    return image[format][size];
+    return this.getUrlString(image[format][size]);
   }
 
   /**
@@ -44,14 +57,14 @@ export class ImageService {
     
     const variants = image[format];
     if (typeof variants === 'string') {
-      return variants;
+      return this.getUrlString(variants);
     }
     
     return [
-      `${variants.sm} 640w`,
-      `${variants.md} 768w`,
-      `${variants.lg} 1024w`,
-      `${variants.xl} 1280w`,
+      `${this.getUrlString(variants.sm)} 640w`,
+      `${this.getUrlString(variants.md)} 768w`,
+      `${this.getUrlString(variants.lg)} 1024w`,
+      `${this.getUrlString(variants.xl)} 1280w`,
     ].join(', ');
   }
 

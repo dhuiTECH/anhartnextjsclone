@@ -4,10 +4,12 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Facebook, Twitter, Linkedin, Instagram, Mail, MapPin } from "lucide-react";
-import anhartLogo from "@/assets/anhart-logo-white.png";
+import anhartLogoImg from "@/assets/anhart-logo-white.png";
 import { CONTACT_INFO, AddressUtils } from "@/config/address";
 import { openGoogleMapsSearch } from "@/utils/externalLinks";
 import { useNewsletterSubscription } from "@/hooks/useNewsletterSubscription";
+
+const anhartLogo = typeof anhartLogoImg === 'string' ? anhartLogoImg : anhartLogoImg?.src || '';
 
 // Social media links - only used section
 const socialLinks = [{

@@ -44,6 +44,21 @@ import { ExternalLink } from "lucide-react";
 import { ourFocusData, FocusCard, OurFocusPage } from "@/data/our-focus";
 
 // =============================================================================
+// IMAGE IMPORTS
+// =============================================================================
+import img162Main from "@/assets/162Main.png";
+import img162Main_2 from "@/assets/162Main_2.png";
+import img162MainSt from "@/assets/162MainSt.webp";
+import imgDodsonsRooms_1 from "@/assets/DodsonsRooms_1.png";
+import imgDodsonSt from "@/assets/DodsonSt.webp";
+import imgMeritt_TH_1 from "@/assets/Meritt_TH_1.png";
+import imgMerritt from "@/assets/merritt.png";
+import imgTheRyder from "@/assets/TheRyder.jpeg";
+import imgRyder_2 from "@/assets/Ryder_2.png";
+import imgModularH_1 from "@/assets/ModularH_1.png";
+import imgAFS_1 from "@/assets/AFS_1.png";
+
+// =============================================================================
 // TYPES
 // =============================================================================
 interface OurFocusSectionProps {
@@ -61,24 +76,25 @@ interface OurFocusSectionProps {
 // =============================================================================
 
 /**
- * Get the original image path for Lovable compatibility
- * Maps image names to their actual file paths
+ * Get the original image path for Next.js compatibility
+ * Maps image names to their imported static assets
  */
 const getOriginalImagePath = (imageName: string): string => {
-  const imageMap: Record<string, string> = {
-    "162Main": new URL("@/assets/162Main.png", import.meta.url).href,
-    "162Main_2": new URL("@/assets/162Main_2.png", import.meta.url).href,
-    "162MainSt": new URL("@/assets/162MainSt.webp", import.meta.url).href,
-    DodsonsRooms_1: new URL("@/assets/DodsonsRooms_1.png", import.meta.url).href,
-    "Dodson St": new URL("@/assets/DodsonSt.webp", import.meta.url).href,
-    Meritt_TH_1: new URL("@/assets/Meritt_TH_1.png", import.meta.url).href,
-    merritt: new URL("@/assets/merritt.png", import.meta.url).href,
-    Ryder_1: new URL("@/assets/TheRyder.jpeg", import.meta.url).href,
-    Ryder_2: new URL("@/assets/Ryder_2.png", import.meta.url).href,
-    ModularH_1: new URL("@/assets/ModularH_1.png", import.meta.url).href,
-    AFS_1: new URL("@/assets/AFS_1.png", import.meta.url).href,
+  const imageMap: Record<string, any> = {
+    "162Main": img162Main,
+    "162Main_2": img162Main_2,
+    "162MainSt": img162MainSt,
+    DodsonsRooms_1: imgDodsonsRooms_1,
+    "Dodson St": imgDodsonSt,
+    Meritt_TH_1: imgMeritt_TH_1,
+    merritt: imgMerritt,
+    Ryder_1: imgTheRyder,
+    Ryder_2: imgRyder_2,
+    ModularH_1: imgModularH_1,
+    AFS_1: imgAFS_1,
   };
-  return imageMap[imageName] || imageName;
+  const image = imageMap[imageName];
+  return typeof image === 'string' ? image : image?.src || imageName;
 };
 
 /**

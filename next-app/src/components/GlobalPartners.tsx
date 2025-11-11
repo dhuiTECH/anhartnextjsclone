@@ -1,9 +1,12 @@
 import React from "react";
-import comBuild from "@/assets/partnercarousel/communitybuilder.jpg";
-import AAC from "@/assets/partnercarousel/AAC.png";
-import cleanStart from "@/assets/partnercarousel/cleanstart.png";
-import GWA from "@/assets/partnercarousel/gwa_architecture.png";
-import smartant from "@/assets/partnercarousel/smartant.png";
+import comBuildImg from "@/assets/partnercarousel/communitybuilder.jpg";
+import AACImg from "@/assets/partnercarousel/AAC.png";
+import cleanStartImg from "@/assets/partnercarousel/cleanstart.png";
+import GWAImg from "@/assets/partnercarousel/gwa_architecture.png";
+import smartantImg from "@/assets/partnercarousel/smartant.png";
+
+// Helper to extract .src from Next.js static imports
+const getImageSrc = (img: any): string => typeof img === 'string' ? img : img?.src || '';
 
 interface Partner {
   id: number;
@@ -24,35 +27,35 @@ export const GlobalPartners: React.FC<{
     {
       id: 1,
       name: "Community Builders",
-      logo: comBuild,
+      logo: getImageSrc(comBuildImg),
       alt: "Community Builders Logo",
       website: "https://www.communitybuilders.ca/",
     },
     {
       id: 2,
       name: "Anhart Constructions",
-      logo: AAC,
+      logo: getImageSrc(AACImg),
       alt: "Anhart Constructions Logo",
       website: "https://anhartconstruction.ca/",
     },
     {
       id: 3,
       name: "CleanStart",
-      logo: cleanStart,
+      logo: getImageSrc(cleanStartImg),
       alt: "CleanStart Logo",
       website: "https://cleanstartbc.ca/",
     },
     {
       id: 4,
       name: "GWA Architecture",
-      logo: GWA,
+      logo: getImageSrc(GWAImg),
       alt: "GWA Architecture logo",
       website: "https://www.gwaarchitecture.com/",
     },
     {
       id: 5,
       name: "SmartAnt",
-      logo: smartant,
+      logo: getImageSrc(smartantImg),
       alt: "SmartAnt logo",
       website: "#",
     },

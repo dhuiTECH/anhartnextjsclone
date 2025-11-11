@@ -3,9 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown } from "lucide-react";
 const video = '/hero-background-video.mp4';
-import anhartLogo from "@/assets/anhart-logo.png";
+import anhartLogoImg from "@/assets/anhart-logo.png";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { useEffect, useRef } from "react";
+
+const anhartLogo = typeof anhartLogoImg === 'string' ? anhartLogoImg : anhartLogoImg?.src || '';
 export const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);

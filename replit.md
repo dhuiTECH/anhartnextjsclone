@@ -12,6 +12,12 @@ This is a Next.js web application for Anhart Affordable Housing, showcasing thei
   - Configured development workflow
   - Configured production deployment settings (autoscale)
 
+- **Image Path Fixes**
+  - Fixed all "[object Object]" errors by extracting `.src` property from Next.js static import objects
+  - Updated components: Footer, Hero, About, GlobalPartners, ClientCarousel, OurFocusSection, ProjectModal, ProjectGalleryModal, PDFViewer
+  - Created `getImageSrc()` helper function for consistent image path handling
+  - All images now render correctly across home, about, and contact pages
+
 ## Project Architecture
 - **Framework**: Next.js 16 (App Router)
 - **UI Library**: React 18 with TypeScript

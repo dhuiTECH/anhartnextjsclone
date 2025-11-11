@@ -8,6 +8,32 @@ import { X, ChevronLeft, ChevronRight, MapPin, Calendar, Users, Building } from 
 import { ProjectData } from "@/types/project";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 
+// Portfolio image imports
+import imgJubileeSign from "@/assets/portfolioAssets/Jubilee-Sign.jpg";
+import imgAffordapartment from "@/assets/portfolioAssets/affordapartment.png";
+import imgKLanding from "@/assets/portfolioAssets/KLanding.png";
+import imgTheOppenhiemer from "@/assets/portfolioAssets/TheOppenhiemer.png";
+import imgSkeena from "@/assets/portfolioAssets/skeena.png";
+import img179Main from "@/assets/portfolioAssets/179Main.png";
+import img1060howe from "@/assets/portfolioAssets/1060howe.png";
+import imgMerritt from "@/assets/portfolioAssets/Merritt.png";
+import imgKwas from "@/assets/portfolioAssets/Kwas.png";
+import imgMaternity from "@/assets/portfolioAssets/Maternity.jpeg";
+
+// Project image imports
+import img162Main from "@/assets/162Main.png";
+import img162Main_2 from "@/assets/162Main_2.png";
+import img162MainSt from "@/assets/162MainSt.webp";
+import imgDodsonsRooms_1 from "@/assets/DodsonsRooms_1.png";
+import imgMeritt_TH_1 from "@/assets/Meritt_TH_1.png";
+import imgTheRyder from "@/assets/TheRyder.jpeg";
+import imgRyder_2 from "@/assets/Ryder_2.png";
+import imgModularH_1 from "@/assets/ModularH_1.png";
+import imgAFS_1 from "@/assets/AFS_1.png";
+import imgSustainableHomes from "@/assets/sustainable-homes-initiative.jpg";
+import imgAffordableLiving from "@/assets/affordable-living-complex.jpg";
+import imgUrbanRenewal from "@/assets/urban-renewal-project.jpg";
+
 // Function to convert URLs in text to clickable links
 const convertUrlsToLinks = (text: string) => {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -30,42 +56,44 @@ const convertUrlsToLinks = (text: string) => {
     return part;
   });
 };
+
 interface ProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
   project: ProjectData | null;
 }
 
-// Function to map image names back to original PNG file paths
+// Function to map image names to Next.js static imports
 const getOriginalImagePath = (imageName: string): string => {
-  const imageMap: Record<string, string> = {
-    // Portfolio images - using direct asset imports for Lovable compatibility
-    "Jubilee-Sign": new URL("@/assets/portfolioAssets/Jubilee-Sign.jpg", import.meta.url).href,
-    affordapartment: new URL("@/assets/portfolioAssets/affordapartment.png", import.meta.url).href,
-    KLanding: new URL("@/assets/portfolioAssets/KLanding.png", import.meta.url).href,
-    TheOppenhiemer: new URL("@/assets/portfolioAssets/TheOppenhiemer.png", import.meta.url).href,
-    skeena: new URL("@/assets/portfolioAssets/skeena.png", import.meta.url).href,
-    "179Main": new URL("@/assets/portfolioAssets/179Main.png", import.meta.url).href,
-    "1060howe": new URL("@/assets/portfolioAssets/1060howe.png", import.meta.url).href,
-    Merritt: new URL("@/assets/portfolioAssets/Merritt.png", import.meta.url).href,
-    // Project images - using direct asset imports for Lovable compatibility
-    "162Main": new URL("@/assets/162Main.png", import.meta.url).href,
-    "162Main_2": new URL("@/assets/162Main_2.png", import.meta.url).href,
-    "162MainSt": new URL("@/assets/162MainSt.webp", import.meta.url).href,
-    DodsonsRooms_1: new URL("@/assets/DodsonsRooms_1.png", import.meta.url).href,
-    Meritt_TH_1: new URL("@/assets/Meritt_TH_1.png", import.meta.url).href,
-    merritt: new URL("@/assets/Meritt_TH_1.png", import.meta.url).href,
-    Ryder_1: new URL("@/assets/TheRyder.jpeg", import.meta.url).href,
-    Ryder_2: new URL("@/assets/Ryder_2.png", import.meta.url).href,
-    ModularH_1: new URL("@/assets/ModularH_1.png", import.meta.url).href,
-    AFS_1: new URL("@/assets/AFS_1.png", import.meta.url).href,
-    "sustainable-homes-initiative": new URL("@/assets/sustainable-homes-initiative.jpg", import.meta.url).href,
-    "affordable-living-complex": new URL("@/assets/affordable-living-complex.jpg", import.meta.url).href,
-    "urban-renewal-project": new URL("@/assets/urban-renewal-project.jpg", import.meta.url).href,
-    Kwas: new URL("@/assets/portfolioAssets/Kwas.png", import.meta.url).href,
-    Maternity: new URL("@/assets/portfolioAssets/Maternity.jpeg", import.meta.url).href
+  const imageMap: Record<string, any> = {
+    // Portfolio images
+    "Jubilee-Sign": imgJubileeSign,
+    affordapartment: imgAffordapartment,
+    KLanding: imgKLanding,
+    TheOppenhiemer: imgTheOppenhiemer,
+    skeena: imgSkeena,
+    "179Main": img179Main,
+    "1060howe": img1060howe,
+    Merritt: imgMerritt,
+    Kwas: imgKwas,
+    Maternity: imgMaternity,
+    // Project images
+    "162Main": img162Main,
+    "162Main_2": img162Main_2,
+    "162MainSt": img162MainSt,
+    DodsonsRooms_1: imgDodsonsRooms_1,
+    Meritt_TH_1: imgMeritt_TH_1,
+    merritt: imgMeritt_TH_1,
+    Ryder_1: imgTheRyder,
+    Ryder_2: imgRyder_2,
+    ModularH_1: imgModularH_1,
+    AFS_1: imgAFS_1,
+    "sustainable-homes-initiative": imgSustainableHomes,
+    "affordable-living-complex": imgAffordableLiving,
+    "urban-renewal-project": imgUrbanRenewal,
   };
-  return imageMap[imageName] || imageName; // Return original if not found
+  const image = imageMap[imageName];
+  return typeof image === 'string' ? image : image?.src || imageName;
 };
 
 /**

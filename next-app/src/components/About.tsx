@@ -17,8 +17,12 @@ import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationW
 import { boardMembers, staff } from "@/data/about_staff";
 import { values } from "@/data/about_values";
 // Hero image now uses image registry system
-import ourVisionImg from "@/assets/our-vision.jpg";
-import ourApproachImg from "@/assets/OurVision.jpeg";
+import ourVisionImport from "@/assets/our-vision.jpg";
+import ourApproachImport from "@/assets/OurVision.jpeg";
+
+// Extract .src from Next.js static imports
+const ourVisionImg = typeof ourVisionImport === 'string' ? ourVisionImport : ourVisionImport?.src || '';
+const ourApproachImg = typeof ourApproachImport === 'string' ? ourApproachImport : ourApproachImport?.src || '';
 
 /**
  * About Page Component
