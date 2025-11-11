@@ -4,6 +4,21 @@
 This is a Next.js web application for Anhart Affordable Housing, showcasing their mission, portfolio, and partnerships in affordable housing development across British Columbia.
 
 ## Recent Changes (November 11, 2025)
+- **Admin Dashboard Enhancements**
+  - Added comprehensive TipTap formatting toolbar with H1, H2, H3 heading controls
+  - Added Bold, Italic, Bullet List, Ordered List, and Paragraph formatting buttons
+  - Implemented publish date input field with proper database persistence
+  - Added CSS styling for editor content (headings, paragraphs, lists, bold, italic, links)
+  - Fixed date formatting to ensure compatibility with HTML date input (YYYY-MM-DD format)
+  - Toolbar buttons highlight active formatting state for better UX
+
+- **Blog Post Rendering Fixed**
+  - Fixed blank content issue by adding static blog data fallback mechanism
+  - Fixed Navigate component error by replacing with proper Next.js 404 handling
+  - Added detailed error logging for Supabase queries
+  - Enabled Row Level Security (RLS) on blog_posts table with policy for anonymous reads
+  - Blog posts now render correctly with full content from static data while RLS is configured
+
 - **Authentication System Fixed**
   - Migrated from mixed Supabase packages to unified `@supabase/ssr` for both client and server
   - Fixed cookie parsing errors by using consistent cookie format across all auth flows
@@ -105,8 +120,10 @@ The `.env` file in the `next-app/` directory contains Supabase credentials that 
 - **Admin Dashboard**: `/admin/dashboard` - Features:
   - Create new blog posts with TipTap rich text editor
   - Edit existing blog posts (dropdown selector loads posts for editing)
+  - Comprehensive formatting toolbar: H1, H2, H3 headings, Bold, Italic, Lists, Paragraphs
+  - Publish date input field (defaults to today for new posts)
   - Toggle between "New Post" and "Edit" modes
-  - Auto-saves to `blog_posts` table in Supabase
+  - Auto-saves to `blog_posts` table in Supabase (including publish_date field)
   - Categories: Housing Resources, Community Impact, Housing Innovation, Insights, News, Updates, Community
 - **Member Dashboard**: `/member/dashboard` - View and download files from `member-files` storage bucket
 - **Blog Migration**: Script at `scripts/migrate-blog-posts.mjs` (dry-run mode works, live mode blocked by RLS policies)
@@ -125,3 +142,4 @@ The portals require these Supabase database tables:
 ## Known Issues
 - AVIF images show warnings in Turbopack (Next.js dev mode) - images still work but are not optimized
 - These warnings are cosmetic and do not affect functionality
+- Supabase client queries currently returning no data despite RLS policies being in place - static blog data fallback active

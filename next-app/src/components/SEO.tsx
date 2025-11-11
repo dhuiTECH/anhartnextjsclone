@@ -21,7 +21,10 @@ const SEO = ({
 }: SEOProps) => {
   const fullTitle = title.includes("Anhart") ? title : `${title} | Anhart Affordable Housing`;
   const fullUrl = url.startsWith("http") ? url : `https://anhart.ca${url}`;
-  const fullImage = image.startsWith("http") ? image : `https://anhart.ca${image}`;
+  
+  // Handle both string and object image types (Next.js static imports return objects)
+  const imageStr = typeof image === 'string' ? image : (image as any)?.src || '/images/anhart-logo.png';
+  const fullImage = imageStr.startsWith("http") ? imageStr : `https://anhart.ca${imageStr}`;
 
   return (
     <Head>
