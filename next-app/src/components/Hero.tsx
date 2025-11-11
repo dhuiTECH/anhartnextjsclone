@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown } from "lucide-react";
-const video = '/hero-background-video.mp4';
+const video = "/hero-background-video.mp4";
 import anhartLogoImg from "@/assets/anhart-logo.png";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { useEffect, useRef } from "react";
 
-const anhartLogo = typeof anhartLogoImg === 'string' ? anhartLogoImg : anhartLogoImg?.src || '';
+const anhartLogo =
+  typeof anhartLogoImg === "string" ? anhartLogoImg : anhartLogoImg?.src || "";
 export const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -44,15 +45,15 @@ export const Hero = () => {
       aria-label="Hero section with affordable housing information"
     >
       {/* Anhart logo as backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30 z-0"
         style={{
           backgroundImage: `url(${anhartLogo})`,
-          backgroundSize: 'contain',
-          backgroundPosition: 'center'
+          backgroundSize: "contain",
+          backgroundPosition: "center",
         }}
       />
-      
+
       {/* Fallback background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/70 to-primary/90 z-[0.5]" />
 
@@ -88,7 +89,7 @@ export const Hero = () => {
 
           <ScrollAnimationWrapper direction="top" delay={200}>
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-light bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] tracking-wider">
-              Redefining Affordable Housing
+              Redefining Affordable Housing Development
             </p>
           </ScrollAnimationWrapper>
 
@@ -96,8 +97,17 @@ export const Hero = () => {
           <div className="mt-8 sm:mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
             {/* Mobile: Side-by-side buttons */}
             <div className="flex flex-row gap-2 sm:hidden w-full max-w-sm">
-              <ScrollAnimationWrapper direction="bottom" delay={300} className="flex-1">
-                <a href="https://anhart.ca/portfolio" target="_blank" rel="noopener noreferrer" className="block">
+              <ScrollAnimationWrapper
+                direction="bottom"
+                delay={300}
+                className="flex-1"
+              >
+                <a
+                  href="https://anhart.ca/portfolio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
                   <Button
                     name="explore our work"
                     size="sm"
@@ -109,8 +119,17 @@ export const Hero = () => {
                 </a>
               </ScrollAnimationWrapper>
 
-              <ScrollAnimationWrapper direction="bottom" delay={400} className="flex-1">
-                <a href="https://anhart.ca/partner" target="_blank" rel="noopener noreferrer" className="block">
+              <ScrollAnimationWrapper
+                direction="bottom"
+                delay={400}
+                className="flex-1"
+              >
+                <a
+                  href="https://anhart.ca/partner"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
                   <Button
                     name="partner with us"
                     size="sm"
@@ -126,7 +145,11 @@ export const Hero = () => {
             {/* Desktop: Original buttons */}
             <div className="hidden sm:flex flex-row items-center justify-center gap-4">
               <ScrollAnimationWrapper direction="bottom" delay={300}>
-                <a href="https://anhart.ca/portfolio" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://anhart.ca/portfolio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Button
                     name="explore our work"
                     size="lg"
@@ -139,7 +162,11 @@ export const Hero = () => {
               </ScrollAnimationWrapper>
 
               <ScrollAnimationWrapper direction="bottom" delay={400}>
-                <a href="https://anhart.ca/partner" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://anhart.ca/partner"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Button
                     name="partner with us"
                     size="lg"
@@ -156,9 +183,15 @@ export const Hero = () => {
       </div>
 
       {/* Scroll Down Arrow */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40" aria-label="Scroll indicator">
+      <div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40"
+        aria-label="Scroll indicator"
+      >
         <div className="flex flex-col items-center gap-2">
-          <ChevronDown strokeWidth={2.5} className="w-12 h-8 text-white animate-bounce-fade" />
+          <ChevronDown
+            strokeWidth={2.5}
+            className="w-12 h-8 text-white animate-bounce-fade"
+          />
         </div>
       </div>
     </section>
