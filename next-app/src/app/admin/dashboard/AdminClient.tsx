@@ -15,7 +15,11 @@ export default function AdminClient({ user }: { user: any }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const editor = useEditor({ extensions: [StarterKit, Link, Image], content: '' });
+  const editor = useEditor({ 
+    extensions: [StarterKit, Link, Image], 
+    content: '',
+    immediatelyRender: false
+  });
 
   const publish = async () => {
     if (!editor) return;
