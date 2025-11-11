@@ -131,6 +131,7 @@ export const Contact = () => {
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <ScrollAnimationWrapper direction="top" delay={0}>
               <div className="mx-auto max-w-2xl lg:text-center">
+                <p className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Connect With Us Today</p>
                 <p className="mt-6 leading-8 text-muted-foreground text-xl">
                   Chat with us about anything, from housing dreams to community ideas. Reach out for an open conversation
                   with Anhart's team or call us at <a href="tel:604-529-6259" className="font-bold text-foreground hover:text-primary transition-colors">604-529-6259</a>

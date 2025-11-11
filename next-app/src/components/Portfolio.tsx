@@ -104,7 +104,7 @@ const Portfolio = () => {
           <div className="mx-auto max-w-6xl px-6 lg:px-8">
             <ScrollAnimationWrapper direction="top" delay={0}>
               <div className="text-center mb-16">
-                <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">Featured Projects</h2>
+                <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">Featured Development Projects</h2>
                 <p className="text-lg leading-8 text-muted-foreground">
                   From our humble beginnings in 2000—revitalizing the Jubilee Rooms and Dodson Hotel, two aging
                   single-room-occupancy buildings in Vancouver's Downtown Eastside—we've been driven by a vision to
