@@ -11,9 +11,19 @@ interface FileObject {
 }
 
 export default function MemberClient({ user, files }: { user: any; files: FileObject[] }) {
-  const download = (name: string) => {
-    const { data } = supabase.storage.from('member-files').getPublicUrl(name);
-    window.open(data.publicUrl, '_blank');
+  const download = async (name: string) => {
+    const { data, error } = await supabase.storage
+      .from('member-files')
+      .createSignedUrl(name, 60); // 60 second expiry
+    
+    if (error) {
+      alert('Error creating download link: ' + error.message);
+      return;
+    }
+    
+    if (data?.signedUrl) {
+      window.open(data.signedUrl, '_blank');
+    }
   };
 
   return (

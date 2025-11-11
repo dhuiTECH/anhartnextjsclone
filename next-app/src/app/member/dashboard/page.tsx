@@ -10,7 +10,10 @@ export default async function MemberDashboard() {
   if (!user) return <p className="p-8">Redirecting to login...</p>;
 
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-  if (profile?.role === 'admin') return <p className="p-8">Admins use /admin/dashboard</p>;
+  
+  if (profile?.role !== 'member') {
+    return <p className="p-8 text-red-600">Access denied: Member only. Your role: {profile?.role || 'none'}</p>;
+  }
 
   const { data: files } = await supabase.storage.from('member-files').list('', { limit: 100 });
   const cleanFiles = files?.filter(f => !f.name.startsWith('.')) || [];

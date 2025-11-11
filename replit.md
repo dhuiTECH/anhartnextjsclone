@@ -4,6 +4,15 @@
 This is a Next.js web application for Anhart Affordable Housing, showcasing their mission, portfolio, and partnerships in affordable housing development across British Columbia.
 
 ## Recent Changes (November 11, 2025)
+- **Admin & Member Portal System Added**
+  - Created complete admin dashboard with TipTap rich text editor for blog publishing at `/admin/dashboard`
+  - Implemented secure admin login at `/admin/login` with Supabase authentication
+  - Built member portal at `/member/dashboard` with file download capabilities
+  - Added role-based access control (RBAC) using Supabase profiles table
+  - Installed TipTap editor dependencies (@tiptap/react, @tiptap/starter-kit, extensions)
+  - Created blog update script (`update-blogs.js`) for managing blog post content
+  - All portals use server-side rendering (SSR) with server/client component split pattern
+
 - **Vercel to Replit Migration Completed**
   - Configured Next.js development server to run on port 5000 with host 0.0.0.0
   - Fixed Supabase client configuration to use environment variables (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)
@@ -31,11 +40,16 @@ This is a Next.js web application for Anhart Affordable Housing, showcasing thei
 next-app/
 ├── src/
 │   ├── app/              # Next.js App Router pages
+│   │   ├── admin/        # Admin portal (login, dashboard with blog editor)
+│   │   ├── member/       # Member portal (dashboard with file downloads)
+│   │   └── ...           # Public pages (home, about, contact, partner)
 │   ├── components/       # React components
 │   ├── assets/           # Images and media files
 │   ├── integrations/     # Third-party integrations (Supabase)
+│   ├── lib/              # Utility libraries (Supabase client re-export)
 │   └── services/         # Business logic services
 ├── public/               # Static assets
+├── update-blogs.js       # Script to update blog post content
 └── scripts/              # Utility scripts
 ```
 
@@ -64,6 +78,18 @@ The `.env` file in the `next-app/` directory contains Supabase credentials that 
 - Run `npm install` to install dependencies
 - Run `npm run dev` to start development server on port 5000
 - Development server accessible at the Replit webview
+
+### Admin & Member Portals
+- **Admin Login**: `/admin/login` - Authenticate as admin (requires role='admin' in profiles table)
+- **Admin Dashboard**: `/admin/dashboard` - Rich text blog editor with TipTap, publishes to `blog_posts` table
+- **Member Dashboard**: `/member/dashboard` - View and download files from `member-files` storage bucket
+- **Blog Updates**: Run `node update-blogs.js` to update existing blog post content
+
+### Database Requirements
+The portals require these Supabase database tables:
+- `profiles`: User profiles with `role` field ('admin' or 'member')
+- `blog_posts`: Blog content with fields for title, slug, content, meta_description, category, etc.
+- Storage bucket `member-files`: For storing member-accessible files
 
 ## Production Deployment
 - Configured for Replit Autoscale deployment
