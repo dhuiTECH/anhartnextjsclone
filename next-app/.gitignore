@@ -33,3 +33,7 @@ build/
 # Environment variables
 .env
 .env*.local
+
+# Replit config (not needed for Vercel deployment)
+../.replit
+.replit

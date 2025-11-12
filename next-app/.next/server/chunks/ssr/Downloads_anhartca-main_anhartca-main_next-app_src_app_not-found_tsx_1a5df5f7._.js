@@ -1,3 +1,0 @@
-module.exports=[40703,a=>{"use strict";var b=a.i(10034);function c(){return(0,b.jsx)("div",{className:"min-h-screen flex items-center justify-center",children:(0,b.jsxs)("div",{className:"text-center",children:[(0,b.jsx)("h1",{className:"text-4xl font-bold mb-4",children:"404 - Page Not Found"}),(0,b.jsx)("p",{className:"text-gray-600 mb-8",children:"The page you are looking for does not exist."}),(0,b.jsx)("a",{href:"/",className:"bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600",children:"Go Home"})]})})}a.s(["default",()=>c,"metadata",0,{title:"404 - Page Not Found",description:"The page you are looking for does not exist."}])}];
-
-//# sourceMappingURL=Downloads_anhartca-main_anhartca-main_next-app_src_app_not-found_tsx_1a5df5f7._.js.map

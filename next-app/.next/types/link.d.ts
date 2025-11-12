@@ -35,12 +35,15 @@ declare namespace __next_route_internal_types__ {
     | `/`
     | `/about`
     | `/about-us`
+    | `/admin/dashboard`
+    | `/admin/login`
     | `/blog`
     | `/contact`
     | `/contact-us`
     | `/limited-partnership`
     | `/media`
     | `/member-login`
+    | `/member/dashboard`
     | `/partner`
     | `/partners`
     | `/portfolio`
