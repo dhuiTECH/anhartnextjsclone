@@ -158,6 +158,35 @@ const BlogPost = () => {
         <section className="py-16 bg-background">
           <div className="mx-auto max-w-4xl px-6 lg:px-8">
             <ScrollAnimationWrapper direction="bottom">
+              <style jsx global>{`
+                .prose pre {
+                  background: #282c34 !important;
+                  color: #abb2bf !important;
+                  font-family: 'JetBrainsMono', 'Fira Code', 'Courier New', monospace !important;
+                  padding: 1.5em !important;
+                  border-radius: 0.5em !important;
+                  overflow-x: auto !important;
+                  margin: 1.5em 0 !important;
+                }
+                .prose pre code {
+                  background: none !important;
+                  color: inherit !important;
+                  font-size: 0.9em !important;
+                  padding: 0 !important;
+                  border-radius: 0 !important;
+                }
+                .prose code {
+                  background: #f3f4f6 !important;
+                  color: #d63384 !important;
+                  padding: 0.2em 0.4em !important;
+                  border-radius: 0.25em !important;
+                  font-family: 'JetBrainsMono', 'Fira Code', 'Courier New', monospace !important;
+                  font-size: 0.9em !important;
+                }
+                .prose pre code.hljs {
+                  padding: 0 !important;
+                }
+              `}</style>
               <article className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary hover:prose-a:text-primary-dark prose-strong:text-foreground">
                 <div dangerouslySetInnerHTML={{ __html: post.content }} />
               </article>
