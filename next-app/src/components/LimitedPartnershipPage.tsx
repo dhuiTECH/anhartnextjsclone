@@ -20,7 +20,7 @@ const LimitedPartnershipPage = () => {
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: `url(${limitedPartnershipHeroImage})`,
+              backgroundImage: `url(${typeof limitedPartnershipHeroImage === 'string' ? limitedPartnershipHeroImage : limitedPartnershipHeroImage.src})`,
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-red-400/80" />
