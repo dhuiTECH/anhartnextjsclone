@@ -145,6 +145,9 @@ const BlogPost = () => {
                 </div>
 
                 <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{post.title}</h1>
+                {post.subtitle && (
+                  <p className="text-2xl text-white/80 font-light mb-4 max-w-3xl italic">{post.subtitle}</p>
+                )}
                 <p className="text-xl text-white/90 max-w-3xl">{post.excerpt}</p>
               </ScrollAnimationWrapper>
             </div>

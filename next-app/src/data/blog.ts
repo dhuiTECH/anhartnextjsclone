@@ -21,6 +21,7 @@ export interface BlogPost {
   id: string;
   slug: string;
   title: string;
+  subtitle?: string;
   excerpt: string;
   content: string;
   featuredImage: string;
@@ -41,6 +42,7 @@ interface DbBlogPost {
   id: string;
   slug: string;
   title: string;
+  subtitle?: string;
   excerpt: string;
   content: string;
   featured_image: string;
@@ -63,6 +65,7 @@ function transformDbPost(dbPost: DbBlogPost): BlogPost {
     id: dbPost.id,
     slug: dbPost.slug,
     title: dbPost.title,
+    subtitle: dbPost.subtitle,
     excerpt: dbPost.excerpt,
     content: dbPost.content,
     featuredImage: dbPost.featured_image,

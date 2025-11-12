@@ -6,11 +6,24 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import { createLowlight } from 'lowlight';
+import html from 'highlight.js/lib/languages/xml';
+import css from 'highlight.js/lib/languages/css';
+import javascript from 'highlight.js/lib/languages/javascript';
+import typescript from 'highlight.js/lib/languages/typescript';
+
+const lowlight = createLowlight();
+lowlight.register('html', html);
+lowlight.register('css', css);
+lowlight.register('javascript', javascript);
+lowlight.register('typescript', typescript);
 
 interface BlogPost {
   id: string;
   title: string;
   slug: string;
+  subtitle?: string;
   meta_title: string;
   meta_description: string;
   featured_image: string;
@@ -23,6 +36,7 @@ interface BlogPost {
 
 export default function AdminClient({ user }: { user: any }) {
   const [title, setTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('');
   const [meta, setMeta] = useState('');
   const [image, setImage] = useState('');
   const [category, setCategory] = useState('Insights');
@@ -35,7 +49,15 @@ export default function AdminClient({ user }: { user: any }) {
   const router = useRouter();
 
   const editor = useEditor({ 
-    extensions: [StarterKit, Link, Image], 
+    extensions: [
+      StarterKit,
+      Link,
+      Image,
+      CodeBlockLowlight.configure({
+        lowlight,
+        defaultLanguage: 'html',
+      }),
+    ], 
     content: '',
     immediatelyRender: false
   });
@@ -47,7 +69,7 @@ export default function AdminClient({ user }: { user: any }) {
   const loadPosts = async () => {
     const { data } = await supabase
       .from('blog_posts')
-      .select('id, title, slug, meta_title, meta_description, featured_image, content, excerpt, category, publish_date, updated_at')
+      .select('id, title, slug, subtitle, meta_title, meta_description, featured_image, content, excerpt, category, publish_date, updated_at')
       .order('updated_at', { ascending: false });
     if (data) setPosts(data);
   };
@@ -59,6 +81,7 @@ export default function AdminClient({ user }: { user: any }) {
     setSelectedPostId(postId);
     setMode('edit');
     setTitle(post.title);
+    setSubtitle(post.subtitle || '');
     setMeta(post.meta_description || '');
     setImage(post.featured_image || '');
     setCategory(post.category || 'Insights');
@@ -83,6 +106,7 @@ export default function AdminClient({ user }: { user: any }) {
     setMode('new');
     setSelectedPostId('');
     setTitle('');
+    setSubtitle('');
     setMeta('');
     setImage('');
     setCategory('Insights');
@@ -105,6 +129,7 @@ export default function AdminClient({ user }: { user: any }) {
       const { error } = await supabase.from('blog_posts')
         .update({
           title,
+          subtitle,
           meta_title: title,
           meta_description: meta,
           featured_image: image,
@@ -126,6 +151,7 @@ export default function AdminClient({ user }: { user: any }) {
       const newSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
       const { error } = await supabase.from('blog_posts').insert({
         title,
+        subtitle,
         slug: newSlug,
         meta_title: title,
         meta_description: meta,
@@ -185,6 +211,7 @@ export default function AdminClient({ user }: { user: any }) {
 
         <form onSubmit={(e) => { e.preventDefault(); publish(); }} className="bg-white p-8 rounded-xl shadow space-y-6">
           <input placeholder="Article Title" value={title} onChange={e=>setTitle(e.target.value)} className="w-full text-2xl p-3 border rounded" required />
+          <input placeholder="Subtitle / Subhead (optional)" value={subtitle} onChange={e=>setSubtitle(e.target.value)} className="w-full text-lg p-3 border rounded text-gray-600" />
           <input placeholder="Meta Description (160 chars)" value={meta} onChange={e=>setMeta(e.target.value)} maxLength={160} className="w-full p-3 border rounded" />
           <input placeholder="Featured Image URL" value={image} onChange={e=>setImage(e.target.value)} className="w-full p-3 border rounded" />
           
@@ -273,6 +300,14 @@ export default function AdminClient({ user }: { user: any }) {
                 >
                   P
                 </button>
+                <div className="w-px bg-gray-300 mx-1"></div>
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+                  className={`px-3 py-1 rounded text-sm font-mono ${editor.isActive('codeBlock') ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}`}
+                >
+                  &lt;/&gt; Code
+                </button>
               </div>
             )}
             <div className="p-4 min-h-96 bg-white prose max-w-none">
@@ -327,6 +362,29 @@ export default function AdminClient({ user }: { user: any }) {
                 .ProseMirror a {
                   color: #4f46e5;
                   text-decoration: underline;
+                }
+                .ProseMirror pre {
+                  background: #282c34;
+                  color: #abb2bf;
+                  font-family: 'JetBrainsMono', 'Fira Code', 'Courier New', monospace;
+                  padding: 1em;
+                  border-radius: 0.5em;
+                  overflow-x: auto;
+                  margin: 1em 0;
+                }
+                .ProseMirror pre code {
+                  background: none;
+                  color: inherit;
+                  font-size: 0.9em;
+                  padding: 0;
+                }
+                .ProseMirror code {
+                  background: #f3f4f6;
+                  color: #d63384;
+                  padding: 0.2em 0.4em;
+                  border-radius: 0.25em;
+                  font-family: 'JetBrainsMono', 'Fira Code', 'Courier New', monospace;
+                  font-size: 0.9em;
                 }
               `}</style>
               <EditorContent editor={editor} />
