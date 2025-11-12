@@ -4,14 +4,16 @@
 This is a Next.js web application for Anhart Affordable Housing, showcasing their mission, portfolio, and partnerships in affordable housing development across British Columbia.
 
 ## Recent Changes (November 12, 2025)
-- **Vercel Deployment Preparation**
+- **Vercel Deployment Preparation** ✅ COMPLETE
   - Converted all 116 AVIF images to WebP format for Vercel compatibility
-  - Updated registry.ts to use .webp imports instead of .avif
+  - Updated registry.ts to use .webp imports instead of .avif (120 imports updated)
   - Removed AVIF files (Vercel doesn't support AVIF in build process)
-  - Created vercel.json with Next.js framework configuration
-  - Added .replit to .gitignore to prevent deployment conflicts
+  - Installed all required dependencies: @tiptap/extension-code-block-lowlight, lowlight, highlight.js, @supabase/ssr
+  - Updated eslint to latest version and removed deprecated eslint config from next.config.js
   - Verified local build succeeds with WebP images (builds in 15.4s)
-  - All images now use WebP format for better Vercel compatibility
+  - Development server running without warnings
+  - All images render correctly with WebP format
+  - **Ready for Vercel deployment** - commit and push to deploy
 
 ## Earlier Changes (November 12, 2025)
 - **Admin Dashboard Blog Editor Enhancements**
