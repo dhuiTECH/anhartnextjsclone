@@ -4,6 +4,16 @@
 This is a Next.js web application for Anhart Affordable Housing, showcasing their mission, portfolio, and partnerships in affordable housing development across British Columbia.
 
 ## Recent Changes (November 12, 2025)
+- **Admin Dashboard Blog Editor Enhancements**
+  - Added subtitle/subhead input field to blog post form (optional field for desk/subhead)
+  - Installed TipTap CodeBlockLowlight extension with syntax highlighting for HTML, CSS, JavaScript, and TypeScript
+  - Added `</> Code` button to formatting toolbar for inserting HTML code blocks
+  - Added `subtitle` column to `blog_posts` database table
+  - Updated blog post display to show subtitle below title (italic, light font weight)
+  - Added dark-theme code block styling in both editor (#282c34 background) and blog display
+  - Code blocks support syntax highlighting for multiple languages
+  - Inline code styled with light gray background and pink text color
+
 - **Toast Notification System**
   - Fixed toast auto-dismiss delay from 1,000,000ms (16+ minutes) to 5,000ms (5 seconds)
   - Added Toaster component to app providers for app-wide toast notification support
