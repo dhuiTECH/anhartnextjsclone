@@ -18,6 +18,8 @@ This is a Next.js web application for Anhart Affordable Housing, showcasing thei
   - Added subtitle/subhead input field to blog post form (optional field for desk/subhead)
   - Installed TipTap CodeBlockLowlight extension with syntax highlighting for HTML, CSS, JavaScript, and TypeScript
   - Added `</> Code` button to formatting toolbar for inserting HTML code blocks
+  - Created centralized `src/lowlight-config.ts` for language registration (HTML, CSS, JS, TS)
+  - Installed lowlight and highlight.js packages for syntax highlighting support
   - Added `subtitle` column to `blog_posts` database table
   - Updated blog post display to show subtitle below title (italic, light font weight)
   - Added dark-theme code block styling in both editor (#282c34 background) and blog display

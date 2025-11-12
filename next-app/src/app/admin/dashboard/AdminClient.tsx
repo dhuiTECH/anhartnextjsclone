@@ -7,17 +7,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import { createLowlight } from 'lowlight';
-import html from 'highlight.js/lib/languages/xml';
-import css from 'highlight.js/lib/languages/css';
-import javascript from 'highlight.js/lib/languages/javascript';
-import typescript from 'highlight.js/lib/languages/typescript';
-
-const lowlight = createLowlight();
-lowlight.register('html', html);
-lowlight.register('css', css);
-lowlight.register('javascript', javascript);
-lowlight.register('typescript', typescript);
+import lowlight from '../../lowlight-config';
 
 interface BlogPost {
   id: string;
