@@ -3,6 +3,20 @@
 ## Overview
 This is a Next.js web application for Anhart Affordable Housing, showcasing their mission, portfolio, and partnerships in affordable housing development across British Columbia.
 
+## Recent Changes (November 12, 2025)
+- **Toast Notification System**
+  - Fixed toast auto-dismiss delay from 1,000,000ms (16+ minutes) to 5,000ms (5 seconds)
+  - Added Toaster component to app providers for app-wide toast notification support
+  - Added explicit 5-second duration prop to ToastProvider in toaster.tsx
+  - Toast notifications now properly display and auto-dismiss for all form submissions
+  - All forms (Contact Us, Partner With Us, Impact Investing, Newsletter) show success/error toasts
+  - Toasts styled with theme colors (bg-background, bg-destructive) matching site design
+
+- **Limited Partnership Page Fix**
+  - Fixed hero banner image rendering on `/limited-partnership` page
+  - Extracted `.src` property from Next.js static import to resolve `[object Object]` error
+  - Hero banner now displays handshake image with coral/pink gradient overlay correctly
+
 ## Recent Changes (November 11, 2025)
 - **Admin Dashboard Enhancements**
   - Added comprehensive TipTap formatting toolbar with H1, H2, H3 heading controls
