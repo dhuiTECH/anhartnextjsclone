@@ -60,13 +60,16 @@ export async function getPostBySlugServer(slug: string): Promise<(BlogPost & { u
       .single();
 
     if (error || !data) {
-      console.log('No post found in database for slug:', slug);
+      console.log('⚠️  No post found in database for slug:', slug);
+      console.log('⚠️  This is likely due to Supabase RLS policy blocking anonymous reads.');
+      console.log('⚠️  Blog post will fallback to client-side rendering, but SEO metadata will be limited.');
       return null;
     }
 
     return transformDbPost(data as DbBlogPost);
   } catch (error) {
-    console.error('Error fetching blog post:', error);
+    console.error('⚠️  Error fetching blog post from Supabase:', error);
+    console.log('⚠️  Blog post will fallback to client-side rendering, but SEO metadata will be limited.');
     return null;
   }
 }
