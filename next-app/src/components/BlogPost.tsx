@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -10,7 +10,11 @@ import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationW
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, Clock, ArrowLeft, ArrowRight } from "lucide-react";
-import { getPostBySlug, getRelatedPosts, BlogPost as BlogPostType } from "@/data/blog";
+import {
+  getPostBySlug,
+  getRelatedPosts,
+  BlogPost as BlogPostType,
+} from "@/data/blog";
 
 /**
  * Individual Blog Post Page
@@ -18,46 +22,35 @@ import { getPostBySlug, getRelatedPosts, BlogPost as BlogPostType } from "@/data
  * Displays full blog post content with SEO optimization,
  * featured image, and related posts.
  */
-const BlogPost = ({ slug: slugProp }: { slug?: string } = {}) => {
+const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
   const params = useParams<{ slug: string }>();
-  const slug = slugProp || params?.slug;
-  const [post, setPost] = useState<BlogPostType | undefined>();
+  const [post, setPost] = useState<BlogPostType | undefined>(initialPost);
   const [relatedPosts, setRelatedPosts] = useState<BlogPostType[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialPost);
 
   useEffect(() => {
-    const fetchPost = async () => {
-      if (!slug) {
-        console.log("No slug provided");
-        setLoading(false);
-        return;
-      }
-
-      console.log("BlogPost component: Starting fetch for slug:", slug);
-      setLoading(true);
-      
-      try {
-        const fetchedPost = await getPostBySlug(slug);
-        console.log("BlogPost component: Post fetched:", fetchedPost?.title || "null");
-        console.log("BlogPost component: Content length:", fetchedPost?.content?.length || 0);
-        console.log("BlogPost component: Full post object:", fetchedPost);
-        setPost(fetchedPost);
-
-        if (fetchedPost) {
-          const related = await getRelatedPosts(fetchedPost);
-          console.log("BlogPost component: Related posts count:", related.length);
+    // This effect now only fetches related posts
+    const fetchRelated = async () => {
+      if (post) {
+        try {
+          const related = await getRelatedPosts(post);
+          console.log(
+            "BlogPost component: Related posts count:",
+            related.length,
+          );
           setRelatedPosts(related);
+        } catch (error) {
+          console.error(
+            "BlogPost component: Error fetching related posts:",
+            error,
+          );
         }
-      } catch (error) {
-        console.error("BlogPost component: Error fetching post:", error);
-      } finally {
-        setLoading(false);
-        window.scrollTo(0, 0);
       }
     };
 
-    fetchPost();
-  }, [slug]);
+    fetchRelated();
+    window.scrollTo(0, 0);
+  }, [post]); // It now runs when the 'post' prop is available
 
   if (loading) {
     return (
@@ -100,33 +93,35 @@ const BlogPost = ({ slug: slugProp }: { slug?: string } = {}) => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": post.title,
-    "description": post.excerpt,
-    "image": post.featuredImage?.startsWith('http') ? post.featuredImage : `https://anhart.ca${post.featuredImage || '/blog/default.jpg'}`,
-    "author": {
+    headline: post.title,
+    description: post.excerpt,
+    image: post.featuredImage?.startsWith("http")
+      ? post.featuredImage
+      : `https://anhart.ca${post.featuredImage || "/blog/default.jpg"}`,
+    author: {
       "@type": "Organization",
-      "name": post.author || "Anhart Affordable Housing",
-      "url": "https://anhart.ca"
+      name: post.author || "Anhart Affordable Housing",
+      url: "https://anhart.ca",
     },
-    "publisher": {
+    publisher: {
       "@type": "Organization",
-      "name": "Anhart Affordable Housing",
-      "logo": {
+      name: "Anhart Affordable Housing",
+      logo: {
         "@type": "ImageObject",
-        "url": "https://anhart.ca/images/anhart-logo.png"
-      }
+        url: "https://anhart.ca/images/anhart-logo.png",
+      },
     },
-    "datePublished": post.publishDate,
-    "dateModified": post.publishDate,
-    "mainEntityOfPage": {
+    datePublished: post.publishDate,
+    dateModified: post.publishDate,
+    mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://anhart.ca/blog/${post.slug}`
+      "@id": `https://anhart.ca/blog/${post.slug}`,
     },
-    "articleSection": post.category,
-    "keywords": post.seo?.keywords?.join(", ") || "",
-    "wordCount": Math.ceil((post.content?.length || 0) / 5),
-    "timeRequired": post.readingTime ? `PT${post.readingTime}M` : "PT5M",
-    "inLanguage": "en-CA"
+    articleSection: post.category,
+    keywords: post.seo?.keywords?.join(", ") || "",
+    wordCount: Math.ceil((post.content?.length || 0) / 5),
+    timeRequired: post.readingTime ? `PT${post.readingTime}M` : "PT5M",
+    inLanguage: "en-CA",
   };
 
   return (
@@ -147,16 +142,19 @@ const BlogPost = ({ slug: slugProp }: { slug?: string } = {}) => {
         {/* Hero Section with Featured Image */}
         <section className="relative h-[60vh] min-h-[400px] overflow-hidden">
           <div className="absolute inset-0 bg-muted">
-            <img 
-              src={post.featuredImage} 
-              alt={post.title} 
+            <img
+              src={post.featuredImage}
+              alt={post.title}
               className="w-full h-full object-cover"
               loading="eager"
               onError={(e) => {
-                console.error('Failed to load blog header image:', post.featuredImage);
+                console.error(
+                  "Failed to load blog header image:",
+                  post.featuredImage,
+                );
                 // Set a fallback background color if image fails
                 const target = e.target as HTMLImageElement;
-                target.style.display = 'none';
+                target.style.display = "none";
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
@@ -174,18 +172,26 @@ const BlogPost = ({ slug: slugProp }: { slug?: string } = {}) => {
 
                 {/* New flex container for badge and date */}
                 <div className="flex items-center gap-4 mb-6">
-                  <Badge className="bg-primary text-primary-foreground">{post.category}</Badge>
+                  <Badge className="bg-primary text-primary-foreground">
+                    {post.category}
+                  </Badge>
                   <div className="flex items-center text-white/90">
                     <Calendar className="mr-2 h-4 w-4" />
                     <span>{formatDate(post.publishDate)}</span>
                   </div>
                 </div>
 
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{post.title}</h1>
+                <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                  {post.title}
+                </h1>
                 {post.subtitle && (
-                  <p className="text-2xl text-white/80 font-light mb-4 max-w-3xl italic">{post.subtitle}</p>
+                  <p className="text-2xl text-white/80 font-light mb-4 max-w-3xl italic">
+                    {post.subtitle}
+                  </p>
                 )}
-                <p className="text-xl text-white/90 max-w-3xl">{post.excerpt}</p>
+                <p className="text-xl text-white/90 max-w-3xl">
+                  {post.excerpt}
+                </p>
               </ScrollAnimationWrapper>
             </div>
           </div>
@@ -199,7 +205,8 @@ const BlogPost = ({ slug: slugProp }: { slug?: string } = {}) => {
                 .prose pre {
                   background: #282c34 !important;
                   color: #abb2bf !important;
-                  font-family: 'JetBrainsMono', 'Fira Code', 'Courier New', monospace !important;
+                  font-family:
+                    "JetBrainsMono", "Fira Code", "Courier New", monospace !important;
                   padding: 1.5em !important;
                   border-radius: 0.5em !important;
                   overflow-x: auto !important;
@@ -217,7 +224,8 @@ const BlogPost = ({ slug: slugProp }: { slug?: string } = {}) => {
                   color: #d63384 !important;
                   padding: 0.2em 0.4em !important;
                   border-radius: 0.25em !important;
-                  font-family: 'JetBrainsMono', 'Fira Code', 'Courier New', monospace !important;
+                  font-family:
+                    "JetBrainsMono", "Fira Code", "Courier New", monospace !important;
                   font-size: 0.9em !important;
                 }
                 .prose pre code.hljs {
@@ -238,11 +246,17 @@ const BlogPost = ({ slug: slugProp }: { slug?: string } = {}) => {
           <section className="py-16 bg-muted/30">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <ScrollAnimationWrapper direction="bottom">
-                <h2 className="text-3xl font-bold text-foreground mb-8">Related Articles</h2>
+                <h2 className="text-3xl font-bold text-foreground mb-8">
+                  Related Articles
+                </h2>
               </ScrollAnimationWrapper>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {relatedPosts.map((relatedPost, index) => (
-                  <ScrollAnimationWrapper key={relatedPost.id} direction="bottom" delay={index * 0.1}>
+                  <ScrollAnimationWrapper
+                    key={relatedPost.id}
+                    direction="bottom"
+                    delay={index * 0.1}
+                  >
                     <Link href={`/blog/${relatedPost.slug}`}>
                       <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-border bg-card">
                         <div className="relative h-48 overflow-hidden">
@@ -254,11 +268,15 @@ const BlogPost = ({ slug: slugProp }: { slug?: string } = {}) => {
                           />
                         </div>
                         <CardContent className="p-6">
-                          <Badge className="mb-3 bg-primary text-primary-foreground">{relatedPost.category}</Badge>
+                          <Badge className="mb-3 bg-primary text-primary-foreground">
+                            {relatedPost.category}
+                          </Badge>
                           <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-2 hover:text-primary transition-colors">
                             {relatedPost.title}
                           </h3>
-                          <p className="text-muted-foreground line-clamp-2 mb-4">{relatedPost.excerpt}</p>
+                          <p className="text-muted-foreground line-clamp-2 mb-4">
+                            {relatedPost.excerpt}
+                          </p>
                           <div className="flex items-center text-primary font-semibold hover:gap-3 transition-all">
                             Read More
                             <ArrowRight className="ml-2 h-4 w-4" />
@@ -277,9 +295,12 @@ const BlogPost = ({ slug: slugProp }: { slug?: string } = {}) => {
         <section className="py-16 bg-background">
           <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
             <ScrollAnimationWrapper direction="bottom">
-              <h2 className="text-3xl font-bold text-foreground mb-4">Learn More About Our Work</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-4">
+                Learn More About Our Work
+              </h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Discover how Anhart is creating quality affordable housing across British Columbia
+                Discover how Anhart is creating quality affordable housing
+                across British Columbia
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link

@@ -1,6 +1,15 @@
 {
   "app": {
+    "[project]/next-app/src/app/admin/dashboard/page": [
+      "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
+    ],
+    "[project]/next-app/src/app/admin/login/page": [
+      "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
+    ],
     "[project]/next-app/src/app/blog/[slug]/page": [
+      "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
+    ],
+    "[project]/next-app/src/app/blog/page": [
       "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
     ],
     "[project]/next-app/src/app/page": [

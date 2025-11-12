@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import BlogPost from '@/components/BlogPost';
 import { getPostBySlugServer } from '@/lib/blog-server';
+import { notFound } from 'next/navigation';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -69,5 +70,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  return <BlogPost slug={slug} />;
+  const post = await getPostBySlugServer(slug);
+
+  // If no post is found on the server, show the 404 page
+  if (!post) {
+    notFound();
+  }
+
+  // Pass the full post object as a prop instead of just the slug
+  return <BlogPost initialPost={post} />;
 }
