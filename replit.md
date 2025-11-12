@@ -4,6 +4,17 @@
 This is a Next.js web application for Anhart Affordable Housing, showcasing their mission, portfolio, and partnerships in affordable housing development across British Columbia.
 
 ## Recent Changes (November 12, 2025)
+- **Blog Posts Published to Supabase Database** 📝
+  - All 5 blog posts migrated from static data to Supabase database
+  - Blog posts: modular-housing, affordable-housing-vancouver, housing-subsidies, how-to-apply, community-impact
+  - Each post includes full SEO metadata (title, description, keywords, structured data)
+  - Fixed Next.js 15 breaking change: dynamic route params now properly awaited
+  - Created comprehensive SUPABASE-RLS-FIX.md guide for fixing Row Level Security
+  - **⚠️ ACTION REQUIRED**: Supabase RLS policy must be updated to allow anonymous reads
+  - **Current Issue**: RLS policy uses `{public}` role instead of `anon`, blocking server-side fetches
+  - **Impact**: Blog posts fallback to client-side rendering (works), but server-side SEO metadata is limited
+  - **Fix**: Update RLS policy in Supabase dashboard to use `anon, authenticated` roles (see SUPABASE-RLS-FIX.md)
+
 - **SEO Improvements for Google Crawling** 🔍
   - Added dynamic `generateMetadata` function in blog/[slug]/page.tsx for proper SSR SEO
   - Each blog post now has unique title, description, keywords, and Open Graph tags visible to Google
@@ -12,7 +23,7 @@ This is a Next.js web application for Anhart Affordable Housing, showcasing thei
   - Guidance encourages proper H2/H3 heading usage, keyword optimization, and meta descriptions
   - Created server-side `getPostBySlugServer` function in lib/blog-server.ts for metadata generation
   - Verified all existing blog posts have proper semantic HTML (H1, H2, H3 tags)
-  - Blog posts now fully crawlable by Google bots with complete metadata
+  - Blog posts now fully crawlable by Google bots with complete metadata (once RLS is fixed)
   - **Critical Bug Fixes**:
     - Fixed null-safety crash in generateMetadata when posts lack keywords (added optional chaining)
     - Fixed invalid JSON-LD timeRequired value (now defaults to "PT5M" for missing reading_time)
@@ -192,7 +203,12 @@ The portals require these Supabase database tables:
 - Build: `npm install && npm run build`
 - Start: `npm run start` (runs on port 5000)
 
-## Known Issues
+## Known Issues & Required Actions
+- **CRITICAL**: Supabase RLS policy blocks server-side blog fetches
+  - Policy uses `{public}` role instead of `anon` role
+  - Fix: Update policy in Supabase dashboard to use `anon, authenticated` roles
+  - See detailed instructions in `next-app/SUPABASE-RLS-FIX.md`
+  - Impact: Server-side SEO metadata generation fails until RLS is fixed
+  - Workaround: Blog posts fallback to client-side rendering (works, but limited SEO)
 - AVIF images show warnings in Turbopack (Next.js dev mode) - images still work but are not optimized
 - These warnings are cosmetic and do not affect functionality
-- Supabase client queries currently returning no data despite RLS policies being in place - static blog data fallback active
