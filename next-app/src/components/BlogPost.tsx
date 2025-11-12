@@ -18,8 +18,9 @@ import { getPostBySlug, getRelatedPosts, BlogPost as BlogPostType } from "@/data
  * Displays full blog post content with SEO optimization,
  * featured image, and related posts.
  */
-const BlogPost = () => {
-  const { slug } = useParams<{ slug: string }>();
+const BlogPost = ({ slug: slugProp }: { slug?: string } = {}) => {
+  const params = useParams<{ slug: string }>();
+  const slug = slugProp || params?.slug;
   const [post, setPost] = useState<BlogPostType | undefined>();
   const [relatedPosts, setRelatedPosts] = useState<BlogPostType[]>([]);
   const [loading, setLoading] = useState(true);

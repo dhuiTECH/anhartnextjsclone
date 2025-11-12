@@ -2,8 +2,9 @@ import { Metadata } from 'next';
 import BlogPost from '@/components/BlogPost';
 import { getPostBySlugServer } from '@/lib/blog-server';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = await getPostBySlugServer(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPostBySlugServer(slug);
   
   if (!post) {
     return {
@@ -66,6 +67,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default function BlogPostPage() {
-  return <BlogPost />;
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  return <BlogPost slug={slug} />;
 }
