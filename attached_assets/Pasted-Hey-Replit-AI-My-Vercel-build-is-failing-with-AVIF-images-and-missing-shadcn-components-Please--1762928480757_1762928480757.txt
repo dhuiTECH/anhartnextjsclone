@@ -1,0 +1,73 @@
+Hey Replit AI! My Vercel build is failing with AVIF images and missing shadcn components.
+
+Please fix EVERYTHING automatically so it works on Vercel:
+
+1. Find ALL .avif files in the entire project (especially in next-app/src/assets/)
+   - Convert each one to .webp with the SAME name (just change .avif → .webp)
+   - Keep them in the same folder
+   - Examples:
+     - TheOppenhiemer-384x216.avif → TheOppenhiemer-384x216.webp
+     - TheOppenhiemer-512x288.avif → TheOppenhiemer-512x288.webp
+     - sustainable-homes-initiative-512x288.avif → .webp
+     - affordable-living-complex-384x216.avif → .webp
+
+2. In next-app/src/assets/registry.ts:
+   - Update ALL import paths to use .webp instead of .avif
+
+3. Run these commands to add missing shadcn/ui components:
+   npx shadcn-ui@latest add button card table input label chart
+
+4. Replace next-app/src/app/admin/dashboard/AdminClient.tsx with this FULL working dashboard:
+
+```tsx
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+const data = [
+  { name: 'Jan', users: 400 },
+  { name: 'Feb', users: 300 },
+  { name: 'Mar', users: 600 },
+  { name: 'Apr', users: 800 },
+];
+
+const users = [
+  { id: 1, name: 'John', role: 'Admin' },
+  { id: 2, name: 'Jane', role: 'Editor' },
+];
+
+export default function AdminClient() {
+  return (
+    <div className="p-8 space-y-6">
+      <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+
+      <div className="grid grid-cols-4 gap-4">
+        <Card><CardHeader><CardTitle>Total Users</CardTitle></CardHeader><CardContent><p className="text-2xl">1,234</p></CardContent></Card>
+        <Card><CardHeader><CardTitle>Projects</CardTitle></CardHeader><CardContent><p className="text-2xl">89</p></CardContent></Card>
+        <Card><CardHeader><CardTitle>Revenue</CardTitle></CardHeader><CardContent><p className="text-2xl">$45k</p></CardContent></Card>
+        <Card><CardHeader><CardTitle>Growth</CardTitle></CardHeader><CardContent><p className="text-2xl text-green-600">+12%</p></CardContent></Card>
+      </div>
+
+      <Card>
+        <CardHeader><CardTitle>User Growth</CardTitle></CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="users" fill="#3b82f6" />
+            </BarChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader><CardTitle>Recent Users</CardTitle></CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader><
