@@ -50,7 +50,9 @@ export default function AdminClient({ user }: { user: any }) {
 
   const editor = useEditor({ 
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        codeBlock: false,
+      }),
       Link,
       Image,
       CodeBlockLowlight.configure({

@@ -13,6 +13,7 @@ This is a Next.js web application for Anhart Affordable Housing, showcasing thei
   - Added dark-theme code block styling in both editor (#282c34 background) and blog display
   - Code blocks support syntax highlighting for multiple languages
   - Inline code styled with light gray background and pink text color
+  - Fixed TipTap plugin duplication error by excluding default CodeBlock from StarterKit (prevents conflict with CodeBlockLowlight)
 
 - **Toast Notification System**
   - Fixed toast auto-dismiss delay from 1,000,000ms (16+ minutes) to 5,000ms (5 seconds)

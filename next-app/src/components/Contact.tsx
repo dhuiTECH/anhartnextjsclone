@@ -130,12 +130,27 @@ export const Contact = () => {
         <section id="contact" className="py-24 bg-muted/30 sm:py-[50px]">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <ScrollAnimationWrapper direction="top" delay={0}>
-              <div className="mx-auto max-w-2xl lg:text-center">
-                <p className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Connect With Us Today</p>
-                <p className="mt-6 leading-8 text-muted-foreground text-xl">
-                  Chat with us about anything, from housing dreams to community ideas. Reach out for an open conversation
-                  with Anhart's team or call us at <a href="tel:604-529-6259" className="font-bold text-foreground hover:text-primary transition-colors">604-529-6259</a>
-                </p>
+              <div className="text-center space-y-4">
+                {/* Heading */}
+                <h2 className="text-3xl font-bold text-foreground md:text-4xl">
+                  Connect With Us Today
+                </h2>
+
+                {/* Pyramid Text */}
+                <div className="space-y-2">
+                  <p className="text-lg text-muted-foreground">
+                    Chat with us about anything, from housing dreams to community ideas.
+                  </p>
+                  <p className="text-lg text-muted-foreground max-w-md mx-auto">
+                    Reach out to Anhart’s team or{' '}
+                    <a
+                      href="tel:604-529-6259"
+                      className="font-bold text-foreground hover:text-primary transition-colors"
+                    >
+                      call 604-529-6259
+                    </a>
+                  </p>
+                </div>
               </div>
             </ScrollAnimationWrapper>
 

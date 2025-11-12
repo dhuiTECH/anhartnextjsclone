@@ -106,8 +106,8 @@ const Portfolio = () => {
               <div className="text-center mb-16">
                 <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">Featured Development Projects</h2>
                 <p className="text-lg leading-8 text-muted-foreground">
-                  From our humble beginnings in 2000—revitalizing the Jubilee Rooms and Dodson Hotel, two aging
-                  single-room-occupancy buildings in Vancouver's Downtown Eastside—we've been driven by a vision to
+                  Anhart is a Canadian real estate development company founded in 2000, beginning with the revitalizing the Jubilee Rooms and Dodson Hotel, two aging
+                  single-room-occupancy buildings (SRO) in Vancouver's Downtown Eastside—we've been driven by a vision to
                   transform lives through affordable housing. Today, we're on a bold journey to develop 20,000
                   sustainable housing units by 2045, creating vibrant, inclusive communities across Canada with every
                   project we undertake.
