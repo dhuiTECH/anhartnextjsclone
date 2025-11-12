@@ -13,6 +13,12 @@ This is a Next.js web application for Anhart Affordable Housing, showcasing thei
   - Created server-side `getPostBySlugServer` function in lib/blog-server.ts for metadata generation
   - Verified all existing blog posts have proper semantic HTML (H1, H2, H3 tags)
   - Blog posts now fully crawlable by Google bots with complete metadata
+  - **Critical Bug Fixes**:
+    - Fixed null-safety crash in generateMetadata when posts lack keywords (added optional chaining)
+    - Fixed invalid JSON-LD timeRequired value (now defaults to "PT5M" for missing reading_time)
+    - Admin dashboard now auto-calculates reading_time (200 words per minute)
+    - Admin dashboard now auto-extracts keywords from title and meta description (max 10 keywords)
+    - New blog posts no longer crash during metadata generation or structured data rendering
   
 - **Vercel Deployment Preparation**
   - Converted all 116 AVIF images to WebP format for Vercel compatibility
