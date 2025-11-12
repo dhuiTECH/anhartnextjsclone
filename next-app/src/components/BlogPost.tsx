@@ -96,6 +96,38 @@ const BlogPost = () => {
     });
   };
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post.title,
+    "description": post.excerpt,
+    "image": post.featuredImage?.startsWith('http') ? post.featuredImage : `https://anhart.ca${post.featuredImage || '/blog/default.jpg'}`,
+    "author": {
+      "@type": "Organization",
+      "name": post.author || "Anhart Affordable Housing",
+      "url": "https://anhart.ca"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Anhart Affordable Housing",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://anhart.ca/images/anhart-logo.png"
+      }
+    },
+    "datePublished": post.publishDate,
+    "dateModified": post.publishDate,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://anhart.ca/blog/${post.slug}`
+    },
+    "articleSection": post.category,
+    "keywords": post.seo?.keywords?.join(", ") || "",
+    "wordCount": Math.ceil((post.content?.length || 0) / 5),
+    "timeRequired": post.readingTime ? `PT${post.readingTime}M` : "PT5M",
+    "inLanguage": "en-CA"
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <SEO
@@ -104,6 +136,10 @@ const BlogPost = () => {
         keywords={post.seo.keywords.join(", ")}
         url={`/blog/${post.slug}`}
         image={post.featuredImage}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       <Header />
       <main>

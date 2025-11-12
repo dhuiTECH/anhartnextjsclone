@@ -117,6 +117,17 @@ export default function AdminClient({ user }: { user: any }) {
     const content = editor.getHTML();
     const excerpt = content.substring(0, 200).replace(/<[^>]*>/g, '');
     
+    // Calculate reading time (average 200 words per minute)
+    const wordCount = editor.getText().split(/\s+/).length;
+    const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+    
+    // Extract keywords from meta description and title
+    const keywords = [
+      ...title.toLowerCase().split(' ').filter(w => w.length > 4),
+      ...meta.toLowerCase().split(' ').filter(w => w.length > 4),
+      category.toLowerCase()
+    ].slice(0, 10); // Limit to 10 keywords
+    
     if (mode === 'edit' && selectedPostId) {
       const { error } = await supabase.from('blog_posts')
         .update({
@@ -130,6 +141,8 @@ export default function AdminClient({ user }: { user: any }) {
           category,
           publish_date: publishDate,
           updated_at: new Date().toISOString(),
+          reading_time: readingTime,
+          keywords: keywords,
         })
         .eq('id', selectedPostId);
       
@@ -141,7 +154,7 @@ export default function AdminClient({ user }: { user: any }) {
       }
     } else {
       const newSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      const { error } = await supabase.from('blog_posts').insert({
+      const { error} = await supabase.from('blog_posts').insert({
         title,
         subtitle,
         slug: newSlug,
@@ -154,6 +167,8 @@ export default function AdminClient({ user }: { user: any }) {
         publish_date: publishDate,
         author_name: user.email || 'Admin',
         is_published: true,
+        reading_time: readingTime,
+        keywords: keywords,
       });
       setLoading(false);
       if (error) alert('Error: ' + error.message);
@@ -171,6 +186,26 @@ export default function AdminClient({ user }: { user: any }) {
         <div className="bg-white p-8 rounded-xl shadow mb-6">
           <h1 className="text-3xl font-bold text-indigo-700 mb-2">Admin Dashboard</h1>
           <p className="text-gray-600">Logged in as: {user.email} (admin)</p>
+        </div>
+
+        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-blue-700 font-semibold mb-1">SEO Best Practices for Blog Posts</p>
+              <ul className="text-xs text-blue-600 space-y-1">
+                <li>✓ Use <strong>H2 headings</strong> to organize main sections (not H1 - the title is already H1)</li>
+                <li>✓ Use <strong>H3 headings</strong> for subsections within H2 sections</li>
+                <li>✓ Include relevant <strong>keywords naturally</strong> in your headings and content</li>
+                <li>✓ Write descriptive meta descriptions (150-160 characters) with target keywords</li>
+                <li>✓ Add meaningful subtitle to complement the main title</li>
+              </ul>
+            </div>
+          </div>
         </div>
 
         <div className="bg-white p-6 rounded-xl shadow mb-6">

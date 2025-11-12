@@ -4,6 +4,16 @@
 This is a Next.js web application for Anhart Affordable Housing, showcasing their mission, portfolio, and partnerships in affordable housing development across British Columbia.
 
 ## Recent Changes (November 12, 2025)
+- **SEO Improvements for Google Crawling** 🔍
+  - Added dynamic `generateMetadata` function in blog/[slug]/page.tsx for proper SSR SEO
+  - Each blog post now has unique title, description, keywords, and Open Graph tags visible to Google
+  - Implemented JSON-LD structured data (Article schema) for rich search results and snippets
+  - Added SEO best practices guidance panel in admin dashboard editor
+  - Guidance encourages proper H2/H3 heading usage, keyword optimization, and meta descriptions
+  - Created server-side `getPostBySlugServer` function in lib/blog-server.ts for metadata generation
+  - Verified all existing blog posts have proper semantic HTML (H1, H2, H3 tags)
+  - Blog posts now fully crawlable by Google bots with complete metadata
+  
 - **Vercel Deployment Preparation**
   - Converted all 116 AVIF images to WebP format for Vercel compatibility
   - Updated registry.ts to use .webp imports instead of .avif
