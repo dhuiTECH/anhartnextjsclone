@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 26, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/damon/Downloads/anhartca-main/anhartca-main/next-app/src/app/contact/page.tsx"],"sourcesContent":["import { Metadata } from 'next';\n\nexport const metadata: Metadata = {\n  title: 'Contact Us',\n};\n\nexport default function Page() {\n  return (\n    <div>\n      <h1>Contact Us Page</h1>\n      {/* This is a placeholder */}\n    </div>\n  );\n}"],"names":[],"mappings":";;;;;;;;AAEO,MAAM,WAAqB;IAChC,OAAO;AACT;AAEe,SAAS;IACtB,qBACE,kTAAC;kBACC,cAAA,kTAAC;sBAAG;;;;;;;;;;;AAIV","debugId":null}}]
-}

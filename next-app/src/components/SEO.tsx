@@ -11,15 +11,15 @@ interface SEOProps {
 }
 
 const SEO = ({
-  title = "Anhart Affordable Housing - Building Communities Through Housing Solutions",
-  description = "Anhart Affordable Housing provides innovative affordable housing solutions coast to coast to coast. We lead, support, and advocate for non-profit housing that creates inclusive communities.",
+  title = "Anhart – Affordable Housing Developer in Canada",
+  description = "Anhart is a vertically integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045.",
   keywords = "affordable housing, SROs, modular homes, non-profit housing, low-income housing, subsidized housing, below-market housing, supportive housing, inclusionary housing, affordability, micro-suites, micro-units, vacancy development, derelict homes, single room occupancy, social housing, community housing, rental housing, housing continuum, transitional housing, Vancouver, Toronto, Calgary, Edmonton, Winnipeg, Ottawa, Hamilton, London, BC, Alberta, Manitoba, Ontario, Canada, housing development, housing solutions, community development, sustainable housing, housing policy, housing finance, community planning, affordable housing Vancouver, affordable housing Toronto, affordable housing Calgary, affordable housing Edmonton, affordable housing Winnipeg, SRO conversion Vancouver, SRO conversion Toronto, modular housing BC, modular housing Alberta, modular housing Ontario, micro-suites Vancouver, micro-suites Toronto, supportive housing Calgary, supportive housing Winnipeg",
   image = "/images/anhart-logo.png",
   url = "https://anhart.ca",
   type = "website",
   structuredData
 }: SEOProps) => {
-  const fullTitle = title.includes("Anhart") ? title : `${title} | Anhart Affordable Housing`;
+  const fullTitle = title.includes("Anhart") ? title : `${title} | Anhart`;
   const fullUrl = url.startsWith("http") ? url : `https://anhart.ca${url}`;
   
   // Handle both string and object image types (Next.js static imports return objects)
@@ -32,7 +32,7 @@ const SEO = ({
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
-      <meta name="author" content="Anhart Affordable Housing" />
+      <meta name="author" content="Anhart" />
       <meta name="robots" content="index, follow" />
       <link rel="canonical" href={fullUrl} />
       {/* Open Graph Meta Tags */}
@@ -43,7 +43,7 @@ const SEO = ({
       <meta property="og:image" content={fullImage} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:site_name" content="Anhart Affordable Housing" />
+      <meta property="og:site_name" content="Anhart" />
       <meta property="og:locale" content="en_CA" />
       {/* Twitter Card Meta Tags */}
       <meta name="twitter:card" content="summary_large_image" />
@@ -76,12 +76,12 @@ const SEO = ({
       <meta name="classification" content="business" />
       <meta name="category" content="non-profit housing development" />
       <meta name="subject" content="affordable housing, community development, social housing" />
-      <meta name="abstract" content="Anhart Affordable Housing develops innovative affordable housing solutions including SROs, modular homes, micro-suites, and supportive housing across Canada." />
-      <meta name="summary" content="Leading non-profit affordable housing development organization creating inclusive communities through innovative housing solutions." />
+      <meta name="abstract" content="Anhart develops innovative affordable housing solutions including SROs, modular homes, micro-suites, and supportive housing across Canada." />
+      <meta name="summary" content="Vertically integrated affordable housing developer creating inclusive communities through innovative housing solutions." />
       <meta name="designer" content="Anhart Development Team" />
-      <meta name="copyright" content="Anhart Affordable Housing" />
+      <meta name="copyright" content="Anhart" />
       <meta name="reply-to" content="info@anhart.ca" />
-      <meta name="owner" content="Anhart Affordable Housing" />
+      <meta name="owner" content="Anhart" />
       <meta name="url" content={fullUrl} />
       <meta name="identifier-URL" content={fullUrl} />
       <meta name="directory" content="submission" />
@@ -110,9 +110,9 @@ const SEO = ({
       <meta name="mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-      <meta name="apple-mobile-web-app-title" content="Anhart Housing" />
-      <meta name="application-name" content="Anhart Affordable Housing" />
-      <meta name="msapplication-tooltip" content="Anhart Affordable Housing - Building Communities Through Housing Solutions" />
+      <meta name="apple-mobile-web-app-title" content="Anhart" />
+      <meta name="application-name" content="Anhart" />
+      <meta name="msapplication-tooltip" content="Anhart – Affordable Housing Developer in Canada" />
       <meta name="msapplication-starturl" content="/" />
       <meta name="msapplication-navbutton-color" content="#1e40af" />
       <meta name="msapplication-TileColor" content="#1e40af" />

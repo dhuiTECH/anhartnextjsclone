@@ -4,7 +4,7 @@ import { ValueItem } from "@/types/common";
 /**
  * Company Values Data
  *
- * Core principles and values that guide Anhart Affordable Housing's work
+ * Core principles and values that guide Anhart's work
  */
 export const values: ValueItem[] = [
   {

@@ -6,44 +6,29 @@ import { Providers } from "./providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  // HOMEPAGE TITLE (59 chars – fits Google perfectly)
+  metadataBase: new URL("https://www.anhart.ca"),
   title: {
-    default: "Anhart Affordable Housing | Free Consultation",
-    template: "%s | Anhart Affordable Housing",
+    default: "Anhart – Affordable Housing Developer in Canada",
+    template: "%s | Anhart",
   },
-
-  // META DESCRIPTION (148 chars – high CTR)
   description:
-    "Anhart Affordable Housing builds sustainable homes across Canada. Get your free consultation for municipalities, non-profits & developers.",
-
-  // CANONICAL URL (your real site)
+    "Anhart is a vertically integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045.",
   alternates: { canonical: "https://www.anhart.ca" },
-
-  // OPEN GRAPH (LinkedIn, Facebook, etc.)
   openGraph: {
-    title: "Anhart Affordable Housing | Free Consultation",
+    title: "Anhart – Affordable Housing Developer in Canada",
     description:
-      "Sustainable, community-led housing in Canada. Book your free consultation today.",
+      "Anhart is a vertically integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045.",
     url: "https://www.anhart.ca",
-    siteName: "Anhart Affordable Housing",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Anhart Affordable Housing – Free Consultation Available",
-      },
-    ],
+    siteName: "Anhart",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
     locale: "en_CA",
     type: "website",
   },
-
-  // TWITTER / X CARD
   twitter: {
     card: "summary_large_image",
-    title: "Anhart Affordable Housing | Free Consultation",
+    title: "Anhart – Affordable Housing Developer in Canada",
     description:
-      "Sustainable housing in Canada. Free consultation for partners.",
+      "Anhart is a vertically integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045.",
     images: ["/og-image.jpg"],
   },
 };
@@ -53,8 +38,37 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateAgent",
+    "name": "Anhart",
+    "url": "https://anhart.ca",
+    "logo": "https://anhart.ca/images/anhart-logo.png",
+    "description": "Anhart is a vertically integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Vancouver",
+      "addressRegion": "BC",
+      "addressCountry": "CA"
+    },
+    "areaServed": {
+      "@type": "Country",
+      "name": "Canada"
+    },
+    "sameAs": [
+      "https://www.linkedin.com/company/anhart",
+      "https://twitter.com/anhart_housing"
+    ]
+  };
+
   return (
     <html lang="en-CA">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>

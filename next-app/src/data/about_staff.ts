@@ -3,7 +3,7 @@ import { StaffMember } from "@/types/common";
 /**
  * Board Members Data
  *
- * Leadership and governance team members for Anhart Affordable Housing
+ * Leadership and governance team members for Anhart
  */
 export const boardMembers: StaffMember[] = [
   {
@@ -46,7 +46,7 @@ export const boardMembers: StaffMember[] = [
 /**
  * Staff Team Data
  *
- * Operational and support team members for Anhart Affordable Housing
+ * Operational and support team members for Anhart
  */
 export const staff: StaffMember[] = [
   {

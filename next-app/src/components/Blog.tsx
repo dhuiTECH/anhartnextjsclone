@@ -63,7 +63,7 @@ const Blog = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title="Blog - Anhart Affordable Housing"
+        title="Blog"
         description="Read the latest insights, news, and resources about affordable housing in BC. Expert guides, community stories, and practical advice for finding housing solutions."
         keywords="affordable housing blog, housing resources, BC housing news, housing guides, community impact stories"
         url="/blog"

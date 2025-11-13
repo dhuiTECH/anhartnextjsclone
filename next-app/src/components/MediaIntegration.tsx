@@ -31,8 +31,8 @@ interface MediaIntegrationProps {
 const MediaIntegration: React.FC<{
   children?: React.ReactNode;
 }> = ({
-  title = "Anhart Affordable Housing - Building Communities Through Housing Solutions",
-  description = "Leading non-profit affordable housing development across Canada",
+  title = "Anhart – Affordable Housing Developer in Canada",
+  description = "Vertically integrated affordable housing developer in Vancouver, BC. Building 20,000 homes by 2045.",
   image = "/images/anhart-logo.png",
   url = "https://anhart.ca",
   province = "All",
@@ -80,7 +80,7 @@ const MediaIntegration: React.FC<{
       <meta property="og:image" content={fullImage} />
       <meta property="og:url" content={fullUrl} />
       <meta property="og:type" content="website" />
-      <meta property="og:site_name" content="Anhart Affordable Housing" />
+      <meta property="og:site_name" content="Anhart" />
       <meta property="og:locale" content="en_CA" />
       <meta property="og:updated_time" content={new Date().toISOString()} />
       {/* Additional Open Graph Tags */}

@@ -793,7 +793,7 @@ export const blogPosts: BlogPost[] = [
     <ul class="text-green-900">
       <li><strong><a href="https://anhart.ca" class="text-green-900 hover:underline font-semibold">Anhart.ca</a></strong>: Details on local subsidies and housing support</li>
       <li><strong>BC Housing</strong>: Provincial programs and eligibility information</li>
-      <li><strong><a href="https://anhart.ca/eligibility" class="text-green-900 hover:underline font-semibold">Anhart Affordable Housing Eligibility</a></strong>: Specific eligibility criteria and application guidance</li>
+      <li><strong><a href="https://anhart.ca/eligibility" class="text-green-900 hover:underline font-semibold">Anhart Eligibility</a></strong>: Specific eligibility criteria and application guidance</li>
     </ul>
   </div>
 

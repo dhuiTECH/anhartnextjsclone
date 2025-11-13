@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 26, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/damon/Downloads/anhartca-main/anhartca-main/next-app/src/app/about/page.tsx"],"sourcesContent":["import { Metadata } from 'next';\nimport About from '@/components/About';\n\nexport const metadata: Metadata = {\n  title: 'About',\n  description: 'About page - Access and manage your content',\n};\n\nexport default function Page() {\n  return (\n    <div>\n      {/* Placeholder Page */}\n    </div>\n  );\n}"],"names":[],"mappings":";;;;;;;;AAGO,MAAM,WAAqB;IAChC,OAAO;IACP,aAAa;AACf;AAEe,SAAS;IACtB,qBACE,kTAAC;;;;;AAIL","debugId":null}}]
-}

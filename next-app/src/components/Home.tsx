@@ -6,7 +6,7 @@ import Link from "next/link";
  * HOME PAGE COMPONENT
  * =============================================================================
  *
- * This is the main landing page for Anhart Affordable Housing website.
+ * This is the main landing page for Anhart website.
  * It showcases the organization's mission, featured projects, services, and
  * provides contact functionality.
  *
@@ -124,7 +124,7 @@ import {
  * HOME COMPONENT
  * =============================================================================
  *
- * Main component that renders the Anhart Affordable Housing homepage.
+ * Main component that renders the Anhart homepage.
  * Manages state for modals, carousels, forms, and drag scroll functionality.
  */
 const Home = () => {
@@ -374,8 +374,8 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title="Anhart Affordable Housing - Building Communities Through Housing Solutions"
-        description="Anhart Affordable Housing provides innovative affordable housing solutions coast to coast to coast. We lead, support, and advocate for non-profit housing that creates inclusive communities."
+        title="Anhart – Affordable Housing Developer in Canada"
+        description="Anhart is a vertically integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045."
         keywords="affordable housing, SROs, modular homes, non-profit housing, low-income housing, subsidized housing, below-market housing, supportive housing, inclusionary housing, affordability, micro-suites, micro-units, vacancy development, derelict homes, single room occupancy, social housing, community housing, rental housing, housing continuum, transitional housing, Vancouver, BC, Canada, housing development, housing solutions, community development, sustainable housing"
         url="/"
         structuredData={[

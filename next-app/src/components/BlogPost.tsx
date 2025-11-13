@@ -100,12 +100,12 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
       : `https://anhart.ca${post.featuredImage || "/blog/default.jpg"}`,
     author: {
       "@type": "Organization",
-      name: post.author || "Anhart Affordable Housing",
+      name: post.author || "Anhart",
       url: "https://anhart.ca",
     },
     publisher: {
       "@type": "Organization",
-      name: "Anhart Affordable Housing",
+      name: "Anhart",
       logo: {
         "@type": "ImageObject",
         url: "https://anhart.ca/images/anhart-logo.png",

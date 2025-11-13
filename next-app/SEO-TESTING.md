@@ -1,4 +1,4 @@
-# SEO Testing Guide for Anhart Affordable Housing Blog
+# SEO Testing Guide for Anhart Blog
 
 ## Overview
 This guide explains how to verify that Google can properly crawl and index your blog posts with all the SEO improvements implemented.

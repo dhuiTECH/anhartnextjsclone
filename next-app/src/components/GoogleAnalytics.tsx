@@ -25,7 +25,7 @@ export const initGA = () => {
       window.gtag = gtag;
       gtag('js', new Date());
       gtag('config', GA_TRACKING_ID, {
-        page_title: document.title,
+        page_title: "Anhart",
         page_location: window.location.href,
       });
     };
@@ -44,7 +44,7 @@ export const trackPageView = (url: string, title?: string) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('config', GA_TRACKING_ID, {
       page_path: url,
-      page_title: title || document.title,
+      page_title: title || "Anhart",
     });
   }
 };

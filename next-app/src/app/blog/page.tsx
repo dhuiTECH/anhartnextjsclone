@@ -3,7 +3,7 @@ import Blog from '@/components/Blog';
 
 export const metadata: Metadata = {
   title: 'Blog',
-  description: 'Blog page - Access and manage your content',
+  description: 'Insights, news, and updates about affordable housing in Canada from Anhart.',
 };
 
 export default function BlogPage() {

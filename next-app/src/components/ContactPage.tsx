@@ -7,7 +7,7 @@ const ContactPage = () => {
   return <div className="min-h-screen bg-background">
       <SEO 
         title="Contact Us - Get In Touch"
-        description="Contact Anhart Affordable Housing for partnership opportunities, project inquiries, or to learn more about our affordable housing development services."
+        description="Contact Anhart for partnership opportunities, project inquiries, or to learn more about our affordable housing development services."
         keywords="contact anhart, housing development contact, affordable housing inquiry, partnership contact, anhart contact, housing services contact"
         url="/contact"
       />

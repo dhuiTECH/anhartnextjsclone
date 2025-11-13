@@ -8,7 +8,7 @@ const LimitedPartnershipPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title="Limited Partnership Investment - Anhart Affordable Housing"
+        title="Limited Partnership Investment"
         description="Learn about investment opportunities in Anhart's Limited Partnership program. Support affordable housing development while earning returns on your impact investment."
         keywords="limited partnership investment, affordable housing investment, impact investing, housing finance, community investment, anhart investment, housing returns"
         url="/limited-partnership"

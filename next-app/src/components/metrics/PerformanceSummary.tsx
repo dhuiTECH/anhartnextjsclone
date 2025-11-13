@@ -144,7 +144,7 @@ const PerformanceSummary: React.FC<{
           },
           {
             year: "2023",
-            project: "Anhart Affordable Housing Corporation",
+            project: "Anhart Corporation",
             patientCapital: "$100,000",
             metrics:
               "Formed strategic partnerships with community developers and financial institutions to scale affordable housing delivery across provinces",

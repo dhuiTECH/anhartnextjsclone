@@ -3,11 +3,11 @@
 export const organizationStructuredData = {
   "@context": "https://schema.org",
   "@type": ["Organization", "NonProfitOrganization", "HousingProvider"],
-  "name": "Anhart Affordable Housing",
-  "alternateName": ["Anhart", "Anhart Housing", "Anhart Non-Profit Housing"],
+  "name": "Anhart",
+  "alternateName": ["Anhart Housing", "Anhart Non-Profit Housing"],
   "url": "https://anhart.ca",
   "logo": "https://anhart.ca/images/anhart-logo.png",
-  "description": "Leading non-profit affordable housing solutions across Canada. We develop, manage, and advocate for SROs, modular homes, micro-suites, and supportive housing that creates inclusive communities for low-income families and individuals.",
+  "description": "Vertically integrated affordable housing developer in Vancouver, BC. We develop, manage, and advocate for SROs, modular homes, micro-suites, and supportive housing that creates inclusive communities for low-income families and individuals.",
   "foundingDate": "2000",
   "address": {
     "@type": "PostalAddress",
@@ -209,12 +209,12 @@ export const organizationStructuredData = {
 export const websiteStructuredData = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "Anhart Affordable Housing",
+  "name": "Anhart",
   "url": "https://anhart.ca",
-  "description" : "Anhart Affordable Housing provides innovative affordable housing solutions coast to coast to coast. We lead, support, and advocate for non-profit housing that creates inclusive communities.",
+  "description" : "Anhart is a vertically integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045.",
     "publisher": {
     "@type": "Organization",
-    "name": "Anhart Affordable Housing",
+    "name": "Anhart",
     "logo": {
       "@type": "ImageObject",
       "url": "https://anhart.ca/images/anhart-logo.png"
@@ -257,7 +257,7 @@ export const projectStructuredData = (project: {
   "image": project.image,
   "sponsor": {
     "@type": "Organization",
-    "name": "Anhart Affordable Housing"
+    "name": "Anhart"
   }
 });
 
@@ -321,9 +321,9 @@ export const faqStructuredData = {
 export const localBusinessStructuredData = {
   "@context": "https://schema.org",
   "@type": ["LocalBusiness", "NonProfitOrganization"],
-  "name": "Anhart Affordable Housing",
+  "name": "Anhart",
   "image": "https://anhart.ca/images/anhart-logo.png",
-  "description": "Non-profit affordable housing development organization serving communities across British Columbia, Alberta, Manitoba, and Ontario.",
+  "description": "Vertically integrated affordable housing developer serving communities across British Columbia, Alberta, Manitoba, and Ontario.",
   "url": "https://anhart.ca",
   "telephone": "+1-6045296259",
   "email": "info@anhart.ca",
@@ -407,7 +407,7 @@ export const provinceBusinessSchemas = {
   "BC": {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "NonProfitOrganization"],
-    "name": "Anhart Affordable Housing - British Columbia",
+    "name": "Anhart - British Columbia",
     "description": "Affordable housing development services in British Columbia including Vancouver, Victoria, Surrey, and Burnaby.",
     "areaServed": {
       "@type": "State",
@@ -418,7 +418,7 @@ export const provinceBusinessSchemas = {
   "Alberta": {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "NonProfitOrganization"],
-    "name": "Anhart Affordable Housing - Alberta",
+    "name": "Anhart - Alberta",
     "description": "Affordable housing development services in Alberta including Calgary, Edmonton, Red Deer, and Lethbridge.",
     "areaServed": {
       "@type": "State",
@@ -429,7 +429,7 @@ export const provinceBusinessSchemas = {
   "Manitoba": {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "NonProfitOrganization"],
-    "name": "Anhart Affordable Housing - Manitoba",
+    "name": "Anhart - Manitoba",
     "description": "Affordable housing development services in Manitoba including Winnipeg, Brandon, and Steinbach.",
     "areaServed": {
       "@type": "State",
@@ -440,7 +440,7 @@ export const provinceBusinessSchemas = {
   "Ontario": {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "NonProfitOrganization"],
-    "name": "Anhart Affordable Housing - Ontario",
+    "name": "Anhart - Ontario",
     "description": "Affordable housing development services in Ontario including Toronto, Ottawa, Hamilton, London, Kitchener, and Windsor.",
     "areaServed": {
       "@type": "State",
@@ -477,7 +477,7 @@ export const housingProjectStructuredData = (project: {
   "image": project.image,
   "sponsor": {
     "@type": "Organization",
-    "name": "Anhart Affordable Housing",
+    "name": "Anhart",
     "url": "https://anhart.ca"
   },
   "additionalProperty": [

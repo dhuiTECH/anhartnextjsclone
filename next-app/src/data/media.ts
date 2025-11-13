@@ -71,7 +71,7 @@ export const pdfDocuments: PdfDocument[] = [
   {
     id: 1,
     title: "Anhart Brochure ONPHA October 3 2025",
-    description: " A brochure for Anhart Affordable Housing, detailing our mission to provide sustainable, affordable homes.",
+    description: "A brochure for Anhart, detailing our mission to provide sustainable, affordable homes.",
     date: "October 2025",
     pages: 2,
     size: "0.5 MB",
@@ -80,7 +80,7 @@ export const pdfDocuments: PdfDocument[] = [
   {
     id: 2,
     title: "Anhart Brochure September 16, 2025",
-    description: "A comprehensive overview of what forms of housing do we at Anhart Affordable Housing provide to communities.",
+    description: "A comprehensive overview of what forms of housing Anhart provides to communities.",
     date: "September, 2025",
     pages: 2,
     size: "1.89 MB",
@@ -89,7 +89,7 @@ export const pdfDocuments: PdfDocument[] = [
   {
     id: 3,
     title: "Anhart Affordable Limited Partnership",
-    description: "An overview of the Anhart Affordable Housing Limited Partnership, including the investment terms and conditions.",
+    description: "An overview of the Anhart Limited Partnership, including the investment terms and conditions.",
     date: "January, 2025",
     pages: 8,
     size: "1.15 MB",
@@ -125,7 +125,7 @@ export const pressReleases: PressRelease[] = [
     title: "Anhart Ryder Project Supports Affordable Housing",
     source: "Vancity Rethink",
     date: "2024",
-    excerpt: "Vancity highlights Anhart Affordable Housing's Ryder project as a key contribution to affordable rental housing in Hope, BC.",
+    excerpt: "Vancity highlights Anhart's Ryder project as a key contribution to affordable rental housing in Hope, BC.",
     type: "external",
     url: "https://rethink.vancity.com/actions/anhart-ryder",
   },

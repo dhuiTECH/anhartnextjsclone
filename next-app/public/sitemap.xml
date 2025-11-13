@@ -18,7 +18,7 @@
     <video:video>
       <video:thumbnail_loc>https://anhart.ca/images/anhart-logo.png</video:thumbnail_loc>
       <video:title>Homepage Background Hero</video:title>
-      <video:description>Animated background video representing Anhart Affordable Housing.</video:description>
+      <video:description>Animated background video representing Anhart.</video:description>
       <video:content_loc>https://anhart.ca/assets/hero-background-video.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>
@@ -50,8 +50,8 @@
     <priority>0.8</priority>
     <video:video>
       <video:thumbnail_loc>https://anhart.ca/mediaAssets/promotionalVideoThumbnail.jpg</video:thumbnail_loc>
-      <video:title>Anhart Affordable Housing 1 minute Promotional Video</video:title>
-      <video:description>One-minute promotional overview of Anhart Affordable Housing.</video:description>
+      <video:title>Anhart 1 Minute Promotional Video</video:title>
+      <video:description>One-minute promotional overview of Anhart.</video:description>
       <video:content_loc>https://anhart.ca/mediaAssets/Anhart%20Affordable%20Housing%201%20minute%20Promotional%20Video.mp4</video:content_loc>
       <video:family_friendly>yes</video:family_friendly>
     </video:video>

@@ -452,7 +452,7 @@ const Media = () => {
     setIsTouchActive(false);
   };
   return <div className="min-h-screen bg-background">
-      <SEO title="News & Media - Anhart Affordable Housing" description="Stay updated with the latest news, media coverage, and press releases about Anhart's affordable housing projects and community impact across Canada." keywords="anhart news, affordable housing media, housing press releases, community development news, housing coverage, anhart press, housing media" url="/media" />
+      <SEO title="News & Media" description="Stay updated with the latest news, media coverage, and press releases about Anhart's affordable housing projects and community impact across Canada." keywords="anhart news, affordable housing media, housing press releases, community development news, housing coverage, anhart press, housing media" url="/media" />
       <Header />
       <main>
         {/* Hero Banner - Media and news coverage overview */}

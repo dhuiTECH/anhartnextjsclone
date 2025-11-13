@@ -131,7 +131,7 @@ export const GoogleMapEmbed: React.FC<{
         const infoWindow = new window.google.maps.InfoWindow({
           content: `
             <div style="padding: 10px; max-width: 200px;">
-              <h3 style="margin: 0 0 8px 0; font-weight: bold; color: #1f2937;">Anhart Affordable Housing</h3>
+              <h3 style="margin: 0 0 8px 0; font-weight: bold; color: #1f2937;">Anhart</h3>
               <p style="margin: 0; color: #6b7280; font-size: 14px;">${address}</p>
             </div>
           `

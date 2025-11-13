@@ -33,7 +33,7 @@ const ourApproachImg =
 /**
  * About Page Component
  *
- * This component displays information about Anhart Affordable Housing,
+ * This component displays information about Anhart,
  * including the company's mission, values, team members, and organizational
  * structure. Features interactive staff member cards with modal details.
  */
@@ -244,7 +244,7 @@ const About = () => {
     <div className="min-h-screen bg-background">
       <SEO
         title="About Us - Our Mission & Team"
-        description="Learn about Anhart Affordable Housing's mission to create inclusive communities through innovative housing solutions. Meet our experienced team of housing professionals and community advocates."
+        description="Learn about Anhart's mission to create inclusive communities through innovative housing solutions. Meet our experienced team of housing professionals and community advocates."
         keywords="about anhart, affordable housing team, housing professionals, community development, mission, values, leadership"
         url="/about"
         structuredData={organizationStructuredData}

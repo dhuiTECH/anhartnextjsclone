@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   
   if (!post) {
     return {
-      title: 'Blog Post Not Found | Anhart Affordable Housing',
+      title: 'Blog Post Not Found',
       description: 'The requested blog post could not be found.',
     };
   }
@@ -25,12 +25,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: metaTitle,
     description: metaDescription,
     keywords: keywords || undefined,
-    authors: [{ name: 'Anhart Affordable Housing' }],
+    authors: [{ name: 'Anhart' }],
     openGraph: {
       title: metaTitle,
       description: metaDescription,
       url: `https://anhart.ca/blog/${post.slug}`,
-      siteName: 'Anhart Affordable Housing',
+      siteName: 'Anhart',
       images: [
         {
           url: imageUrl,
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       type: 'article',
       publishedTime: post.publishDate,
       modifiedTime: post.updatedAt,
-      authors: ['Anhart Affordable Housing'],
+      authors: ['Anhart'],
       tags: [post.category, ...(post.seo?.keywords || [])],
     },
     twitter: {

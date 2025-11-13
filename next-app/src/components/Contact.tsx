@@ -100,8 +100,8 @@ export const Contact = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO 
-        title="Contact Us - Anhart Affordable Housing"
-        description="Get in touch with Anhart Affordable Housing. Contact us for inquiries about affordable housing solutions, partnerships, or investment opportunities."
+        title="Contact Us"
+        description="Get in touch with Anhart. Contact us for inquiries about affordable housing solutions, partnerships, or investment opportunities."
         keywords="contact anhart, affordable housing contact, housing inquiries, anhart team"
         url="/contact"
       />
