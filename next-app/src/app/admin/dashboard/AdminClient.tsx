@@ -36,6 +36,9 @@ export default function AdminClient({ user }: { user: any }) {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [selectedPostId, setSelectedPostId] = useState<string>('');
   const [slug, setSlug] = useState('');
+  const [showCodeDialog, setShowCodeDialog] = useState(false);
+  const [codeInput, setCodeInput] = useState('');
+  const [codeLanguage, setCodeLanguage] = useState('html');
   const router = useRouter();
 
   const editor = useEditor({ 
@@ -178,6 +181,26 @@ export default function AdminClient({ user }: { user: any }) {
         await loadPosts();
       }
     }
+  };
+
+  const insertCode = () => {
+    if (!editor || !codeInput.trim()) return;
+    
+    // Insert the code as a code block
+    editor.chain().focus().insertContent({
+      type: 'codeBlock',
+      attrs: { language: codeLanguage },
+      content: [
+        {
+          type: 'text',
+          text: codeInput,
+        },
+      ],
+    }).run();
+    
+    // Reset and close dialog
+    setCodeInput('');
+    setShowCodeDialog(false);
   };
 
   return (
@@ -332,8 +355,17 @@ export default function AdminClient({ user }: { user: any }) {
                   type="button"
                   onClick={() => editor.chain().focus().toggleCodeBlock().run()}
                   className={`px-3 py-1 rounded text-sm font-mono ${editor.isActive('codeBlock') ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}`}
+                  title="Toggle code block"
                 >
                   &lt;/&gt; Code
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowCodeDialog(true)}
+                  className="px-3 py-1 rounded text-sm font-mono bg-green-600 text-white hover:bg-green-700"
+                  title="Insert code snippet"
+                >
+                  + Insert Code
                 </button>
               </div>
             )}
@@ -422,6 +454,78 @@ export default function AdminClient({ user }: { user: any }) {
             {loading ? (mode === 'edit' ? 'Updating...' : 'Publishing...') : (mode === 'edit' ? 'Update Article' : 'Publish Article')}
           </button>
         </form>
+
+        {/* Insert Code Dialog */}
+        {showCodeDialog && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowCodeDialog(false)}>
+            <div className="bg-white rounded-lg shadow-xl p-6 max-w-3xl w-full mx-4" onClick={(e) => e.stopPropagation()}>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-gray-900">Insert Code Snippet</h3>
+                <button 
+                  onClick={() => setShowCodeDialog(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Language
+                </label>
+                <select
+                  value={codeLanguage}
+                  onChange={(e) => setCodeLanguage(e.target.value)}
+                  className="w-full p-2 border rounded"
+                >
+                  <option value="html">HTML</option>
+                  <option value="css">CSS</option>
+                  <option value="javascript">JavaScript</option>
+                  <option value="typescript">TypeScript</option>
+                  <option value="jsx">JSX</option>
+                  <option value="tsx">TSX</option>
+                  <option value="python">Python</option>
+                  <option value="bash">Bash</option>
+                  <option value="json">JSON</option>
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Paste your code here:
+                </label>
+                <textarea
+                  value={codeInput}
+                  onChange={(e) => setCodeInput(e.target.value)}
+                  placeholder="Paste your HTML or code here..."
+                  className="w-full h-64 p-3 border rounded font-mono text-sm bg-gray-50"
+                  style={{ fontFamily: 'monospace' }}
+                />
+              </div>
+
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => {
+                    setCodeInput('');
+                    setShowCodeDialog(false);
+                  }}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={insertCode}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                  disabled={!codeInput.trim()}
+                >
+                  Insert Code
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
