@@ -93,6 +93,12 @@ export const Hero = () => {
             </p>
           </ScrollAnimationWrapper>
 
+          <ScrollAnimationWrapper direction="top" delay={250}>
+            <h2 className="text-sm sm:text-base md:text-base lg:text-xl font-semibold text-white/80 mb-6 [text-shadow:_0_2px_8px_rgba(0,0,0,0.7)]">
+              (Free Pre-Development Consultation - Across Canada)
+            </h2>
+          </ScrollAnimationWrapper>
+
           {/* Buttons positioned below text */}
           <div className="mt-8 sm:mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
             {/* Mobile: Side-by-side buttons */}
@@ -113,7 +119,7 @@ export const Hero = () => {
                     size="sm"
                     className="bg-primary/60 backdrop-blur-md text-white hover:bg-white hover:text-primary font-semibold px-3 py-2 text-sm w-full transition-all duration-300 border border-primary/50 hover:border-white shadow-lg hover:shadow-xl"
                   >
-                    Explore More
+                    Explore Projects
                     <span className="ml-1 text-sm font-bold">{">"}</span>
                   </Button>
                 </a>
@@ -131,12 +137,12 @@ export const Hero = () => {
                   className="block"
                 >
                   <Button
-                    name="partner with us"
+                    name="Book Now"
                     size="sm"
                     variant="outline"
                     className="bg-white/5 backdrop-blur-sm border-white/30 text-white font-semibold px-3 py-2 text-sm w-full hover:bg-white/15 hover:border-white/50 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg"
                   >
-                    Partner With Us
+                    Partner With U
                   </Button>
                 </a>
               </ScrollAnimationWrapper>
@@ -168,12 +174,12 @@ export const Hero = () => {
                   rel="noopener noreferrer"
                 >
                   <Button
-                    name="partner with us"
+                    name="Book Now"
                     size="lg"
                     variant="outline"
                     className="bg-white/5 backdrop-blur-sm border-white/30 text-white font-semibold px-8 py-3 text-base hover:bg-white/15 hover:border-white/50 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg"
                   >
-                    Partner with Us
+                    Book Now
                   </Button>
                 </a>
               </ScrollAnimationWrapper>

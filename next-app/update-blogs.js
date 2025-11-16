@@ -1,10 +1,10 @@
-const { createClient } = require('@supabase/supabase-js');
+const { createClient } = require("@supabase/supabase-js");
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
-  console.error('Missing Supabase environment variables!');
+  console.error("Missing Supabase environment variables!");
   process.exit(1);
 }
 
@@ -99,17 +99,23 @@ At **Anhart**, we work directly with **BC Housing** and other partners to provid
 
 async function run() {
   const { error: e1 } = await supabase
-    .from('blog_posts')
+    .from("blog_posts")
     .update({ content: modularBody })
-    .eq('title', 'Modular Housing Solutions: The Future of Affordable Living in Canada');
+    .eq(
+      "title",
+      "Modular Housing Solutions: The Future of Affordable Living in Canada",
+    );
 
   const { error: e2 } = await supabase
-    .from('blog_posts')
+    .from("blog_posts")
     .update({ content: subsidiesBody })
-    .eq('title', 'Understanding Housing Subsidies and Qualifying for Support in British Columbia');
+    .eq(
+      "title",
+      "Understanding Housing Subsidies and Qualifying for Support in British Columbia",
+    );
 
-  console.log(e1 ? 'Modular error:' : 'Modular updated', e1);
-  console.log(e2 ? 'Subsidies error:' : 'Subsidies updated', e2);
+  console.log(e1 ? "Modular error:" : "Modular updated", e1);
+  console.log(e2 ? "Subsidies error:" : "Subsidies updated", e2);
 }
 
 run();
