@@ -82,19 +82,19 @@ export const Hero = () => {
       >
         <div className="text-center">
           <ScrollAnimationWrapper direction="top" delay={100}>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight text-white mb-4 sm:mb-6 [text-shadow:_0_4px_16px_rgba(0,0,0,0.8)]">
+            <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight text-white mb-4 sm:mb-6 [text-shadow:_0_4px_16px_rgba(0,0,0,0.8)]">
               The Power of Small
             </h1>
           </ScrollAnimationWrapper>
 
           <ScrollAnimationWrapper direction="top" delay={200}>
-            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-light bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] tracking-wider">
+            <p className="text-base sm:text-xl md:text-2xl lg:text-3xl text-white/90 font-light bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] tracking-wider">
               Redefining Affordable Housing Development
             </p>
           </ScrollAnimationWrapper>
 
           <ScrollAnimationWrapper direction="top" delay={250}>
-            <h2 className="text-sm sm:text-base md:text-base lg:text-xl font-semibold text-white/80 mb-6 [text-shadow:_0_2px_8px_rgba(0,0,0,0.7)]">
+            <h2 className="text-xs sm:text-base md:text-base lg:text-xl font-semibold text-white/80 mb-6 [text-shadow:_0_2px_8px_rgba(0,0,0,0.7)]">
               (Free Pre-Development Consultation - Across Canada)
             </h2>
           </ScrollAnimationWrapper>
