@@ -140,7 +140,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
       <Header />
       <main>
         {/* Hero Section with Featured Image */}
-        <section className="relative h-[60vh] min-h-[400px] overflow-hidden">
+        <section className="relative w-full h-[600px] overflow-hidden">
           <div className="absolute inset-0 bg-muted">
             <img
               src={post.featuredImage}
@@ -152,15 +152,14 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                   "Failed to load blog header image:",
                   post.featuredImage,
                 );
-                // Set a fallback background color if image fails
                 const target = e.target as HTMLImageElement;
                 target.style.display = "none";
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           </div>
-          <div className="relative h-full flex items-end">
-            <div className="mx-auto max-w-4xl px-6 lg:px-8 pb-16 w-full">
+          <div className="relative min-h-[600px] md:min-h-[700px] flex items-end">
+            <div className="mx-auto max-w-4xl px-6 lg:px-8 pb-16 pt-32 w-full">
               <ScrollAnimationWrapper direction="bottom">
                 <Link
                   href="/blog"
@@ -170,7 +169,6 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                   Back to Blog
                 </Link>
 
-                {/* New flex container for badge and date */}
                 <div className="flex items-center gap-4 mb-6">
                   <Badge className="bg-primary text-primary-foreground">
                     {post.category}
@@ -185,13 +183,11 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                   {post.title}
                 </h1>
                 {post.subtitle && (
-                  <p className="text-2xl text-white/80 font-light mb-4 max-w-3xl italic">
+                  <p className="text-xl text-white/90 font-light mb-4 max-w-3xl italic">
                     {post.subtitle}
                   </p>
                 )}
-                <p className="text-xl text-white/90 max-w-3xl">
-                  {post.excerpt}
-                </p>
+                <p className="text-md text-white/80 max-w-xl">{post.excerpt}</p>
               </ScrollAnimationWrapper>
             </div>
           </div>

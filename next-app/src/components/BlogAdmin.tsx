@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect, useRef } from "react";
 import { Header } from "@/components/Header";
@@ -7,10 +7,25 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Edit, Trash2, Save, X, Upload, Image as ImageIcon, AlertCircle } from "lucide-react";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Save,
+  X,
+  Upload,
+  Image as ImageIcon,
+  AlertCircle,
+} from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import ReactQuill from "react-quill";
@@ -95,7 +110,9 @@ const BlogAdmin = () => {
 
       if (uploadError) throw uploadError;
 
-      const { data } = supabase.storage.from("blog-images").getPublicUrl(filePath);
+      const { data } = supabase.storage
+        .from("blog-images")
+        .getPublicUrl(filePath);
 
       toast({
         title: "Success",
@@ -178,10 +195,28 @@ const BlogAdmin = () => {
       return;
     }
 
+    // Prevent meta_description from being accidentally set to content
+    // Strip HTML tags from content for comparison
+    const contentText = editingPost.content?.replace(/<[^>]*>/g, '').trim() || '';
+    const metaDescText = editingPost.meta_description?.trim() || '';
+    
+    // If meta_description matches content (or a significant portion of it), warn the user
+    if (metaDescText && contentText && 
+        (metaDescText === contentText || (contentText.includes(metaDescText) && metaDescText.length > 50))) {
+      toast({
+        title: "Warning",
+        description: "Meta description appears to match content. Please enter a unique meta description.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const postData = {
       ...editingPost,
       tags: Array.isArray(editingPost.tags) ? editingPost.tags : [],
       keywords: Array.isArray(editingPost.keywords) ? editingPost.keywords : [],
+      // Ensure meta_description is explicitly set and not accidentally overwritten
+      meta_description: editingPost.meta_description?.trim() || '',
     };
 
     if (isCreating) {
@@ -254,7 +289,9 @@ const BlogAdmin = () => {
       <main className="py-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-4xl font-bold text-foreground">Blog Management</h1>
+            <h1 className="text-4xl font-bold text-foreground">
+              Blog Management
+            </h1>
             {!editingPost && (
               <Button onClick={handleCreate} className="gap-2">
                 <Plus className="h-4 w-4" />
@@ -266,7 +303,9 @@ const BlogAdmin = () => {
           {editingPost ? (
             <Card>
               <CardHeader>
-                <CardTitle>{isCreating ? "Create New Blog Post" : "Edit Blog Post"}</CardTitle>
+                <CardTitle>
+                  {isCreating ? "Create New Blog Post" : "Edit Blog Post"}
+                </CardTitle>
                 <CardDescription>
                   Fill in the details below. Fields marked with * are required.
                 </CardDescription>
@@ -277,10 +316,15 @@ const BlogAdmin = () => {
                   <AlertDescription>
                     <strong>Quick Tips:</strong>
                     <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
-                      <li>Slug auto-generates from title but can be customized</li>
+                      <li>
+                        Slug auto-generates from title but can be customized
+                      </li>
                       <li>Use the rich text editor for formatted content</li>
                       <li>Upload images to get permanent URLs automatically</li>
-                      <li>Reading time is in minutes (estimated based on word count)</li>
+                      <li>
+                        Reading time is in minutes (estimated based on word
+                        count)
+                      </li>
                       <li>Tags and keywords should be comma-separated</li>
                     </ul>
                   </AlertDescription>
@@ -310,30 +354,55 @@ const BlogAdmin = () => {
                       placeholder="auto-generated-from-title"
                       value={editingPost.slug}
                       onChange={(e) =>
-                        setEditingPost({ ...editingPost, slug: generateSlug(e.target.value) })
+                        setEditingPost({
+                          ...editingPost,
+                          slug: generateSlug(e.target.value),
+                        })
                       }
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label htmlFor="excerpt">Excerpt * (Short description)</Label>
+                  <Label htmlFor="excerpt">
+                    Excerpt * (Brief summary shown in hero)
+                  </Label>
                   <Textarea
                     id="excerpt"
-                    placeholder="Brief summary of the post (150-200 characters recommended)"
+                    placeholder="Brief summary that appears below the subtitle in the hero section (300 characters max)"
                     value={editingPost.excerpt}
                     onChange={(e) =>
                       setEditingPost({
                         ...editingPost,
                         excerpt: e.target.value,
-                        meta_description: e.target.value.slice(0, 160),
                       })
                     }
                     rows={3}
+                    maxLength={300}
                   />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {editingPost.excerpt?.length || 0} characters
-                  </p>
+                  <div className="mt-2 space-y-1">
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className={`h-2 rounded-full transition-all ${
+                          (editingPost.excerpt?.length || 0) >= 250
+                            ? "bg-yellow-500"
+                            : (editingPost.excerpt?.length || 0) >= 200
+                            ? "bg-blue-500"
+                            : "bg-green-500"
+                        }`}
+                        style={{
+                          width: `${Math.min(
+                            ((editingPost.excerpt?.length || 0) / 300) * 100,
+                            100
+                          )}%`,
+                        }}
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {editingPost.excerpt?.length || 0}/300 characters - Displays
+                      in hero section
+                    </p>
+                  </div>
                 </div>
 
                 <div>
@@ -342,13 +411,16 @@ const BlogAdmin = () => {
                     <ReactQuill
                       theme="snow"
                       value={editingPost.content}
-                      onChange={(content) => setEditingPost({ ...editingPost, content })}
+                      onChange={(content) =>
+                        setEditingPost({ ...editingPost, content })
+                      }
                       modules={modules}
                       className="min-h-[300px]"
                     />
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Use the editor toolbar to format your content. You can also paste HTML directly.
+                    Use the editor toolbar to format your content. You can also
+                    paste HTML directly.
                   </p>
                 </div>
 
@@ -360,7 +432,10 @@ const BlogAdmin = () => {
                         placeholder="Image URL or upload a file"
                         value={editingPost.featured_image}
                         onChange={(e) =>
-                          setEditingPost({ ...editingPost, featured_image: e.target.value })
+                          setEditingPost({
+                            ...editingPost,
+                            featured_image: e.target.value,
+                          })
                         }
                       />
                       <input
@@ -400,7 +475,10 @@ const BlogAdmin = () => {
                       id="author"
                       value={editingPost.author_name}
                       onChange={(e) =>
-                        setEditingPost({ ...editingPost, author_name: e.target.value })
+                        setEditingPost({
+                          ...editingPost,
+                          author_name: e.target.value,
+                        })
                       }
                     />
                   </div>
@@ -409,9 +487,15 @@ const BlogAdmin = () => {
                     <Input
                       id="publish_date"
                       type="date"
-                      value={editingPost.publish_date || new Date().toISOString().split("T")[0]}
+                      value={
+                        editingPost.publish_date ||
+                        new Date().toISOString().split("T")[0]
+                      }
                       onChange={(e) =>
-                        setEditingPost({ ...editingPost, publish_date: e.target.value })
+                        setEditingPost({
+                          ...editingPost,
+                          publish_date: e.target.value,
+                        })
                       }
                     />
                   </div>
@@ -425,7 +509,10 @@ const BlogAdmin = () => {
                       placeholder="e.g., Housing Resources"
                       value={editingPost.category}
                       onChange={(e) =>
-                        setEditingPost({ ...editingPost, category: e.target.value })
+                        setEditingPost({
+                          ...editingPost,
+                          category: e.target.value,
+                        })
                       }
                     />
                   </div>
@@ -451,7 +538,10 @@ const BlogAdmin = () => {
                         id="published"
                         checked={editingPost.is_published}
                         onCheckedChange={(checked) =>
-                          setEditingPost({ ...editingPost, is_published: checked })
+                          setEditingPost({
+                            ...editingPost,
+                            is_published: checked,
+                          })
                         }
                       />
                       <Label htmlFor="published">
@@ -466,11 +556,18 @@ const BlogAdmin = () => {
                   <Input
                     id="tags"
                     placeholder="affordable housing, BC, community"
-                    value={Array.isArray(editingPost.tags) ? editingPost.tags.join(", ") : ""}
+                    value={
+                      Array.isArray(editingPost.tags)
+                        ? editingPost.tags.join(", ")
+                        : ""
+                    }
                     onChange={(e) =>
                       setEditingPost({
                         ...editingPost,
-                        tags: e.target.value.split(",").map((t) => t.trim()).filter(Boolean),
+                        tags: e.target.value
+                          .split(",")
+                          .map((t) => t.trim())
+                          .filter(Boolean),
                       })
                     }
                   />
@@ -479,16 +576,20 @@ const BlogAdmin = () => {
                 <div className="border-t pt-4">
                   <h3 className="text-lg font-semibold mb-4">SEO Settings</h3>
                   <div className="space-y-4">
-
                     <div>
-                      <Label htmlFor="meta_title">Meta Title * (60 characters max)</Label>
+                      <Label htmlFor="meta_title">
+                        Meta Title * (60 characters max)
+                      </Label>
                       <Input
                         id="meta_title"
                         placeholder="SEO-optimized title for search engines"
                         maxLength={60}
                         value={editingPost.meta_title}
                         onChange={(e) =>
-                          setEditingPost({ ...editingPost, meta_title: e.target.value })
+                          setEditingPost({
+                            ...editingPost,
+                            meta_title: e.target.value,
+                          })
                         }
                       />
                       <p className="text-xs text-muted-foreground mt-1">
@@ -506,17 +607,23 @@ const BlogAdmin = () => {
                         maxLength={160}
                         value={editingPost.meta_description}
                         onChange={(e) =>
-                          setEditingPost({ ...editingPost, meta_description: e.target.value })
+                          setEditingPost({
+                            ...editingPost,
+                            meta_description: e.target.value,
+                          })
                         }
                         rows={3}
                       />
                       <p className="text-xs text-muted-foreground mt-1">
-                        {editingPost.meta_description?.length || 0}/160 characters
+                        {editingPost.meta_description?.length || 0}/160
+                        characters
                       </p>
                     </div>
 
                     <div>
-                      <Label htmlFor="keywords">SEO Keywords (comma-separated)</Label>
+                      <Label htmlFor="keywords">
+                        SEO Keywords (comma-separated)
+                      </Label>
                       <Input
                         id="keywords"
                         placeholder="keyword one, keyword two, keyword three"
@@ -544,7 +651,11 @@ const BlogAdmin = () => {
                     <Save className="h-4 w-4" />
                     Save
                   </Button>
-                  <Button onClick={handleCancel} variant="outline" className="gap-2">
+                  <Button
+                    onClick={handleCancel}
+                    variant="outline"
+                    className="gap-2"
+                  >
                     <X className="h-4 w-4" />
                     Cancel
                   </Button>
@@ -559,23 +670,46 @@ const BlogAdmin = () => {
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-xl font-bold text-foreground">{post.title}</h3>
-                          <Badge variant={post.is_published ? "default" : "secondary"}>
+                          <h3 className="text-xl font-bold text-foreground">
+                            {post.title}
+                          </h3>
+                          <Badge
+                            variant={
+                              post.is_published ? "default" : "secondary"
+                            }
+                          >
                             {post.is_published ? "Published" : "Draft"}
                           </Badge>
                         </div>
-                        <p className="text-muted-foreground mb-2">{post.excerpt}</p>
+                        <p className="text-muted-foreground mb-2">
+                          {post.excerpt}
+                        </p>
                         <div className="flex gap-2 text-sm text-muted-foreground">
                           <span>Category: {post.category}</span>
                           <span>•</span>
-                          <span>{new Date(post.publish_date).toLocaleDateString()}</span>
+                          <span>
+                            {new Date(post.publish_date).toLocaleDateString()}
+                          </span>
                         </div>
                       </div>
                       <div className="flex gap-2">
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => setEditingPost(post)}
+                          onClick={() => {
+                            // Defensive: Ensure meta_description is not accidentally set to content
+                            const postToEdit = { ...post };
+                            // If meta_description appears to be content, clear it
+                            const contentText = post.content?.replace(/<[^>]*>/g, '').trim() || '';
+                            const metaDescText = post.meta_description?.trim() || '';
+                            if (metaDescText && contentText && 
+                                (metaDescText === contentText || 
+                                 (contentText.includes(metaDescText) && metaDescText.length > 50 && contentText.length > metaDescText.length))) {
+                              console.warn('Meta description appears to match content. Clearing meta_description.');
+                              postToEdit.meta_description = '';
+                            }
+                            setEditingPost(postToEdit);
+                          }}
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
