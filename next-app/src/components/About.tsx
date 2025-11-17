@@ -264,7 +264,7 @@ const About = () => {
             <ScrollAnimationWrapper direction="top" delay={0}>
               <div className="text-center mb-16">
                 <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">
-                  Our Journey AAA
+                  Our Journey
                 </h2>
                 <p className="text-lg leading-8 text-muted-foreground">
                   Anhart was founded on a simple mission: build practical,
