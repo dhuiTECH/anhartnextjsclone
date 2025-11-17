@@ -30,7 +30,7 @@ import Link from "next/link";
 // =============================================================================
 // REACT & HOOKS IMPORTS
 // =============================================================================
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 // =============================================================================
 // CUSTOM HOOKS
@@ -181,6 +181,31 @@ const Home = () => {
    */
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileKey, setTurnstileKey] = useState(0); // Key to force Turnstile reset
+
+  // =============================================================================
+  // TURNSTILE CALLBACKS (Memoized to prevent re-render loops)
+  // =============================================================================
+
+  /**
+   * Turnstile success callback - memoized to prevent infinite re-renders
+   */
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  /**
+   * Turnstile error callback - memoized to prevent infinite re-renders
+   */
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
+
+  /**
+   * Turnstile expire callback - memoized to prevent infinite re-renders
+   */
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
 
   // =============================================================================
   // EVENT HANDLERS
@@ -751,15 +776,9 @@ const Home = () => {
                       <div className="flex justify-center" key={turnstileKey}>
                         <Turnstile
                           siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACBa8qdGLdmp2t2Q"}
-                          onSuccess={(token) => {
-                            setTurnstileToken(token);
-                          }}
-                          onError={() => {
-                            setTurnstileToken(null);
-                          }}
-                          onExpire={() => {
-                            setTurnstileToken(null);
-                          }}
+                          onSuccess={handleTurnstileSuccess}
+                          onError={handleTurnstileError}
+                          onExpire={handleTurnstileExpire}
                           theme="auto"
                           size="normal"
                         />

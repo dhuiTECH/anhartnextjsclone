@@ -44,6 +44,18 @@ export const Turnstile = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  
+  // Store callbacks in refs to prevent re-renders when they change
+  const onSuccessRef = useRef(onSuccess);
+  const onErrorRef = useRef(onError);
+  const onExpireRef = useRef(onExpire);
+  
+  // Update refs when callbacks change
+  useEffect(() => {
+    onSuccessRef.current = onSuccess;
+    onErrorRef.current = onError;
+    onExpireRef.current = onExpire;
+  }, [onSuccess, onError, onExpire]);
 
   useEffect(() => {
     // Check if Turnstile script is loaded
@@ -78,9 +90,15 @@ export const Turnstile = ({
     try {
       const widgetId = window.turnstile.render(containerRef.current, {
         sitekey: siteKey,
-        callback: onSuccess,
-        "error-callback": onError,
-        "expired-callback": onExpire,
+        callback: (token: string) => {
+          onSuccessRef.current?.(token);
+        },
+        "error-callback": () => {
+          onErrorRef.current?.();
+        },
+        "expired-callback": () => {
+          onExpireRef.current?.();
+        },
         theme,
         size,
       });
@@ -100,7 +118,7 @@ export const Turnstile = ({
         widgetIdRef.current = null;
       }
     };
-  }, [isLoaded, siteKey, onSuccess, onError, onExpire, theme, size]);
+  }, [isLoaded, siteKey, theme, size]); // Removed callbacks from dependencies
 
   const reset = () => {
     if (widgetIdRef.current && window.turnstile) {
