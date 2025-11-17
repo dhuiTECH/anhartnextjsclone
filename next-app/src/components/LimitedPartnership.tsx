@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { FileText, Users, DollarSign, Building, Shield, Target, Calendar, Mail, CheckCircle, ArrowRight, TrendingUp, Heart, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
+import { Turnstile } from "@/components/Turnstile";
 
 // Partnership expectations - what we expect from limited partners
 const partnershipExpectations = [{
@@ -171,6 +172,23 @@ export const LimitedPartnership = () => {
   // Horizontal gesture locking state
   const [isHorizontalGesture, setIsHorizontalGesture] = useState(false);
   const [gestureStartY, setGestureStartY] = useState(0);
+  
+  // Turnstile state
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState(0);
+  
+  // Turnstile callbacks (memoized to prevent re-render loops)
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+  
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
+  
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
 
   // =============================================================================
   // NAVIGATION FUNCTIONS
@@ -348,6 +366,12 @@ export const LimitedPartnership = () => {
       return; // Silently reject the submission
     }
     
+    // Validate Turnstile token
+    if (!turnstileToken) {
+      console.error("Turnstile verification required");
+      return;
+    }
+    
     const name = formData.get('name') as string;
     const success = await submitForm({
       name,
@@ -356,10 +380,13 @@ export const LimitedPartnership = () => {
       organization: formData.get('organization') as string,
       investment_amount: formData.get('investmentAmount') as string,
       message: formData.get('message') as string,
-      form_type: 'limited_partnership'
+      form_type: 'limited_partnership',
+      turnstile_token: turnstileToken || undefined,
     });
     if (success) {
       form.reset();
+      setTurnstileToken(null);
+      setTurnstileKey((prev) => prev + 1);
     }
   };
   return <section id="limited-partnership" className="py-12 md:py-24 bg-gradient-to-br from-muted/20 via-muted/30 to-muted/40 sm:py-[50px] relative overflow-hidden">
@@ -1232,7 +1259,19 @@ export const LimitedPartnership = () => {
                   <Input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
                 </div>
                 
-                <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+                {/* Cloudflare Turnstile Widget */}
+                <div className="flex justify-center" key={turnstileKey}>
+                  <Turnstile
+                    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACBa8qdGLdmp2t2Q"}
+                    onSuccess={handleTurnstileSuccess}
+                    onError={handleTurnstileError}
+                    onExpire={handleTurnstileExpire}
+                    theme="auto"
+                    size="normal"
+                  />
+                </div>
+                
+                <Button type="submit" className="w-full" size="lg" disabled={isSubmitting || !turnstileToken}>
                   {isSubmitting ? "Sending Inquiry..." : "Send Investment Inquiry"}
                 </Button>
               </form>

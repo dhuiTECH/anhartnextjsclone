@@ -12,7 +12,9 @@ import { DollarSign, Users, Award } from "lucide-react";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
 import { ThreeCardSection } from "@/components/shared/ThreeCardSection";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
+import { Turnstile } from "@/components/Turnstile";
 import partnerHeroImg from "@/assets/partner-hero-friendly.jpg";
+import { useCallback, useState } from "react";
 
 const partnerHero = typeof partnerHeroImg === 'string' ? partnerHeroImg : partnerHeroImg?.src || '';
 
@@ -21,6 +23,23 @@ const Partner = () => {
     submitForm,
     isSubmitting
   } = useFormSubmission();
+  
+  // Turnstile state
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState(0);
+  
+  // Turnstile callbacks (memoized to prevent re-render loops)
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+  
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
+  
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
   // Partner benefits data - structured for ThreeCardSection component
   const partnerBenefits = [{
     id: 1,
@@ -49,6 +68,12 @@ const Partner = () => {
       console.log("Bot detected via honeypot");
       return; // Silently reject the submission
     }
+    
+    // Validate Turnstile token
+    if (!turnstileToken) {
+      console.error("Turnstile verification required");
+      return;
+    }
 
     // Get form values
     const contact = formData.get('contact') as string;
@@ -67,12 +92,15 @@ const Partner = () => {
       organization: organization || '',
       subject: '',
       message: message,
-      form_type: 'partner'
+      form_type: 'partner',
+      turnstile_token: turnstileToken || undefined,
     };
     console.log('Submitting partner form data:', submissionData);
     const success = await submitForm(submissionData);
     if (success) {
       form.reset();
+      setTurnstileToken(null);
+      setTurnstileKey((prev) => prev + 1);
     }
   };
   return <div className="min-h-screen bg-background">
@@ -222,8 +250,20 @@ const Partner = () => {
                       <Input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
                     </div>
 
+                    {/* Cloudflare Turnstile Widget */}
+                    <div className="flex justify-center" key={turnstileKey}>
+                      <Turnstile
+                        siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACBa8qdGLdmp2t2Q"}
+                        onSuccess={handleTurnstileSuccess}
+                        onError={handleTurnstileError}
+                        onExpire={handleTurnstileExpire}
+                        theme="auto"
+                        size="normal"
+                      />
+                    </div>
+
                     <div className="flex justify-center">
-                      <Button type="submit" size="lg" className="bg-accent hover:bg-accent/90 text-white font-semibold px-8 sm:px-12 py-3 w-full sm:w-auto" disabled={isSubmitting}>
+                      <Button type="submit" size="lg" className="bg-accent hover:bg-accent/90 text-white font-semibold px-8 sm:px-12 py-3 w-full sm:w-auto" disabled={isSubmitting || !turnstileToken}>
                         {isSubmitting ? 'Submitting...' : 'Submit Partnership Request'}
                       </Button>
                     </div>

@@ -13,7 +13,8 @@ import { GoogleMapEmbed } from "@/components/shared/GoogleMaps";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
 import { CONTACT_INFO, AddressUtils } from "@/config/address";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
-import React, { useState } from "react";
+import { Turnstile } from "@/components/Turnstile";
+import React, { useState, useCallback } from "react";
 import contactHeroImg from "@/assets/baseAssets/contact-hero-1280x720.webp";
 
 const contactHero = typeof contactHeroImg === 'string' ? contactHeroImg : contactHeroImg?.src || '';
@@ -44,6 +45,40 @@ const contactInfo = [
 export const Contact = () => {
   const { submitForm, isSubmitting } = useFormSubmission();
   const [isSubscribing, setIsSubscribing] = useState(false);
+  
+  // Turnstile state for contact form
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState(0);
+  
+  // Turnstile state for newsletter form
+  const [newsletterTurnstileToken, setNewsletterTurnstileToken] = useState<string | null>(null);
+  const [newsletterTurnstileKey, setNewsletterTurnstileKey] = useState(0);
+  
+  // Turnstile callbacks for contact form (memoized)
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+  
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
+  
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
+  
+  // Turnstile callbacks for newsletter form (memoized)
+  const handleNewsletterTurnstileSuccess = useCallback((token: string) => {
+    setNewsletterTurnstileToken(token);
+  }, []);
+  
+  const handleNewsletterTurnstileError = useCallback(() => {
+    setNewsletterTurnstileToken(null);
+  }, []);
+  
+  const handleNewsletterTurnstileExpire = useCallback(() => {
+    setNewsletterTurnstileToken(null);
+  }, []);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -55,6 +90,13 @@ export const Contact = () => {
       console.log("Bot detected via honeypot");
       return; // Silently reject the submission
     }
+    
+    // Validate Turnstile token
+    if (!turnstileToken) {
+      console.error("Turnstile verification required");
+      return;
+    }
+    
     const name = formData.get("name") as string;
     const success = await submitForm({
       name,
@@ -64,9 +106,12 @@ export const Contact = () => {
       subject: formData.get("subject") as string,
       message: formData.get("message") as string,
       form_type: "contact",
+      turnstile_token: turnstileToken || undefined,
     });
     if (success) {
       form.reset();
+      setTurnstileToken(null);
+      setTurnstileKey((prev) => prev + 1);
     }
   };
   const handleSubscribeSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -79,6 +124,13 @@ export const Contact = () => {
     if (honeypot && honeypot.trim() !== "") {
       return;
     }
+    
+    // Validate Turnstile token
+    if (!newsletterTurnstileToken) {
+      console.error("Turnstile verification required");
+      return;
+    }
+    
     setIsSubscribing(true);
     try {
       const success = await submitForm({
@@ -89,9 +141,12 @@ export const Contact = () => {
         subject: "Newsletter Subscription",
         message: "Please subscribe me to the newsletter.",
         form_type: "newsletter_subscribe",
+        turnstile_token: newsletterTurnstileToken || undefined,
       });
       if (success) {
         form.reset();
+        setNewsletterTurnstileToken(null);
+        setNewsletterTurnstileKey((prev) => prev + 1);
       }
     } finally {
       setIsSubscribing(false);
@@ -194,7 +249,17 @@ export const Contact = () => {
                       <Label htmlFor="newsletter-website">Website (leave blank)</Label>
                       <Input id="newsletter-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
                     </div>
-                    <Button type="submit" size="sm" className="w-full" disabled={isSubscribing}>
+                    <div className="flex justify-center" key={newsletterTurnstileKey}>
+                      <Turnstile
+                        siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACBa8qdGLdmp2t2Q"}
+                        onSuccess={handleNewsletterTurnstileSuccess}
+                        onError={handleNewsletterTurnstileError}
+                        onExpire={handleNewsletterTurnstileExpire}
+                        theme="auto"
+                        size="normal"
+                      />
+                    </div>
+                    <Button type="submit" size="sm" className="w-full" disabled={isSubscribing || !newsletterTurnstileToken}>
                       {isSubscribing ? "Subscribing…" : "Subscribe"}
                     </Button>
                   </form>
@@ -290,7 +355,19 @@ export const Contact = () => {
                     <Input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
                   </div>
 
-                  <Button size="lg" className="w-full" type="submit" disabled={isSubmitting}>
+                  {/* Cloudflare Turnstile Widget */}
+                  <div className="flex justify-center" key={turnstileKey}>
+                    <Turnstile
+                      siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACBa8qdGLdmp2t2Q"}
+                      onSuccess={handleTurnstileSuccess}
+                      onError={handleTurnstileError}
+                      onExpire={handleTurnstileExpire}
+                      theme="auto"
+                      size="normal"
+                    />
+                  </div>
+
+                  <Button size="lg" className="w-full" type="submit" disabled={isSubmitting || !turnstileToken}>
                     {isSubmitting ? "Submitting..." : "Submit Message"}
                   </Button>
                 </form>

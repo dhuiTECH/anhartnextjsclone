@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown, X } from "lucide-react";
 import anhartLogoImg from "@/assets/anhart-logo.png";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import {
   Dialog,
   DialogClose,
@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Turnstile } from "@/components/Turnstile";
 
 const anhartLogo =  
   typeof anhartLogoImg === "string" ? anhartLogoImg : anhartLogoImg?.src || "";
@@ -32,6 +33,23 @@ export const Hero = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  
+  // Turnstile state
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState(0);
+  
+  // Turnstile callbacks (memoized to prevent re-render loops)
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+  
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
+  
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -39,16 +57,27 @@ export const Hero = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate Turnstile token
+    if (!turnstileToken) {
+      alert("Please complete the verification.");
+      return;
+    }
+    
     setIsSubmitting(true);
 
     const form = e.currentTarget;
     const data = new FormData(form);
+    data.append("turnstile_token", turnstileToken);
 
     try {
       const res = await fetch(GOOGLE_SHEET_URL, { method: "POST", body: data });
       if (res.ok) {
         setIsSuccess(true);
         form.reset();
+        setFormData({ name: "", email: "", phone: "", location: "", message: "" });
+        setTurnstileToken(null);
+        setTurnstileKey((prev) => prev + 1);
         setTimeout(() => {
           setIsDialogOpen(false);
           setIsSuccess(false);
@@ -227,8 +256,18 @@ export const Hero = () => {
                           <Label htmlFor="message">Message</Label>
                           <Textarea id="message" name="message" value={formData.message} onChange={handleInputChange} placeholder="Details about your project..." rows={4} required />
                         </div>
+                        <div className="flex justify-center" key={turnstileKey}>
+                          <Turnstile
+                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACBa8qdGLdmp2t2Q"}
+                            onSuccess={handleTurnstileSuccess}
+                            onError={handleTurnstileError}
+                            onExpire={handleTurnstileExpire}
+                            theme="auto"
+                            size="normal"
+                          />
+                        </div>
                         <DialogFooter>
-                          <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
+                          <Button type="submit" disabled={isSubmitting || !turnstileToken} className="w-full sm:w-auto">
                             {isSubmitting ? "Sending..." : "Send"}
                           </Button>
                         </DialogFooter>
@@ -310,8 +349,18 @@ export const Hero = () => {
                           <Label htmlFor="message">Message</Label>
                           <Textarea id="message" name="message" value={formData.message} onChange={handleInputChange} placeholder="Details about your project..." rows={4} required />
                         </div>
+                        <div className="flex justify-center" key={turnstileKey}>
+                          <Turnstile
+                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACBa8qdGLdmp2t2Q"}
+                            onSuccess={handleTurnstileSuccess}
+                            onError={handleTurnstileError}
+                            onExpire={handleTurnstileExpire}
+                            theme="auto"
+                            size="normal"
+                          />
+                        </div>
                         <DialogFooter>
-                          <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
+                          <Button type="submit" disabled={isSubmitting || !turnstileToken} className="w-full sm:w-auto">
                             {isSubmitting ? "Sending..." : "Send"}
                           </Button>
                         </DialogFooter>
