@@ -185,7 +185,7 @@ export const Hero = () => {
                       variant="outline"
                       className="bg-white/5 backdrop-blur-sm border-white/30 text-white font-semibold px-3 py-2 text-sm w-full hover:bg-white/15 hover:border-white/50 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg"
                     >
-                      Partner With Us
+                      Book Now
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-md border border-primary/20 shadow-2xl">
