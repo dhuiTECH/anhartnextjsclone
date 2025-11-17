@@ -13,6 +13,11 @@
  * - Insert code snippets with syntax highlighting
  * - Manage SEO metadata (title, description, keywords)
  * - Calculate reading time automatically
+ * 
+ * Security Note:
+ * - CAPTCHA/Turnstile is intentionally DISABLED for admin operations
+ * - Admin access is already protected by authentication middleware
+ * - No CAPTCHA validation is required for publishing/updating blog posts
  */
 
 "use client";
@@ -241,16 +246,19 @@ export default function AdminClient({ user }: { user: any }) {
   };
 
   // ============================================================================
-  // IMAGE UPLOAD FUNCTIONS - Featured Image
+  // IMAGE UPLOAD FUNCTIONS - Hero Banner / Featured Image
   // ============================================================================
+  // NOTE: This is SEPARATE from content image uploads below
+  // This handles the hero banner/featured image at the top of the blog post
   
   /**
    * handleImageUpload
    * 
-   * Purpose: Upload a featured image file to Supabase Storage bucket.
+   * Purpose: Upload a hero banner/featured image file to Supabase Storage bucket.
+   * This is the main image displayed at the top of the blog post (separate from content images).
    * Generates a unique filename to prevent conflicts and returns the public URL.
    * 
-   * @param file - The image file to upload
+   * @param file - The hero banner image file to upload
    * @returns The public URL of the uploaded image, or null if upload fails
    */
   const handleImageUpload = async (file: File) => {
@@ -288,8 +296,9 @@ export default function AdminClient({ user }: { user: any }) {
   /**
    * handleFileSelect
    * 
-   * Purpose: Handle file selection from the featured image file input.
+   * Purpose: Handle file selection from the hero banner/featured image file input.
    * Triggers upload and updates the featured image URL state.
+   * This is separate from content image uploads.
    * 
    * @param e - File input change event
    */
@@ -304,16 +313,19 @@ export default function AdminClient({ user }: { user: any }) {
   };
 
   // ============================================================================
-  // IMAGE UPLOAD FUNCTIONS - Content Images
+  // IMAGE UPLOAD FUNCTIONS - Content Images (Within Article Body)
   // ============================================================================
+  // NOTE: This is SEPARATE from the hero banner upload above
+  // This handles images that go inside the blog post content/body
   
   /**
    * handleContentImageUpload
    * 
    * Purpose: Upload an image file and insert it directly into the blog content
    * at the current cursor position in the editor.
+   * This is separate from the hero banner - these images go within the article body.
    * 
-   * @param file - The image file to upload and insert
+   * @param file - The content image file to upload and insert
    * @returns The public URL of the uploaded image, or null if upload fails
    */
   const handleContentImageUpload = async (file: File) => {
@@ -358,7 +370,8 @@ export default function AdminClient({ user }: { user: any }) {
    * handleContentImageSelect
    * 
    * Purpose: Handle file selection from the content image file input.
-   * Triggers upload and insertion, then resets the input for re-selection.
+   * Triggers upload and insertion into the editor, then resets the input for re-selection.
+   * This is separate from the hero banner upload - this is for images within the article.
    * 
    * @param e - File input change event
    */
@@ -390,10 +403,16 @@ export default function AdminClient({ user }: { user: any }) {
    * 3. Calculate reading time based on word count
    * 4. Extract keywords from title, meta description, and category
    * 5. Either update existing post or insert new post
+   * 
+   * Security: No CAPTCHA/Turnstile validation required - admin access is
+   * already protected by authentication middleware at the route level.
    */
   const publish = async () => {
     if (!editor) return;
     setLoading(true);
+    
+    // NOTE: CAPTCHA/Turnstile validation is intentionally disabled for admin operations
+    // Admin access is protected by authentication, so no additional CAPTCHA is needed
     
     // Get HTML content from the rich text editor
     const content = editor.getHTML();
@@ -724,21 +743,24 @@ export default function AdminClient({ user }: { user: any }) {
             maxLength={160}
             className="w-full p-3 border rounded"
           />
-          {/* Featured Image Section */}
-          {/* Purpose: Main image displayed at the top of the blog post */}
+          {/* ==================================================================== */}
+          {/* HERO BANNER / FEATURED IMAGE UPLOAD */}
+          {/* Purpose: Upload the main hero banner image displayed at the top of the blog post */}
+          {/* This is separate from content images - it's the featured/cover image */}
+          {/* ==================================================================== */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Featured Image *
+              Hero Banner / Featured Image *
             </label>
             <div className="flex gap-2">
               {/* URL Input - Can paste image URL directly */}
               <input
-                placeholder="Image URL or upload a file"
+                placeholder="Hero banner image URL or upload a file"
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
                 className="flex-1 p-3 border rounded"
               />
-              {/* Hidden File Input - Triggered by Upload button */}
+              {/* Hidden File Input - For hero banner upload only */}
               <input
                 ref={fileInputRef}
                 type="file"
@@ -746,22 +768,22 @@ export default function AdminClient({ user }: { user: any }) {
                 onChange={handleFileSelect}
                 className="hidden"
               />
-              {/* Upload Button - Opens file picker and uploads to Supabase */}
+              {/* Upload Button - Uploads hero banner to Supabase */}
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading}
                 className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
-                {uploading ? "Uploading..." : "Upload"}
+                {uploading ? "Uploading..." : "Upload Hero"}
               </button>
             </div>
-            {/* Image Preview - Shows selected/uploaded featured image */}
+            {/* Hero Banner Preview - Shows selected/uploaded featured image */}
             {image && (
               <div className="mt-2 relative w-full h-48 border rounded-md overflow-hidden">
                 <img
                   src={image}
-                  alt="Preview"
+                  alt="Hero banner preview"
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     console.error("Failed to load image:", image);
@@ -772,7 +794,7 @@ export default function AdminClient({ user }: { user: any }) {
               </div>
             )}
             <p className="text-xs text-gray-500 mt-1">
-              Upload an image or paste a URL. Recommended size: 1200x630px
+              Upload hero banner image or paste a URL. Recommended size: 1200x630px
             </p>
           </div>
 
@@ -914,8 +936,12 @@ export default function AdminClient({ user }: { user: any }) {
                 </button>
                 <div className="w-px bg-gray-300 mx-1"></div>
                 
-                {/* Image Insertion Buttons - Upload or insert by URL */}
-                {/* Hidden file input for content image uploads */}
+                {/* ================================================================ */}
+                {/* CONTENT IMAGE UPLOAD - Separate from hero banner upload */}
+                {/* Purpose: Upload images to insert within the blog post content */}
+                {/* This is different from the hero banner - these go in the article body */}
+                {/* ================================================================ */}
+                {/* Hidden file input for content image uploads (separate from hero banner) */}
                 <input
                   ref={contentImageInputRef}
                   type="file"
@@ -923,26 +949,26 @@ export default function AdminClient({ user }: { user: any }) {
                   onChange={handleContentImageSelect}
                   className="hidden"
                 />
-                {/* Upload Image Button - Uploads file to Supabase and inserts */}
+                {/* Upload Content Image Button - Uploads to Supabase and inserts into editor */}
                 <button
                   type="button"
                   onClick={() => contentImageInputRef.current?.click()}
                   disabled={uploadingContentImage}
                   className="px-3 py-1 rounded text-sm bg-purple-600 text-white hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-1"
-                  title="Upload and insert image"
+                  title="Upload image for content (separate from hero banner)"
                 >
                   {uploadingContentImage ? (
                     <>⏳ Uploading...</>
                   ) : (
-                    <>🖼️ Upload Image</>
+                    <>🖼️ Upload Content Image</>
                   )}
                 </button>
-                {/* Insert URL Button - Opens dialog to insert image by URL */}
+                {/* Insert URL Button - Opens dialog to insert image by URL into content */}
                 <button
                   type="button"
                   onClick={() => setShowImageDialog(true)}
                   className="px-3 py-1 rounded text-sm bg-blue-600 text-white hover:bg-blue-700"
-                  title="Insert image by URL"
+                  title="Insert image by URL into content"
                 >
                   📎 Insert URL
                 </button>
