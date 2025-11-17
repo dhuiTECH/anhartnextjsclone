@@ -3,5 +3,17 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "outputDirectory": ".next"
+  "outputDirectory": ".next",
+  "redirects": [
+    {
+      "source": "/the-ryder",
+      "destination": "/",
+      "permanent": true
+    }
+    {
+      "source": "/news",
+      "destination": "/blog",
+      "permanent": true
+    }
+  ]
 }
