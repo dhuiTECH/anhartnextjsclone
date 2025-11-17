@@ -917,6 +917,26 @@ export default function AdminClient({ user }: { user: any }) {
                 </button>
                 <div className="w-px bg-gray-300 mx-1"></div>
                 
+                {/* Blockquote Button - Quote/blockquote formatting */}
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().toggleBlockquote().run()}
+                  className={`px-3 py-1 rounded text-sm ${editor.isActive("blockquote") ? "bg-indigo-600 text-white" : "bg-white text-gray-700 hover:bg-gray-200"}`}
+                  title="Blockquote"
+                >
+                  "
+                </button>
+                {/* Horizontal Rule Button - Insert divider line (---) */}
+                <button
+                  type="button"
+                  onClick={() => editor.chain().focus().setHorizontalRule().run()}
+                  className="px-3 py-1 rounded text-sm bg-white text-gray-700 hover:bg-gray-200"
+                  title="Insert horizontal rule (---)"
+                >
+                  ─
+                </button>
+                <div className="w-px bg-gray-300 mx-1"></div>
+                
                 {/* Code Block Buttons - Toggle code block or insert code snippet */}
                 <button
                   type="button"
@@ -1063,6 +1083,25 @@ export default function AdminClient({ user }: { user: any }) {
                   margin: 1em 0;
                   border-radius: 0.5em;
                   display: block;
+                }
+                .ProseMirror blockquote {
+                  border-left: 4px solid #4f46e5;
+                  padding-left: 1em;
+                  margin: 1.5em 0;
+                  font-style: italic;
+                  color: #4b5563;
+                  background-color: #f9fafb;
+                  padding: 1em 1em 1em 1.5em;
+                  border-radius: 0.25em;
+                }
+                .ProseMirror hr {
+                  border: none;
+                  border-top: 2px solid #e5e7eb;
+                  margin: 2em 0;
+                  width: 100%;
+                }
+                .ProseMirror hr:hover {
+                  border-top-color: #9ca3af;
                 }
               `}</style>
               <EditorContent editor={editor} />
