@@ -11,7 +11,7 @@
       "permanent": true
     },
     {
-      "source": "/news",
+      "source": "/tag/news",
       "destination": "/blog",
       "permanent": true
     },
@@ -29,6 +29,10 @@
       "source": "/work",
       "destination": "/portfolio",
       "permanent": true
+    },
+    {
+      "source": "/impact",
+      "destination": "/limited-partnership"
     }
   ]
 }
