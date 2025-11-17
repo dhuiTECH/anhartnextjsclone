@@ -22,4 +22,9 @@ The application is built with **Next.js 16 (App Router)**, React 18 with TypeScr
 ## External Dependencies
 - **Supabase:** Used for database (PostgreSQL), authentication, and file storage (`member-files` bucket).
 - **Google Analytics:** Integrated for tracking user behavior, configured via `NEXT_PUBLIC_GA_TRACKING_ID`.
-- **TipTap:** Rich text editor used in the admin dashboard for blog post creation, including `@tiptap/react`, `@tiptap/starter-kit`, and `CodeBlockLowlight` with `lowlight` and `highlight.js` for syntax highlighting.
+- **TipTap:** Rich text editor used in the admin dashboard for blog post creation, including `@tiptap/react`, `@tiptap/starter-kit`, `CodeBlockLowlight` with `lowlight` and `highlight.js` for syntax highlighting, and "Insert Code" dialog for adding formatted code blocks.
+
+## Known Issues
+- **Homepage Video Background:** The hero section uses a 19MB video file (`/mediaAssets/hero-background-video.mp4`) which may load slowly. If the video doesn't load, a pink/coral gradient background is shown as fallback.
+- **Image Registry:** AVIF image variants are incorrectly mapped to WebP files in `src/assets/registry.ts`. The OptimizedImage component has been updated to skip AVIF and use WebP directly.
+- **Blog Image Loading:** Fixed missing blog featured images by updating database references to point to existing images in `/public/blog/` directory.

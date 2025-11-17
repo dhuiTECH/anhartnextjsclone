@@ -36,6 +36,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [forceVisible, setForceVisible] = useState(false);
 
   // Get configuration from category
   const config = ImageService.getImageConfig(category);
@@ -45,6 +46,18 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   const finalSizes = sizes || config.sizes;
   const finalPriority = priority || config.priority;
   const finalLoading = loading || config.loading;
+
+  // Safety timeout: force image to be visible after 2 seconds even if onLoad doesn't fire
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isLoaded && !hasError) {
+        console.warn(`Image ${imageName} load event didn't fire, making visible anyway`);
+        setForceVisible(true);
+      }
+    }, 2000);
+    
+    return () => clearTimeout(timer);
+  }, [imageName, isLoaded, hasError]);
 
   const handleLoad = () => {
     setIsLoaded(true);
@@ -73,20 +86,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   return (
     <div className={`relative overflow-hidden ${className}`}>
-      {!isLoaded && !hasError && (
-        <Skeleton 
-          className="absolute inset-0" 
-        />
-      )}
-      
       <picture>
-        {/* AVIF format (best compression) */}
-        <source
-          type="image/avif"
-          srcSet={avifSrcSet}
-          sizes={finalSizes}
-        />
-        
         {/* WebP format (good compression, wide support) */}
         <source
           type="image/webp"
@@ -94,16 +94,14 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
           sizes={finalSizes}
         />
         
-        {/* Fallback image */}
+        {/* Fallback image - starts visible, no opacity animation */}
         <img
-          src={hasError ? '/placeholder.svg' : fallbackSrc}
+          src={fallbackSrc}
           alt={alt}
           loading={finalPriority ? 'eager' : finalLoading}
           onLoad={handleLoad}
           onError={handleError}
-          className={`transition-opacity duration-500 ${
-            isLoaded ? 'opacity-100' : 'opacity-0'
-          } w-full h-full object-cover`}
+          className="w-full h-full object-cover"
           style={{ aspectRatio: finalAspectRatio }}
           decoding="async"
           fetchPriority={finalPriority ? 'high' : 'auto'}
