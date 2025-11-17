@@ -90,6 +90,54 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
     });
   };
 
+  // Helper function to normalize image URLs
+  const normalizeImageUrl = (url: string | undefined | null): string => {
+    if (!url) return "/blog/default.jpg";
+    
+    // If it's already a full URL (http/https), return as is
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+    
+    // If it's a data URL, return as is
+    if (url.startsWith("data:")) {
+      return url;
+    }
+    
+    // If it starts with /, it's an absolute path - add domain
+    if (url.startsWith("/")) {
+      return `https://anhart.ca${url}`;
+    }
+    
+    // Otherwise, treat as relative path and add domain
+    return `https://anhart.ca/${url}`;
+  };
+
+  // Process content HTML to fix image URLs
+  const processContentImages = (html: string): string => {
+    if (!html) return html;
+    
+    // Use a temporary div to parse and modify HTML
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+    
+    // Find all img tags and fix their src attributes
+    const images = tempDiv.querySelectorAll("img");
+    images.forEach((img) => {
+      const src = img.getAttribute("src");
+      if (src) {
+        img.setAttribute("src", normalizeImageUrl(src));
+        // Add error handling for images in content
+        img.onerror = function() {
+          console.error("Failed to load image in content:", src);
+          this.style.display = "none";
+        };
+      }
+    });
+    
+    return tempDiv.innerHTML;
+  };
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -143,7 +191,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
         <section className="relative w-full h-[800px] overflow-hidden pb-3">
           <div className="absolute inset-0 bg-muted">
             <img
-              src={post.featuredImage}
+              src={normalizeImageUrl(post.featuredImage)}
               alt={post.title}
               className="w-full h-full object-cover"
               loading="eager"
@@ -179,15 +227,32 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                   </div>
                 </div>
 
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                <h1 
+                  className="text-4xl md:text-5xl font-bold text-white mb-4"
+                  style={{
+                    textShadow: '2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5)'
+                  }}
+                >
                   {post.title}
                 </h1>
                 {post.subtitle && (
-                  <p className="text-xl text-white/90 font-light mb-4 max-w-3xl italic">
+                  <p 
+                    className="text-xl text-white/90 font-light mb-4 max-w-3xl italic"
+                    style={{
+                      textShadow: '1px 1px 6px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 0, 0, 0.4)'
+                    }}
+                  >
                     {post.subtitle}
                   </p>
                 )}
-                <p className="text-md text-white/80 max-w-xl">{post.excerpt}</p>
+                <p 
+                  className="text-md text-white/80 max-w-xl"
+                  style={{
+                    textShadow: '1px 1px 4px rgba(0, 0, 0, 0.6)'
+                  }}
+                >
+                  {post.excerpt}
+                </p>
               </ScrollAnimationWrapper>
             </div>
           </div>
@@ -228,8 +293,14 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                   padding: 0 !important;
                 }
               `}</style>
-              <article className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary hover:prose-a:text-primary-dark prose-strong:text-foreground">
-                <div dangerouslySetInnerHTML={{ __html: post.content }} />
+              <article className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary hover:prose-a:text-primary-dark prose-strong:text-foreground prose-img:rounded-lg prose-img:shadow-lg">
+                <div 
+                  dangerouslySetInnerHTML={{ 
+                    __html: typeof window !== "undefined" 
+                      ? processContentImages(post.content) 
+                      : post.content 
+                  }} 
+                />
               </article>
 
               {/* Author and Reading Time - REMOVED from here */}
@@ -257,10 +328,18 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                       <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-border bg-card">
                         <div className="relative h-48 overflow-hidden">
                           <img
-                            src={relatedPost.featuredImage}
+                            src={normalizeImageUrl(relatedPost.featuredImage)}
                             alt={relatedPost.title}
                             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                             loading="lazy"
+                            onError={(e) => {
+                              console.error(
+                                "Failed to load related post image:",
+                                relatedPost.featuredImage,
+                              );
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = "none";
+                            }}
                           />
                         </div>
                         <CardContent className="p-6">

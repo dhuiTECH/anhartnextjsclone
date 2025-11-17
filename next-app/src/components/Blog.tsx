@@ -54,6 +54,29 @@ const Blog = () => {
     });
   }, [allPosts, selectedCategory, searchQuery]);
 
+  // Helper function to normalize image URLs
+  const normalizeImageUrl = (url: string | undefined | null): string => {
+    if (!url) return "/blog/default.jpg";
+    
+    // If it's already a full URL (http/https), return as is
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+    
+    // If it's a data URL, return as is
+    if (url.startsWith("data:")) {
+      return url;
+    }
+    
+    // If it starts with /, it's an absolute path - add domain
+    if (url.startsWith("/")) {
+      return `https://anhart.ca${url}`;
+    }
+    
+    // Otherwise, treat as relative path and add domain
+    return `https://anhart.ca/${url}`;
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -139,10 +162,18 @@ const Blog = () => {
                         {post.featuredImage && (
                           <div className="relative h-48 overflow-hidden">
                             <img
-                              src={post.featuredImage}
+                              src={normalizeImageUrl(post.featuredImage)}
                               alt={post.title}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               loading="lazy"
+                              onError={(e) => {
+                                console.error(
+                                  "Failed to load blog listing image:",
+                                  post.featuredImage,
+                                );
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = "none";
+                              }}
                             />
                           </div>
                         )}

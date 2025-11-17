@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { EditorContent, useEditor } from "@tiptap/react";
@@ -40,6 +40,8 @@ export default function AdminClient({ user }: { user: any }) {
   const [showCodeDialog, setShowCodeDialog] = useState(false);
   const [codeInput, setCodeInput] = useState("");
   const [codeLanguage, setCodeLanguage] = useState("html");
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   const editor = useEditor({
@@ -117,6 +119,46 @@ export default function AdminClient({ user }: { user: any }) {
     setPublishDate(today);
 
     if (editor) editor.commands.clearContent();
+  };
+
+  // Upload image to Supabase Storage
+  const handleImageUpload = async (file: File) => {
+    if (!file) return null;
+
+    setUploading(true);
+    try {
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("blog-images")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage
+        .from("blog-images")
+        .getPublicUrl(filePath);
+
+      alert("Image uploaded successfully!");
+      return data.publicUrl;
+    } catch (error: any) {
+      alert("Error uploading image: " + (error.message || "Failed to upload image"));
+      return null;
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const url = await handleImageUpload(file);
+    if (url) {
+      setImage(url);
+    }
   };
 
   const publish = async () => {
@@ -365,12 +407,51 @@ export default function AdminClient({ user }: { user: any }) {
             maxLength={160}
             className="w-full p-3 border rounded"
           />
-          <input
-            placeholder="Featured Image URL"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-            className="w-full p-3 border rounded"
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Featured Image *
+            </label>
+            <div className="flex gap-2">
+              <input
+                placeholder="Image URL or upload a file"
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
+                className="flex-1 p-3 border rounded"
+              />
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                {uploading ? "Uploading..." : "Upload"}
+              </button>
+            </div>
+            {image && (
+              <div className="mt-2 relative w-full h-48 border rounded-md overflow-hidden">
+                <img
+                  src={image}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    console.error("Failed to load image:", image);
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = "none";
+                  }}
+                />
+              </div>
+            )}
+            <p className="text-xs text-gray-500 mt-1">
+              Upload an image or paste a URL. Recommended size: 1200x630px
+            </p>
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <select
