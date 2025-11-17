@@ -113,30 +113,6 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
     return `https://anhart.ca/${url}`;
   };
 
-  // Process content HTML to fix image URLs
-  const processContentImages = (html: string): string => {
-    if (!html) return html;
-    
-    // Use a temporary div to parse and modify HTML
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = html;
-    
-    // Find all img tags and fix their src attributes
-    const images = tempDiv.querySelectorAll("img");
-    images.forEach((img) => {
-      const src = img.getAttribute("src");
-      if (src) {
-        img.setAttribute("src", normalizeImageUrl(src));
-        // Add error handling for images in content
-        img.onerror = function() {
-          console.error("Failed to load image in content:", src);
-          this.style.display = "none";
-        };
-      }
-    });
-    
-    return tempDiv.innerHTML;
-  };
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -230,7 +206,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                 <h1 
                   className="text-4xl md:text-5xl font-bold text-white mb-4"
                   style={{
-                    textShadow: '2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.5)'
+                    textShadow: '2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.7)'
                   }}
                 >
                   {post.title}
@@ -296,9 +272,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
               <article className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary hover:prose-a:text-primary-dark prose-strong:text-foreground prose-img:rounded-lg prose-img:shadow-lg">
                 <div 
                   dangerouslySetInnerHTML={{ 
-                    __html: typeof window !== "undefined" 
-                      ? processContentImages(post.content) 
-                      : post.content 
+                    __html: post.content
                   }} 
                 />
               </article>
