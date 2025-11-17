@@ -1,13 +1,15 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Facebook, Twitter, Linkedin, Instagram, Mail, MapPin } from "lucide-react";
 import anhartLogoImg from "@/assets/anhart-logo-white.png";
 import { CONTACT_INFO, AddressUtils } from "@/config/address";
 import { openGoogleMapsSearch } from "@/utils/externalLinks";
 import { useNewsletterSubscription } from "@/hooks/useNewsletterSubscription";
+import { Turnstile } from "@/components/Turnstile";
 
 const anhartLogo = typeof anhartLogoImg === 'string' ? anhartLogoImg : anhartLogoImg?.src || '';
 
@@ -31,15 +33,48 @@ const socialLinks = [{
 }];
 export const Footer = () => {
   const [email, setEmail] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState(0);
+  const [honeypot, setHoneypot] = useState("");
+  
   const {
     subscribe,
     isSubmitting
   } = useNewsletterSubscription();
+
+  // Turnstile callbacks (memoized to prevent re-render loops)
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+  }, []);
+
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = await subscribe(email);
+    
+    // Honeypot check - if filled, it's likely a bot
+    if (honeypot && honeypot.trim() !== "") {
+      console.log("Bot detected via honeypot");
+      return; // Silently reject the submission
+    }
+
+    // Validate Turnstile token
+    if (!turnstileToken) {
+      return; // Prevent submission without Turnstile verification
+    }
+
+    const success = await subscribe(email, turnstileToken);
     if (success) {
       setEmail(""); // Clear form on success
+      setHoneypot(""); // Clear honeypot
+      setTurnstileToken(null);
+      setTurnstileKey((prev) => prev + 1); // Reset Turnstile
     }
   };
   return (
@@ -119,11 +154,39 @@ export const Footer = () => {
                     <p className="text-sm leading-6 text-background/80">
                       Subscribe to our newsletter for the latest housing news, project updates, and community impact stories.
                     </p>
-                    <form onSubmit={handleNewsletterSubmit} className="flex gap-x-3">
-                      <Input type="email" placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} required disabled={isSubmitting} className="flex-1 bg-background/10 text-background placeholder:text-background/60 border-background/30 focus:border-background/50" />
-                      <Button type="submit" variant="secondary" size="sm" className="px-4" disabled={isSubmitting} aria-label="Subscribe to newsletter">
-                        <Mail className="h-4 w-4" />
-                      </Button>
+                    <form onSubmit={handleNewsletterSubmit} className="space-y-3">
+                      <div className="flex gap-x-3">
+                        <Input type="email" placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} required disabled={isSubmitting} className="flex-1 bg-background/10 text-background placeholder:text-background/60 border-background/30 focus:border-background/50" />
+                        <Button type="submit" variant="secondary" size="sm" className="px-4" disabled={isSubmitting || !turnstileToken} aria-label="Subscribe to newsletter">
+                          <Mail className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      
+                      {/* Honeypot field - hidden from users but visible to bots */}
+                      <div style={{ display: "none" }}>
+                        <Label htmlFor="newsletter-website">Website (leave blank)</Label>
+                        <Input 
+                          id="newsletter-website" 
+                          name="website" 
+                          type="text" 
+                          value={honeypot}
+                          onChange={e => setHoneypot(e.target.value)}
+                          tabIndex={-1} 
+                          autoComplete="off" 
+                        />
+                      </div>
+
+                      {/* Cloudflare Turnstile Widget - Invisible mode */}
+                      <div key={turnstileKey}>
+                        <Turnstile
+                          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACBa8qdGLdmp2t2Q"}
+                          onSuccess={handleTurnstileSuccess}
+                          onError={handleTurnstileError}
+                          onExpire={handleTurnstileExpire}
+                          theme="auto"
+                          size="invisible"
+                        />
+                      </div>
                     </form>
                     <p className="text-xs text-background/60">
                       We respect your privacy. Unsubscribe at any time.
@@ -205,26 +268,54 @@ export const Footer = () => {
               
               {/* Newsletter Signup - Compact */}
               <div className="text-center">
-                <form onSubmit={handleNewsletterSubmit} className="flex gap-x-2 max-w-xs mx-auto">
-                  <Input 
-                    type="email" 
-                    placeholder="Email for updates" 
-                    value={email} 
-                    onChange={e => setEmail(e.target.value)} 
-                    required 
-                    disabled={isSubmitting} 
-                    className="flex-1 bg-background/10 text-background placeholder:text-background/60 border-background/30 focus:border-background/50 text-xs" 
-                  />
-                  <Button 
-                    type="submit" 
-                    variant="secondary" 
-                    size="sm" 
-                    className="px-2" 
-                    disabled={isSubmitting} 
-                    aria-label="Subscribe to newsletter"
-                  >
-                    <Mail className="h-3 w-3" />
-                  </Button>
+                <form onSubmit={handleNewsletterSubmit} className="space-y-2 max-w-xs mx-auto">
+                  <div className="flex gap-x-2">
+                    <Input 
+                      type="email" 
+                      placeholder="Email for updates" 
+                      value={email} 
+                      onChange={e => setEmail(e.target.value)} 
+                      required 
+                      disabled={isSubmitting} 
+                      className="flex-1 bg-background/10 text-background placeholder:text-background/60 border-background/30 focus:border-background/50 text-xs" 
+                    />
+                    <Button 
+                      type="submit" 
+                      variant="secondary" 
+                      size="sm" 
+                      className="px-2" 
+                      disabled={isSubmitting || !turnstileToken} 
+                      aria-label="Subscribe to newsletter"
+                    >
+                      <Mail className="h-3 w-3" />
+                    </Button>
+                  </div>
+                  
+                  {/* Honeypot field - hidden from users but visible to bots */}
+                  <div style={{ display: "none" }}>
+                    <Label htmlFor="newsletter-website-mobile">Website (leave blank)</Label>
+                    <Input 
+                      id="newsletter-website-mobile" 
+                      name="website" 
+                      type="text" 
+                      value={honeypot}
+                      onChange={e => setHoneypot(e.target.value)}
+                      tabIndex={-1} 
+                      autoComplete="off" 
+                    />
+                  </div>
+
+                  {/* Cloudflare Turnstile Widget - Invisible mode */}
+                  <div key={turnstileKey}>
+                    <Turnstile
+                      siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACBa8qdGLdmp2t2Q"}
+                      onSuccess={handleTurnstileSuccess}
+                      onError={handleTurnstileError}
+                      onExpire={handleTurnstileExpire}
+                      theme="auto"
+                      size="invisible"
+                    />
+                  </div>
                 </form>
               </div>
             </div>

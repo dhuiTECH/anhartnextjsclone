@@ -13,7 +13,7 @@ declare global {
           "error-callback"?: () => void;
           "expired-callback"?: () => void;
           theme?: "light" | "dark" | "auto";
-          size?: "normal" | "compact";
+          size?: "normal" | "compact" | "invisible";
         }
       ) => string;
       reset: (widgetId: string) => void;
@@ -28,7 +28,7 @@ interface TurnstileProps {
   onError?: () => void;
   onExpire?: () => void;
   theme?: "light" | "dark" | "auto";
-  size?: "normal" | "compact";
+  size?: "normal" | "compact" | "invisible";
   className?: string;
 }
 
@@ -133,10 +133,13 @@ export const Turnstile = ({
     }
   }, []);
 
+  // For invisible mode, hide the container completely
+  const isInvisible = size === "invisible";
+  
   return (
     <div
       ref={containerRef}
-      className={className}
+      className={isInvisible ? "hidden" : className}
       data-sitekey={siteKey}
     />
   );
