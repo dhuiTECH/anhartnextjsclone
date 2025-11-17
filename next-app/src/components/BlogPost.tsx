@@ -140,7 +140,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
       <Header />
       <main>
         {/* Hero Section with Featured Image */}
-        <section className="relative w-full h-[600px] overflow-hidden">
+        <section className="relative w-full h-[800px] overflow-hidden pb-3">
           <div className="absolute inset-0 bg-muted">
             <img
               src={post.featuredImage}

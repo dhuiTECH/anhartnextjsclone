@@ -195,28 +195,10 @@ const BlogAdmin = () => {
       return;
     }
 
-    // Prevent meta_description from being accidentally set to content
-    // Strip HTML tags from content for comparison
-    const contentText = editingPost.content?.replace(/<[^>]*>/g, '').trim() || '';
-    const metaDescText = editingPost.meta_description?.trim() || '';
-    
-    // If meta_description matches content (or a significant portion of it), warn the user
-    if (metaDescText && contentText && 
-        (metaDescText === contentText || (contentText.includes(metaDescText) && metaDescText.length > 50))) {
-      toast({
-        title: "Warning",
-        description: "Meta description appears to match content. Please enter a unique meta description.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     const postData = {
       ...editingPost,
       tags: Array.isArray(editingPost.tags) ? editingPost.tags : [],
       keywords: Array.isArray(editingPost.keywords) ? editingPost.keywords : [],
-      // Ensure meta_description is explicitly set and not accidentally overwritten
-      meta_description: editingPost.meta_description?.trim() || '',
     };
 
     if (isCreating) {
@@ -380,29 +362,10 @@ const BlogAdmin = () => {
                     rows={3}
                     maxLength={300}
                   />
-                  <div className="mt-2 space-y-1">
-                    <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className={`h-2 rounded-full transition-all ${
-                          (editingPost.excerpt?.length || 0) >= 250
-                            ? "bg-yellow-500"
-                            : (editingPost.excerpt?.length || 0) >= 200
-                            ? "bg-blue-500"
-                            : "bg-green-500"
-                        }`}
-                        style={{
-                          width: `${Math.min(
-                            ((editingPost.excerpt?.length || 0) / 300) * 100,
-                            100
-                          )}%`,
-                        }}
-                      />
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {editingPost.excerpt?.length || 0}/300 characters - Displays
-                      in hero section
-                    </p>
-                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {editingPost.excerpt?.length || 0}/300 characters - Displays
+                    in hero section
+                  </p>
                 </div>
 
                 <div>
@@ -696,20 +659,7 @@ const BlogAdmin = () => {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => {
-                            // Defensive: Ensure meta_description is not accidentally set to content
-                            const postToEdit = { ...post };
-                            // If meta_description appears to be content, clear it
-                            const contentText = post.content?.replace(/<[^>]*>/g, '').trim() || '';
-                            const metaDescText = post.meta_description?.trim() || '';
-                            if (metaDescText && contentText && 
-                                (metaDescText === contentText || 
-                                 (contentText.includes(metaDescText) && metaDescText.length > 50 && contentText.length > metaDescText.length))) {
-                              console.warn('Meta description appears to match content. Clearing meta_description.');
-                              postToEdit.meta_description = '';
-                            }
-                            setEditingPost(postToEdit);
-                          }}
+                          onClick={() => setEditingPost(post)}
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
