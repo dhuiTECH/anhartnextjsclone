@@ -70,7 +70,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 // =============================================================================
 // ICON IMPORTS
@@ -550,6 +550,7 @@ const Home = () => {
            */}
         <Dialog open={clientsDialogOpen} onOpenChange={setClientsDialogOpen}>
           <DialogContent className="w-[95vw] max-w-4xl p-0 overflow-hidden dialog-content">
+            <DialogTitle className="sr-only">Our Clients</DialogTitle>
             <div className="relative">
               <Button
                 variant="ghost"
