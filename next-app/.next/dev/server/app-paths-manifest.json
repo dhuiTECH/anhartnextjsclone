@@ -1,10 +1,7 @@
 {
-  "/about/page": "app/about/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/blog/[slug]/page": "app/blog/[slug]/page.js",
   "/blog/page": "app/blog/page.js",
-  "/contact/page": "app/contact/page.js",
-  "/limited-partnership/page": "app/limited-partnership/page.js",
-  "/media/page": "app/media/page.js",
   "/page": "app/page.js",
-  "/partner/page": "app/partner/page.js",
-  "/portfolio/page": "app/portfolio/page.js"
+  "/partner/page": "app/partner/page.js"
 }

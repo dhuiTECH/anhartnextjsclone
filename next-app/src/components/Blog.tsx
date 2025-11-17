@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
+import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
@@ -40,12 +40,15 @@ const Blog = () => {
 
   const filteredPosts = useMemo(() => {
     return allPosts.filter((post) => {
-      const matchesCategory = selectedCategory === "All" || post.category === selectedCategory;
+      const matchesCategory =
+        selectedCategory === "All" || post.category === selectedCategory;
       const matchesSearch =
         searchQuery === "" ||
         post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+        post.tags.some((tag) =>
+          tag.toLowerCase().includes(searchQuery.toLowerCase()),
+        );
 
       return matchesCategory && matchesSearch;
     });
@@ -71,11 +74,11 @@ const Blog = () => {
       <Header />
       <main>
         {/* Hero Banner - Blog insights and resources */}
-        <HeroBanner 
-          backgroundImage="blog-hero" 
-          title="Anhart Blog" 
+        <HeroBanner
+          backgroundImage="blog-hero"
+          title="Anhart Blog"
           subtitle="Insights, resources, and stories about affordable housing"
-          contentPosition="right" 
+          contentPosition="right"
         />
 
         {/* Search and Filter */}
@@ -96,7 +99,9 @@ const Blog = () => {
                 {categories.map((category) => (
                   <Button
                     key={category}
-                    variant={selectedCategory === category ? "default" : "outline"}
+                    variant={
+                      selectedCategory === category ? "default" : "outline"
+                    }
                     onClick={() => setSelectedCategory(category)}
                     className="whitespace-nowrap"
                   >
@@ -117,12 +122,18 @@ const Blog = () => {
               </div>
             ) : filteredPosts.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-muted-foreground">No articles found matching your criteria.</p>
+                <p className="text-muted-foreground">
+                  No articles found matching your criteria.
+                </p>
               </div>
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredPosts.map((post, index) => (
-                  <ScrollAnimationWrapper key={post.id} direction="bottom" delay={index * 0.1}>
+                  <ScrollAnimationWrapper
+                    key={post.id}
+                    direction="bottom"
+                    delay={index * 0.1}
+                  >
                     <Link href={`/blog/${post.slug}`} className="block h-full">
                       <Card className="h-full hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
                         {post.featuredImage && (
@@ -139,7 +150,7 @@ const Blog = () => {
                           <Badge className="mb-3 w-fit bg-primary text-primary-foreground">
                             {post.category}
                           </Badge>
-                          <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-2 hover:text-primary transition-colors">
+                          <h3 className="text-xl font-bold text-foreground mb-2 hover:text-primary transition-colors line-clamp-5">
                             {post.title}
                           </h3>
                           <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -154,7 +165,9 @@ const Blog = () => {
                           </div>
                         </CardHeader>
                         <CardContent>
-                          <p className="text-muted-foreground mb-4 line-clamp-3">{post.excerpt}</p>
+                          <p className="text-muted-foreground mb-4 line-clamp-4">
+                            {post.excerpt}
+                          </p>
                           <div className="flex items-center text-primary font-semibold hover:gap-3 transition-all">
                             Read Article
                             <ArrowRight className="ml-2 h-4 w-4" />
@@ -173,9 +186,12 @@ const Blog = () => {
         <section className="py-16 bg-muted/30">
           <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
             <ScrollAnimationWrapper direction="bottom">
-              <h2 className="text-3xl font-bold text-foreground mb-4">Stay Updated</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-4">
+                Stay Updated
+              </h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Follow our blog for the latest news, resources, and insights about affordable housing in BC
+                Follow our blog for the latest news, resources, and insights
+                about affordable housing in BC
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link

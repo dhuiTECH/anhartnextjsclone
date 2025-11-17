@@ -271,10 +271,10 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                           <Badge className="mb-3 bg-primary text-primary-foreground">
                             {relatedPost.category}
                           </Badge>
-                          <h3 className="text-xl font-bold text-foreground mb-2 line-clamp-2 hover:text-primary transition-colors">
+                          <h3 className="text-xl font-bold text-foreground mb-2 hover:text-primary transition-colors">
                             {relatedPost.title}
                           </h3>
-                          <p className="text-muted-foreground line-clamp-2 mb-4">
+                          <p className="text-muted-foreground mb-4">
                             {relatedPost.excerpt}
                           </p>
                           <div className="flex items-center text-primary font-semibold hover:gap-3 transition-all">
