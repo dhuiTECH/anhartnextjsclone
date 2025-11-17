@@ -9,7 +9,7 @@
       "source": "/the-ryder",
       "destination": "/",
       "permanent": true
-    }
+    },
     {
       "source": "/news",
       "destination": "/blog",
