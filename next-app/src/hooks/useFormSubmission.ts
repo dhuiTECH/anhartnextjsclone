@@ -14,6 +14,7 @@ interface FormData {
   organization?: string;
   subject?: string;
   investment_amount?: string;
+  turnstile_token?: string;
 }
 
 // Client-side validation function (assuming it's defined elsewhere or will be kept here)
@@ -103,6 +104,7 @@ export const useFormSubmission = () => {
       if (formData.organization) body.append("organization", formData.organization);
       if (formData.subject) body.append("subject", formData.subject);
       if (formData.investment_amount) body.append("investment_amount", formData.investment_amount);
+      if (formData.turnstile_token) body.append("turnstile_token", formData.turnstile_token);
       body.append("timestamp", new Date().toISOString());
       body.append("userAgent", navigator.userAgent);
       body.append("referrer", document.referrer);

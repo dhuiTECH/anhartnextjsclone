@@ -58,6 +58,7 @@ import { GlobalPartners } from "@/components/GlobalPartners";
 import { ThreeCardSection } from "@/components/shared/ThreeCardSection";
 import MetricsModal from "@/components/MetricsModal";
 import { FAQSection } from "@/components/FAQSection";
+import { Turnstile } from "@/components/Turnstile";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { OurFocusSection } from "@/components/OurFocusSection";
 // OptimizedImage import removed - using high-fidelity images
@@ -174,6 +175,13 @@ const Home = () => {
   const [clientsDialogOpen, setClientsDialogOpen] = useState(false);
   const [metricsModalOpen, setMetricsModalOpen] = useState(false);
 
+  /**
+   * Turnstile State Management
+   * Tracks the Cloudflare Turnstile token for form submission
+   */
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState(0); // Key to force Turnstile reset
+
   // =============================================================================
   // EVENT HANDLERS
   // =============================================================================
@@ -199,6 +207,12 @@ const Home = () => {
       return; // Silently reject the submission
     }
 
+    // Validate Turnstile token
+    if (!turnstileToken) {
+      console.error("Turnstile verification required");
+      return; // Prevent submission without Turnstile verification
+    }
+
     // Submit form data using the custom hook
     const success = await submitForm({
       name: formData.get("name") as string,
@@ -208,10 +222,15 @@ const Home = () => {
       subject: formData.get("subject") as string,
       message: formData.get("message") as string,
       form_type: "home",
+      turnstile_token: turnstileToken || undefined,
     });
 
-    // Reset form on successful submission
-    if (success) form.reset();
+    // Reset form and Turnstile on successful submission
+    if (success) {
+      form.reset();
+      setTurnstileToken(null);
+      setTurnstileKey((prev) => prev + 1); // Force Turnstile to reset by changing key
+    }
   };
 
   // =============================================================================
@@ -728,10 +747,28 @@ const Home = () => {
                         </div>
                       </div>
 
+                      {/* Cloudflare Turnstile Widget */}
+                      <div className="flex justify-center" key={turnstileKey}>
+                        <Turnstile
+                          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACBa8qdGLdmp2t2Q"}
+                          onSuccess={(token) => {
+                            setTurnstileToken(token);
+                          }}
+                          onError={() => {
+                            setTurnstileToken(null);
+                          }}
+                          onExpire={() => {
+                            setTurnstileToken(null);
+                          }}
+                          theme="auto"
+                          size="normal"
+                        />
+                      </div>
+
                       <Button
                         type="submit"
                         className="w-full mt-6"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || !turnstileToken}
                       >
                         {isSubmitting ? "Submitting..." : "Submit Message"}
                       </Button>
