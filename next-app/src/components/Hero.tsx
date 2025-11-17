@@ -166,7 +166,8 @@ export const Hero = () => {
                   <Button
                     name="explore our work"
                     size="sm"
-                    className="bg-primary/60 backdrop-blur-md text-white hover:bg-white hover:text-primary font-semibold px-3 py-2 text-sm w-full transition-all duration-300 border border-primary/50 hover:border-white shadow-lg hover:shadow-xl"
+                    variant="outline"
+                    className="bg-white/5 backdrop-blur-sm border-white/30 text-white font-semibold px-3 py-2 text-sm w-full hover:bg-white/15 hover:border-white/50 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg"
                   >
                     Explore Projects
                     <span className="ml-1 text-sm font-bold">{">"}</span>
@@ -183,7 +184,7 @@ export const Hero = () => {
                       name="Book Now"
                       size="sm"
                       variant="outline"
-                      className="bg-white/5 backdrop-blur-sm border-white/30 text-white font-semibold px-3 py-2 text-sm w-full hover:bg-white/15 hover:border-white/50 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg"
+                      className="bg-primary/60 backdrop-blur-md text-white hover:bg-white hover:text-primary font-semibold px-3 py-2 text-sm w-full transition-all duration-300 border border-primary/50 hover:border-white shadow-lg hover:shadow-xl"
                     >
                       Book Now
                     </Button>
@@ -248,7 +249,8 @@ export const Hero = () => {
                   <Button
                     name="explore our work"
                     size="lg"
-                    className="bg-primary/60 backdrop-blur-md text-white hover:bg-white hover:text-primary font-semibold px-6 py-3 text-base group relative transition-all duration-300 border border-primary/50 hover:border-white shadow-lg hover:shadow-xl"
+                    variant="outline"
+                    className="bg-white/5 backdrop-blur-sm border-white/30 text-white font-semibold px-6 py-3 text-lg hover:bg-white/15 hover:border-white/50 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg"
                   >
                     Explore Our Work
                     <span className="ml-2 text-lg font-bold">{">"}</span>
@@ -265,8 +267,8 @@ export const Hero = () => {
                       name="Book Now"
                       size="lg"
                       variant="outline"
-                      className="bg-white/5 backdrop-blur-sm border-white/30 text-white font-semibold px-8 py-3 text-base hover:bg-white/15 hover:border-white/50 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg"
-                    >
+                       className="bg-primary/65 backdrop-blur-md text-white hover:bg-white hover:text-primary font-semibold px-6 py-3 text-lg w-[200px] flex-shrink-0 transition-all duration-300 border border-primary/50 hover:border-white shadow-lg hover:shadow-xl"
+                      >
                       Book Now
                     </Button>
                   </DialogTrigger>
