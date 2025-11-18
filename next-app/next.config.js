@@ -28,7 +28,22 @@ const nextConfig = {
   },
   // Configure SWC to target modern browsers
   swcMinify: true,
-  // Optimize bundle splitting
+  
+  // NOTE: Turbopack is enabled by default in Next.js 16
+  // Custom webpack configs are NOT compatible with Turbopack
+  // 
+  // Options:
+  // 1. Use Turbopack (recommended) - Remove webpack config, Turbopack has built-in optimizations
+  // 2. Use Webpack - Add `--webpack` flag to dev/build scripts and uncomment webpack config below
+  //
+  // For now, we're using Turbopack which automatically handles:
+  // - Code splitting
+  // - Tree shaking
+  // - Bundle optimization
+  // - Faster builds (up to 10x faster than Webpack)
+  
+  // Uncomment below if you need to use Webpack instead of Turbopack:
+  /*
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Optimize chunk splitting for better code splitting
@@ -89,6 +104,7 @@ const nextConfig = {
     }
     return config;
   },
+  */
 };
 
 module.exports = nextConfig;
