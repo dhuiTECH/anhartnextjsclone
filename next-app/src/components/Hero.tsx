@@ -361,7 +361,7 @@ export const Hero = () => {
                               onError={handleTurnstileError}
                               onExpire={handleTurnstileExpire}
                               theme="auto"
-                              size="normal"
+                              size="invisible"
                             />
                           </div>
                         )}
@@ -422,13 +422,10 @@ export const Hero = () => {
                       <X className="h-4 w-4" />
                       <span className="sr-only">Close</span>
                     </DialogClose>
-                    <DialogHeader className="pb-0">
+                    <DialogHeader className="">
                       <DialogTitle className="text-xl font-bold text-primary">
                         Free Consultation
                       </DialogTitle>
-                      <DialogDescription className="text-muted-foreground text-xs mt-0.5">
-                        Tell us about your project.
-                      </DialogDescription>
                     </DialogHeader>
                     {isSuccess ? (
                       <div className="text-center py-2">
@@ -511,7 +508,7 @@ export const Hero = () => {
                               onError={handleTurnstileError}
                               onExpire={handleTurnstileExpire}
                               theme="auto"
-                              size="normal"
+                              size="invisible"
                             />
                           </div>
                         )}
