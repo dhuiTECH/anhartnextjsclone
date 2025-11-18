@@ -957,12 +957,20 @@ const Home = () => {
                 </ScrollAnimationWrapper>
                 <ScrollAnimationWrapper direction="top" delay={100}>
                   <p className="text-lg text-muted-foreground">
-                    Read the latest insights and resources about affordable housing
+                    Discover featured insights and resources about affordable housing
                   </p>
                 </ScrollAnimationWrapper>
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div
+                className={`grid gap-8 ${
+                  featuredBlogs.length === 1
+                    ? "md:grid-cols-1 justify-center max-w-2xl mx-auto"
+                    : featuredBlogs.length === 2
+                      ? "md:grid-cols-2 lg:grid-cols-2 max-w-5xl mx-auto"
+                      : "md:grid-cols-2 lg:grid-cols-3"
+                }`}
+              >
                 {featuredBlogs.map((post, index) => (
                   <ScrollAnimationWrapper
                     key={post.id}
