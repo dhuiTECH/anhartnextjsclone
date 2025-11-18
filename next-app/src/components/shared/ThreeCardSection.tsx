@@ -97,59 +97,78 @@ export const ThreeCardSection: React.FC<{
   const handleMouseDown = (e: React.MouseEvent) => {
     if (layout !== 'carousel' || !scrollContainerRef.current) return;
     setIsDragging(true);
-    setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
-    setScrollLeft(scrollContainerRef.current.scrollLeft);
+    // Batch DOM reads together
+    const container = scrollContainerRef.current;
+    const containerLeft = container.offsetLeft;
+    const containerScrollLeft = container.scrollLeft;
+    setStartX(e.pageX - containerLeft);
+    setScrollLeft(containerScrollLeft);
   };
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || layout !== 'carousel' || !scrollContainerRef.current) return;
     e.preventDefault();
-    const x = e.pageX - scrollContainerRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+    // Use requestAnimationFrame to batch DOM operations
+    requestAnimationFrame(() => {
+      if (!scrollContainerRef.current) return;
+      const container = scrollContainerRef.current;
+      const x = e.pageX - container.offsetLeft;
+      const walk = (x - startX) * 2;
+      container.scrollLeft = scrollLeft - walk;
+    });
   };
   const handleMouseUp = () => setIsDragging(false);
   const handleMouseLeave = () => setIsDragging(false);
   const handleTouchStart = (e: React.TouchEvent) => {
     if (layout !== 'carousel' || !scrollContainerRef.current) return;
     setIsDragging(true);
-    setStartX(e.touches[0].pageX - scrollContainerRef.current.offsetLeft);
-    setScrollLeft(scrollContainerRef.current.scrollLeft);
+    // Batch DOM reads together
+    const container = scrollContainerRef.current;
+    const touch = e.touches[0];
+    const containerLeft = container.offsetLeft;
+    const containerScrollLeft = container.scrollLeft;
+    setStartX(touch.pageX - containerLeft);
+    setScrollLeft(containerScrollLeft);
     
     // Capture initial Y position for gesture detection
-    setGestureStartY(e.touches[0].pageY);
+    setGestureStartY(touch.pageY);
     setIsHorizontalGesture(false);
   };
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging || layout !== 'carousel' || !scrollContainerRef.current) return;
     
     const touch = e.touches[0];
-    const x = touch.pageX - scrollContainerRef.current.offsetLeft;
-    const y = touch.pageY;
+    const touchX = touch.pageX;
+    const touchY = touch.pageY;
     
-    // Calculate movement distances
-    const deltaX = Math.abs(x - startX);
-    const deltaY = Math.abs(y - gestureStartY);
+    // Calculate movement distances first (before RAF)
+    const deltaX = Math.abs(touchX - startX);
+    const deltaY = Math.abs(touchY - gestureStartY);
     
     // Detect horizontal gesture if horizontal movement is dominant
     if (!isHorizontalGesture && deltaX > 20 && deltaX > deltaY * 2) {
       setIsHorizontalGesture(true);
     }
     
-    // If horizontal gesture is detected, prevent vertical scrolling
+    // If horizontal gesture is detected, prevent vertical scrolling (must be synchronous)
     if (isHorizontalGesture) {
       e.preventDefault();
       e.stopPropagation();
     }
     
-    // Only perform horizontal scrolling if it's a horizontal gesture
+    // Use requestAnimationFrame to batch DOM operations
     if (isHorizontalGesture || deltaX > deltaY) {
-      const walk = (x - startX) * 2;
-      scrollContainerRef.current.scrollLeft = scrollLeft - walk;
-      
-      // Determine swipe direction for animation
-      if (deltaX > 10) {
-        setSwipeDirection((x - startX) > 0 ? 'right' : 'left');
-      }
+      requestAnimationFrame(() => {
+        if (!scrollContainerRef.current) return;
+        const container = scrollContainerRef.current;
+        const x = touchX - container.offsetLeft;
+        const walk = (x - startX) * 2;
+        container.scrollLeft = scrollLeft - walk;
+        
+        // Determine swipe direction for animation
+        if (deltaX > 10) {
+          setSwipeDirection((x - startX) > 0 ? 'right' : 'left');
+        }
+      });
     }
   };
   const handleTouchEnd = () => {
@@ -278,10 +297,15 @@ export const ThreeCardSection: React.FC<{
    */
   const scrollToPage = (pageIndex: number) => {
     if (layout !== 'carousel' || !scrollContainerRef.current) return;
-    const containerWidth = scrollContainerRef.current.offsetWidth;
-    scrollContainerRef.current.scrollTo({
-      left: pageIndex * containerWidth,
-      behavior: 'smooth'
+    // Use requestAnimationFrame to batch DOM operations
+    requestAnimationFrame(() => {
+      if (!scrollContainerRef.current) return;
+      const container = scrollContainerRef.current;
+      const containerWidth = container.offsetWidth;
+      container.scrollTo({
+        left: pageIndex * containerWidth,
+        behavior: 'smooth'
+      });
     });
     setCurrentPage(pageIndex);
   };
@@ -299,18 +323,36 @@ export const ThreeCardSection: React.FC<{
    */
   useEffect(() => {
     if (layout !== 'carousel') return;
+    let rafId: number | null = null;
     const handleScroll = () => {
-      if (scrollContainerRef.current && !isDragging) {
-        const scrollPosition = scrollContainerRef.current.scrollLeft;
-        const containerWidth = scrollContainerRef.current.offsetWidth;
-        const newPage = Math.round(scrollPosition / containerWidth);
-        setCurrentPage(newPage);
+      if (!isDragging) {
+        // Cancel any pending animation frame
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+        }
+        
+        // Use requestAnimationFrame to batch DOM reads
+        rafId = requestAnimationFrame(() => {
+          if (!scrollContainerRef.current) return;
+          const container = scrollContainerRef.current;
+          // Batch all DOM reads together
+          const scrollPosition = container.scrollLeft;
+          const containerWidth = container.offsetWidth;
+          const newPage = Math.round(scrollPosition / containerWidth);
+          setCurrentPage(newPage);
+          rafId = null;
+        });
       }
     };
     const container = scrollContainerRef.current;
     if (container) {
-      container.addEventListener('scroll', handleScroll);
-      return () => container.removeEventListener('scroll', handleScroll);
+      container.addEventListener('scroll', handleScroll, { passive: true });
+      return () => {
+        container.removeEventListener('scroll', handleScroll);
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+        }
+      };
     }
   }, [layout, isDragging]);
 

@@ -358,15 +358,24 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollContainerRef.current) return;
     setIsDragging(true);
-    setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
-    setScrollLeft(scrollContainerRef.current.scrollLeft);
+    // Batch DOM reads together
+    const container = scrollContainerRef.current;
+    const containerLeft = container.offsetLeft;
+    const containerScrollLeft = container.scrollLeft;
+    setStartX(e.pageX - containerLeft);
+    setScrollLeft(containerScrollLeft);
   };
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !scrollContainerRef.current) return;
     e.preventDefault();
-    const x = e.pageX - scrollContainerRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+    // Use requestAnimationFrame to batch DOM operations
+    requestAnimationFrame(() => {
+      if (!scrollContainerRef.current) return;
+      const container = scrollContainerRef.current;
+      const x = e.pageX - container.offsetLeft;
+      const walk = (x - startX) * 2;
+      container.scrollLeft = scrollLeft - walk;
+    });
   };
   const handleMouseUp = () => {
     setIsDragging(false);
@@ -379,44 +388,54 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!scrollContainerRef.current) return;
     setIsDragging(true);
-    setStartX(e.touches[0].pageX - scrollContainerRef.current.offsetLeft);
-    setScrollLeft(scrollContainerRef.current.scrollLeft);
+    // Batch DOM reads together
+    const container = scrollContainerRef.current;
+    const touch = e.touches[0];
+    const containerLeft = container.offsetLeft;
+    const containerScrollLeft = container.scrollLeft;
+    setStartX(touch.pageX - containerLeft);
+    setScrollLeft(containerScrollLeft);
 
     // Capture initial Y position for gesture detection
-    setGestureStartY(e.touches[0].pageY);
+    setGestureStartY(touch.pageY);
     setIsHorizontalGesture(false);
   };
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isDragging || !scrollContainerRef.current) return;
 
     const touch = e.touches[0];
-    const x = touch.pageX - scrollContainerRef.current.offsetLeft;
-    const y = touch.pageY;
+    const touchX = touch.pageX;
+    const touchY = touch.pageY;
 
-    // Calculate movement distances
-    const deltaX = Math.abs(x - startX);
-    const deltaY = Math.abs(y - gestureStartY);
+    // Calculate movement distances first (before RAF)
+    const deltaX = Math.abs(touchX - startX);
+    const deltaY = Math.abs(touchY - gestureStartY);
 
     // Detect horizontal gesture if horizontal movement is dominant
     if (!isHorizontalGesture && deltaX > 20 && deltaX > deltaY * 2) {
       setIsHorizontalGesture(true);
     }
 
-    // If horizontal gesture is detected, prevent vertical scrolling
+    // If horizontal gesture is detected, prevent vertical scrolling (must be synchronous)
     if (isHorizontalGesture) {
       e.preventDefault();
       e.stopPropagation();
     }
 
-    // Only perform horizontal scrolling if it's a horizontal gesture
+    // Use requestAnimationFrame to batch DOM operations
     if (isHorizontalGesture || deltaX > deltaY) {
-      const walk = (x - startX) * 1.5;
-      scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+      requestAnimationFrame(() => {
+        if (!scrollContainerRef.current) return;
+        const container = scrollContainerRef.current;
+        const x = touchX - container.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        container.scrollLeft = scrollLeft - walk;
 
-      // Determine swipe direction for animation
-      if (deltaX > 10) {
-        setSwipeDirection(x - startX > 0 ? "right" : "left");
-      }
+        // Determine swipe direction for animation
+        if (deltaX > 10) {
+          setSwipeDirection(x - startX > 0 ? "right" : "left");
+        }
+      });
     }
   };
   const handleTouchEnd = () => {
@@ -561,14 +580,20 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
       // In the mobile/tablet view, we don't use the scrollRef for navigation
       // because we're rendering only the current page content directly, not a long scrollable strip.
       // So, this scroll is only effective for the desktop drag-scroll layout.
-      if (window.innerWidth >= 1280) {
-        // Check for XL breakpoint (desktop)
-        const containerWidth = scrollContainerRef.current.offsetWidth;
-        scrollContainerRef.current.scrollTo({
-          left: pageIndex * containerWidth,
-          behavior: "smooth",
-        });
-      }
+      // Use requestAnimationFrame to batch DOM operations
+      requestAnimationFrame(() => {
+        if (!scrollContainerRef.current) return;
+        // Check for XL breakpoint (desktop) - cache window width to avoid forced reflow
+        const isDesktop = window.innerWidth >= 1280;
+        if (isDesktop) {
+          const container = scrollContainerRef.current;
+          const containerWidth = container.offsetWidth;
+          container.scrollTo({
+            left: pageIndex * containerWidth,
+            behavior: "smooth",
+          });
+        }
+      });
       setCurrentPage(pageIndex);
     } else {
       // Fallback for mobile/tablet where scrollContainerRef might not be the primary navigation method
@@ -589,21 +614,39 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
   // =============================================================================
 
   useEffect(() => {
+    let rafId: number | null = null;
     const handleScroll = () => {
-      if (scrollContainerRef.current) {
-        const scrollPosition = scrollContainerRef.current.scrollLeft;
-        const containerWidth = scrollContainerRef.current.offsetWidth;
+      // Cancel any pending animation frame
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      
+      // Use requestAnimationFrame to batch DOM reads
+      rafId = requestAnimationFrame(() => {
+        if (!scrollContainerRef.current) return;
+        const container = scrollContainerRef.current;
+        // Batch all DOM reads together
+        const scrollPosition = container.scrollLeft;
+        const containerWidth = container.offsetWidth;
+        // Cache window width to avoid forced reflow
+        const isDesktop = window.innerWidth >= 1280;
         // Only update current page based on scroll position if we're in the desktop view
-        if (window.innerWidth >= 1280) {
+        if (isDesktop) {
           const newPage = Math.round(scrollPosition / containerWidth);
           setCurrentPage(newPage);
         }
-      }
+        rafId = null;
+      });
     };
     const container = scrollContainerRef.current;
     if (container) {
-      container.addEventListener("scroll", handleScroll);
-      return () => container.removeEventListener("scroll", handleScroll);
+      container.addEventListener("scroll", handleScroll, { passive: true });
+      return () => {
+        container.removeEventListener("scroll", handleScroll);
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+        }
+      };
     }
   }, []);
 

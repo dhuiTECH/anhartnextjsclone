@@ -71,8 +71,12 @@ export const HorizontalScrollCarousel: React.FC<{
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollContainerRef.current) return;
     setIsDragging(true);
-    setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
-    setScrollLeft(scrollContainerRef.current.scrollLeft);
+    // Batch DOM reads together
+    const container = scrollContainerRef.current;
+    const containerLeft = container.offsetLeft;
+    const containerScrollLeft = container.scrollLeft;
+    setStartX(e.pageX - containerLeft);
+    setScrollLeft(containerScrollLeft);
   };
 
   /**
@@ -81,9 +85,14 @@ export const HorizontalScrollCarousel: React.FC<{
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !scrollContainerRef.current) return;
     e.preventDefault();
-    const x = e.pageX - scrollContainerRef.current.offsetLeft;
-    const walk = (x - startX) * 2; // Scroll sensitivity multiplier
-    scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+    // Use requestAnimationFrame to batch DOM operations
+    requestAnimationFrame(() => {
+      if (!scrollContainerRef.current) return;
+      const container = scrollContainerRef.current;
+      const x = e.pageX - container.offsetLeft;
+      const walk = (x - startX) * 2; // Scroll sensitivity multiplier
+      container.scrollLeft = scrollLeft - walk;
+    });
   };
 
   /**
@@ -106,11 +115,16 @@ export const HorizontalScrollCarousel: React.FC<{
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!scrollContainerRef.current) return;
     setIsDragging(true);
-    setStartX(e.touches[0].pageX - scrollContainerRef.current.offsetLeft);
-    setScrollLeft(scrollContainerRef.current.scrollLeft);
+    // Batch DOM reads together
+    const container = scrollContainerRef.current;
+    const touch = e.touches[0];
+    const containerLeft = container.offsetLeft;
+    const containerScrollLeft = container.scrollLeft;
+    setStartX(touch.pageX - containerLeft);
+    setScrollLeft(containerScrollLeft);
     
     // Capture initial Y position for gesture detection
-    setGestureStartY(e.touches[0].pageY);
+    setGestureStartY(touch.pageY);
     setIsHorizontalGesture(false);
   };
 
@@ -121,33 +135,38 @@ export const HorizontalScrollCarousel: React.FC<{
     if (!isDragging || !scrollContainerRef.current) return;
     
     const touch = e.touches[0];
-    const x = touch.pageX - scrollContainerRef.current.offsetLeft;
-    const y = touch.pageY;
+    const touchX = touch.pageX;
+    const touchY = touch.pageY;
     
-    // Calculate movement distances
-    const deltaX = Math.abs(x - startX);
-    const deltaY = Math.abs(y - gestureStartY);
+    // Calculate movement distances first (before RAF)
+    const deltaX = Math.abs(touchX - startX);
+    const deltaY = Math.abs(touchY - gestureStartY);
     
     // Detect horizontal gesture if horizontal movement is dominant
     if (!isHorizontalGesture && deltaX > 20 && deltaX > deltaY * 2) {
       setIsHorizontalGesture(true);
     }
     
-    // If horizontal gesture is detected, prevent vertical scrolling
+    // If horizontal gesture is detected, prevent vertical scrolling (must be synchronous)
     if (isHorizontalGesture) {
       e.preventDefault();
       e.stopPropagation();
     }
     
-    // Only perform horizontal scrolling if it's a horizontal gesture
+    // Use requestAnimationFrame to batch DOM operations
     if (isHorizontalGesture || deltaX > deltaY) {
-      const walk = (x - startX) * 2;
-      scrollContainerRef.current.scrollLeft = scrollLeft - walk;
-      
-      // Determine swipe direction for animation
-      if (deltaX > 10) {
-        setSwipeDirection((x - startX) > 0 ? 'right' : 'left');
-      }
+      requestAnimationFrame(() => {
+        if (!scrollContainerRef.current) return;
+        const container = scrollContainerRef.current;
+        const x = touchX - container.offsetLeft;
+        const walk = (x - startX) * 2;
+        container.scrollLeft = scrollLeft - walk;
+        
+        // Determine swipe direction for animation
+        if (deltaX > 10) {
+          setSwipeDirection((x - startX) > 0 ? 'right' : 'left');
+        }
+      });
     }
   };
 
@@ -175,13 +194,17 @@ export const HorizontalScrollCarousel: React.FC<{
     if (!scrollContainerRef.current) return;
     
     setCurrentPage(pageIndex);
-    const container = scrollContainerRef.current;
-    const containerWidth = container.offsetWidth;
-    const scrollPosition = pageIndex * containerWidth;
-    
-    container.scrollTo({
-      left: scrollPosition,
-      behavior: 'smooth'
+    // Use requestAnimationFrame to batch DOM operations
+    requestAnimationFrame(() => {
+      if (!scrollContainerRef.current) return;
+      const container = scrollContainerRef.current;
+      const containerWidth = container.offsetWidth;
+      const scrollPosition = pageIndex * containerWidth;
+      
+      container.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
     });
   };
 
@@ -207,14 +230,19 @@ export const HorizontalScrollCarousel: React.FC<{
   const updateCurrentPage = () => {
     if (!scrollContainerRef.current) return;
     
-    const container = scrollContainerRef.current;
-    const containerWidth = container.offsetWidth;
-    const scrollLeft = container.scrollLeft;
-    const newPage = Math.round(scrollLeft / containerWidth);
-    
-    if (newPage !== currentPage && newPage >= 0 && newPage < totalPages) {
-      setCurrentPage(newPage);
-    }
+    // Use requestAnimationFrame to batch DOM reads
+    requestAnimationFrame(() => {
+      if (!scrollContainerRef.current) return;
+      const container = scrollContainerRef.current;
+      // Batch all DOM reads together
+      const containerWidth = container.offsetWidth;
+      const containerScrollLeft = container.scrollLeft;
+      const newPage = Math.round(containerScrollLeft / containerWidth);
+      
+      if (newPage !== currentPage && newPage >= 0 && newPage < totalPages) {
+        setCurrentPage(newPage);
+      }
+    });
   };
 
   // Update page on scroll
@@ -222,14 +250,27 @@ export const HorizontalScrollCarousel: React.FC<{
     const container = scrollContainerRef.current;
     if (!container) return;
 
+    let rafId: number | null = null;
     const handleScroll = () => {
       if (!isDragging) {
-        updateCurrentPage();
+        // Cancel any pending animation frame
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+        }
+        rafId = requestAnimationFrame(() => {
+          updateCurrentPage();
+          rafId = null;
+        });
       }
     };
 
-    container.addEventListener('scroll', handleScroll);
-    return () => container.removeEventListener('scroll', handleScroll);
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+    };
   }, [isDragging, currentPage, totalPages]);
 
   return (

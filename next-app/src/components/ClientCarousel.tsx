@@ -160,16 +160,25 @@ export const ClientCarousel: React.FC<{
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollContainerRef.current) return;
     setIsDragging(true);
-    setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
-    setScrollLeft(scrollContainerRef.current.scrollLeft);
+    // Batch DOM reads together
+    const container = scrollContainerRef.current;
+    const containerLeft = container.offsetLeft;
+    const containerScrollLeft = container.scrollLeft;
+    setStartX(e.pageX - containerLeft);
+    setScrollLeft(containerScrollLeft);
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !scrollContainerRef.current) return;
     e.preventDefault();
-    const x = e.pageX - scrollContainerRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+    // Use requestAnimationFrame to batch DOM operations
+    requestAnimationFrame(() => {
+      if (!scrollContainerRef.current) return;
+      const container = scrollContainerRef.current;
+      const x = e.pageX - container.offsetLeft;
+      const walk = (x - startX) * 2;
+      container.scrollLeft = scrollLeft - walk;
+    });
   };
 
   const handleMouseUp = () => {
@@ -229,11 +238,16 @@ export const ClientCarousel: React.FC<{
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!scrollContainerRef.current) return;
     setIsDragging(true);
-    setStartX(e.touches[0].pageX - scrollContainerRef.current.offsetLeft);
-    setScrollLeft(scrollContainerRef.current.scrollLeft);
+    // Batch DOM reads together
+    const container = scrollContainerRef.current;
+    const touch = e.touches[0];
+    const containerLeft = container.offsetLeft;
+    const containerScrollLeft = container.scrollLeft;
+    setStartX(touch.pageX - containerLeft);
+    setScrollLeft(containerScrollLeft);
 
     // Capture initial Y position for gesture detection
-    setGestureStartY(e.touches[0].pageY);
+    setGestureStartY(touch.pageY);
     setIsHorizontalGesture(false);
   };
 
@@ -241,33 +255,38 @@ export const ClientCarousel: React.FC<{
     if (!isDragging || !scrollContainerRef.current) return;
 
     const touch = e.touches[0];
-    const x = touch.pageX - scrollContainerRef.current.offsetLeft;
-    const y = touch.pageY;
+    const touchX = touch.pageX;
+    const touchY = touch.pageY;
 
-    // Calculate movement distances
-    const deltaX = Math.abs(x - startX);
-    const deltaY = Math.abs(y - gestureStartY);
+    // Calculate movement distances first (before RAF)
+    const deltaX = Math.abs(touchX - startX);
+    const deltaY = Math.abs(touchY - gestureStartY);
 
     // Detect horizontal gesture if horizontal movement is dominant
     if (!isHorizontalGesture && deltaX > 20 && deltaX > deltaY * 2) {
       setIsHorizontalGesture(true);
     }
 
-    // If horizontal gesture is detected, prevent vertical scrolling
+    // If horizontal gesture is detected, prevent vertical scrolling (must be synchronous)
     if (isHorizontalGesture) {
       e.preventDefault();
       e.stopPropagation();
     }
 
-    // Only perform horizontal scrolling if it's a horizontal gesture
+    // Use requestAnimationFrame to batch DOM operations
     if (isHorizontalGesture || deltaX > deltaY) {
-      const walk = (x - startX) * 1.5; // Optimized multiplier for smooth touch experience
-      scrollContainerRef.current.scrollLeft = scrollLeft - walk;
+      requestAnimationFrame(() => {
+        if (!scrollContainerRef.current) return;
+        const container = scrollContainerRef.current;
+        const x = touchX - container.offsetLeft;
+        const walk = (x - startX) * 1.5; // Optimized multiplier for smooth touch experience
+        container.scrollLeft = scrollLeft - walk;
 
-      // Determine swipe direction for animation
-      if (deltaX > 10) {
-        setSwipeDirection(x - startX > 0 ? "right" : "left");
-      }
+        // Determine swipe direction for animation
+        if (deltaX > 10) {
+          setSwipeDirection(x - startX > 0 ? "right" : "left");
+        }
+      });
     }
   };
 

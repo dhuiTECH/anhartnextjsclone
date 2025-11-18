@@ -148,22 +148,38 @@ export const Hero = () => {
   useEffect(() => {
     if (!isMobile) {
       // Disable parallax on mobile
+      let rafId: number | null = null;
       const handleScroll = () => {
-        const scrolled = window.pageYOffset;
-        const heroHeight = window.innerHeight * 0.85; // ADJUST THIS: Original was 0.85—increase to 0.95 for more parallax room, but watch for overlap
-        if (scrolled <= heroHeight) {
-          const videoRate = scrolled * -0.5;
-          const contentRate = scrolled * 0.15;
-          if (videoRef.current) {
-            videoRef.current.style.transform = `translateY(${videoRate}px)`;
-          }
-          if (contentRef.current) {
-            contentRef.current.style.transform = `translateY(${contentRate}px)`;
-          }
+        // Cancel any pending animation frame
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
         }
+        
+        // Batch DOM reads and writes using requestAnimationFrame
+        rafId = requestAnimationFrame(() => {
+          const scrolled = window.pageYOffset;
+          const heroHeight = window.innerHeight * 0.85; // ADJUST THIS: Original was 0.85—increase to 0.95 for more parallax room, but watch for overlap
+          if (scrolled <= heroHeight) {
+            const videoRate = scrolled * -0.5;
+            const contentRate = scrolled * 0.15;
+            // Batch all DOM writes together
+            if (videoRef.current) {
+              videoRef.current.style.transform = `translateY(${videoRate}px)`;
+            }
+            if (contentRef.current) {
+              contentRef.current.style.transform = `translateY(${contentRate}px)`;
+            }
+          }
+          rafId = null;
+        });
       };
       window.addEventListener("scroll", handleScroll, { passive: true });
-      return () => window.removeEventListener("scroll", handleScroll);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+        }
+      };
     }
   }, [isMobile]);
 
