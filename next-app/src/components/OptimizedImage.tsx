@@ -94,10 +94,12 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
           sizes={finalSizes}
         />
         
-        {/* Fallback image - starts visible, no opacity animation */}
+        {/* Fallback image with proper dimensions */}
         <img
           src={fallbackSrc}
           alt={alt}
+          width={1280}
+          height={720}
           loading={finalPriority ? 'eager' : finalLoading}
           onLoad={handleLoad}
           onError={handleError}
