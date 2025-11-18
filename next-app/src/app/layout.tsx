@@ -75,7 +75,7 @@ export default function RootLayout({
         {/* Cloudflare Turnstile Script */}
         <Script
           src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
       </body>
     </html>
