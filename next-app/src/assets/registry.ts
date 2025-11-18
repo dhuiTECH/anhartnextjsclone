@@ -1,6 +1,6 @@
 /**
  * Auto-generated Image Registry
- * Generated on: 2025-11-18T06:50:27.651Z
+ * Generated on: 2025-11-18T06:58:05.744Z
  * 
  * This file maps image names to their optimized WebP variants.
  * All images are optimized to under 200KB for fast loading.
@@ -416,6 +416,24 @@ export const imageConfigs = {
   },
   blog: {
     sizes: '(max-width: 768px) 100vw, 750px',
+    priority: false,
+    loading: 'lazy' as const,
+    aspectRatio: '16/9'
+  },
+  portfolio: {
+    sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+    priority: false,
+    loading: 'lazy' as const,
+    aspectRatio: '16/9'
+  },
+  logo: {
+    sizes: '(max-width: 768px) 150px, 200px',
+    priority: false,
+    loading: 'lazy' as const,
+    aspectRatio: '1/1'
+  },
+  initiative: {
+    sizes: '(max-width: 768px) 100vw, 50vw',
     priority: false,
     loading: 'lazy' as const,
     aspectRatio: '16/9'
