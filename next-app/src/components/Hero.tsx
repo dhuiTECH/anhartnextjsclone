@@ -279,9 +279,6 @@ export const Hero = () => {
                       <DialogTitle className="text-lg font-bold text-primary">
                         Free Consultation
                       </DialogTitle>
-                      <DialogDescription className="text-muted-foreground text-xs mt-0.5">
-                        Tell us about your project.
-                      </DialogDescription>
                     </DialogHeader>
                     {isSuccess ? (
                       <div className="text-center py-2">
