@@ -245,30 +245,30 @@ export const Hero = () => {
                       Book Now
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-md border border-primary/20 shadow-2xl">
-                    <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                  <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-md border border-primary/20 shadow-2xl p-4 sm:p-5">
+                    <DialogClose className="absolute right-3 top-3 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
                       <X className="h-4 w-4" />
                       <span className="sr-only">Close</span>
                     </DialogClose>
-                    <DialogHeader className="pb-2">
-                      <DialogTitle className="text-xl font-bold text-primary pb">
+                    <DialogHeader className="pb-1">
+                      <DialogTitle className="text-xl font-bold text-primary">
                         Free Consultation
                       </DialogTitle>
-                      <DialogDescription className="text-muted-foreground">
+                      <DialogDescription className="text-muted-foreground text-sm">
                         Tell us about your project.
                       </DialogDescription>
                     </DialogHeader>
                     {isSuccess ? (
-                      <div className="text-center py-6">
+                      <div className="text-center py-4">
                         <p className="text-green-600 font-semibold">
                           Your form has been successfully sent!
                         </p>
-                        <p className="text-muted-foreground mt-2">
+                        <p className="text-muted-foreground mt-2 text-sm">
                           We will reach out within 24-48 hours.
                         </p>
                       </div>
                     ) : (
-                      <form onSubmit={handleSubmit}>
+                      <form onSubmit={handleSubmit} className="space-y-3">
                         <div>
                           <Label htmlFor="name">Name</Label>
                           <Input
@@ -278,6 +278,7 @@ export const Hero = () => {
                             onChange={handleInputChange}
                             placeholder="Your full name"
                             required
+                            className="mt-1"
                           />
                         </div>
                         <div>
@@ -290,6 +291,7 @@ export const Hero = () => {
                             onChange={handleInputChange}
                             placeholder="your.email@example.com"
                             required
+                            className="mt-1"
                           />
                         </div>
                         <div>
@@ -301,6 +303,7 @@ export const Hero = () => {
                             value={formData.phone}
                             onChange={handleInputChange}
                             placeholder="(123) 456-7890"
+                            className="mt-1"
                           />
                         </div>
                         <div>
@@ -312,6 +315,7 @@ export const Hero = () => {
                             onChange={handleInputChange}
                             placeholder="e.g., Toronto, ON"
                             required
+                            className="mt-1"
                           />
                         </div>
                         <div>
@@ -324,19 +328,22 @@ export const Hero = () => {
                             placeholder="Details about your project..."
                             rows={4}
                             required
+                            className="mt-1"
                           />
                         </div>
-                        <div className="flex justify-center" key={turnstileKey}>
-                          <Turnstile
-                            siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
-                            onSuccess={handleTurnstileSuccess}
-                            onError={handleTurnstileError}
-                            onExpire={handleTurnstileExpire}
-                            theme="auto"
-                            size="normal"
-                          />
-                        </div>
-                        <DialogFooter>
+                        {!isSuccess && (
+                          <div className="flex justify-center" key={turnstileKey}>
+                            <Turnstile
+                              siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
+                              onSuccess={handleTurnstileSuccess}
+                              onError={handleTurnstileError}
+                              onExpire={handleTurnstileExpire}
+                              theme="auto"
+                              size="normal"
+                            />
+                          </div>
+                        )}
+                        <DialogFooter className="pt-2">
                           <Button
                             type="submit"
                             disabled={isSubmitting || !turnstileToken}
@@ -388,30 +395,30 @@ export const Hero = () => {
                       Book Now
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-md border border-primary/20 shadow-2xl">
-                    <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                  <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-md border border-primary/20 shadow-2xl p-4 sm:p-5">
+                    <DialogClose className="absolute right-3 top-3 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
                       <X className="h-4 w-4" />
                       <span className="sr-only">Close</span>
                     </DialogClose>
-                    <DialogHeader>
+                    <DialogHeader className="pb-1">
                       <DialogTitle className="text-2xl font-bold text-primary">
                         Free Consultation
                       </DialogTitle>
-                      <DialogDescription className="text-muted-foreground">
+                      <DialogDescription className="text-muted-foreground text-sm">
                         Tell us about your project.
                       </DialogDescription>
                     </DialogHeader>
                     {isSuccess ? (
-                      <div className="text-center py-6">
+                      <div className="text-center py-4">
                         <p className="text-green-600 font-semibold">
                           Your form has been successfully sent!
                         </p>
-                        <p className="text-muted-foreground mt-2">
+                        <p className="text-muted-foreground mt-2 text-sm">
                           We will reach out within 24-48 hours.
                         </p>
                       </div>
                     ) : (
-                      <form onSubmit={handleSubmit} className="space-y-4">
+                      <form onSubmit={handleSubmit} className="space-y-3">
                         <div>
                           <Label htmlFor="name">Name</Label>
                           <Input
@@ -421,6 +428,7 @@ export const Hero = () => {
                             onChange={handleInputChange}
                             placeholder="Your full name"
                             required
+                            className="mt-1"
                           />
                         </div>
                         <div>
@@ -433,6 +441,7 @@ export const Hero = () => {
                             onChange={handleInputChange}
                             placeholder="your.email@example.com"
                             required
+                            className="mt-1"
                           />
                         </div>
                         <div>
@@ -444,6 +453,7 @@ export const Hero = () => {
                             value={formData.phone}
                             onChange={handleInputChange}
                             placeholder="(123) 456-7890"
+                            className="mt-1"
                           />
                         </div>
                         <div>
@@ -455,6 +465,7 @@ export const Hero = () => {
                             onChange={handleInputChange}
                             placeholder="e.g., Toronto, ON"
                             required
+                            className="mt-1"
                           />
                         </div>
                         <div>
@@ -467,19 +478,22 @@ export const Hero = () => {
                             placeholder="Details about your project..."
                             rows={4}
                             required
+                            className="mt-1"
                           />
                         </div>
-                        <div className="flex justify-center" key={turnstileKey}>
-                          <Turnstile
-                            siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
-                            onSuccess={handleTurnstileSuccess}
-                            onError={handleTurnstileError}
-                            onExpire={handleTurnstileExpire}
-                            theme="auto"
-                            size="normal"
-                          />
-                        </div>
-                        <DialogFooter>
+                        {!isSuccess && (
+                          <div className="flex justify-center" key={turnstileKey}>
+                            <Turnstile
+                              siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
+                              onSuccess={handleTurnstileSuccess}
+                              onError={handleTurnstileError}
+                              onExpire={handleTurnstileExpire}
+                              theme="auto"
+                              size="normal"
+                            />
+                          </div>
+                        )}
+                        <DialogFooter className="pt-2">
                           <Button
                             type="submit"
                             disabled={isSubmitting || !turnstileToken}
