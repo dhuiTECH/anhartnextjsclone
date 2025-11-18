@@ -394,3 +394,30 @@ export function getImage(name: string): ImageEntry | null {
 export function getImageNames(): string[] {
   return Object.keys(imageRegistry);
 }
+
+export const imageConfigs = {
+  hero: {
+    sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 1200px',
+    priority: true,
+    loading: 'eager' as const,
+    aspectRatio: '16/9'
+  },
+  project: {
+    sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
+    priority: false,
+    loading: 'lazy' as const,
+    aspectRatio: '16/9'
+  },
+  icon: {
+    sizes: '64px',
+    priority: false,
+    loading: 'lazy' as const,
+    aspectRatio: '1/1'
+  },
+  blog: {
+    sizes: '(max-width: 768px) 100vw, 750px',
+    priority: false,
+    loading: 'lazy' as const,
+    aspectRatio: '16/9'
+  }
+};

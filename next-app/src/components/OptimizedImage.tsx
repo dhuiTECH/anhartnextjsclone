@@ -38,8 +38,13 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   const [hasError, setHasError] = useState(false);
   const [forceVisible, setForceVisible] = useState(false);
 
-  // Get configuration from category
-  const config = ImageService.getImageConfig(category);
+  // Get configuration from category with defaults
+  const config = ImageService.getImageConfig(category) || {
+    sizes: '(max-width: 768px) 100vw, 50vw',
+    priority: false,
+    loading: 'lazy' as const,
+    aspectRatio: '16/9'
+  };
   
   // Use provided props or fall back to config
   const finalAspectRatio = aspectRatio || config.aspectRatio;

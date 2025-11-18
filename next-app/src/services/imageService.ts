@@ -55,17 +55,28 @@ export class ImageService {
       return '';
     }
     
+    if (format === 'avif') {
+      console.warn(`AVIF format not supported in registry, falling back to webp for ${imageName}`);
+      format = 'webp';
+    }
+    
     const variants = image[format];
+    if (!variants) {
+      console.warn(`Format ${format} not found for image ${imageName}, using fallback`);
+      return this.getUrlString(image.fallback);
+    }
+    
     if (typeof variants === 'string') {
       return this.getUrlString(variants);
     }
     
-    return [
-      `${this.getUrlString(variants.sm)} 640w`,
-      `${this.getUrlString(variants.md)} 768w`,
-      `${this.getUrlString(variants.lg)} 1024w`,
-      `${this.getUrlString(variants.xl)} 1280w`,
-    ].join(', ');
+    const srcSetParts = [];
+    if (variants.sm) srcSetParts.push(`${this.getUrlString(variants.sm)} 640w`);
+    if (variants.md) srcSetParts.push(`${this.getUrlString(variants.md)} 768w`);
+    if (variants.lg) srcSetParts.push(`${this.getUrlString(variants.lg)} 1024w`);
+    if (variants.xl) srcSetParts.push(`${this.getUrlString(variants.xl)} 1280w`);
+    
+    return srcSetParts.join(', ');
   }
 
   /**
