@@ -4,7 +4,11 @@ import Script from "next/script";
 import "./globals.css";
 import { Providers } from "./providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ["latin"],
+  display: 'swap', // Prevent FOIT (Flash of Invisible Text) and improve LCP
+  preload: true, // Preload the font for faster rendering
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.anhart.ca"),
@@ -65,6 +69,11 @@ export default function RootLayout({
   return (
     <html lang="en-CA">
       <head>
+        {/* Preconnect to critical third-party origins for faster page load */}
+        <link rel="preconnect" href="https://hxqbbyglhubcgfkbqltu.supabase.co" />
+        <link rel="dns-prefetch" href="https://hxqbbyglhubcgfkbqltu.supabase.co" />
+        <link rel="preconnect" href="https://challenges.cloudflare.com" />
+        <link rel="dns-prefetch" href="https://challenges.cloudflare.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

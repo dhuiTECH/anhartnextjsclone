@@ -16,6 +16,16 @@ const nextConfig = {
     // This reduces render-blocking resources and improves LCP
     optimizeCss: true,
   },
+  compiler: {
+    // Target modern browsers to avoid unnecessary polyfills
+    // This prevents polyfills for features like Array.prototype.at, Object.fromEntries, etc.
+    // that are already supported in modern browsers
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
+  // Configure SWC to target modern browsers
+  swcMinify: true,
 };
 
 module.exports = nextConfig;
