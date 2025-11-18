@@ -16,7 +16,7 @@ The application is built with **Next.js 16 (App Router)**, React 18 with TypeScr
 - **Authentication & Authorization:** Implemented with Supabase, utilizing `@supabase/ssr` for both client and server-side authentication, including role-based access control (RBAC) for admin and member roles.
 - **SEO Enhancements:** Dynamic `generateMetadata` for blog posts, JSON-LD structured data (Article and RealEstateAgent schemas), and optimized image handling for improved search engine visibility.
 - **Toast Notification System:** Provides app-wide success/error feedback for form submissions.
-- **Image Optimization:** All images are converted to WebP format for performance and Vercel compatibility.
+- **Comprehensive Image Optimization:** All 34 source images converted to WebP format with responsive sizes (sm/md/lg/xl breakpoints), generating 206 optimized files averaging ~35KB each (all under 200KB). Images include proper srcset, width/height attributes, and lazy loading for optimal performance. Optimization scripts available in `/scripts/` for future use.
 - **Directory Structure:** Organizes code into `app/` (Next.js App Router pages including admin/member portals), `components/`, `assets/`, `integrations/` (Supabase), `lib/`, and `services/`.
 
 ## External Dependencies
@@ -26,5 +26,5 @@ The application is built with **Next.js 16 (App Router)**, React 18 with TypeScr
 
 ## Known Issues
 - **Homepage Video Background:** The hero section uses a 19MB video file (`/mediaAssets/hero-background-video.mp4`) which may load slowly. If the video doesn't load, a pink/coral gradient background is shown as fallback.
-- **Image Registry:** AVIF image variants are incorrectly mapped to WebP files in `src/assets/registry.ts`. The OptimizedImage component has been updated to skip AVIF and use WebP directly.
-- **Blog Image Loading:** Fixed missing blog featured images by updating database references to point to existing images in `/public/blog/` directory.
+- **Missing Image Files:** Several images referenced in data files don't exist: `Jubilee-Sign`, `beaverConsturction` (typo), `Trusted-Partners`, `expert-consultation`, `systemsNetwork`, `thinkingStatueLaptop`, `communityChampions`. The app gracefully handles these missing images with console warnings.
+- **AVIF Format Removed:** AVIF support was removed from the image registry because the files incorrectly pointed to WebP variants. All images now use WebP format exclusively, which provides excellent compression and broad browser support.
