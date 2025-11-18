@@ -104,6 +104,7 @@ export default function AdminClient({ user }: { user: any }) {
   
   const [uploading, setUploading] = useState(false); // Upload state for featured image
   const [uploadingContentImage, setUploadingContentImage] = useState(false); // Upload state for content images
+  const [isMobile, setIsMobile] = useState(false); // Mobile device detection
   
   // ============================================================================
   // REFS
@@ -140,15 +141,32 @@ export default function AdminClient({ user }: { user: any }) {
     ],
     content: "", // Initial editor content (empty for new posts)
     immediatelyRender: false, // Defer rendering until editor is ready
+    // Mobile-friendly editor configuration
+    editorProps: {
+      attributes: {
+        class: 'prose prose-lg max-w-none focus:outline-none',
+        // Ensure mobile browsers don't limit content
+        style: 'min-height: 24rem; overflow: visible; max-height: none; height: auto;',
+      },
+    },
   });
 
   // ============================================================================
   // EFFECT HOOKS
   // ============================================================================
-  // Purpose: Load blog posts when component mounts
+  // Purpose: Load blog posts when component mounts and detect mobile devices
   
   useEffect(() => {
     loadPosts();
+    
+    // Detect mobile device
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // ============================================================================
@@ -184,6 +202,10 @@ export default function AdminClient({ user }: { user: any }) {
     const post = posts.find((p) => p.id === postId);
     if (!post || !editor) return;
 
+    // Log content length for debugging mobile issues
+    console.log("Loading post content - Length:", post.content?.length || 0);
+    console.log("Is mobile device:", isMobile);
+
     // Set UI mode to edit
     setSelectedPostId(postId);
     setMode("edit");
@@ -209,8 +231,45 @@ export default function AdminClient({ user }: { user: any }) {
       setPublishDate(dateString);
     }
 
-    // Load post content into the rich text editor
-    editor.commands.setContent(post.content || "");
+    // Load post content into the rich text editor with error handling
+    // Mobile browsers may have issues with very large content, so we add retry logic
+    try {
+      // Ensure editor is ready before setting content
+      if (!editor.isDestroyed) {
+        // Clear editor first to ensure clean state
+        editor.commands.clearContent();
+        
+        // Small delay to ensure editor is ready (especially important on mobile)
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Set content with the full post content
+        editor.commands.setContent(post.content || "");
+        
+        // Verify content was loaded correctly
+        const loadedContent = editor.getHTML();
+        const loadedLength = loadedContent.length;
+        const originalLength = post.content?.length || 0;
+        
+        console.log("Content loaded - Original length:", originalLength, "Loaded length:", loadedLength);
+        
+        // If content appears truncated on mobile, log a warning
+        if (isMobile && loadedLength < originalLength * 0.9) {
+          console.warn("⚠️ Content may be truncated on mobile. Original:", originalLength, "Loaded:", loadedLength);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading content into editor:", error);
+      // Retry once after a longer delay
+      setTimeout(() => {
+        try {
+          if (!editor.isDestroyed) {
+            editor.commands.setContent(post.content || "");
+          }
+        } catch (retryError) {
+          console.error("Retry failed to load content:", retryError);
+        }
+      }, 500);
+    }
   };
 
   // ============================================================================
@@ -996,13 +1055,42 @@ export default function AdminClient({ user }: { user: any }) {
             )}
             {/* Editor Content Area - Where the blog post content is written */}
             {/* Purpose: Rich text editing area with custom styling for formatted content */}
-            <div className="p-4 min-h-96 bg-white prose max-w-none">
+            <div className="p-4 min-h-96 bg-white prose max-w-none" style={{ 
+              overflow: 'visible',
+              maxHeight: 'none',
+              height: 'auto'
+            }}>
               {/* Editor Styles - Custom CSS for TipTap editor content */}
               {/* Purpose: Style headings, paragraphs, lists, code blocks, and images */}
               <style jsx global>{`
                 .ProseMirror {
                   outline: none;
                   min-height: 24rem;
+                  /* Ensure content is fully visible on mobile */
+                  word-wrap: break-word;
+                  overflow-wrap: break-word;
+                  /* Prevent mobile browsers from limiting content */
+                  -webkit-overflow-scrolling: touch;
+                  /* Ensure all content is rendered */
+                  max-height: none !important;
+                  height: auto !important;
+                }
+                /* Mobile-specific fixes for content rendering */
+                @media (max-width: 768px) {
+                  .ProseMirror {
+                    min-height: 20rem;
+                    /* Ensure mobile browsers don't limit content */
+                    -webkit-text-size-adjust: 100%;
+                    /* Prevent content truncation */
+                    overflow: visible !important;
+                    max-height: none !important;
+                  }
+                  /* Ensure editor container doesn't limit content */
+                  .ProseMirror > * {
+                    max-width: 100%;
+                    word-wrap: break-word;
+                    overflow-wrap: break-word;
+                  }
                 }
                 .ProseMirror h1 {
                   font-size: 2em;
