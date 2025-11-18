@@ -74,6 +74,37 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://hxqbbyglhubcgfkbqltu.supabase.co" />
         <link rel="preconnect" href="https://challenges.cloudflare.com" />
         <link rel="dns-prefetch" href="https://challenges.cloudflare.com" />
+        
+        {/* Preload LCP video - Hero background video is likely the LCP element */}
+        <link
+          rel="preload"
+          href="/mediaAssets/hero-background-video.mp4"
+          as="video"
+          type="video/mp4"
+          fetchPriority="high"
+        />
+        
+        {/* Preload critical images for LCP optimization */}
+        {/* These will be discovered earlier by the HTML parser */}
+        <link
+          rel="preload"
+          href="/images/anhart-logo-text.webp"
+          as="image"
+          type="image/webp"
+          fetchPriority="high"
+        />
+        <link
+          rel="preload"
+          href="/images/anhart-logo-text.png"
+          as="image"
+          type="image/png"
+          fetchPriority="high"
+        />
+        
+        {/* DNS prefetch for image domains to speed up image loading */}
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

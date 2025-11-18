@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { ImageService } from '@/services/imageService';
 import { ImageSize, ImageFormat, ImageCategory } from '@/types/images';
 import { Skeleton } from '@/components/ui/skeleton';
+import { imageRegistry } from '@/assets/registry';
 
 interface OptimizedImageProps {
   imageName: string;
@@ -79,6 +80,20 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   const avifSrcSet = useMemo(() => ImageService.getImageSrcSet(imageName, 'avif'), [imageName]);
   const fallbackSrc = useMemo(() => ImageService.getImageSrc(imageName, 'fallback', size), [imageName, size]);
 
+  // Get image dimensions from registry for proper aspect ratio and layout stability
+  const imageDimensions = useMemo(() => {
+    const image = imageRegistry[imageName];
+    if (!image || !image.dimensions) return null;
+    
+    // Get dimensions for the selected size, fallback to lg if not available
+    const dims = image.dimensions[size] || image.dimensions.lg || image.dimensions.md || image.dimensions.sm;
+    return dims || null;
+  }, [imageName, size]);
+
+  // Calculate width and height for the img element
+  const imgWidth = imageDimensions?.width || 1280;
+  const imgHeight = imageDimensions?.height || 720;
+
   // Check if image exists
   if (!ImageService.hasImage(imageName)) {
     console.warn(`Image ${imageName} not found in registry`);
@@ -99,12 +114,12 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
           sizes={finalSizes}
         />
         
-        {/* Fallback image with proper dimensions */}
+        {/* Fallback image with proper dimensions for LCP optimization */}
         <img
           src={fallbackSrc}
           alt={alt}
-          width={1280}
-          height={720}
+          width={imgWidth}
+          height={imgHeight}
           loading={finalPriority ? 'eager' : finalLoading}
           onLoad={handleLoad}
           onError={handleError}

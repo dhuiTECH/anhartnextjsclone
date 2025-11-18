@@ -201,6 +201,7 @@ export const Hero = () => {
       {/* Fallback background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/70 to-primary/90 z-[0.5]" />
       {/* Full-screen background video with extended height for parallax */}
+      {/* Optimized for LCP: preload="auto" and fetchpriority="high" for faster discovery */}
       <video
         ref={videoRef}
         className="absolute top-0 left-0 w-full object-cover z-[1]"
@@ -212,7 +213,8 @@ export const Hero = () => {
         loop
         muted
         playsInline
-        preload="metadata"
+        preload="auto"
+        fetchPriority="high"
         aria-label="Background video showing housing development animation"
       >
         <source src="/mediaAssets/hero-background-video.mp4" type="video/mp4" />
