@@ -1,7 +1,14 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
-import AdminClient from './AdminClient';
+import dynamic from 'next/dynamic';
 import type { Database } from '@/integrations/supabase/types';
+
+// Dynamically import AdminClient to prevent TipTap/ProseMirror from being bundled in main chunks
+// This reduces the main bundle size by ~150KB+ since TipTap is only needed on admin pages
+const AdminClient = dynamic(() => import('./AdminClient'), {
+  ssr: false, // Admin dashboard is client-side only
+  loading: () => <p className="p-8">Loading admin dashboard...</p>,
+});
 
 export const dynamic = 'force-dynamic';
 

@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronDown, X } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 import anhartLogoWebp from "@/assets/anhart-logo.webp";
 import anhartLogoPng from "@/assets/anhart-logo.png";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
@@ -9,7 +9,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -110,14 +109,6 @@ export const Hero = () => {
     }
   };
 
-  const scrollToContent = () => {
-    window.scrollTo({
-      top: window.innerHeight,
-      behavior: "smooth",
-    });
-  };
-
-
   useEffect(() => {
     setIsMobile(window.innerWidth < 640);
     const handleResize = () => setIsMobile(window.innerWidth < 640);
@@ -194,7 +185,7 @@ export const Hero = () => {
         muted
         playsInline
         preload="auto"
-        fetchPriority="high"
+        {...({ fetchPriority: "high" } as any)}
         aria-label="Background video showing housing development animation"
       >
         <source src="/mediaAssets/hero-background-video.mp4" type="video/mp4" />
