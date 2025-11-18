@@ -179,7 +179,7 @@ export const Footer = () => {
                       {/* Cloudflare Turnstile Widget - Invisible mode */}
                       <div key={turnstileKey}>
                         <Turnstile
-                          siteKey="0x4AAAAAAChEhfkXf5mcNUA4m"
+                          siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
                           onSuccess={handleTurnstileSuccess}
                           onError={handleTurnstileError}
                           onExpire={handleTurnstileExpire}
@@ -308,7 +308,7 @@ export const Footer = () => {
                   {/* Cloudflare Turnstile Widget - Invisible mode */}
                   <div key={turnstileKey}>
                     <Turnstile
-                      siteKey="0x4AAAAAAChEhfkXf5mcNUA4m"
+                      siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
                       onSuccess={handleTurnstileSuccess}
                       onError={handleTurnstileError}
                       onExpire={handleTurnstileExpire}
