@@ -19,51 +19,60 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Turnstile } from "@/components/Turnstile";
 
-const anhartLogo =  
+const anhartLogo =
   typeof anhartLogoImg === "string" ? anhartLogoImg : anhartLogoImg?.src || "";
 
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzfMQYjHKQSR5lOwodWizxUoY4NgB1y03O3tAbHSBCV4ZgpgDbu-4xNbkUTl18lTZzw/exec";
+const GOOGLE_SHEET_URL =
+  "https://script.google.com/macros/s/AKfycbzfMQYjHKQSR5lOwodWizxUoY4NgB1y03O3tAbHSBCV4ZgpgDbu-4xNbkUTl18lTZzw/exec";
 
 export const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const [formData, setFormData] = useState({ name: "", email: "", phone: "", location: "", message: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    location: "",
+    message: "",
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  
+
   // Turnstile state
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileKey, setTurnstileKey] = useState(0);
-  
+
   // Turnstile callbacks (memoized to prevent re-render loops)
   const handleTurnstileSuccess = useCallback((token: string) => {
     setTurnstileToken(token);
   }, []);
-  
+
   const handleTurnstileError = useCallback(() => {
     setTurnstileToken(null);
   }, []);
-  
+
   const handleTurnstileExpire = useCallback(() => {
     setTurnstileToken(null);
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate Turnstile token
     if (!turnstileToken) {
       alert("Please complete the verification.");
       return;
     }
-    
+
     setIsSubmitting(true);
 
     const form = e.currentTarget;
@@ -75,7 +84,13 @@ export const Hero = () => {
       if (res.ok) {
         setIsSuccess(true);
         form.reset();
-        setFormData({ name: "", email: "", phone: "", location: "", message: "" });
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          location: "",
+          message: "",
+        });
         setTurnstileToken(null);
         setTurnstileKey((prev) => prev + 1);
         setTimeout(() => {
@@ -102,15 +117,16 @@ export const Hero = () => {
   useEffect(() => {
     setIsMobile(window.innerWidth < 640);
     const handleResize = () => setIsMobile(window.innerWidth < 640);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
-    if (!isMobile) {  // Disable parallax on mobile
+    if (!isMobile) {
+      // Disable parallax on mobile
       const handleScroll = () => {
         const scrolled = window.pageYOffset;
-        const heroHeight = window.innerHeight * 0.85;  // ADJUST THIS: Original was 0.85—increase to 0.95 for more parallax room, but watch for overlap
+        const heroHeight = window.innerHeight * 0.85; // ADJUST THIS: Original was 0.85—increase to 0.95 for more parallax room, but watch for overlap
         if (scrolled <= heroHeight) {
           const videoRate = scrolled * -0.5;
           const contentRate = scrolled * 0.15;
@@ -129,7 +145,7 @@ export const Hero = () => {
 
   return (
     <section
-      className="relative h-[85vh] sm:h-[95vh] w-full overflow-hidden"  // ADJUST THIS: Original heights—change percentages for size (e.g., 90vh for medium)
+      className="relative h-[85vh] sm:h-[95vh] w-full overflow-hidden" // ADJUST THIS: Original heights—change percentages for size (e.g., 90vh for medium)
       aria-label="Hero section with affordable housing information"
     >
       {/* Anhart logo as backdrop */}
@@ -148,7 +164,7 @@ export const Hero = () => {
         ref={videoRef}
         className="absolute top-0 left-0 w-full object-cover z-[1]"
         style={{
-          height: isMobile ? "100vh" : "150vh",  // ADJUST THIS: Original 150vh on desktop for parallax—reduce to 130vh if too tall
+          height: isMobile ? "100vh" : "150vh", // ADJUST THIS: Original 150vh on desktop for parallax—reduce to 130vh if too tall
           minHeight: isMobile ? "100vh" : "150vh",
         }}
         autoPlay
@@ -185,7 +201,11 @@ export const Hero = () => {
           <div className="mt-8 sm:mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
             {/* Mobile: Side-by-side buttons */}
             <div className="flex flex-row gap-2 sm:hidden w-full max-w-sm">
-              <ScrollAnimationWrapper direction="bottom" delay={300} className="flex-1">
+              <ScrollAnimationWrapper
+                direction="bottom"
+                delay={300}
+                className="flex-1"
+              >
                 <a
                   href="https://anhart.ca/portfolio"
                   target="_blank"
@@ -203,11 +223,18 @@ export const Hero = () => {
                   </Button>
                 </a>
               </ScrollAnimationWrapper>
-              <ScrollAnimationWrapper direction="bottom" delay={400} className="flex-1">
-                <Dialog open={isDialogOpen} onOpenChange={(open) => {
-                  setIsDialogOpen(open);
-                  if (!open) setIsSuccess(false);
-                }}>
+              <ScrollAnimationWrapper
+                direction="bottom"
+                delay={400}
+                className="flex-1"
+              >
+                <Dialog
+                  open={isDialogOpen}
+                  onOpenChange={(open) => {
+                    setIsDialogOpen(open);
+                    if (!open) setIsSuccess(false);
+                  }}
+                >
                   <DialogTrigger asChild>
                     <Button
                       name="Book Now"
@@ -223,38 +250,81 @@ export const Hero = () => {
                       <X className="h-4 w-4" />
                       <span className="sr-only">Close</span>
                     </DialogClose>
-                    <DialogHeader>
-                      <DialogTitle className="text-2xl font-bold text-primary">Free Consultation</DialogTitle>
+                    <DialogHeader className="pb-2">
+                      <DialogTitle className="text-xl font-bold text-primary pb">
+                        Free Consultation
+                      </DialogTitle>
                       <DialogDescription className="text-muted-foreground">
                         Tell us about your project.
                       </DialogDescription>
                     </DialogHeader>
                     {isSuccess ? (
                       <div className="text-center py-6">
-                        <p className="text-green-600 font-semibold">Your form has been successfully sent!</p>
-                        <p className="text-muted-foreground mt-2">We will reach out within 24-48 hours.</p>
+                        <p className="text-green-600 font-semibold">
+                          Your form has been successfully sent!
+                        </p>
+                        <p className="text-muted-foreground mt-2">
+                          We will reach out within 24-48 hours.
+                        </p>
                       </div>
                     ) : (
-                      <form onSubmit={handleSubmit} className="space-y-4">
+                      <form onSubmit={handleSubmit}>
                         <div>
                           <Label htmlFor="name">Name</Label>
-                          <Input id="name" name="name" value={formData.name} onChange={handleInputChange} placeholder="Your full name" required />
+                          <Input
+                            id="name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            placeholder="Your full name"
+                            required
+                          />
                         </div>
                         <div>
                           <Label htmlFor="email">Email</Label>
-                          <Input id="email" name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="your.email@example.com" required />
+                          <Input
+                            id="email"
+                            name="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            placeholder="your.email@example.com"
+                            required
+                          />
                         </div>
                         <div>
                           <Label htmlFor="phone">Phone (optional)</Label>
-                          <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleInputChange} placeholder="(123) 456-7890" />
+                          <Input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                            placeholder="(123) 456-7890"
+                          />
                         </div>
                         <div>
                           <Label htmlFor="location">Location</Label>
-                          <Input id="location" name="location" value={formData.location} onChange={handleInputChange} placeholder="e.g., Toronto, ON" required />
+                          <Input
+                            id="location"
+                            name="location"
+                            value={formData.location}
+                            onChange={handleInputChange}
+                            placeholder="e.g., Toronto, ON"
+                            required
+                          />
                         </div>
                         <div>
                           <Label htmlFor="message">Message</Label>
-                          <Textarea id="message" name="message" value={formData.message} onChange={handleInputChange} placeholder="Details about your project..." rows={4} required />
+                          <Textarea
+                            id="message"
+                            name="message"
+                            value={formData.message}
+                            onChange={handleInputChange}
+                            placeholder="Details about your project..."
+                            rows={4}
+                            required
+                          />
                         </div>
                         <div className="flex justify-center" key={turnstileKey}>
                           <Turnstile
@@ -267,7 +337,11 @@ export const Hero = () => {
                           />
                         </div>
                         <DialogFooter>
-                          <Button type="submit" disabled={isSubmitting || !turnstileToken} className="w-full sm:w-auto">
+                          <Button
+                            type="submit"
+                            disabled={isSubmitting || !turnstileToken}
+                            className="w-full sm:w-auto"
+                          >
                             {isSubmitting ? "Sending..." : "Send"}
                           </Button>
                         </DialogFooter>
@@ -297,17 +371,20 @@ export const Hero = () => {
                 </a>
               </ScrollAnimationWrapper>
               <ScrollAnimationWrapper direction="bottom" delay={400}>
-                <Dialog open={isDialogOpen} onOpenChange={(open) => {
-                  setIsDialogOpen(open);
-                  if (!open) setIsSuccess(false);
-                }}>
+                <Dialog
+                  open={isDialogOpen}
+                  onOpenChange={(open) => {
+                    setIsDialogOpen(open);
+                    if (!open) setIsSuccess(false);
+                  }}
+                >
                   <DialogTrigger asChild>
                     <Button
                       name="Book Now"
                       size="lg"
                       variant="outline"
-                       className="bg-primary/65 backdrop-blur-md text-white hover:bg-white hover:text-primary font-semibold px-6 py-3 text-lg w-[200px] flex-shrink-0 transition-all duration-300 border border-primary/50 hover:border-white shadow-lg hover:shadow-xl"
-                      >
+                      className="bg-primary/65 backdrop-blur-md text-white hover:bg-white hover:text-primary font-semibold px-6 py-3 text-lg w-[200px] flex-shrink-0 transition-all duration-300 border border-primary/50 hover:border-white shadow-lg hover:shadow-xl"
+                    >
                       Book Now
                     </Button>
                   </DialogTrigger>
@@ -317,37 +394,80 @@ export const Hero = () => {
                       <span className="sr-only">Close</span>
                     </DialogClose>
                     <DialogHeader>
-                      <DialogTitle className="text-2xl font-bold text-primary">Free Consultation</DialogTitle>
+                      <DialogTitle className="text-2xl font-bold text-primary">
+                        Free Consultation
+                      </DialogTitle>
                       <DialogDescription className="text-muted-foreground">
                         Tell us about your project.
                       </DialogDescription>
                     </DialogHeader>
                     {isSuccess ? (
                       <div className="text-center py-6">
-                        <p className="text-green-600 font-semibold">Your form has been successfully sent!</p>
-                        <p className="text-muted-foreground mt-2">We will reach out within 24-48 hours.</p>
+                        <p className="text-green-600 font-semibold">
+                          Your form has been successfully sent!
+                        </p>
+                        <p className="text-muted-foreground mt-2">
+                          We will reach out within 24-48 hours.
+                        </p>
                       </div>
                     ) : (
                       <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                           <Label htmlFor="name">Name</Label>
-                          <Input id="name" name="name" value={formData.name} onChange={handleInputChange} placeholder="Your full name" required />
+                          <Input
+                            id="name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            placeholder="Your full name"
+                            required
+                          />
                         </div>
                         <div>
                           <Label htmlFor="email">Email</Label>
-                          <Input id="email" name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="your.email@example.com" required />
+                          <Input
+                            id="email"
+                            name="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            placeholder="your.email@example.com"
+                            required
+                          />
                         </div>
                         <div>
                           <Label htmlFor="phone">Phone (optional)</Label>
-                          <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleInputChange} placeholder="(123) 456-7890" />
+                          <Input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                            placeholder="(123) 456-7890"
+                          />
                         </div>
                         <div>
                           <Label htmlFor="location">Location</Label>
-                          <Input id="location" name="location" value={formData.location} onChange={handleInputChange} placeholder="e.g., Toronto, ON" required />
+                          <Input
+                            id="location"
+                            name="location"
+                            value={formData.location}
+                            onChange={handleInputChange}
+                            placeholder="e.g., Toronto, ON"
+                            required
+                          />
                         </div>
                         <div>
                           <Label htmlFor="message">Message</Label>
-                          <Textarea id="message" name="message" value={formData.message} onChange={handleInputChange} placeholder="Details about your project..." rows={4} required />
+                          <Textarea
+                            id="message"
+                            name="message"
+                            value={formData.message}
+                            onChange={handleInputChange}
+                            placeholder="Details about your project..."
+                            rows={4}
+                            required
+                          />
                         </div>
                         <div className="flex justify-center" key={turnstileKey}>
                           <Turnstile
@@ -360,7 +480,11 @@ export const Hero = () => {
                           />
                         </div>
                         <DialogFooter>
-                          <Button type="submit" disabled={isSubmitting || !turnstileToken} className="w-full sm:w-auto">
+                          <Button
+                            type="submit"
+                            disabled={isSubmitting || !turnstileToken}
+                            className="w-full sm:w-auto"
+                          >
                             {isSubmitting ? "Sending..." : "Send"}
                           </Button>
                         </DialogFooter>
