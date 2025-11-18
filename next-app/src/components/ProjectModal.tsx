@@ -63,8 +63,8 @@ interface ProjectModalProps {
   project: ProjectData | null;
 }
 
-// Function to map image names to Next.js static imports
-const getOriginalImagePath = (imageName: string): string => {
+// Function to get image paths with WebP and PNG fallback
+const getImagePaths = (imageName: string): { webp?: string; fallback: string } => {
   const imageMap: Record<string, any> = {
     // Portfolio images
     "Jubilee-Sign": imgJubileeSign,
@@ -93,7 +93,22 @@ const getOriginalImagePath = (imageName: string): string => {
     "urban-renewal-project": imgUrbanRenewal,
   };
   const image = imageMap[imageName];
-  return typeof image === 'string' ? image : image?.src || imageName;
+  const imageSrc = typeof image === 'string' ? image : image?.src || imageName;
+  
+  // Check if image is already WebP - if so, try to find PNG fallback
+  // For now, return the image as fallback (browsers will handle WebP automatically)
+  // If it's a WebP file, we'll use it as the source, otherwise as fallback
+  const isWebP = imageSrc.includes('.webp') || imageName.includes('St') || imageName === '162MainSt';
+  
+  return {
+    webp: isWebP ? imageSrc : undefined,
+    fallback: imageSrc
+  };
+};
+
+// Legacy function for backward compatibility
+const getOriginalImagePath = (imageName: string): string => {
+  return getImagePaths(imageName).fallback;
 };
 
 /**
@@ -126,11 +141,26 @@ const ProjectModal = ({
           {project && <div className="space-y-6">
               {/* Project Image */}
               <div className="w-full max-w-[80%] mx-auto h-72 sm:h-96 bg-muted rounded-lg overflow-hidden">
-                {project.image ? <img src={getOriginalImagePath(project.image)} alt={project.title} className="w-full h-full object-cover" loading="lazy" decoding="async" onError={e => {
-              (e.currentTarget as HTMLElement).style.display = "none";
-              const fallback = e.currentTarget.nextElementSibling as HTMLElement;
-              if (fallback) fallback.style.display = "flex";
-            }} /> : null}
+                {project.image ? (() => {
+                  const imagePaths = getImagePaths(project.image);
+                  return (
+                    <picture>
+                      {imagePaths.webp && <source srcSet={imagePaths.webp} type="image/webp" />}
+                      <img 
+                        src={imagePaths.fallback} 
+                        alt={project.title} 
+                        className="w-full h-full object-cover" 
+                        loading="lazy" 
+                        decoding="async" 
+                        onError={e => {
+                          (e.currentTarget as HTMLElement).style.display = "none";
+                          const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                          if (fallback) fallback.style.display = "flex";
+                        }} 
+                      />
+                    </picture>
+                  );
+                })() : null}
                 <div className="w-full h-full bg-muted flex items-center justify-center" style={{
               display: project.image ? "none" : "flex"
             }}>

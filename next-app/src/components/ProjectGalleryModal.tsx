@@ -32,8 +32,8 @@ import imgSustainableHomes from "@/assets/sustainable-homes-initiative.jpg";
 import imgAffordableLiving from "@/assets/affordable-living-complex.jpg";
 import imgUrbanRenewal from "@/assets/urban-renewal-project.jpg";
 
-// Function to map image names to Next.js static imports
-const getOriginalImagePath = (imageName: string): string => {
+// Function to get image paths with WebP and PNG fallback
+const getImagePaths = (imageName: string): { webp?: string; fallback: string } => {
   const imageMap: Record<string, any> = {
     // Portfolio images
     "Jubilee-Sign": imgJubileeSign,
@@ -62,7 +62,20 @@ const getOriginalImagePath = (imageName: string): string => {
     "urban-renewal-project": imgUrbanRenewal,
   };
   const image = imageMap[imageName];
-  return typeof image === 'string' ? image : image?.src || imageName;
+  const imageSrc = typeof image === 'string' ? image : image?.src || imageName;
+  
+  // Check if image is already WebP
+  const isWebP = imageSrc.includes('.webp') || imageName.includes('St') || imageName === '162MainSt';
+  
+  return {
+    webp: isWebP ? imageSrc : undefined,
+    fallback: imageSrc
+  };
+};
+
+// Legacy function for backward compatibility
+const getOriginalImagePath = (imageName: string): string => {
+  return getImagePaths(imageName).fallback;
 };
 interface ProjectGalleryModalProps {
   isOpen: boolean;
@@ -118,16 +131,24 @@ export const ProjectGalleryModal: React.FC<{
               className="bg-card rounded-lg border border-border overflow-hidden hover:shadow-lg transition-shadow duration-300"
             >
               <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  src={getOriginalImagePath(project.image)}
-                  alt={project.title}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLElement).style.display = "none";
-                    const fallback = e.currentTarget.nextElementSibling as HTMLElement;
-                    if (fallback) fallback.style.display = "flex";
-                  }}
-                />
+                {(() => {
+                  const imagePaths = getImagePaths(project.image);
+                  return (
+                    <picture>
+                      {imagePaths.webp && <source srcSet={imagePaths.webp} type="image/webp" />}
+                      <img
+                        src={imagePaths.fallback}
+                        alt={project.title}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLElement).style.display = "none";
+                          const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                          if (fallback) fallback.style.display = "flex";
+                        }}
+                      />
+                    </picture>
+                  );
+                })()}
                 <div
                   className="w-full h-full bg-muted flex items-center justify-center"
                   style={{

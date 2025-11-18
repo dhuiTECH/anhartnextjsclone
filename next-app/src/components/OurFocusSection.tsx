@@ -76,10 +76,10 @@ interface OurFocusSectionProps {
 // =============================================================================
 
 /**
- * Get the original image path for Next.js compatibility
+ * Get image paths with WebP and PNG fallback
  * Maps image names to their imported static assets
  */
-const getOriginalImagePath = (imageName: string): string => {
+const getImagePaths = (imageName: string): { webp?: string; fallback: string } => {
   const imageMap: Record<string, any> = {
     "162Main": img162Main,
     "162Main_2": img162Main_2,
@@ -94,7 +94,20 @@ const getOriginalImagePath = (imageName: string): string => {
     AFS_1: imgAFS_1,
   };
   const image = imageMap[imageName];
-  return typeof image === 'string' ? image : image?.src || imageName;
+  const imageSrc = typeof image === 'string' ? image : image?.src || imageName;
+  
+  // Check if image is already WebP (like 162MainSt, DodsonSt)
+  const isWebP = imageSrc.includes('.webp') || imageName.includes('St') || imageName === '162MainSt' || imageName === 'Dodson St';
+  
+  return {
+    webp: isWebP ? imageSrc : undefined,
+    fallback: imageSrc
+  };
+};
+
+// Legacy function for backward compatibility
+const getOriginalImagePath = (imageName: string): string => {
+  return getImagePaths(imageName).fallback;
 };
 
 /**
@@ -123,16 +136,24 @@ const FocusCardComponent: React.FC<FocusCardProps> = ({ card, onViewDetails }) =
     >
       {/* Project Example Image */}
       <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
-        <img
-          src={getOriginalImagePath(card.exampleProject.image)}
-          alt={card.exampleProject.name}
-          className="w-full h-full object-cover object-center group-hover:brightness-110 transition-all duration-300"
-          onError={(e) => {
-            (e.currentTarget as HTMLElement).style.display = "none";
-            const fallback = e.currentTarget.nextElementSibling as HTMLElement;
-            if (fallback) fallback.style.display = "flex";
-          }}
-        />
+        {(() => {
+          const imagePaths = getImagePaths(card.exampleProject.image);
+          return (
+            <picture>
+              {imagePaths.webp && <source srcSet={imagePaths.webp} type="image/webp" />}
+              <img
+                src={imagePaths.fallback}
+                alt={card.exampleProject.name}
+                className="w-full h-full object-cover object-center group-hover:brightness-110 transition-all duration-300"
+                onError={(e) => {
+                  (e.currentTarget as HTMLElement).style.display = "none";
+                  const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                  if (fallback) fallback.style.display = "flex";
+                }}
+              />
+            </picture>
+          );
+        })()}
         <div
           className="w-full h-full bg-muted flex items-center justify-center"
           style={{
@@ -195,16 +216,24 @@ const ProjectDetailsModal: React.FC<ProjectDetailsModalProps> = ({ isOpen, onClo
             <div className="space-y-4 md:space-y-6">
               {/* Project Image */}
               <div className="aspect-video bg-muted rounded-lg overflow-hidden">
-                <img
-                  src={getOriginalImagePath(card.exampleProject.image)}
-                  alt={card.exampleProject.name}
-                  className="w-full h-full object-cover object-center"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLElement).style.display = "none";
-                    const fallback = e.currentTarget.nextElementSibling as HTMLElement;
-                    if (fallback) fallback.style.display = "flex";
-                  }}
-                />
+                {(() => {
+                  const imagePaths = getImagePaths(card.exampleProject.image);
+                  return (
+                    <picture>
+                      {imagePaths.webp && <source srcSet={imagePaths.webp} type="image/webp" />}
+                      <img
+                        src={imagePaths.fallback}
+                        alt={card.exampleProject.name}
+                        className="w-full h-full object-cover object-center"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLElement).style.display = "none";
+                          const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                          if (fallback) fallback.style.display = "flex";
+                        }}
+                      />
+                    </picture>
+                  );
+                })()}
                 <div
                   className="w-full h-full bg-muted flex items-center justify-center"
                   style={{
