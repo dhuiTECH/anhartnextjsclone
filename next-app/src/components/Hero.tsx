@@ -270,32 +270,32 @@ export const Hero = () => {
                       Book Now
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-md border border-primary/20 shadow-2xl p-4 sm:p-5">
-                    <DialogClose className="absolute right-3 top-3 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                  <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-md border border-primary/20 shadow-2xl p-3 sm:p-4">
+                    <DialogClose className="absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
                       <X className="h-4 w-4" />
                       <span className="sr-only">Close</span>
                     </DialogClose>
-                    <DialogHeader className="pb-1">
-                      <DialogTitle className="text-xl font-bold text-primary">
+                    <DialogHeader className="pb-0">
+                      <DialogTitle className="text-lg font-bold text-primary">
                         Free Consultation
                       </DialogTitle>
-                      <DialogDescription className="text-muted-foreground text-sm">
+                      <DialogDescription className="text-muted-foreground text-xs mt-0.5">
                         Tell us about your project.
                       </DialogDescription>
                     </DialogHeader>
                     {isSuccess ? (
-                      <div className="text-center py-4">
-                        <p className="text-green-600 font-semibold">
+                      <div className="text-center py-2">
+                        <p className="text-green-600 font-semibold text-sm">
                           Your form has been successfully sent!
                         </p>
-                        <p className="text-muted-foreground mt-2 text-sm">
+                        <p className="text-muted-foreground mt-1 text-xs">
                           We will reach out within 24-48 hours.
                         </p>
                       </div>
                     ) : (
-                      <form onSubmit={handleSubmit} className="space-y-3">
+                      <form onSubmit={handleSubmit} className="space-y-2">
                         <div>
-                          <Label htmlFor="name">Name</Label>
+                          <Label htmlFor="name" className="text-sm">Name</Label>
                           <Input
                             id="name"
                             name="name"
@@ -303,11 +303,11 @@ export const Hero = () => {
                             onChange={handleInputChange}
                             placeholder="Your full name"
                             required
-                            className="mt-1"
+                            className="mt-0.5 h-9"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="email">Email</Label>
+                          <Label htmlFor="email" className="text-sm">Email</Label>
                           <Input
                             id="email"
                             name="email"
@@ -316,11 +316,11 @@ export const Hero = () => {
                             onChange={handleInputChange}
                             placeholder="your.email@example.com"
                             required
-                            className="mt-1"
+                            className="mt-0.5 h-9"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="phone">Phone (optional)</Label>
+                          <Label htmlFor="phone" className="text-sm">Phone (optional)</Label>
                           <Input
                             id="phone"
                             name="phone"
@@ -328,11 +328,11 @@ export const Hero = () => {
                             value={formData.phone}
                             onChange={handleInputChange}
                             placeholder="(123) 456-7890"
-                            className="mt-1"
+                            className="mt-0.5 h-9"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="location">Location</Label>
+                          <Label htmlFor="location" className="text-sm">Location</Label>
                           <Input
                             id="location"
                             name="location"
@@ -340,24 +340,24 @@ export const Hero = () => {
                             onChange={handleInputChange}
                             placeholder="e.g., Toronto, ON"
                             required
-                            className="mt-1"
+                            className="mt-0.5 h-9"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="message">Message</Label>
+                          <Label htmlFor="message" className="text-sm">Message</Label>
                           <Textarea
                             id="message"
                             name="message"
                             value={formData.message}
                             onChange={handleInputChange}
                             placeholder="Details about your project..."
-                            rows={4}
+                            rows={3}
                             required
-                            className="mt-1"
+                            className="mt-0.5"
                           />
                         </div>
                         {!isSuccess && (
-                          <div className="flex justify-center" key={turnstileKey}>
+                          <div className="flex justify-center py-1" key={turnstileKey}>
                             <Turnstile
                               siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
                               onSuccess={handleTurnstileSuccess}
@@ -368,11 +368,11 @@ export const Hero = () => {
                             />
                           </div>
                         )}
-                        <DialogFooter className="pt-2">
+                        <DialogFooter className="pt-1">
                           <Button
                             type="submit"
                             disabled={isSubmitting || !turnstileToken}
-                            className="w-full sm:w-auto"
+                            className="w-full sm:w-auto h-9"
                           >
                             {isSubmitting ? "Sending..." : "Send"}
                           </Button>
@@ -420,32 +420,32 @@ export const Hero = () => {
                       Book Now
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-md border border-primary/20 shadow-2xl p-4 sm:p-5">
-                    <DialogClose className="absolute right-3 top-3 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                  <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-md border border-primary/20 shadow-2xl p-3 sm:p-4">
+                    <DialogClose className="absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
                       <X className="h-4 w-4" />
                       <span className="sr-only">Close</span>
                     </DialogClose>
-                    <DialogHeader className="pb-1">
-                      <DialogTitle className="text-2xl font-bold text-primary">
+                    <DialogHeader className="pb-0">
+                      <DialogTitle className="text-xl font-bold text-primary">
                         Free Consultation
                       </DialogTitle>
-                      <DialogDescription className="text-muted-foreground text-sm">
+                      <DialogDescription className="text-muted-foreground text-xs mt-0.5">
                         Tell us about your project.
                       </DialogDescription>
                     </DialogHeader>
                     {isSuccess ? (
-                      <div className="text-center py-4">
-                        <p className="text-green-600 font-semibold">
+                      <div className="text-center py-2">
+                        <p className="text-green-600 font-semibold text-sm">
                           Your form has been successfully sent!
                         </p>
-                        <p className="text-muted-foreground mt-2 text-sm">
+                        <p className="text-muted-foreground mt-1 text-xs">
                           We will reach out within 24-48 hours.
                         </p>
                       </div>
                     ) : (
-                      <form onSubmit={handleSubmit} className="space-y-3">
+                      <form onSubmit={handleSubmit} className="space-y-2">
                         <div>
-                          <Label htmlFor="name">Name</Label>
+                          <Label htmlFor="name" className="text-sm">Name</Label>
                           <Input
                             id="name"
                             name="name"
@@ -453,11 +453,11 @@ export const Hero = () => {
                             onChange={handleInputChange}
                             placeholder="Your full name"
                             required
-                            className="mt-1"
+                            className="mt-0.5 h-9"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="email">Email</Label>
+                          <Label htmlFor="email" className="text-sm">Email</Label>
                           <Input
                             id="email"
                             name="email"
@@ -466,11 +466,11 @@ export const Hero = () => {
                             onChange={handleInputChange}
                             placeholder="your.email@example.com"
                             required
-                            className="mt-1"
+                            className="mt-0.5 h-9"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="phone">Phone (optional)</Label>
+                          <Label htmlFor="phone" className="text-sm">Phone (optional)</Label>
                           <Input
                             id="phone"
                             name="phone"
@@ -478,11 +478,11 @@ export const Hero = () => {
                             value={formData.phone}
                             onChange={handleInputChange}
                             placeholder="(123) 456-7890"
-                            className="mt-1"
+                            className="mt-0.5 h-9"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="location">Location</Label>
+                          <Label htmlFor="location" className="text-sm">Location</Label>
                           <Input
                             id="location"
                             name="location"
@@ -490,24 +490,24 @@ export const Hero = () => {
                             onChange={handleInputChange}
                             placeholder="e.g., Toronto, ON"
                             required
-                            className="mt-1"
+                            className="mt-0.5 h-9"
                           />
                         </div>
                         <div>
-                          <Label htmlFor="message">Message</Label>
+                          <Label htmlFor="message" className="text-sm">Message</Label>
                           <Textarea
                             id="message"
                             name="message"
                             value={formData.message}
                             onChange={handleInputChange}
                             placeholder="Details about your project..."
-                            rows={4}
+                            rows={3}
                             required
-                            className="mt-1"
+                            className="mt-0.5"
                           />
                         </div>
                         {!isSuccess && (
-                          <div className="flex justify-center" key={turnstileKey}>
+                          <div className="flex justify-center py-1" key={turnstileKey}>
                             <Turnstile
                               siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
                               onSuccess={handleTurnstileSuccess}
@@ -518,11 +518,11 @@ export const Hero = () => {
                             />
                           </div>
                         )}
-                        <DialogFooter className="pt-2">
+                        <DialogFooter className="pt-1">
                           <Button
                             type="submit"
                             disabled={isSubmitting || !turnstileToken}
-                            className="w-full sm:w-auto"
+                            className="w-full sm:w-auto h-9"
                           >
                             {isSubmitting ? "Sending..." : "Send"}
                           </Button>
