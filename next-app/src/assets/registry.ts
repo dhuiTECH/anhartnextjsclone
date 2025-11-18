@@ -1,11 +1,15 @@
 /**
  * Auto-generated Image Registry
- * Generated on: 2025-11-18T06:58:05.744Z
+ * Generated on: 2025-11-18T07:07:18.299Z
  * 
  * This file maps image names to their optimized WebP variants.
  * All images are optimized to under 200KB for fast loading.
  */
 
+import JubileeSignSm from './portfolioAssets/Jubilee-Sign-320x180.webp';
+import JubileeSignMd from './portfolioAssets/Jubilee-Sign-384x216.webp';
+import JubileeSignLg from './portfolioAssets/Jubilee-Sign-512x288.webp';
+import JubileeSignXl from './portfolioAssets/Jubilee-Sign-640x360.webp';
 import img1060howeSm from './baseAssets/1060howe-320x190.webp';
 import img1060howeMd from './baseAssets/1060howe-384x228.webp';
 import img162MainSm from './baseAssets/162Main-320x180.webp';
@@ -87,6 +91,10 @@ import TheRyderSm from './baseAssets/TheRyder-320x170.webp';
 import TheRyderMd from './baseAssets/TheRyder-384x204.webp';
 import TheRyderLg from './baseAssets/TheRyder-512x271.webp';
 import TheRyderXl from './baseAssets/TheRyder-640x339.webp';
+import TrustedPartnersSm from './baseAssets/Trusted-Partners-320x180.webp';
+import TrustedPartnersMd from './baseAssets/Trusted-Partners-384x216.webp';
+import TrustedPartnersLg from './baseAssets/Trusted-Partners-512x288.webp';
+import TrustedPartnersXl from './baseAssets/Trusted-Partners-640x360.webp';
 import aboutHeroSm from './baseAssets/about-hero-640x360.webp';
 import aboutHeroMd from './baseAssets/about-hero-768x432.webp';
 import aboutHeroLg from './baseAssets/about-hero-1024x576.webp';
@@ -104,6 +112,10 @@ import contactHeroSm from './baseAssets/contact-hero-640x360.webp';
 import contactHeroMd from './baseAssets/contact-hero-768x432.webp';
 import contactHeroLg from './baseAssets/contact-hero-1024x576.webp';
 import contactHeroXl from './baseAssets/contact-hero-1280x720.webp';
+import expertConsultationSm from './baseAssets/expert-consultation-320x180.webp';
+import expertConsultationMd from './baseAssets/expert-consultation-384x216.webp';
+import expertConsultationLg from './baseAssets/expert-consultation-512x288.webp';
+import expertConsultationXl from './baseAssets/expert-consultation-640x360.webp';
 import housingaffordSm from './baseAssets/housingafford-320x320.webp';
 import housingaffordMd from './baseAssets/housingafford-384x384.webp';
 import housingaffordLg from './baseAssets/housingafford-512x512.webp';
@@ -285,6 +297,11 @@ export const imageRegistry: Record<string, ImageEntry> = {
     fallback: TheRyderSm,
     dimensions: { sm: { width: 320, height: 170 }, md: { width: 384, height: 204 }, lg: { width: 512, height: 271 }, xl: { width: 640, height: 339 } },
   },
+  'Trusted-Partners': {
+    webp: { sm: TrustedPartnersSm, md: TrustedPartnersMd, lg: TrustedPartnersLg, xl: TrustedPartnersXl },
+    fallback: TrustedPartnersSm,
+    dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
+  },
   'about-hero': {
     webp: { sm: aboutHeroSm, md: aboutHeroMd, lg: aboutHeroLg, xl: aboutHeroXl },
     fallback: aboutHeroSm,
@@ -309,6 +326,11 @@ export const imageRegistry: Record<string, ImageEntry> = {
     webp: { sm: contactHeroSm, md: contactHeroMd, lg: contactHeroLg, xl: contactHeroXl },
     fallback: contactHeroSm,
     dimensions: { sm: { width: 640, height: 360 }, md: { width: 768, height: 432 }, lg: { width: 1024, height: 576 }, xl: { width: 1280, height: 720 } },
+  },
+  'expert-consultation': {
+    webp: { sm: expertConsultationSm, md: expertConsultationMd, lg: expertConsultationLg, xl: expertConsultationXl },
+    fallback: expertConsultationSm,
+    dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
   },
   'housingafford': {
     webp: { sm: housingaffordSm, md: housingaffordMd, lg: housingaffordLg, xl: housingaffordXl },
@@ -383,6 +405,21 @@ export const imageRegistry: Record<string, ImageEntry> = {
   'urban-renewal-project': {
     webp: { sm: urbanRenewalProjectSm, md: urbanRenewalProjectMd, lg: urbanRenewalProjectLg, xl: urbanRenewalProjectXl },
     fallback: urbanRenewalProjectSm,
+    dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
+  },
+  'Jubilee-Sign': {
+    webp: { sm: JubileeSignSm, md: JubileeSignMd, lg: JubileeSignLg, xl: JubileeSignXl },
+    fallback: JubileeSignSm,
+    dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
+  },
+  'expert-consultation': {
+    webp: { sm: expertConsultationSm, md: expertConsultationMd, lg: expertConsultationLg, xl: expertConsultationXl },
+    fallback: expertConsultationSm,
+    dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
+  },
+  'Trusted-Partners': {
+    webp: { sm: TrustedPartnersSm, md: TrustedPartnersMd, lg: TrustedPartnersLg, xl: TrustedPartnersXl },
+    fallback: TrustedPartnersSm,
     dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
   }
 };
