@@ -9,7 +9,7 @@ export const ResourceHints = () => {
       {/* DNS prefetch for external domains */}
       <link rel="dns-prefetch" href="//www.google-analytics.com" />
       {/* Preload critical resources */}
-      <link rel="preload" href="/images/anhart-logo-text.png" as="image" type="image/png" fetchPriority="high" />
+      <link rel="preload" href="/images/anhart-logo-text.webp" as="image" type="image/webp" fetchPriority="high" />
       {/* Prefetch likely next page resources */}
       <link rel="prefetch" href="/about" />
       <link rel="prefetch" href="/portfolio" />

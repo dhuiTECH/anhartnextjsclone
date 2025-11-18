@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Facebook, Twitter, Linkedin, Instagram, Mail, MapPin } from "lucide-react";
-import anhartLogoImg from "@/assets/anhart-logo-white.png";
+import anhartLogoImg from "@/assets/anhart-logo-white.webp";
 import { CONTACT_INFO, AddressUtils } from "@/config/address";
 import { openGoogleMapsSearch } from "@/utils/externalLinks";
 import { useNewsletterSubscription } from "@/hooks/useNewsletterSubscription";

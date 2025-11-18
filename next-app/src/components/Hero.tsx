@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown, X } from "lucide-react";
-import anhartLogoImg from "@/assets/anhart-logo.png";
+import anhartLogoImg from "@/assets/anhart-logo.webp";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { useEffect, useRef, useState, useCallback } from "react";
 import {

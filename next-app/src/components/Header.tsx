@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
 
-const anhartLogo = "/images/anhart-logo-text.png";
+const anhartLogo = "/images/anhart-logo-text.webp";
 
 const navigation = [{ name: "Home", href: "/" }];
 
