@@ -10,6 +10,22 @@ import JubileeSignSm from './portfolioAssets/Jubilee-Sign-320x180.webp';
 import JubileeSignMd from './portfolioAssets/Jubilee-Sign-384x216.webp';
 import JubileeSignLg from './portfolioAssets/Jubilee-Sign-512x288.webp';
 import JubileeSignXl from './portfolioAssets/Jubilee-Sign-640x360.webp';
+import beaverConsturctionSm from './baseAssets/beaverConsturction-320x180.webp';
+import beaverConsturctionMd from './baseAssets/beaverConsturction-384x216.webp';
+import beaverConsturctionLg from './baseAssets/beaverConsturction-512x288.webp';
+import beaverConsturctionXl from './baseAssets/beaverConsturction-640x360.webp';
+import communityChampionsSm from './baseAssets/communityChampions-320x180.webp';
+import communityChampionsMd from './baseAssets/communityChampions-384x216.webp';
+import communityChampionsLg from './baseAssets/communityChampions-512x288.webp';
+import communityChampionsXl from './baseAssets/communityChampions-640x360.webp';
+import systemsNetworkSm from './baseAssets/systemsNetwork-320x180.webp';
+import systemsNetworkMd from './baseAssets/systemsNetwork-384x216.webp';
+import systemsNetworkLg from './baseAssets/systemsNetwork-512x288.webp';
+import systemsNetworkXl from './baseAssets/systemsNetwork-640x360.webp';
+import thinkingStatueLaptopSm from './baseAssets/thinkingStatueLaptop-320x180.webp';
+import thinkingStatueLaptopMd from './baseAssets/thinkingStatueLaptop-384x216.webp';
+import thinkingStatueLaptopLg from './baseAssets/thinkingStatueLaptop-512x288.webp';
+import thinkingStatueLaptopXl from './baseAssets/thinkingStatueLaptop-640x360.webp';
 import img1060howeSm from './baseAssets/1060howe-320x190.webp';
 import img1060howeMd from './baseAssets/1060howe-384x228.webp';
 import img162MainSm from './baseAssets/162Main-320x180.webp';
@@ -176,11 +192,13 @@ import urbanRenewalProjectMd from './baseAssets/urban-renewal-project-384x216.we
 import urbanRenewalProjectLg from './baseAssets/urban-renewal-project-512x288.webp';
 import urbanRenewalProjectXl from './baseAssets/urban-renewal-project-640x360.webp';
 
+import type { StaticImageData } from 'next/image';
+
 export interface ImageVariants {
-  sm: string;
-  md?: string;
-  lg?: string;
-  xl?: string;
+  sm: string | StaticImageData;
+  md?: string | StaticImageData;
+  lg?: string | StaticImageData;
+  xl?: string | StaticImageData;
 }
 
 export interface ImageDimensions {
@@ -192,7 +210,7 @@ export interface ImageDimensions {
 
 export interface ImageEntry {
   webp: ImageVariants;
-  fallback: string;
+  fallback: string | StaticImageData;
   dimensions: ImageDimensions;
 }
 
@@ -412,14 +430,24 @@ export const imageRegistry: Record<string, ImageEntry> = {
     fallback: JubileeSignSm,
     dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
   },
-  'expert-consultation': {
-    webp: { sm: expertConsultationSm, md: expertConsultationMd, lg: expertConsultationLg, xl: expertConsultationXl },
-    fallback: expertConsultationSm,
+  'beaverConsturction': {
+    webp: { sm: beaverConsturctionSm, md: beaverConsturctionMd, lg: beaverConsturctionLg, xl: beaverConsturctionXl },
+    fallback: beaverConsturctionSm,
     dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
   },
-  'Trusted-Partners': {
-    webp: { sm: TrustedPartnersSm, md: TrustedPartnersMd, lg: TrustedPartnersLg, xl: TrustedPartnersXl },
-    fallback: TrustedPartnersSm,
+  'communityChampions': {
+    webp: { sm: communityChampionsSm, md: communityChampionsMd, lg: communityChampionsLg, xl: communityChampionsXl },
+    fallback: communityChampionsSm,
+    dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
+  },
+  'systemsNetwork': {
+    webp: { sm: systemsNetworkSm, md: systemsNetworkMd, lg: systemsNetworkLg, xl: systemsNetworkXl },
+    fallback: systemsNetworkSm,
+    dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
+  },
+  'thinkingStatueLaptop': {
+    webp: { sm: thinkingStatueLaptopSm, md: thinkingStatueLaptopMd, lg: thinkingStatueLaptopLg, xl: thinkingStatueLaptopXl },
+    fallback: thinkingStatueLaptopSm,
     dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
   }
 };
