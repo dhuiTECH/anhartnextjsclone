@@ -72,6 +72,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 
 // =============================================================================
 // ICON IMPORTS
@@ -84,12 +85,15 @@ import {
   ArrowRight,
   ArrowLeft,
   X,
+  Calendar,
+  Clock,
 } from "lucide-react";
 
 // =============================================================================
 // TYPE IMPORTS
 // =============================================================================
 import { ProjectData } from "@/types/project";
+import { BlogPost, getFeaturedPosts } from "@/data/blog";
 
 // =============================================================================
 // DATA & CONFIGURATION IMPORTS
@@ -181,6 +185,12 @@ const Home = () => {
    */
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [turnstileKey, setTurnstileKey] = useState(0); // Key to force Turnstile reset
+
+  /**
+   * Featured Blogs State Management
+   * Stores the featured blog posts to display
+   */
+  const [featuredBlogs, setFeaturedBlogs] = useState<BlogPost[]>([]);
 
   // =============================================================================
   // TURNSTILE CALLBACKS (Memoized to prevent re-render loops)
@@ -303,6 +313,23 @@ const Home = () => {
     };
   }, []); // Empty dependency array - only runs once
 
+  /**
+   * Fetch Featured Blog Posts
+   *
+   * Fetches blog posts marked as featured from the database.
+   */
+  useEffect(() => {
+    const fetchFeaturedBlogs = async () => {
+      try {
+        const posts = await getFeaturedPosts();
+        setFeaturedBlogs(posts);
+      } catch (error) {
+        console.error("Error fetching featured blogs:", error);
+      }
+    };
+    fetchFeaturedBlogs();
+  }, []);
+
   // =============================================================================
   // MODAL HANDLERS
   // =============================================================================
@@ -402,6 +429,43 @@ const Home = () => {
    * Closes the partners carousel dialog.
    */
   const closeClientsDialog = () => setClientsDialogOpen(false);
+
+  // =============================================================================
+  // HELPER FUNCTIONS
+  // =============================================================================
+
+  /**
+   * Normalize Blog Image URL
+   *
+   * Helper function to normalize blog post image URLs for display.
+   */
+  const normalizeImageUrl = (url: string | undefined | null): string => {
+    if (!url) return "/blog/default.jpg";
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return url;
+    }
+    if (url.startsWith("data:")) {
+      return url;
+    }
+    if (url.startsWith("/")) {
+      return `https://anhart.ca${url}`;
+    }
+    return `https://anhart.ca/${url}`;
+  };
+
+  /**
+   * Format Date
+   *
+   * Formats a date string into a readable format.
+   */
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   // =============================================================================
   // DATA STRUCTURES
@@ -876,6 +940,95 @@ const Home = () => {
             </div>
           </div>
         </section>
+
+        {/* =====================================================================
+              FEATURED BLOGS SECTION
+              =====================================================================
+              Displays the latest blog posts in a card grid layout.
+           */}
+        {featuredBlogs.length > 0 && (
+          <section className="py-16 bg-background">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8">
+              <div className="text-center mb-12">
+                <ScrollAnimationWrapper direction="top">
+                  <h2 className="text-3xl font-bold tracking-tight text-foreground mb-4">
+                    Featured Blogs
+                  </h2>
+                </ScrollAnimationWrapper>
+                <ScrollAnimationWrapper direction="top" delay={100}>
+                  <p className="text-lg text-muted-foreground">
+                    Read the latest insights and resources about affordable housing
+                  </p>
+                </ScrollAnimationWrapper>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {featuredBlogs.map((post, index) => (
+                  <ScrollAnimationWrapper
+                    key={post.id}
+                    direction="bottom"
+                    delay={index * 0.1}
+                  >
+                      <Link href={`/blog/${post.slug}`} className="block h-full">
+                        <Card className="h-full hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
+                          {post.featuredImage && (
+                            <div className="relative h-48 overflow-hidden">
+                              <img
+                                src={normalizeImageUrl(post.featuredImage)}
+                                alt={post.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                loading="lazy"
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                  target.style.display = "none";
+                                }}
+                              />
+                            </div>
+                          )}
+                          <CardHeader>
+                            <Badge className="mb-3 w-fit bg-primary text-primary-foreground">
+                              {post.category}
+                            </Badge>
+                            <h3 className="text-xl font-bold text-foreground mb-2 hover:text-primary transition-colors line-clamp-2">
+                              {post.title}
+                            </h3>
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                              <span className="flex items-center gap-1">
+                                <Calendar className="h-4 w-4" />
+                                {formatDate(post.publishDate)}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Clock className="h-4 w-4" />
+                                {post.readingTime} min
+                              </span>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-muted-foreground mb-4 line-clamp-3">
+                              {post.excerpt}
+                            </p>
+                            <div className="flex items-center text-primary font-semibold group-hover:gap-2 transition-all">
+                              Read More
+                              <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </Link>
+                    </ScrollAnimationWrapper>
+                  ))}
+              </div>
+
+              <div className="text-center mt-12">
+                <Link href="/blog">
+                  <Button variant="outline" size="lg">
+                    View All Blogs
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
       </main>
       {/* =====================================================================
             FOOTER

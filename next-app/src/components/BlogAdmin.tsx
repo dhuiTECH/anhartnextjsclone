@@ -48,6 +48,7 @@ interface BlogPost {
   meta_description: string;
   keywords: string[];
   is_published: boolean;
+  is_featured: boolean;
 }
 
 const BlogAdmin = () => {
@@ -83,6 +84,7 @@ const BlogAdmin = () => {
     meta_description: "",
     keywords: [],
     is_published: false,
+    is_featured: false,
     publish_date: new Date().toISOString().split("T")[0],
   };
 
@@ -161,7 +163,13 @@ const BlogAdmin = () => {
       return;
     }
 
-    setPosts(data || []);
+    // Ensure is_featured is set (defaults to false if not present)
+    const postsWithFeatured = (data || []).map((post: any) => ({
+      ...post,
+      is_featured: post.is_featured ?? false,
+    }));
+
+    setPosts(postsWithFeatured as BlogPost[]);
   };
 
   const handleSave = async () => {
@@ -193,6 +201,38 @@ const BlogAdmin = () => {
         variant: "destructive",
       });
       return;
+    }
+
+    // Check if trying to feature a post - ensure max 3 featured posts
+    if (editingPost.is_featured) {
+      const { data: featuredPosts, error: countError } = await supabase
+        .from("blog_posts")
+        .select("id")
+        .eq("is_featured", true);
+
+      if (countError) {
+        toast({
+          title: "Error",
+          description: "Failed to check featured posts count",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // If updating an existing post, exclude it from the count
+      const posts = (featuredPosts as { id: string }[]) || [];
+      const currentFeaturedCount = isCreating
+        ? posts.length
+        : posts.filter((p) => p.id !== editingPost.id).length;
+
+      if (currentFeaturedCount >= 3) {
+        toast({
+          title: "Validation Error",
+          description: "Maximum 3 posts can be featured. Please unfeature another post first.",
+          variant: "destructive",
+        });
+        return;
+      }
     }
 
     const postData = {
@@ -514,6 +554,25 @@ const BlogAdmin = () => {
                   </div>
                 </div>
 
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="featured"
+                    checked={editingPost.is_featured || false}
+                    onCheckedChange={(checked) =>
+                      setEditingPost({
+                        ...editingPost,
+                        is_featured: checked,
+                      })
+                    }
+                  />
+                  <Label htmlFor="featured" className="flex flex-col">
+                    <span>Featured on Homepage</span>
+                    <span className="text-xs text-muted-foreground">
+                      (Max 3 posts can be featured)
+                    </span>
+                  </Label>
+                </div>
+
                 <div>
                   <Label htmlFor="tags">Tags (comma-separated)</Label>
                   <Input
@@ -643,6 +702,11 @@ const BlogAdmin = () => {
                           >
                             {post.is_published ? "Published" : "Draft"}
                           </Badge>
+                          {post.is_featured && (
+                            <Badge variant="outline" className="bg-primary/10 text-primary border-primary">
+                              Featured
+                            </Badge>
+                          )}
                         </div>
                         <p className="text-muted-foreground mb-2">
                           {post.excerpt}

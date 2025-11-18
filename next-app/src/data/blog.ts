@@ -56,6 +56,7 @@ interface DbBlogPost {
   meta_description: string;
   keywords: string[];
   is_published: boolean;
+  is_featured?: boolean;
 }
 
 function transformDbPost(dbPost: DbBlogPost): BlogPost {
@@ -1112,6 +1113,24 @@ export const getSortedPosts = async (): Promise<BlogPost[]> => {
 
   if (error) {
     console.error("Error fetching blog posts:", error);
+    return [];
+  }
+
+  return (data || []).map(transformDbPost);
+};
+
+// Get featured posts (max 3)
+export const getFeaturedPosts = async (): Promise<BlogPost[]> => {
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("is_published", true)
+    .eq("is_featured", true)
+    .order("publish_date", { ascending: false })
+    .limit(3);
+
+  if (error) {
+    console.error("Error fetching featured blog posts:", error);
     return [];
   }
 
