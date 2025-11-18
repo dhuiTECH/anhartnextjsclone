@@ -40,6 +40,8 @@ export const ClientCarousel: React.FC<{
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  // Cache containerLeft to avoid forced reflows
+  const containerLeftRef = useRef<number>(0);
 
   // Swipe animation state
   const [isAnimating, setIsAnimating] = useState(false);
@@ -160,10 +162,11 @@ export const ClientCarousel: React.FC<{
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollContainerRef.current) return;
     setIsDragging(true);
-    // Batch DOM reads together
+    // Batch DOM reads together - cache all geometric properties
     const container = scrollContainerRef.current;
     const containerLeft = container.offsetLeft;
     const containerScrollLeft = container.scrollLeft;
+    containerLeftRef.current = containerLeft;
     setStartX(e.pageX - containerLeft);
     setScrollLeft(containerScrollLeft);
   };
@@ -171,13 +174,13 @@ export const ClientCarousel: React.FC<{
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !scrollContainerRef.current) return;
     e.preventDefault();
-    // Use requestAnimationFrame to batch DOM operations
+    // Use cached containerLeft to avoid forced reflow
+    const x = e.pageX - containerLeftRef.current;
+    const walk = (x - startX) * 2;
+    // Use requestAnimationFrame to batch DOM writes
     requestAnimationFrame(() => {
       if (!scrollContainerRef.current) return;
-      const container = scrollContainerRef.current;
-      const x = e.pageX - container.offsetLeft;
-      const walk = (x - startX) * 2;
-      container.scrollLeft = scrollLeft - walk;
+      scrollContainerRef.current.scrollLeft = scrollLeft - walk;
     });
   };
 
@@ -238,11 +241,12 @@ export const ClientCarousel: React.FC<{
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!scrollContainerRef.current) return;
     setIsDragging(true);
-    // Batch DOM reads together
+    // Batch DOM reads together - cache all geometric properties
     const container = scrollContainerRef.current;
     const touch = e.touches[0];
     const containerLeft = container.offsetLeft;
     const containerScrollLeft = container.scrollLeft;
+    containerLeftRef.current = containerLeft;
     setStartX(touch.pageX - containerLeft);
     setScrollLeft(containerScrollLeft);
 
@@ -273,19 +277,18 @@ export const ClientCarousel: React.FC<{
       e.stopPropagation();
     }
 
-    // Use requestAnimationFrame to batch DOM operations
+    // Use cached containerLeft to avoid forced reflow
     if (isHorizontalGesture || deltaX > deltaY) {
+      const x = touchX - containerLeftRef.current;
+      const walk = (x - startX) * 1.5; // Optimized multiplier for smooth touch experience
+      // Determine swipe direction for animation
+      if (deltaX > 10) {
+        setSwipeDirection(x - startX > 0 ? "right" : "left");
+      }
+      // Use requestAnimationFrame to batch DOM writes
       requestAnimationFrame(() => {
         if (!scrollContainerRef.current) return;
-        const container = scrollContainerRef.current;
-        const x = touchX - container.offsetLeft;
-        const walk = (x - startX) * 1.5; // Optimized multiplier for smooth touch experience
-        container.scrollLeft = scrollLeft - walk;
-
-        // Determine swipe direction for animation
-        if (deltaX > 10) {
-          setSwipeDirection(x - startX > 0 ? "right" : "left");
-        }
+        scrollContainerRef.current.scrollLeft = scrollLeft - walk;
       });
     }
   };

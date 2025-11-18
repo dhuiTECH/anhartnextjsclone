@@ -51,6 +51,10 @@ export const HorizontalScrollCarousel: React.FC<{
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  // Cache containerLeft to avoid forced reflows
+  const containerLeftRef = useRef<number>(0);
+  // Cache containerWidth to avoid forced reflows
+  const containerWidthRef = useRef<number>(0);
   
   // Swipe animation state
   const [isAnimating, setIsAnimating] = useState(false);
@@ -71,10 +75,11 @@ export const HorizontalScrollCarousel: React.FC<{
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollContainerRef.current) return;
     setIsDragging(true);
-    // Batch DOM reads together
+    // Batch DOM reads together - cache all geometric properties
     const container = scrollContainerRef.current;
     const containerLeft = container.offsetLeft;
     const containerScrollLeft = container.scrollLeft;
+    containerLeftRef.current = containerLeft;
     setStartX(e.pageX - containerLeft);
     setScrollLeft(containerScrollLeft);
   };
@@ -85,13 +90,13 @@ export const HorizontalScrollCarousel: React.FC<{
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !scrollContainerRef.current) return;
     e.preventDefault();
-    // Use requestAnimationFrame to batch DOM operations
+    // Use cached containerLeft to avoid forced reflow
+    const x = e.pageX - containerLeftRef.current;
+    const walk = (x - startX) * 2; // Scroll sensitivity multiplier
+    // Use requestAnimationFrame to batch DOM writes
     requestAnimationFrame(() => {
       if (!scrollContainerRef.current) return;
-      const container = scrollContainerRef.current;
-      const x = e.pageX - container.offsetLeft;
-      const walk = (x - startX) * 2; // Scroll sensitivity multiplier
-      container.scrollLeft = scrollLeft - walk;
+      scrollContainerRef.current.scrollLeft = scrollLeft - walk;
     });
   };
 
@@ -115,11 +120,12 @@ export const HorizontalScrollCarousel: React.FC<{
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!scrollContainerRef.current) return;
     setIsDragging(true);
-    // Batch DOM reads together
+    // Batch DOM reads together - cache all geometric properties
     const container = scrollContainerRef.current;
     const touch = e.touches[0];
     const containerLeft = container.offsetLeft;
     const containerScrollLeft = container.scrollLeft;
+    containerLeftRef.current = containerLeft;
     setStartX(touch.pageX - containerLeft);
     setScrollLeft(containerScrollLeft);
     
@@ -153,19 +159,18 @@ export const HorizontalScrollCarousel: React.FC<{
       e.stopPropagation();
     }
     
-    // Use requestAnimationFrame to batch DOM operations
+    // Use cached containerLeft to avoid forced reflow
     if (isHorizontalGesture || deltaX > deltaY) {
+      const x = touchX - containerLeftRef.current;
+      const walk = (x - startX) * 2;
+      // Determine swipe direction for animation
+      if (deltaX > 10) {
+        setSwipeDirection((x - startX) > 0 ? 'right' : 'left');
+      }
+      // Use requestAnimationFrame to batch DOM writes
       requestAnimationFrame(() => {
         if (!scrollContainerRef.current) return;
-        const container = scrollContainerRef.current;
-        const x = touchX - container.offsetLeft;
-        const walk = (x - startX) * 2;
-        container.scrollLeft = scrollLeft - walk;
-        
-        // Determine swipe direction for animation
-        if (deltaX > 10) {
-          setSwipeDirection((x - startX) > 0 ? 'right' : 'left');
-        }
+        scrollContainerRef.current.scrollLeft = scrollLeft - walk;
       });
     }
   };
@@ -194,14 +199,16 @@ export const HorizontalScrollCarousel: React.FC<{
     if (!scrollContainerRef.current) return;
     
     setCurrentPage(pageIndex);
+    // Use cached width if available, otherwise read it once
+    const containerWidth = containerWidthRef.current || scrollContainerRef.current.offsetWidth;
+    if (!containerWidthRef.current) {
+      containerWidthRef.current = containerWidth;
+    }
+    const scrollPosition = pageIndex * containerWidth;
     // Use requestAnimationFrame to batch DOM operations
     requestAnimationFrame(() => {
       if (!scrollContainerRef.current) return;
-      const container = scrollContainerRef.current;
-      const containerWidth = container.offsetWidth;
-      const scrollPosition = pageIndex * containerWidth;
-      
-      container.scrollTo({
+      scrollContainerRef.current.scrollTo({
         left: scrollPosition,
         behavior: 'smooth'
       });
@@ -235,7 +242,11 @@ export const HorizontalScrollCarousel: React.FC<{
       if (!scrollContainerRef.current) return;
       const container = scrollContainerRef.current;
       // Batch all DOM reads together
-      const containerWidth = container.offsetWidth;
+      // Use cached width to avoid forced reflow
+      const containerWidth = containerWidthRef.current || container.offsetWidth;
+      if (!containerWidthRef.current) {
+        containerWidthRef.current = containerWidth;
+      }
       const containerScrollLeft = container.scrollLeft;
       const newPage = Math.round(containerScrollLeft / containerWidth);
       
@@ -244,6 +255,18 @@ export const HorizontalScrollCarousel: React.FC<{
       }
     });
   };
+
+  // Cache container width on mount and resize
+  useEffect(() => {
+    const updateContainerWidth = () => {
+      if (scrollContainerRef.current) {
+        containerWidthRef.current = scrollContainerRef.current.offsetWidth;
+      }
+    };
+    updateContainerWidth();
+    window.addEventListener('resize', updateContainerWidth);
+    return () => window.removeEventListener('resize', updateContainerWidth);
+  }, []);
 
   // Update page on scroll
   useEffect(() => {

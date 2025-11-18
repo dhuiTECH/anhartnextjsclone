@@ -76,6 +76,10 @@ export const ThreeCardSection: React.FC<{
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  // Cache containerLeft to avoid forced reflows
+  const containerLeftRef = useRef<number>(0);
+  // Cache containerWidth to avoid forced reflows
+  const containerWidthRef = useRef<number>(0);
   
   // Swipe animation state
   const [isAnimating, setIsAnimating] = useState(false);
@@ -97,23 +101,24 @@ export const ThreeCardSection: React.FC<{
   const handleMouseDown = (e: React.MouseEvent) => {
     if (layout !== 'carousel' || !scrollContainerRef.current) return;
     setIsDragging(true);
-    // Batch DOM reads together
+    // Batch DOM reads together - cache all geometric properties
     const container = scrollContainerRef.current;
     const containerLeft = container.offsetLeft;
     const containerScrollLeft = container.scrollLeft;
+    containerLeftRef.current = containerLeft;
     setStartX(e.pageX - containerLeft);
     setScrollLeft(containerScrollLeft);
   };
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || layout !== 'carousel' || !scrollContainerRef.current) return;
     e.preventDefault();
-    // Use requestAnimationFrame to batch DOM operations
+    // Use cached containerLeft to avoid forced reflow
+    const x = e.pageX - containerLeftRef.current;
+    const walk = (x - startX) * 2;
+    // Use requestAnimationFrame to batch DOM writes
     requestAnimationFrame(() => {
       if (!scrollContainerRef.current) return;
-      const container = scrollContainerRef.current;
-      const x = e.pageX - container.offsetLeft;
-      const walk = (x - startX) * 2;
-      container.scrollLeft = scrollLeft - walk;
+      scrollContainerRef.current.scrollLeft = scrollLeft - walk;
     });
   };
   const handleMouseUp = () => setIsDragging(false);
@@ -121,11 +126,12 @@ export const ThreeCardSection: React.FC<{
   const handleTouchStart = (e: React.TouchEvent) => {
     if (layout !== 'carousel' || !scrollContainerRef.current) return;
     setIsDragging(true);
-    // Batch DOM reads together
+    // Batch DOM reads together - cache all geometric properties
     const container = scrollContainerRef.current;
     const touch = e.touches[0];
     const containerLeft = container.offsetLeft;
     const containerScrollLeft = container.scrollLeft;
+    containerLeftRef.current = containerLeft;
     setStartX(touch.pageX - containerLeft);
     setScrollLeft(containerScrollLeft);
     
@@ -155,19 +161,18 @@ export const ThreeCardSection: React.FC<{
       e.stopPropagation();
     }
     
-    // Use requestAnimationFrame to batch DOM operations
+    // Use cached containerLeft to avoid forced reflow
     if (isHorizontalGesture || deltaX > deltaY) {
+      const x = touchX - containerLeftRef.current;
+      const walk = (x - startX) * 2;
+      // Determine swipe direction for animation
+      if (deltaX > 10) {
+        setSwipeDirection((x - startX) > 0 ? 'right' : 'left');
+      }
+      // Use requestAnimationFrame to batch DOM writes
       requestAnimationFrame(() => {
         if (!scrollContainerRef.current) return;
-        const container = scrollContainerRef.current;
-        const x = touchX - container.offsetLeft;
-        const walk = (x - startX) * 2;
-        container.scrollLeft = scrollLeft - walk;
-        
-        // Determine swipe direction for animation
-        if (deltaX > 10) {
-          setSwipeDirection((x - startX) > 0 ? 'right' : 'left');
-        }
+        scrollContainerRef.current.scrollLeft = scrollLeft - walk;
       });
     }
   };
@@ -297,12 +302,15 @@ export const ThreeCardSection: React.FC<{
    */
   const scrollToPage = (pageIndex: number) => {
     if (layout !== 'carousel' || !scrollContainerRef.current) return;
+    // Use cached width if available, otherwise read it once
+    const containerWidth = containerWidthRef.current || scrollContainerRef.current.offsetWidth;
+    if (!containerWidthRef.current) {
+      containerWidthRef.current = containerWidth;
+    }
     // Use requestAnimationFrame to batch DOM operations
     requestAnimationFrame(() => {
       if (!scrollContainerRef.current) return;
-      const container = scrollContainerRef.current;
-      const containerWidth = container.offsetWidth;
-      container.scrollTo({
+      scrollContainerRef.current.scrollTo({
         left: pageIndex * containerWidth,
         behavior: 'smooth'
       });
@@ -317,6 +325,19 @@ export const ThreeCardSection: React.FC<{
     const newPage = currentPage < totalPages - 1 ? currentPage + 1 : 0;
     scrollToPage(newPage);
   };
+
+  // Cache container width on mount and resize (carousel mode)
+  useEffect(() => {
+    if (layout !== 'carousel') return;
+    const updateContainerWidth = () => {
+      if (scrollContainerRef.current) {
+        containerWidthRef.current = scrollContainerRef.current.offsetWidth;
+      }
+    };
+    updateContainerWidth();
+    window.addEventListener('resize', updateContainerWidth);
+    return () => window.removeEventListener('resize', updateContainerWidth);
+  }, [layout]);
 
   /**
    * Update current page based on scroll position (carousel mode)
@@ -337,7 +358,11 @@ export const ThreeCardSection: React.FC<{
           const container = scrollContainerRef.current;
           // Batch all DOM reads together
           const scrollPosition = container.scrollLeft;
-          const containerWidth = container.offsetWidth;
+          // Use cached width to avoid forced reflow
+          const containerWidth = containerWidthRef.current || container.offsetWidth;
+          if (!containerWidthRef.current) {
+            containerWidthRef.current = containerWidth;
+          }
           const newPage = Math.round(scrollPosition / containerWidth);
           setCurrentPage(newPage);
           rafId = null;

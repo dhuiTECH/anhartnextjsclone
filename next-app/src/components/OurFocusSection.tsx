@@ -345,6 +345,10 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  // Cache containerLeft to avoid forced reflows
+  const containerLeftRef = useRef<number>(0);
+  // Cache containerWidth to avoid forced reflows
+  const containerWidthRef = useRef<number>(0);
 
   // Swipe animation state
   const [isAnimating, setIsAnimating] = useState(false);
@@ -381,23 +385,24 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!scrollContainerRef.current) return;
     setIsDragging(true);
-    // Batch DOM reads together
+    // Batch DOM reads together - cache all geometric properties
     const container = scrollContainerRef.current;
     const containerLeft = container.offsetLeft;
     const containerScrollLeft = container.scrollLeft;
+    containerLeftRef.current = containerLeft;
     setStartX(e.pageX - containerLeft);
     setScrollLeft(containerScrollLeft);
   };
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !scrollContainerRef.current) return;
     e.preventDefault();
-    // Use requestAnimationFrame to batch DOM operations
+    // Use cached containerLeft to avoid forced reflow
+    const x = e.pageX - containerLeftRef.current;
+    const walk = (x - startX) * 2;
+    // Use requestAnimationFrame to batch DOM writes
     requestAnimationFrame(() => {
       if (!scrollContainerRef.current) return;
-      const container = scrollContainerRef.current;
-      const x = e.pageX - container.offsetLeft;
-      const walk = (x - startX) * 2;
-      container.scrollLeft = scrollLeft - walk;
+      scrollContainerRef.current.scrollLeft = scrollLeft - walk;
     });
   };
   const handleMouseUp = () => {
@@ -411,11 +416,12 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
   const handleTouchStart = (e: React.TouchEvent) => {
     if (!scrollContainerRef.current) return;
     setIsDragging(true);
-    // Batch DOM reads together
+    // Batch DOM reads together - cache all geometric properties
     const container = scrollContainerRef.current;
     const touch = e.touches[0];
     const containerLeft = container.offsetLeft;
     const containerScrollLeft = container.scrollLeft;
+    containerLeftRef.current = containerLeft;
     setStartX(touch.pageX - containerLeft);
     setScrollLeft(containerScrollLeft);
 
@@ -445,19 +451,18 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
       e.stopPropagation();
     }
 
-    // Use requestAnimationFrame to batch DOM operations
+    // Use cached containerLeft to avoid forced reflow
     if (isHorizontalGesture || deltaX > deltaY) {
+      const x = touchX - containerLeftRef.current;
+      const walk = (x - startX) * 1.5;
+      // Determine swipe direction for animation
+      if (deltaX > 10) {
+        setSwipeDirection(x - startX > 0 ? "right" : "left");
+      }
+      // Use requestAnimationFrame to batch DOM writes
       requestAnimationFrame(() => {
         if (!scrollContainerRef.current) return;
-        const container = scrollContainerRef.current;
-        const x = touchX - container.offsetLeft;
-        const walk = (x - startX) * 1.5;
-        container.scrollLeft = scrollLeft - walk;
-
-        // Determine swipe direction for animation
-        if (deltaX > 10) {
-          setSwipeDirection(x - startX > 0 ? "right" : "left");
-        }
+        scrollContainerRef.current.scrollLeft = scrollLeft - walk;
       });
     }
   };
@@ -603,20 +608,23 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
       // In the mobile/tablet view, we don't use the scrollRef for navigation
       // because we're rendering only the current page content directly, not a long scrollable strip.
       // So, this scroll is only effective for the desktop drag-scroll layout.
-      // Use requestAnimationFrame to batch DOM operations
-      requestAnimationFrame(() => {
-        if (!scrollContainerRef.current) return;
-        // Check for XL breakpoint (desktop) - cache window width to avoid forced reflow
-        const isDesktop = window.innerWidth >= 1280;
-        if (isDesktop) {
-          const container = scrollContainerRef.current;
-          const containerWidth = container.offsetWidth;
-          container.scrollTo({
+      // Check for XL breakpoint (desktop) - cache window width to avoid forced reflow
+      const isDesktop = window.innerWidth >= 1280;
+      if (isDesktop) {
+        // Use cached width if available, otherwise read it once
+        const containerWidth = containerWidthRef.current || scrollContainerRef.current.offsetWidth;
+        if (!containerWidthRef.current) {
+          containerWidthRef.current = containerWidth;
+        }
+        // Use requestAnimationFrame to batch DOM operations
+        requestAnimationFrame(() => {
+          if (!scrollContainerRef.current) return;
+          scrollContainerRef.current.scrollTo({
             left: pageIndex * containerWidth,
             behavior: "smooth",
           });
-        }
-      });
+        });
+      }
       setCurrentPage(pageIndex);
     } else {
       // Fallback for mobile/tablet where scrollContainerRef might not be the primary navigation method
@@ -636,6 +644,18 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
   // EFFECTS
   // =============================================================================
 
+  // Cache container width on mount and resize
+  useEffect(() => {
+    const updateContainerWidth = () => {
+      if (scrollContainerRef.current) {
+        containerWidthRef.current = scrollContainerRef.current.offsetWidth;
+      }
+    };
+    updateContainerWidth();
+    window.addEventListener('resize', updateContainerWidth);
+    return () => window.removeEventListener('resize', updateContainerWidth);
+  }, []);
+
   useEffect(() => {
     let rafId: number | null = null;
     const handleScroll = () => {
@@ -650,7 +670,11 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
         const container = scrollContainerRef.current;
         // Batch all DOM reads together
         const scrollPosition = container.scrollLeft;
-        const containerWidth = container.offsetWidth;
+        // Use cached width to avoid forced reflow
+        const containerWidth = containerWidthRef.current || container.offsetWidth;
+        if (!containerWidthRef.current) {
+          containerWidthRef.current = containerWidth;
+        }
         // Cache window width to avoid forced reflow
         const isDesktop = window.innerWidth >= 1280;
         // Only update current page based on scroll position if we're in the desktop view
