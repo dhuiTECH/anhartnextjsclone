@@ -71,10 +71,19 @@ export class ImageService {
     }
     
     const srcSetParts = [];
-    if (variants.sm) srcSetParts.push(`${this.getUrlString(variants.sm)} 640w`);
-    if (variants.md) srcSetParts.push(`${this.getUrlString(variants.md)} 768w`);
-    if (variants.lg) srcSetParts.push(`${this.getUrlString(variants.lg)} 1024w`);
-    if (variants.xl) srcSetParts.push(`${this.getUrlString(variants.xl)} 1280w`);
+    // Use actual image dimensions from registry for accurate width descriptors
+    if (variants.sm && image.dimensions.sm) {
+      srcSetParts.push(`${this.getUrlString(variants.sm)} ${image.dimensions.sm.width}w`);
+    }
+    if (variants.md && image.dimensions.md) {
+      srcSetParts.push(`${this.getUrlString(variants.md)} ${image.dimensions.md.width}w`);
+    }
+    if (variants.lg && image.dimensions.lg) {
+      srcSetParts.push(`${this.getUrlString(variants.lg)} ${image.dimensions.lg.width}w`);
+    }
+    if (variants.xl && image.dimensions.xl) {
+      srcSetParts.push(`${this.getUrlString(variants.xl)} ${image.dimensions.xl.width}w`);
+    }
     
     return srcSetParts.join(', ');
   }

@@ -44,19 +44,9 @@ import { ExternalLink } from "lucide-react";
 import { ourFocusData, FocusCard, OurFocusPage } from "@/data/our-focus";
 
 // =============================================================================
-// IMAGE IMPORTS
+// IMAGE SERVICE IMPORTS
 // =============================================================================
-import img162Main from "@/assets/162Main.png";
-import img162Main_2 from "@/assets/162Main_2.png";
-import img162MainSt from "@/assets/162MainSt.webp";
-import imgDodsonsRooms_1 from "@/assets/DodsonsRooms_1.png";
-import imgDodsonSt from "@/assets/DodsonSt.webp";
-import imgMeritt_TH_1 from "@/assets/Meritt_TH_1.png";
-import imgMerritt from "@/assets/merritt.png";
-import imgTheRyder from "@/assets/TheRyder.jpeg";
-import imgRyder_2 from "@/assets/Ryder_2.png";
-import imgModularH_1 from "@/assets/ModularH_1.png";
-import imgAFS_1 from "@/assets/AFS_1.png";
+import { ImageService } from "@/services/imageService";
 
 // =============================================================================
 // TYPES
@@ -76,38 +66,41 @@ interface OurFocusSectionProps {
 // =============================================================================
 
 /**
- * Get image paths with WebP and PNG fallback
- * Maps image names to their imported static assets
+ * Map image names from data to registry names
+ * Some images in the data use different names than in the registry
  */
-const getImagePaths = (imageName: string): { webp?: string; fallback: string } => {
-  const imageMap: Record<string, any> = {
-    "162Main": img162Main,
-    "162Main_2": img162Main_2,
-    "162MainSt": img162MainSt,
-    DodsonsRooms_1: imgDodsonsRooms_1,
-    "Dodson St": imgDodsonSt,
-    Meritt_TH_1: imgMeritt_TH_1,
-    merritt: imgMerritt,
-    Ryder_1: imgTheRyder,
-    Ryder_2: imgRyder_2,
-    ModularH_1: imgModularH_1,
-    AFS_1: imgAFS_1,
+const mapImageNameToRegistry = (imageName: string): string => {
+  const nameMap: Record<string, string> = {
+    "162MainSt": "162Main", // Use 162Main from registry (has responsive variants)
+    "Dodson St": "DodsonsRooms_1", // Use DodsonsRooms_1 from registry
+    "Ryder_1": "TheRyder", // Use TheRyder from registry
   };
-  const image = imageMap[imageName];
-  const imageSrc = typeof image === 'string' ? image : image?.src || imageName;
-  
-  // Check if image is already WebP (like 162MainSt, DodsonSt)
-  const isWebP = imageSrc.includes('.webp') || imageName.includes('St') || imageName === '162MainSt' || imageName === 'Dodson St';
-  
-  return {
-    webp: isWebP ? imageSrc : undefined,
-    fallback: imageSrc
-  };
+  return nameMap[imageName] || imageName;
 };
 
-// Legacy function for backward compatibility
-const getOriginalImagePath = (imageName: string): string => {
-  return getImagePaths(imageName).fallback;
+/**
+ * Get responsive image data using ImageService
+ * Returns srcSet for WebP and fallback image
+ */
+const getResponsiveImageData = (imageName: string): { webpSrcSet: string; fallback: string } => {
+  const registryName = mapImageNameToRegistry(imageName);
+  
+  // Check if image exists in registry
+  if (!ImageService.hasImage(registryName)) {
+    console.warn(`Image ${imageName} (mapped to ${registryName}) not found in registry`);
+    return {
+      webpSrcSet: '',
+      fallback: ''
+    };
+  }
+  
+  const webpSrcSet = ImageService.getImageSrcSet(registryName, 'webp');
+  const fallback = ImageService.getImageSrc(registryName, 'fallback', 'lg');
+  
+  return {
+    webpSrcSet,
+    fallback
+  };
 };
 
 /**
@@ -137,14 +130,29 @@ const FocusCardComponent: React.FC<FocusCardProps> = ({ card, onViewDetails }) =
       {/* Project Example Image */}
       <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
         {(() => {
-          const imagePaths = getImagePaths(card.exampleProject.image);
+          const imageData = getResponsiveImageData(card.exampleProject.image);
+          if (!imageData.webpSrcSet && !imageData.fallback) {
+            return (
+              <div className="w-full h-full bg-muted flex items-center justify-center">
+                <span className="text-sm text-muted-foreground">Image not found</span>
+              </div>
+            );
+          }
           return (
             <picture>
-              {imagePaths.webp && <source srcSet={imagePaths.webp} type="image/webp" />}
+              {imageData.webpSrcSet && (
+                <source 
+                  srcSet={imageData.webpSrcSet} 
+                  type="image/webp"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                />
+              )}
               <img
-                src={imagePaths.fallback}
+                src={imageData.fallback}
                 alt={card.exampleProject.name}
                 className="w-full h-full object-cover object-center group-hover:brightness-110 transition-all duration-300"
+                loading="lazy"
+                decoding="async"
                 onError={(e) => {
                   (e.currentTarget as HTMLElement).style.display = "none";
                   const fallback = e.currentTarget.nextElementSibling as HTMLElement;
@@ -217,14 +225,29 @@ const ProjectDetailsModal: React.FC<ProjectDetailsModalProps> = ({ isOpen, onClo
               {/* Project Image */}
               <div className="aspect-video bg-muted rounded-lg overflow-hidden">
                 {(() => {
-                  const imagePaths = getImagePaths(card.exampleProject.image);
+                  const imageData = getResponsiveImageData(card.exampleProject.image);
+                  if (!imageData.webpSrcSet && !imageData.fallback) {
+                    return (
+                      <div className="w-full h-full bg-muted flex items-center justify-center">
+                        <span className="text-sm text-muted-foreground">Image not found</span>
+                      </div>
+                    );
+                  }
                   return (
                     <picture>
-                      {imagePaths.webp && <source srcSet={imagePaths.webp} type="image/webp" />}
+                      {imageData.webpSrcSet && (
+                        <source 
+                          srcSet={imageData.webpSrcSet} 
+                          type="image/webp"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                        />
+                      )}
                       <img
-                        src={imagePaths.fallback}
+                        src={imageData.fallback}
                         alt={card.exampleProject.name}
                         className="w-full h-full object-cover object-center"
+                        loading="lazy"
+                        decoding="async"
                         onError={(e) => {
                           (e.currentTarget as HTMLElement).style.display = "none";
                           const fallback = e.currentTarget.nextElementSibling as HTMLElement;
