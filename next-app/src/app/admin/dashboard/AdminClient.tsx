@@ -105,6 +105,7 @@ export default function AdminClient({ user }: { user: any }) {
   const [uploading, setUploading] = useState(false); // Upload state for featured image
   const [uploadingContentImage, setUploadingContentImage] = useState(false); // Upload state for content images
   const [isMobile, setIsMobile] = useState(false); // Mobile device detection
+  const [contentLength, setContentLength] = useState(0); // Track editor content character count
   
   // ============================================================================
   // REFS
@@ -149,6 +150,11 @@ export default function AdminClient({ user }: { user: any }) {
         style: 'min-height: 24rem; overflow: visible; max-height: none; height: auto;',
       },
     },
+    onUpdate: ({ editor }) => {
+      // Track content length for character limit
+      const html = editor.getHTML();
+      setContentLength(html.length);
+    },
   });
 
   // ============================================================================
@@ -168,6 +174,14 @@ export default function AdminClient({ user }: { user: any }) {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Initialize content length when editor is ready
+  useEffect(() => {
+    if (editor) {
+      const html = editor.getHTML();
+      setContentLength(html.length);
+    }
+  }, [editor]);
 
   // ============================================================================
   // DATA FETCHING FUNCTIONS
@@ -250,6 +264,9 @@ export default function AdminClient({ user }: { user: any }) {
         const loadedLength = loadedContent.length;
         const originalLength = post.content?.length || 0;
         
+        // Update content length state
+        setContentLength(loadedLength);
+        
         console.log("Content loaded - Original length:", originalLength, "Loaded length:", loadedLength);
         
         // If content appears truncated on mobile, log a warning
@@ -301,7 +318,10 @@ export default function AdminClient({ user }: { user: any }) {
     setPublishDate(today);
 
     // Clear editor content
-    if (editor) editor.commands.clearContent();
+    if (editor) {
+      editor.commands.clearContent();
+      setContentLength(0);
+    }
   };
 
   // ============================================================================
@@ -475,6 +495,14 @@ export default function AdminClient({ user }: { user: any }) {
     
     // Get HTML content from the rich text editor
     const content = editor.getHTML();
+    
+    // Check character limit (8000 characters)
+    const CONTENT_LIMIT = 8000;
+    if (content.length > CONTENT_LIMIT) {
+      setLoading(false);
+      alert(`Content exceeds the character limit of ${CONTENT_LIMIT} characters. Current length: ${content.length}. Please reduce the content before publishing.`);
+      return;
+    }
 
     // Generate excerpt: use form input if provided, otherwise auto-generate from content
     // Remove HTML tags and limit to 200 characters
@@ -894,6 +922,42 @@ export default function AdminClient({ user }: { user: any }) {
           {/* RICH TEXT EDITOR SECTION */}
           {/* Purpose: Main content editor with formatting toolbar */}
           {/* ==================================================================== */}
+          <div>
+            {/* Content Character Counter */}
+            {/* Purpose: Display character count and warn when approaching 8000 character limit */}
+            <div className="mb-2">
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  className={`h-2 rounded-full transition-all ${
+                    contentLength > 8000
+                      ? "bg-red-500" // Over limit
+                      : contentLength >= 7500
+                        ? "bg-yellow-500" // Warning: approaching limit
+                        : contentLength >= 6000
+                          ? "bg-blue-500" // Good length
+                          : "bg-green-500" // Below recommended
+                  }`}
+                  style={{
+                    width: `${Math.min(
+                      (contentLength / 8000) * 100,
+                      100,
+                    )}%`,
+                  }}
+                />
+              </div>
+              <p className={`text-xs mt-1 ${
+                contentLength > 8000
+                  ? "text-red-600 font-semibold"
+                  : contentLength >= 7500
+                    ? "text-yellow-600"
+                    : "text-gray-500"
+              }`}>
+                {contentLength}/8000 characters
+                {contentLength > 8000 && " - Content exceeds limit! Please reduce before publishing."}
+                {contentLength >= 7500 && contentLength <= 8000 && " - Approaching character limit"}
+              </p>
+            </div>
+          </div>
           <div className="border rounded-lg overflow-hidden">
             {/* Editor Toolbar - Formatting buttons and content insertion tools */}
             {editor && (
