@@ -258,7 +258,7 @@ export const Hero = () => {
                         </div>
                         <div className="flex justify-center" key={turnstileKey}>
                           <Turnstile
-                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACBa8qdGLdmp2t2Q"}
+                            siteKey="0x4AAAAAAChEhfkXf5mcNUA4m"
                             onSuccess={handleTurnstileSuccess}
                             onError={handleTurnstileError}
                             onExpire={handleTurnstileExpire}
@@ -351,7 +351,7 @@ export const Hero = () => {
                         </div>
                         <div className="flex justify-center" key={turnstileKey}>
                           <Turnstile
-                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACBa8qdGLdmp2t2Q"}
+                            siteKey="0x4AAAAAAChEhfkXf5mcNUA4m"
                             onSuccess={handleTurnstileSuccess}
                             onError={handleTurnstileError}
                             onExpire={handleTurnstileExpire}
