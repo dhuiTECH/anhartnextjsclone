@@ -8,6 +8,8 @@ const inter = Inter({
   subsets: ["latin"],
   display: 'swap', // Prevent FOIT (Flash of Invisible Text) and improve LCP
   preload: true, // Preload the font for faster rendering
+  adjustFontFallback: true, // Optimize font fallback for better CLS
+  fallback: ['system-ui', 'arial'], // Fast fallback fonts
 });
 
 export const metadata: Metadata = {
@@ -69,6 +71,13 @@ export default function RootLayout({
   return (
     <html lang="en-CA">
       <head>
+        {/* Preconnect to same origin first for faster CSS/JS loading */}
+        <link rel="preconnect" href="https://www.anhart.ca" crossOrigin="anonymous" />
+        
+        {/* Preconnect to Google Fonts (critical for LCP) - use preconnect, not just dns-prefetch */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
         {/* Preconnect to critical third-party origins for faster page load */}
         <link rel="preconnect" href="https://hxqbbyglhubcgfkbqltu.supabase.co" />
         <link rel="dns-prefetch" href="https://hxqbbyglhubcgfkbqltu.supabase.co" />
@@ -100,10 +109,6 @@ export default function RootLayout({
           type="image/png"
           fetchPriority="high"
         />
-        
-        {/* DNS prefetch for image domains to speed up image loading */}
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
         
         <script
           type="application/ld+json"

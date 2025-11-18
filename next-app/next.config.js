@@ -15,6 +15,8 @@ const nextConfig = {
     // Enable CSS optimization to inline critical CSS and defer non-critical CSS
     // This reduces render-blocking resources and improves LCP
     optimizeCss: true,
+    // Optimize package imports to reduce bundle size
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
   },
   compiler: {
     // Target modern browsers to avoid unnecessary polyfills
