@@ -31,8 +31,6 @@ const GOOGLE_SHEET_URL =
 export const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const logoBgRef = useRef<HTMLDivElement>(null);
-  const [supportsWebP, setSupportsWebP] = useState<boolean | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -119,24 +117,6 @@ export const Hero = () => {
     });
   };
 
-  // Detect WebP support
-  useEffect(() => {
-    const checkWebPSupport = () => {
-      const webP = new Image();
-      webP.onload = webP.onerror = () => {
-        setSupportsWebP(webP.height === 2);
-      };
-      webP.src = "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA";
-    };
-    checkWebPSupport();
-  }, []);
-
-  // Set background image based on WebP support
-  useEffect(() => {
-    if (logoBgRef.current && supportsWebP !== null) {
-      logoBgRef.current.style.backgroundImage = `url("${supportsWebP ? anhartLogoWebpSrc : anhartLogoPngSrc}")`;
-    }
-  }, [supportsWebP]);
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 640);
@@ -189,15 +169,15 @@ export const Hero = () => {
       aria-label="Hero section with affordable housing information"
     >
       {/* Anhart logo as backdrop with WebP/PNG fallback */}
-      <div
-        ref={logoBgRef}
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30 z-0"
-        style={{
-          backgroundImage: `url("${anhartLogoPngSrc}")`,
-          backgroundSize: "contain",
-          backgroundPosition: "center",
-        }}
-      />
+      <picture className="absolute inset-0 z-0 flex items-center justify-center opacity-30">
+        <source srcSet={anhartLogoWebpSrc} type="image/webp" />
+        <img
+          src={anhartLogoPngSrc}
+          alt=""
+          className="w-full h-full object-contain object-center"
+          aria-hidden="true"
+        />
+      </picture>
       {/* Fallback background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/70 to-primary/90 z-[0.5]" />
       {/* Full-screen background video with extended height for parallax */}
