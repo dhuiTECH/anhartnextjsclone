@@ -11,6 +11,11 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: process.env.NODE_ENV === 'production',
   },
+  experimental: {
+    // Enable CSS optimization to inline critical CSS and defer non-critical CSS
+    // This reduces render-blocking resources and improves LCP
+    optimizeCss: true,
+  },
 };
 
 module.exports = nextConfig;
