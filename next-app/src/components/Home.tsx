@@ -511,39 +511,35 @@ const Home = () => {
            */}
         <section id="statistics-section" className="py-16 bg-muted/30">
           <div className="mx-auto max-w-6xl px-6 lg:px-8 text-center">
-            <ScrollAnimationWrapper direction="top">
-              <h1 className="text-3xl font-bold tracking-tight text-foreground mb-6 text-center">
-                Launched By Impact Investors, Led by Communities
-              </h1>
-            </ScrollAnimationWrapper>
-            <ScrollAnimationWrapper direction="top" delay={200}>
-              <p className="text-base sm:text-lg lg:text-xl leading-7 text-gray-700/95 mb-8">
-                {/* Mobile text */}
-                <span className="block sm:hidden">
-                  From our first project in Vancouver to communities nationwide,
-                  Anhart partners with local non-profits to deliver 20,000
-                  affordable homes by 2045 — proving that small, trusted
-                  collaborations can achieve big goals.
-                </span>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground mb-6 text-center">
+              Launched By Impact Investors, Led by Communities
+            </h1>
+            <p className="text-base sm:text-lg lg:text-xl leading-7 text-gray-700/95 mb-8">
+              {/* Mobile text */}
+              <span className="block sm:hidden">
+                From our first project in Vancouver to communities nationwide,
+                Anhart partners with local non-profits to deliver 20,000
+                affordable homes by 2045 — proving that small, trusted
+                collaborations can achieve big goals.
+              </span>
 
-                {/* Tablet/Desktop text */}
-                <span className="hidden sm:block text-xl leading-8 text-muted-foreground mb-8">
-                  From our first project in Vancouver's Downtown Eastside in
-                  2000, Anhart has grown into one of Canada's leading non-profit
-                  real estate developers. We are on track to deliver 20,000
-                  affordable homes nationwide by 2045, working coast to coast to
-                  coast. Our model combines patient capital, trusted local
-                  partnerships, and the latest insights from complex adaptive
-                  systems. To us, <strong>“small”</strong> means staying at
-                  scale while remaining deeply rooted in local networks — a
-                  distributed approach where each community functions like a
-                  vital cell in a living system. Together, these small,
-                  connected efforts form the larger organism of affordable
-                  housing, proving that the power of small is the most effective
-                  pathway to achieving big goals.
-                </span>
-              </p>
-            </ScrollAnimationWrapper>
+              {/* Tablet/Desktop text */}
+              <span className="hidden sm:block text-xl leading-8 text-muted-foreground mb-8">
+                From our first project in Vancouver's Downtown Eastside in
+                2000, Anhart has grown into one of Canada's leading non-profit
+                real estate developers. We are on track to deliver 20,000
+                affordable homes nationwide by 2045, working coast to coast to
+                coast. Our model combines patient capital, trusted local
+                partnerships, and the latest insights from complex adaptive
+                systems. To us, <strong>"small"</strong> means staying at
+                scale while remaining deeply rooted in local networks — a
+                distributed approach where each community functions like a
+                vital cell in a living system. Together, these small,
+                connected efforts form the larger organism of affordable
+                housing, proving that the power of small is the most effective
+                pathway to achieving big goals.
+              </span>
+            </p>
             {/* Statistics */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
               <div
