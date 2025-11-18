@@ -253,7 +253,7 @@ const Partner = () => {
                     {/* Cloudflare Turnstile Widget */}
                     <div className="flex justify-center" key={turnstileKey}>
                       <Turnstile
-                        siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACBa8qdGLdmp2t2Q"}
+                        siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACBhtHfX5mcNUA4m"}
                         onSuccess={handleTurnstileSuccess}
                         onError={handleTurnstileError}
                         onExpire={handleTurnstileExpire}
