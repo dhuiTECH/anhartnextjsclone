@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
 
-const anhartLogo = "/images/anhart-logo-text.webp";
+const anhartLogoWebp = "/images/anhart-logo-text.webp";
+const anhartLogoPng = "/images/anhart-logo-text.png";
 
 const navigation = [{ name: "Home", href: "/" }];
 
@@ -89,7 +90,10 @@ export const Header = () => {
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 lg:px-8 h-full">
           <div className="flex lg:flex-1">
             <a href="/" className="flex items-center">
-              <img src={anhartLogo} alt="Anhart" className="header-logo" width="405" height="160" loading="eager" fetchPriority="high" />
+              <picture>
+                <source srcSet={anhartLogoWebp} type="image/webp" />
+                <img src={anhartLogoPng} alt="Anhart" className="header-logo" width="405" height="160" loading="eager" fetchPriority="high" />
+              </picture>
             </a>
           </div>
 
@@ -206,7 +210,10 @@ const MobileMenu = ({
     {/* Mobile Header with Logo */}
     <div className="px-6 py-6 border-b border-border bg-background/80 backdrop-blur-sm">
       <div className="flex items-center">
-        <img src={anhartLogo} alt="Anhart" className="h-10 w-auto" width="405" height="160" loading="lazy" />
+        <picture>
+          <source srcSet={anhartLogoWebp} type="image/webp" />
+          <img src={anhartLogoPng} alt="Anhart" className="h-10 w-auto" width="405" height="160" loading="lazy" />
+        </picture>
       </div>
     </div>
 

@@ -5,13 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Facebook, Twitter, Linkedin, Instagram, Mail, MapPin } from "lucide-react";
-import anhartLogoImg from "@/assets/anhart-logo-white.webp";
+import anhartLogoWhiteWebp from "@/assets/anhart-logo-white.webp";
+import anhartLogoWhitePng from "@/assets/anhart-logo-white.png";
 import { CONTACT_INFO, AddressUtils } from "@/config/address";
 import { openGoogleMapsSearch } from "@/utils/externalLinks";
 import { useNewsletterSubscription } from "@/hooks/useNewsletterSubscription";
 import { Turnstile } from "@/components/Turnstile";
 
-const anhartLogo = typeof anhartLogoImg === 'string' ? anhartLogoImg : anhartLogoImg?.src || '';
+const anhartLogoWhiteWebpSrc = typeof anhartLogoWhiteWebp === 'string' ? anhartLogoWhiteWebp : anhartLogoWhiteWebp?.src || '';
+const anhartLogoWhitePngSrc = typeof anhartLogoWhitePng === 'string' ? anhartLogoWhitePng : anhartLogoWhitePng?.src || '';
 
 // Social media links - only used section
 const socialLinks = [{
@@ -86,7 +88,10 @@ export const Footer = () => {
             {/* Company Info Section */}
             <div className="space-y-8">
               <div>
-                <img className="h-12 w-auto" src={anhartLogo} alt="Anhart" width="405" height="160" loading="lazy" />
+                <picture>
+                  <source srcSet={anhartLogoWhiteWebpSrc} type="image/webp" />
+                  <img className="h-12 w-auto" src={anhartLogoWhitePngSrc} alt="Anhart" width="405" height="160" loading="lazy" />
+                </picture>
               </div>
               <div className="space-y-4">
                 <p className="text-base leading-7 text-background/90 font-medium">Building communities through affordable housing.</p>
@@ -203,7 +208,10 @@ export const Footer = () => {
               {/* Company Info - Simplified */}
               <div className="space-y-6">
                 <div>
-                  <img className="h-10 w-auto" src={anhartLogo} alt="Anhart" width="405" height="160" loading="lazy" />
+                  <picture>
+                    <source srcSet={anhartLogoWhiteWebpSrc} type="image/webp" />
+                    <img className="h-10 w-auto" src={anhartLogoWhitePngSrc} alt="Anhart" width="405" height="160" loading="lazy" />
+                  </picture>
                 </div>
                 <p className="text-sm leading-6 text-background/90">
                   Building communities through affordable housing solutions.
@@ -243,7 +251,10 @@ export const Footer = () => {
           <div className="md:hidden space-y-6">
             {/* Logo and Tagline */}
             <div className="text-center space-y-4">
-              <img className="h-8 w-auto mx-auto" src={anhartLogo} alt="Anhart" width="405" height="160" loading="lazy" />
+              <picture>
+                <source srcSet={anhartLogoWhiteWebpSrc} type="image/webp" />
+                <img className="h-8 w-auto mx-auto" src={anhartLogoWhitePngSrc} alt="Anhart" width="405" height="160" loading="lazy" />
+              </picture>
               <p className="text-sm text-background/90">
                 Building communities through affordable housing solutions.
               </p>

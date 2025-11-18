@@ -8,8 +8,9 @@ export const ResourceHints = () => {
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       {/* DNS prefetch for external domains */}
       <link rel="dns-prefetch" href="//www.google-analytics.com" />
-      {/* Preload critical resources */}
+      {/* Preload critical resources - WebP with PNG fallback */}
       <link rel="preload" href="/images/anhart-logo-text.webp" as="image" type="image/webp" fetchPriority="high" />
+      <link rel="preload" href="/images/anhart-logo-text.png" as="image" type="image/png" fetchPriority="high" />
       {/* Prefetch likely next page resources */}
       <link rel="prefetch" href="/about" />
       <link rel="prefetch" href="/portfolio" />

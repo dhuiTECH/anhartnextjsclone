@@ -1,7 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown, X } from "lucide-react";
-import anhartLogoImg from "@/assets/anhart-logo.webp";
+import anhartLogoWebp from "@/assets/anhart-logo.webp";
+import anhartLogoPng from "@/assets/anhart-logo.png";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { useEffect, useRef, useState, useCallback } from "react";
 import {
@@ -19,8 +20,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Turnstile } from "@/components/Turnstile";
 
-const anhartLogo =
-  typeof anhartLogoImg === "string" ? anhartLogoImg : anhartLogoImg?.src || "";
+const anhartLogoWebpSrc =
+  typeof anhartLogoWebp === "string" ? anhartLogoWebp : anhartLogoWebp?.src || "";
+const anhartLogoPngSrc =
+  typeof anhartLogoPng === "string" ? anhartLogoPng : anhartLogoPng?.src || "";
 
 const GOOGLE_SHEET_URL =
   "https://script.google.com/macros/s/AKfycbzfMQYjHKQSR5lOwodWizxUoY4NgB1y03O3tAbHSBCV4ZgpgDbu-4xNbkUTl18lTZzw/exec";
@@ -28,6 +31,8 @@ const GOOGLE_SHEET_URL =
 export const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const logoBgRef = useRef<HTMLDivElement>(null);
+  const [supportsWebP, setSupportsWebP] = useState<boolean | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -114,6 +119,25 @@ export const Hero = () => {
     });
   };
 
+  // Detect WebP support
+  useEffect(() => {
+    const checkWebPSupport = () => {
+      const webP = new Image();
+      webP.onload = webP.onerror = () => {
+        setSupportsWebP(webP.height === 2);
+      };
+      webP.src = "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA";
+    };
+    checkWebPSupport();
+  }, []);
+
+  // Set background image based on WebP support
+  useEffect(() => {
+    if (logoBgRef.current && supportsWebP !== null) {
+      logoBgRef.current.style.backgroundImage = `url("${supportsWebP ? anhartLogoWebpSrc : anhartLogoPngSrc}")`;
+    }
+  }, [supportsWebP]);
+
   useEffect(() => {
     setIsMobile(window.innerWidth < 640);
     const handleResize = () => setIsMobile(window.innerWidth < 640);
@@ -148,11 +172,12 @@ export const Hero = () => {
       className="relative h-[85vh] sm:h-[95vh] w-full overflow-hidden" // ADJUST THIS: Original heights—change percentages for size (e.g., 90vh for medium)
       aria-label="Hero section with affordable housing information"
     >
-      {/* Anhart logo as backdrop */}
+      {/* Anhart logo as backdrop with WebP/PNG fallback */}
       <div
+        ref={logoBgRef}
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30 z-0"
         style={{
-          backgroundImage: `url(${anhartLogo})`,
+          backgroundImage: `url("${anhartLogoPngSrc}")`,
           backgroundSize: "contain",
           backgroundPosition: "center",
         }}
@@ -526,3 +551,4 @@ export const Hero = () => {
     </section>
   );
 };
+
