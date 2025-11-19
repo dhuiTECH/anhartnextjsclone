@@ -358,6 +358,12 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
   const [isHorizontalGesture, setIsHorizontalGesture] = useState(false);
   const [gestureStartY, setGestureStartY] = useState(0);
 
+  // Description text fade state to prevent flickering
+  const [displayedDescription, setDisplayedDescription] = useState(
+    ourFocusData.pages[0]?.description || ""
+  );
+  const [isDescriptionFading, setIsDescriptionFading] = useState(false);
+
   // =============================================================================
   // EVENT HANDLERS
   // =============================================================================
@@ -656,6 +662,22 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
     return () => window.removeEventListener('resize', updateContainerWidth);
   }, []);
 
+  // Smooth description text transition to prevent flickering
+  useEffect(() => {
+    const newDescription = ourFocusData.pages[currentPage]?.description || "";
+    if (newDescription !== displayedDescription) {
+      // Fade out
+      setIsDescriptionFading(true);
+      // Wait for fade out, then update text and fade in
+      const timeout = setTimeout(() => {
+        setDisplayedDescription(newDescription);
+        setIsDescriptionFading(false);
+      }, 150); // Half of the transition duration (300ms total)
+      return () => clearTimeout(timeout);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
+
   useEffect(() => {
     let rafId: number | null = null;
     const handleScroll = () => {
@@ -713,7 +735,13 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
             <h2 className="text-3xl font-bold tracking-tight text-foreground mb-4">{ourFocusData.title}</h2>
           </ScrollAnimationWrapper>
           <ScrollAnimationWrapper direction="top" delay={100}>
-            <p className="text-lg text-muted-foreground">{ourFocusData.pages[currentPage]?.description}</p>
+            <p 
+              className={`text-lg text-muted-foreground transition-opacity duration-300 ${
+                isDescriptionFading ? "opacity-0" : "opacity-100"
+              }`}
+            >
+              {displayedDescription}
+            </p>
           </ScrollAnimationWrapper>
         </div>
 
