@@ -59,7 +59,7 @@ export const FAQSection: React.FC<{
               <ScrollAnimationWrapper key={index} direction="bottom" delay={200 + index * 50}>
               <AccordionItem 
                 value={`item-${index}`}
-                className="border border-border rounded-lg bg-card hover:bg-accent/5 transition-colors duration-200"
+                className="border border-border rounded-lg bg-card hover:bg-accent/5 data-[state=open]:bg-card data-[state=open]:hover:bg-card transition-colors duration-200"
               >
                 <AccordionTrigger className="px-6 py-4 hover:no-underline text-left font-semibold text-foreground [&>svg]:bg-primary [&>svg]:text-white [&>svg]:rounded-full [&>svg]:p-1 [&>svg]:w-6 [&>svg]:h-6">
                   {faq.question}
