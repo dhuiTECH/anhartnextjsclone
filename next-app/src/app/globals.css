@@ -86,6 +86,8 @@
 /* Smooth scrolling for the entire page */
 html {
   scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
 }
 
 /* Anhart Design System */
@@ -203,6 +205,8 @@ html {
   /* Global body default - Roboto for everything */
   body {
     @apply font-roboto bg-background text-foreground;
+    margin: 0;
+    padding: 0;
   }
 
   /* All text elements use Roboto by default */
@@ -261,16 +265,15 @@ html {
     @apply sticky top-0 z-50 bg-background/95 backdrop-blur-sm;
     will-change: transform, height, padding;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    height: 96px;
+    height: 72px;
 
     padding: 0; 
   
     border-bottom: 1px solid #E5E5E5;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
   }
 
   .header.shrunk {
-    height: 72px;
+    height: 64px;
     padding: 0;
   }
 
@@ -281,7 +284,7 @@ html {
   }
 
   .header.shrunk .header-logo {
-    height: 48px;
+    height: 50px;
   }
 
   .header-nav-link {
@@ -300,19 +303,19 @@ html {
   /* Mobile responsive adjustments */
   @media (max-width: 1024px) {
     .header {
-      height: 84px;
+      height: 64px; 
     }
-
+  
     .header.shrunk {
-      height: 64px;
-    }
-
-    .header-logo {
       height: 56px;
+    }
+  
+    .header-logo {
+      height: 42px; 
     }
 
     .header.shrunk .header-logo {
-      height: 42px;
+       height: 36px;
     }
   }
 

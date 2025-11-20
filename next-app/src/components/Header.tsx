@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react"; // Added useRef
 import { Button } from "@/components/ui/button";
 import { Menu, X, ChevronDown } from "lucide-react";
 
@@ -40,7 +40,6 @@ export const Header = () => {
   // Smooth scroll detection with throttling
   useEffect(() => {
     let ticking = false;
-
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
@@ -51,7 +50,6 @@ export const Header = () => {
         ticking = true;
       }
     };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -98,12 +96,12 @@ export const Header = () => {
             </a>
 
             {/* Desktop navigation - left side */}
-            <div className="hidden lg:flex h-full text-lg"> 
+            <div className="hidden lg:flex h-full text-lg">
               {navigation.map((item) => (
-                <a 
-                  key={item.name} 
-                  href={item.href} 
-                  className="header-nav-link flex items-center h-full px-2" 
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="header-nav-link flex items-center h-full px-2"
                 >
                   {item.name}
                 </a>
@@ -128,7 +126,7 @@ export const Header = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex lg:hidden">
+          <div className="flex lg:hidden h-full items-center">
             <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
               {mobileMenuOpen ? <X className="h-9 w-9" /> : <Menu className="h-9 w-9" />}
             </Button>
@@ -148,9 +146,8 @@ export const Header = () => {
 
       {/* Mobile overlay */}
       <div
-        className={`lg:hidden fixed inset-0 bg-black/50 transition-opacity duration-300 ${
-          mobileMenuOpen ? "opacity-100 z-40" : "opacity-0 pointer-events-none -z-10"
-        }`}
+        className={`lg:hidden fixed inset-0 bg-black/50 transition-opacity duration-300 ${mobileMenuOpen ? "opacity-100 z-40" : "opacity-0 pointer-events-none -z-10"
+          }`}
         onClick={() => setMobileMenuOpen(false)}
       />
 
@@ -170,38 +167,53 @@ export const Header = () => {
 };
 
 const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
-  const headerHeight = isScrolled ? 72 : 96;
+  // NOTE: Ensure these numbers match your CSS .header height EXACTLY
+  const headerHeight = isScrolled ? 64 : 72;
+  
+  // Use a ref to manage the timeout so we can clear it if the user moves mouse back
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setOpen(false);
+    }, 150); // 150ms buffer to bridge any gaps
+  };
+
   return (
-    <div
-      
-      className="relative flex items-center  rounded-md" 
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-    >
+    <> {/* REFACTORED: No more wrapper div */}
       <button
-        className="header-nav-link flex items-center h-full px-2 rounded-md px-5"
+        className="header-nav-link flex items-center h-full px-5"
         onClick={() => setOpen(!open)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         {title}
         <ChevronDown
-          className={`ml-2 h-5 w-5 text-gray-400/40 transition-transform duration-200 ${
-            open ? "rotate-180" : ""
-          }`}
+          className={`ml-2 h-5 w-5 text-gray-400/40 transition-transform duration-200 ${open ? "rotate-180" : ""
+            }`}
         />
       </button>
 
-      {/* The transparent padding fix from the previous step */}
       <div
-        className={`fixed left-4 w-110 z-50 transition-all duration-200 pt-4 ${
-          open
-            ? "opacity-100 visible translate-x-0"
-            : "opacity-0 invisible -translate-x-full"
-        }`}
+        className={`fixed left-4 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${open
+            ? "opacity-100 visible"
+            : "opacity-0 invisible"
+          }`}
         style={{
-          top: `${headerHeight}px`, 
+          // FIX: Subtract 1px to overlap the border and kill the gap
+          top: `${headerHeight - 1}px`, 
           maxHeight: `calc(100vh - ${headerHeight}px)`,
           height: "auto",
         }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         <div className="bg-background/95 backdrop-blur-md border-r border-border shadow-lg rounded-lg overflow-hidden">
           <div className="py-4 px-4">
@@ -209,7 +221,9 @@ const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
               <a
                 key={item.name}
                 href={item.href}
-                className="block px-4 py-3 hover:bg-primary/10 hover:text-primary transition-all duration-150 rounded-lg"
+                className={`block px-4 py-3 hover:bg-primary/10 hover:text-primary transition-all duration-[50ms] rounded-lg ${
+                  open ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
+                }`}
                 style={{ transitionDelay: `${index * 25}ms` }}
               >
                 <div className="text-lg font-semibold text-[#333333] mb-1">
@@ -225,45 +239,56 @@ const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
-/* 
-* Connect with Us Button Dropdown Button Component
-*/
+
 const ConnectButton = ({ items, open, setOpen, isScrolled }: any) => {
-  const headerHeight = isScrolled ? 72 : 96;
+  const headerHeight = isScrolled ? 64 : 72;
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setOpen(false);
+    }, 150);
+  };
+
   return (
-    <div
-      // This creates a full-height invisible column that holds the button in the center
-      className="relative h-full flex items-center"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-    >
+    // Wrapper here is needed for flex positioning in the parent, but logic is consistent
+    <div className="relative h-full flex items-center">
       <button
         className="connect-nav-button flex items-center px-8 py-3 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all duration-200"
         style={{ borderRadius: "50px" }}
         onClick={() => setOpen(!open)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         Connect With Us
         <ChevronDown
-          className={`ml-2 h-4 w-4 text-white transition-transform duration-200 ${
-            open ? "rotate-180" : ""
-          }`}
+          className={`ml-2 h-4 w-4 text-white transition-transform duration-200 ${open ? "rotate-180" : ""
+            }`}
         />
       </button>
-      
+
       <div
-        className={`fixed right-4 w-110 z-50 transition-all duration-200 pt-4 ${
-          open
-            ? "opacity-100 visible translate-x-0"
-            : "opacity-0 invisible translate-x-full"
-        }`}
+        className={`fixed right-4 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${open
+            ? "opacity-100 visible"
+            : "opacity-0 invisible"
+          }`}
         style={{
-          top: `${headerHeight}px`,
+          top: `${headerHeight - 1}px`,
           maxHeight: `calc(100vh - ${headerHeight}px)`,
           height: "auto",
         }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         <div className="bg-background/95 backdrop-blur-md border-l border-border shadow-lg rounded-lg overflow-hidden">
           <div className="py-4 px-4">
@@ -271,7 +296,9 @@ const ConnectButton = ({ items, open, setOpen, isScrolled }: any) => {
               <a
                 key={item.name}
                 href={item.href}
-                className="block px-4 py-3 hover:bg-primary/20 hover:text-primary transition-all duration-150 rounded-lg"
+                className={`block px-4 py-3 hover:bg-primary/20 hover:text-primary transition-all duration-[50ms] rounded-lg ${
+                  open ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
+                }`}
                 style={{ transitionDelay: `${index * 25}ms` }}
               >
                 <div className="text-lg font-semibold text-[#333333] mb-1">
@@ -291,6 +318,7 @@ const ConnectButton = ({ items, open, setOpen, isScrolled }: any) => {
   );
 };
 
+// MobileMenu and MobileAccordionDropdown remain unchanged
 const MobileMenu = ({
   open,
   navigation,
