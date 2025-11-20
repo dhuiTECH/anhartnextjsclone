@@ -861,10 +861,10 @@ const Home = () => {
                 <ScrollAnimationWrapper direction="right" delay={300}>
                   <Card className="flex-1 hover:shadow-md transition-shadow duration-300">
                     <CardContent className="p-8 h-full">
-                      <h3 className="text-xl font-semibold text-foreground mb-6">
+                      <h3 className="text-xl font-semibold text-foreground mb-6 py-1">
                         Main Office
                       </h3>
-                      <div className="space-y-4 text-muted-foreground">
+                      <div className="space-y-4 text-muted-foreground py-1">
                         <p className="flex items-start">
                           <HomeIcon className="w-5 h-5 text-primary mr-3 mt-0.5 flex-shrink-0" />
                           <button
@@ -918,16 +918,16 @@ const Home = () => {
                       <h3 className="text-xl font-semibold text-foreground mb-6">
                         Get In Touch
                       </h3>
-                      <p className="text-muted-foreground mb-6 flex-grow">
+                      <p className="text-l text-muted-foreground mb-6 flex-grow pb-1">
                         We'd love to hear about your housing project or
                         partnership opportunity. Our team is ready to work with
                         you to create sustainable, affordable housing solutions.
                       </p>
-                      <ul className="list-disc list-inside space-y-3 text-sm text-muted-foreground">
-                        <li>No-cost pre-development</li>
-                        <li>No-cost architectural feasibility</li>
-                        <li>Non-profit developmental services</li>
-                        <li>Property & Tenant Management Support</li>
+                      <ul className="list-disc list-inside space-y-3 text-sm text-muted-foreground pb-2">
+                        <li className="py-1">No-cost pre-development</li>
+                        <li className="py-1">No-cost architectural feasibility</li>
+                        <li className="py-1">Non-profit developmental services</li>
+                        <li className="py-1">Property & Tenant Management Support</li>
                       </ul>
                     </CardContent>
                   </Card>

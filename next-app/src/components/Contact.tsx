@@ -265,7 +265,7 @@ export const Contact = () => {
                   </form>
                 </CardContent>
               </Card>
-              <div className="grid grid-cols-1 gap-2 md:gap-3 sm:grid-cols-2 lg:grid-cols-1">
+              <div className="grid grid-cols-1 gap-2 md:gap-3 sm:grid-cols-2 lg:grid-cols-1 py-3">
                 {contactInfo.map((info, index) => (
                   <ScrollAnimationWrapper key={info.title} direction="left" delay={300 + index * 50}>
                     <Card className="hover:shadow-md transition-shadow duration-300">

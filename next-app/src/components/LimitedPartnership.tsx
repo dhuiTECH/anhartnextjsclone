@@ -1202,17 +1202,17 @@ export const LimitedPartnership = () => {
         </div>
 
         <ScrollAnimationWrapper direction="left" delay={700}>
-          <div className="mx-auto mt-8 md:mt-16 grid max-w-6xl grid-cols-1 gap-6 md:gap-8 lg:grid-cols-2">
+          <div className="mx-auto mt-8 md:mt-16 grid max-w-6xl grid-cols-1 gap-6 md:gap-8 lg:grid-cols-2 lg:items-stretch">
             {/* Investment Inquiry Form */}
-            <Card className="shadow-lg">
+            <Card className="shadow-lg flex flex-col h-full">
             <CardHeader className="pb-4">
               <CardTitle className="text-xl md:text-2xl">Investment Inquiry</CardTitle>
               <p className="text-sm md:text-base text-muted-foreground">
                 Ready to learn more? Contact Keith Gordon to discuss your investment and request key documents.
               </p>
             </CardHeader>
-            <CardContent className="space-y-4 md:space-y-6">
-              <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+            <CardContent className="space-y-4 md:space-y-6 flex-1 flex flex-col">
+              <form className="space-y-4 md:space-y-6 flex-1 flex flex-col" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="name">
@@ -1271,7 +1271,7 @@ export const LimitedPartnership = () => {
                   />
                 </div>
                 
-                <Button type="submit" className="w-full" size="lg" disabled={isSubmitting || !turnstileToken}>
+                <Button type="submit" className="w-full mt-auto" size="lg" disabled={isSubmitting || !turnstileToken}>
                   {isSubmitting ? "Sending Inquiry..." : "Send Investment Inquiry"}
                 </Button>
               </form>
@@ -1280,80 +1280,80 @@ export const LimitedPartnership = () => {
         
           {/* Contact Information & Process */}
           <ScrollAnimationWrapper direction="right" delay={800}>
-            <div className="space-y-6 md:space-y-8">
-            {/* Contact Information */}
-            <div>
-              <h3 className="text-xl md:text-2xl font-bold tracking-tight text-foreground mb-4 md:mb-8">
-                Contact Information
-              </h3>
-              <Card className="hover:shadow-md transition-shadow duration-300">
-                <CardContent className="p-4 md:p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-white">
-                      <Mail className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground mb-2">Keith Gordon</h4>
-                      <p className="text-muted-foreground">Co-founder, Anhart Investments</p>
-                      <p className="text-primary font-semibold">keith.gordon@anhart.ca</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-            
-            {/* Investment Process - Hidden on Mobile */}
-            <div className="hidden md:block">
-              <h3 className="text-2xl font-bold tracking-tight text-foreground mb-8">
-                Investment Process
-              </h3>
-              <Card className="hover:shadow-md transition-shadow duration-300">
-                <CardContent className="p-6">
-                  <div className="space-y-6">
+            <Card className="shadow-lg flex flex-col h-full">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl md:text-2xl">Contact Information</CardTitle>
+              </CardHeader>
+              <CardContent className="flex-1 flex flex-col space-y-6 md:space-y-8">
+                {/* Contact Card */}
+                <Card className="hover:shadow-md transition-shadow duration-300">
+                  <CardContent className="p-4 md:p-6">
                     <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-sm font-bold text-white">1</span>
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-white flex-shrink-0">
+                        <Mail className="h-5 w-5" />
                       </div>
                       <div>
-                        <div className="font-semibold text-foreground mb-1">Submit Inquiry</div>
-                        <div className="text-sm text-muted-foreground">Complete the form with your investment details and questions</div>
+                        <h4 className="font-semibold text-foreground mb-2">Keith Gordon</h4>
+                        <p className="text-muted-foreground">Co-founder, Anhart Investments</p>
+                        <p className="text-primary font-semibold">keith.gordon@anhart.ca</p>
                       </div>
                     </div>
-                    
-                    <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-sm font-bold text-white">2</span>
+                  </CardContent>
+                </Card>
+                
+                {/* Investment Process - Hidden on Mobile */}
+                <div className="hidden md:block flex-1 flex flex-col">
+                  <h3 className="text-xl md:text-2xl font-bold tracking-tight text-foreground mb-4 md:mb-6">
+                    Investment Process
+                  </h3>
+                  <Card className="hover:shadow-md transition-shadow duration-300 flex-1">
+                    <CardContent className="p-4 md:p-6">
+                      <div className="space-y-6">
+                        <div className="flex items-start gap-4">
+                          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm font-bold text-white">1</span>
+                          </div>
+                          <div>
+                            <div className="font-semibold text-foreground mb-1">Submit Inquiry</div>
+                            <div className="text-sm text-muted-foreground">Complete the form with your investment details and questions</div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-start gap-4">
+                          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm font-bold text-white">2</span>
+                          </div>
+                          <div>
+                            <div className="font-semibold text-foreground mb-1">Initial Consultation</div>
+                            <div className="text-sm text-muted-foreground">Keith will contact you within 48 hours to schedule a call</div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-start gap-4">
+                          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm font-bold text-white">3</span>
+                          </div>
+                          <div>
+                            <div className="font-semibold text-foreground mb-1">Document Review</div>
+                            <div className="text-sm text-muted-foreground">Receive and review LPA, Term Sheet, and Business Plan</div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-start gap-4">
+                          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm font-bold text-white">4</span>
+                          </div>
+                          <div>
+                            <div className="font-semibold text-foreground mb-1">Investment Decision</div>
+                            <div className="text-sm text-muted-foreground">Complete subscription agreement if you decide to invest</div>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="font-semibold text-foreground mb-1">Initial Consultation</div>
-                        <div className="text-sm text-muted-foreground">Keith will contact you within 48 hours to schedule a call</div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-sm font-bold text-white">3</span>
-                      </div>
-                      <div>
-                        <div className="font-semibold text-foreground mb-1">Document Review</div>
-                        <div className="text-sm text-muted-foreground">Receive and review LPA, Term Sheet, and Business Plan</div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                        <span className="text-sm font-bold text-white">4</span>
-                      </div>
-                      <div>
-                        <div className="font-semibold text-foreground mb-1">Investment Decision</div>
-                        <div className="text-sm text-muted-foreground">Complete subscription agreement if you decide to invest</div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-            </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </CardContent>
+            </Card>
             </ScrollAnimationWrapper>
           </div>
         </ScrollAnimationWrapper>
