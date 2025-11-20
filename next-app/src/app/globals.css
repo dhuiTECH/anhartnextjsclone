@@ -61,6 +61,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -86,12 +87,14 @@
 html {
   scroll-behavior: smooth;
 }
+
 /* Anhart Design System */
 
 @layer base {
   :root {
     /* Core Brand Colors - Warm Red Accent Theme */
-    --primary: 0 69% 67%; /* Warm Red Primary #E57373 */
+    --primary: 0 69% 67%;
+    /* Warm Red Primary #E57373 */
     --primary-foreground: 0 0% 100%;
     --primary-dark: 0 69% 55%;
 
@@ -116,7 +119,8 @@ html {
     --muted-foreground: 220 9% 46%;
 
     /* Accent Colors - Warm Red */
-    --accent: 0 69% 67%; /* #E57373 warm red */
+    --accent: 0 69% 67%;
+    /* #E57373 warm red */
     --accent-foreground: 0 0% 100%;
 
     /* System Colors */
@@ -236,7 +240,9 @@ html {
     @apply font-merriweather text-lg text-accent;
   }
 }
+
 @layer components {
+
   /* Dialog-specific font styling */
   .dialog-content {
     @apply font-roboto;
@@ -252,16 +258,20 @@ html {
 
   /* Header shrink-on-scroll effect */
   .header {
-    @apply sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border;
+    @apply sticky top-0 z-50 bg-background/95 backdrop-blur-sm;
     will-change: transform, height, padding;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     height: 96px;
-    padding: 1.5rem 0;
+
+    padding: 0; 
+  
+    border-bottom: 1px solid #E5E5E5;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
   }
 
   .header.shrunk {
     height: 72px;
-    padding: 0.75rem 0;
+    padding: 0;
   }
 
   .header-logo {
@@ -275,7 +285,11 @@ html {
   }
 
   .header-nav-link {
-    @apply text-base font-semibold text-foreground hover:text-primary transition-all duration-200 py-2 px-3 rounded-md;
+    @apply text-lg font-semibold text-[#333333] hover:text-primary transition-all duration-200 pr-1 rounded-md h-full;
+    
+    display: flex;
+    align-items: center;
+    
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -331,24 +345,31 @@ html {
   .delay-100 {
     animation-delay: 100ms;
   }
+
   .delay-200 {
     animation-delay: 200ms;
   }
+
   .delay-300 {
     animation-delay: 300ms;
   }
+
   .delay-400 {
     animation-delay: 400ms;
   }
+
   .delay-500 {
     animation-delay: 500ms;
   }
+
   .delay-600 {
     animation-delay: 600ms;
   }
+
   .delay-700 {
     animation-delay: 700ms;
   }
+
   .delay-800 {
     animation-delay: 800ms;
   }
@@ -368,6 +389,7 @@ html {
       opacity: 0;
       transform: translateX(-40px);
     }
+
     to {
       opacity: 1;
       transform: translateX(0);
@@ -379,6 +401,7 @@ html {
       opacity: 0;
       transform: translateX(40px);
     }
+
     to {
       opacity: 1;
       transform: translateX(0);
@@ -390,6 +413,7 @@ html {
       opacity: 0;
       transform: translateY(40px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -401,6 +425,7 @@ html {
       opacity: 0;
       transform: translateY(-40px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -411,6 +436,7 @@ html {
     from {
       opacity: 0;
     }
+
     to {
       opacity: 1;
     }
@@ -421,6 +447,7 @@ html {
       opacity: 0;
       transform: scale(0.9);
     }
+
     to {
       opacity: 1;
       transform: scale(1);
@@ -429,6 +456,7 @@ html {
 
   /* Respect reduced motion preference */
   @media (prefers-reduced-motion: reduce) {
+
     .animate-slide-in-left,
     .animate-slide-in-right,
     .animate-slide-in-up,
@@ -485,6 +513,7 @@ html {
       transform: translateX(0);
       opacity: 1;
     }
+
     100% {
       transform: translateX(-100%);
       opacity: 0.7;
@@ -496,6 +525,7 @@ html {
       transform: translateX(0);
       opacity: 1;
     }
+
     100% {
       transform: translateX(100%);
       opacity: 0.7;

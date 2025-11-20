@@ -7,22 +7,22 @@ import { Menu, X, ChevronDown } from "lucide-react";
 const anhartLogoWebp = "/images/anhart-logo-text.webp";
 const anhartLogoPng = "/images/anhart-logo-text.png";
 
-const navigation = [{ name: "Home", href: "/" }];
+const navigation: { name: string; href: string }[] = [];
 
 const aboutUsDropdown = [
-  { name: "Our Story", href: "/about" },
-  { name: "News & Media", href: "/media" },
-  { name: "Blog", href: "/blog" },
+  { name: "Our Story", href: "/about", description: "Learn about our journey, mission and values at Anhart" },
+  { name: "News & Media", href: "/media", description: "Stay updated with our latest news and stories from our partners" },
+  { name: "Blog", href: "/blog", description: "Read guides, insights and stories from our Anhart team" },
 ];
 
 const portfolioDropdown = [
-  { name: "Projects", href: "/portfolio" },
-  { name: "Impact Investing", href: "/limited-partnership" },
+  { name: "Projects", href: "/portfolio", description: "Explore a few of our affordable housing projects across Canada" },
+  { name: "Impact Investing", href: "/limited-partnership", description: "Learn about how you can invest in sustainable housing solutions" },
 ];
 
 const connectDropdown = [
-  { name: "Partner With Us", href: "/partner" },
-  { name: "Contact Us", href: "/contact" },
+  { name: "Partner With Us", href: "/partner", description: "Join us in creating affordable housing solutions across Canada" },
+  { name: "Contact Us", href: "/contact", description: "Get in touch with our team or learn about our contact information" },
 ];
 
 export const Header = () => {
@@ -87,14 +87,44 @@ export const Header = () => {
   return (
     <>
       <header className={`header ${isScrolled ? "shrunk" : ""}`}>
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 lg:px-8 h-full">
-          <div className="flex lg:flex-1">
+        <nav className="w-full flex items-center justify-between px-3 lg:px-8 h-full">
+          {/* Left side: Logo + About + Portfolio */}
+          <div className="flex items-center gap-x-6 h-full">
             <a href="/" className="flex items-center">
               <picture>
                 <source srcSet={anhartLogoWebp} type="image/webp" />
                 <img src={anhartLogoPng} alt="Anhart" className="header-logo" width="405" height="160" loading="eager" fetchPriority="high" />
               </picture>
             </a>
+
+            {/* Desktop navigation - left side */}
+            <div className="hidden lg:flex h-full text-lg"> 
+              {navigation.map((item) => (
+                <a 
+                  key={item.name} 
+                  href={item.href} 
+                  className="header-nav-link flex items-center h-full px-2" 
+                >
+                  {item.name}
+                </a>
+              ))}
+
+              <Dropdown
+                title="About"
+                items={aboutUsDropdown}
+                open={aboutUsDropdownOpen}
+                setOpen={setAboutUsDropdownOpen}
+                isScrolled={isScrolled}
+              />
+
+              <Dropdown
+                title="Portfolio"
+                items={portfolioDropdown}
+                open={portfolioDropdownOpen}
+                setOpen={setPortfolioDropdownOpen}
+                isScrolled={isScrolled}
+              />
+            </div>
           </div>
 
           {/* Mobile menu button */}
@@ -104,33 +134,13 @@ export const Header = () => {
             </Button>
           </div>
 
-          {/* Desktop navigation */}
-          <div className="hidden lg:flex lg:gap-x-6 lg:ml-auto lg:mr-4 text-lg">
-            {navigation.map((item) => (
-              <a key={item.name} href={item.href} className="header-nav-link pt-2.5">
-                {item.name}
-              </a>
-            ))}
-
-            <Dropdown
-              title="About Us"
-              items={aboutUsDropdown}
-              open={aboutUsDropdownOpen}
-              setOpen={setAboutUsDropdownOpen}
-            />
-
-            <Dropdown
-              title="Portfolio"
-              items={portfolioDropdown}
-              open={portfolioDropdownOpen}
-              setOpen={setPortfolioDropdownOpen}
-            />
-
-            <Dropdown
-              title="Connect With Us"
+          {/* Right side: Connect With Us button */}
+          <div className="hidden lg:flex h-full items-center">
+            <ConnectButton
               items={connectDropdown}
               open={connectDropdownOpen}
               setOpen={setConnectDropdownOpen}
+              isScrolled={isScrolled}
             />
           </div>
         </nav>
@@ -159,39 +169,127 @@ export const Header = () => {
   );
 };
 
-const Dropdown = ({ title, items, open, setOpen }: any) => (
-  <div className="relative group">
-    <button
-      className="header-nav-link flex items-center"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-      onClick={() => setOpen(!open)}
-    >
-      {title}
-      <ChevronDown className="ml-1 h-7 w-7" />
-    </button>
+const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
+  const headerHeight = isScrolled ? 72 : 96;
+  return (
     <div
-      className={`absolute top-full left-0 mt-1 w-48 bg-background/95 backdrop-blur-md border border-border shadow-lg z-50 transition-all duration-200 overflow-hidden rounded-lg ${
-        open ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2"
-      }`}
+      
+      className="relative flex items-center  rounded-md" 
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
     >
-      <div className="py-2">
-        {items.map((item: any, index: number) => (
-          <a
-            key={item.name}
-            href={item.href}
-            className="block px-4 py-2.5 text-sm font-medium text-foreground/80 hover:text-primary transition-all duration-150 border-l-2 border-transparent"
-            style={{ transitionDelay: `${index * 25}ms` }}
-          >
-            {item.name}
-          </a>
-        ))}
+      <button
+        className="header-nav-link flex items-center h-full px-2 rounded-md px-5"
+        onClick={() => setOpen(!open)}
+      >
+        {title}
+        <ChevronDown
+          className={`ml-2 h-5 w-5 text-gray-400/40 transition-transform duration-200 ${
+            open ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+
+      {/* The transparent padding fix from the previous step */}
+      <div
+        className={`fixed left-4 w-110 z-50 transition-all duration-200 pt-4 ${
+          open
+            ? "opacity-100 visible translate-x-0"
+            : "opacity-0 invisible -translate-x-full"
+        }`}
+        style={{
+          top: `${headerHeight}px`, 
+          maxHeight: `calc(100vh - ${headerHeight}px)`,
+          height: "auto",
+        }}
+      >
+        <div className="bg-background/95 backdrop-blur-md border-r border-border shadow-lg rounded-lg overflow-hidden">
+          <div className="py-4 px-4">
+            {items.map((item: any, index: number) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className="block px-4 py-3 hover:bg-primary/10 hover:text-primary transition-all duration-150 rounded-lg"
+                style={{ transitionDelay: `${index * 25}ms` }}
+              >
+                <div className="text-lg font-semibold text-[#333333] mb-1">
+                  {item.name}
+                </div>
+                {item.description && (
+                  <div className="text-sm text-muted-foreground leading-relaxed">
+                    {item.description}
+                  </div>
+                )}
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
+/* 
+* Connect with Us Button Dropdown Button Component
+*/
+const ConnectButton = ({ items, open, setOpen, isScrolled }: any) => {
+  const headerHeight = isScrolled ? 72 : 96;
+  return (
+    <div
+      // This creates a full-height invisible column that holds the button in the center
+      className="relative h-full flex items-center"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <button
+        className="connect-nav-button flex items-center px-8 py-3 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all duration-200"
+        style={{ borderRadius: "50px" }}
+        onClick={() => setOpen(!open)}
+      >
+        Connect With Us
+        <ChevronDown
+          className={`ml-2 h-4 w-4 text-white transition-transform duration-200 ${
+            open ? "rotate-180" : ""
+          }`}
+        />
+      </button>
+      
+      <div
+        className={`fixed right-4 w-110 z-50 transition-all duration-200 pt-4 ${
+          open
+            ? "opacity-100 visible translate-x-0"
+            : "opacity-0 invisible translate-x-full"
+        }`}
+        style={{
+          top: `${headerHeight}px`,
+          maxHeight: `calc(100vh - ${headerHeight}px)`,
+          height: "auto",
+        }}
+      >
+        <div className="bg-background/95 backdrop-blur-md border-l border-border shadow-lg rounded-lg overflow-hidden">
+          <div className="py-4 px-4">
+            {items.map((item: any, index: number) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className="block px-4 py-3 hover:bg-primary/20 hover:text-primary transition-all duration-150 rounded-lg"
+                style={{ transitionDelay: `${index * 25}ms` }}
+              >
+                <div className="text-lg font-semibold text-[#333333] mb-1">
+                  {item.name}
+                </div>
+                {item.description && (
+                  <div className="text-sm text-muted-foreground leading-relaxed">
+                    {item.description}
+                  </div>
+                )}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const MobileMenu = ({
   open,
@@ -231,7 +329,7 @@ const MobileMenu = ({
         ))}
 
         <MobileAccordionDropdown
-          title="About Us"
+          title="About"
           items={aboutUsDropdown}
           isOpen={activeMobileDropdown === "about-us"}
           onToggle={() => onDropdownToggle("about-us")}
