@@ -321,13 +321,16 @@ const ConnectButton = ({ items, open, setOpen, isScrolled }: any) => {
     const contactSection = document.getElementById("contact");
     if (contactSection) {
       const headerOffset = headerHeight;
-      const elementPosition = contactSection.getBoundingClientRect().top;
-      const offsetPosition =
-        elementPosition + window.pageYOffset - headerOffset;
+      // Use requestAnimationFrame to batch DOM reads and avoid forced reflow
+      requestAnimationFrame(() => {
+        const elementPosition = contactSection.getBoundingClientRect().top;
+        const offsetPosition =
+          elementPosition + window.pageYOffset - headerOffset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
       });
     } else {
       // Fallback: navigate to home page with hash

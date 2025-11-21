@@ -326,17 +326,38 @@ export const ThreeCardSection: React.FC<{
     scrollToPage(newPage);
   };
 
-  // Cache container width on mount and resize (carousel mode)
+  // Cache container width on mount and resize (carousel mode) using ResizeObserver to avoid forced reflows
   useEffect(() => {
-    if (layout !== 'carousel') return;
+    if (layout !== 'carousel' || !scrollContainerRef.current) return;
+    
     const updateContainerWidth = () => {
       if (scrollContainerRef.current) {
-        containerWidthRef.current = scrollContainerRef.current.offsetWidth;
+        // Use requestAnimationFrame to batch DOM reads
+        requestAnimationFrame(() => {
+          if (scrollContainerRef.current) {
+            containerWidthRef.current = scrollContainerRef.current.offsetWidth;
+          }
+        });
       }
     };
+    
+    // Initial measurement
     updateContainerWidth();
+    
+    // Use ResizeObserver instead of window resize for better performance
+    const resizeObserver = new ResizeObserver(() => {
+      updateContainerWidth();
+    });
+    
+    resizeObserver.observe(scrollContainerRef.current);
+    
+    // Fallback to window resize for edge cases
     window.addEventListener('resize', updateContainerWidth);
-    return () => window.removeEventListener('resize', updateContainerWidth);
+    
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateContainerWidth);
+    };
   }, [layout]);
 
   /**
