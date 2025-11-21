@@ -483,7 +483,7 @@ const Home = () => {
     <div className="min-h-screen bg-background">
       <SEO
         title="Anhart – Affordable Housing Developer in Canada"
-        description="Anhart is a vertically integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045."
+        description="Anhart is a integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045."
         keywords="affordable housing, SROs, modular homes, non-profit housing, low-income housing, subsidized housing, below-market housing, supportive housing, inclusionary housing, affordability, micro-suites, micro-units, vacancy development, derelict homes, single room occupancy, social housing, community housing, rental housing, housing continuum, transitional housing, Vancouver, BC, Canada, housing development, housing solutions, community development, sustainable housing"
         url="/"
         structuredData={[
@@ -512,7 +512,7 @@ const Home = () => {
         <section id="statistics-section" className="py-16 bg-muted/30">
           <div className="mx-auto max-w-6xl px-6 lg:px-8 text-center">
             <h1 className="text-3xl font-bold tracking-tight text-foreground mb-6 text-center">
-              Launched By Impact Investors, Led by Communities
+              Launched By Impact Investors, Community-Led, Non-Profit Housing
             </h1>
             <p className="text-base sm:text-lg lg:text-xl leading-7 text-gray-700/95 mb-8">
               {/* Mobile text */}
