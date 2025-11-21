@@ -29,6 +29,17 @@ const nextConfig = {
   // Configure SWC to target modern browsers
   swcMinify: true,
   
+  // Redirects
+  async redirects() {
+    return [
+      {
+        source: '/partners',
+        destination: '/partner',
+        permanent: true, // 301 redirect
+      },
+    ];
+  },
+  
   // NOTE: Turbopack is enabled by default in Next.js 16
   // Custom webpack configs are NOT compatible with Turbopack
   // 
