@@ -83,13 +83,24 @@ export const Turnstile = ({
   }, []);
 
   useEffect(() => {
-    if (!isLoaded || !containerRef.current || widgetIdRef.current) {
+    if (!isLoaded || !containerRef.current) {
       return;
     }
 
+    // Clean up existing widget if it exists (e.g., when props change)
+    if (widgetIdRef.current && window.turnstile) {
+      try {
+        window.turnstile.remove(widgetIdRef.current);
+      } catch (error) {
+        console.error("Error removing existing Turnstile:", error);
+      }
+      widgetIdRef.current = null;
+    }
+
     try {
-      // Convert "invisible" to "normal" for the API, but keep visual hiding via CSS
-      const apiSize = size === "invisible" ? "normal" : size;
+      // Convert "invisible" to "compact" for the API (smaller footprint for hidden widgets)
+      // but keep visual hiding via CSS
+      const apiSize = size === "invisible" ? "compact" : size;
       
       const widgetId = window.turnstile.render(containerRef.current, {
         sitekey: siteKey,
