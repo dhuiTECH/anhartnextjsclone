@@ -186,7 +186,7 @@ export const Hero = () => {
         muted
         playsInline
         preload="auto"
-        {...({ fetchPriority: "high" } as any)}
+        {...({ fetchPriority: "high" } as React.VideoHTMLAttributes<HTMLVideoElement>)}
         aria-label="Background video showing housing development animation"
         onError={() => {
           console.warn("Hero background video failed to load, using fallback gradient");
