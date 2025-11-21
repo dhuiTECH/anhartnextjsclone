@@ -539,7 +539,6 @@ export const Hero = () => {
       {/* Scroll Down Arrow */}
       <div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40"
-        aria-label="Scroll indicator"
       >
         <div className="flex flex-col items-center gap-2">
           <ChevronDown
