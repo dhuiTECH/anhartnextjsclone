@@ -31,7 +31,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 // =============================================================================
 // ICON IMPORTS (REMOVED - ONLY PLACEHOLDER)
@@ -208,6 +208,7 @@ const ProjectDetailsModal: React.FC<ProjectDetailsModalProps> = ({ isOpen, onClo
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-[95vw] max-w-4xl h-auto max-h-[90vh] md:max-h-[85vh] p-0 flex flex-col">
+        <DialogTitle className="sr-only">{card.exampleProject.name}</DialogTitle>
         <div className="relative p-4 md:p-6 overflow-y-auto flex-1">
           <Button
             variant="ghost"
@@ -952,7 +953,7 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
               className="group hover:bg-primary hover:text-primary-foreground transition-colors"
               asChild
             >
-              <a href="https://anhart.ca/portfolio" target="_blank" rel="noopener noreferrer">
+              <a href="https://anhart.ca/portfolio" target="_blank" rel="noopener noreferrer "aria-label="View all projects" title="View all projects">
                 View All Projects
                 <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>
