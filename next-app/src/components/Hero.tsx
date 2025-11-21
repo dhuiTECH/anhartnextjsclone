@@ -42,6 +42,7 @@ export const Hero = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [videoError, setVideoError] = useState(false);
 
   // Turnstile state
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -175,7 +176,7 @@ export const Hero = () => {
       {/* Optimized for LCP: preload="auto" and fetchpriority="high" for faster discovery */}
       <video
         ref={videoRef}
-        className="absolute top-0 left-0 w-full object-cover z-[1]"
+        className={`absolute top-0 left-0 w-full object-cover z-[1] ${videoError ? "hidden" : ""}`}
         style={{
           height: isMobile ? "100vh" : "150vh", // ADJUST THIS: Original 150vh on desktop for parallax—reduce to 130vh if too tall
           minHeight: isMobile ? "100vh" : "150vh",
@@ -187,9 +188,25 @@ export const Hero = () => {
         preload="auto"
         {...({ fetchPriority: "high" } as any)}
         aria-label="Background video showing housing development animation"
+        onError={() => {
+          console.warn("Hero background video failed to load, using fallback gradient");
+          setVideoError(true);
+        }}
       >
         <source src="/mediaAssets/hero-background-video.mp4" type="video/mp4" />
       </video>
+      {/* Fallback gradient background when video fails to load */}
+      {videoError && (
+        <div
+          className="absolute top-0 left-0 w-full z-[1]"
+          style={{
+            height: isMobile ? "100vh" : "150vh",
+            minHeight: isMobile ? "100vh" : "150vh",
+            background: "linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%)",
+          }}
+          aria-hidden="true"
+        />
+      )}
       {/* Centered content container */}
       <div
         ref={contentRef}

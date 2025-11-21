@@ -13,7 +13,7 @@ declare global {
           "error-callback"?: () => void;
           "expired-callback"?: () => void;
           theme?: "light" | "dark" | "auto";
-          size?: "normal" | "compact" | "invisible";
+          size?: "normal" | "compact" | "flexible";
         }
       ) => string;
       reset: (widgetId: string) => void;
@@ -88,6 +88,9 @@ export const Turnstile = ({
     }
 
     try {
+      // Convert "invisible" to "normal" for the API, but keep visual hiding via CSS
+      const apiSize = size === "invisible" ? "normal" : size;
+      
       const widgetId = window.turnstile.render(containerRef.current, {
         sitekey: siteKey,
         callback: (token: string) => {
@@ -100,7 +103,7 @@ export const Turnstile = ({
           onExpireRef.current?.();
         },
         theme,
-        size,
+        size: apiSize,
       });
 
       widgetIdRef.current = widgetId;
