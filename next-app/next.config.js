@@ -14,9 +14,27 @@ const nextConfig = {
   experimental: {
     // Enable CSS optimization to inline critical CSS and defer non-critical CSS
     // This reduces render-blocking resources and improves LCP
+    // Next.js uses Critters to automatically inline critical CSS and defer non-critical CSS
+    // Critical CSS (above-the-fold) is inlined in <style> tags
+    // Non-critical CSS is loaded asynchronously with media="print" and swapped to "all" on load
     optimizeCss: true,
     // Optimize package imports to reduce bundle size
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+  },
+  
+  // Headers to improve CSS loading performance
+  async headers() {
+    return [
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
   },
   compiler: {
     // Target modern browsers to avoid unnecessary polyfills
