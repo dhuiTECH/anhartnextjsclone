@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect, useRef } from "react"; // Added useRef
 import { Button } from "@/components/ui/button";
@@ -10,19 +10,52 @@ const anhartLogoPng = "/images/anhart-logo-text.png";
 const navigation: { name: string; href: string }[] = [];
 
 const aboutUsDropdown = [
-  { name: "Our Story", href: "/about", description: "Learn about our journey, mission and values at Anhart" },
-  { name: "News & Media", href: "/media", description: "Stay updated with our latest news and stories from our partners" },
-  { name: "Blog", href: "/blog", description: "Read guides, insights and stories from our Anhart team" },
+  {
+    name: "Our Story",
+    href: "/about",
+    description: "Learn about our journey, mission and values at Anhart",
+  },
+  {
+    name: "News & Media",
+    href: "/media",
+    description:
+      "Stay updated with our latest news and stories from our partners",
+  },
+  {
+    name: "Blog",
+    href: "/blog",
+    description: "Read guides, insights and stories from our Anhart team",
+  },
 ];
 
 const portfolioDropdown = [
-  { name: "Projects", href: "/portfolio", description: "Explore a few of our affordable housing projects across Canada" },
-  { name: "Impact Investing", href: "/limited-partnership", description: "Learn about how you can invest in sustainable housing solutions" },
+  {
+    name: "Projects",
+    href: "/portfolio",
+    description:
+      "Explore a few of our affordable housing projects across Canada",
+  },
+  {
+    name: "Impact Investing",
+    href: "/limited-partnership",
+    description:
+      "Learn about how you can invest in sustainable housing solutions",
+  },
 ];
 
 const connectDropdown = [
-  { name: "Partner With Us", href: "/partner", description: "Join us in creating affordable housing solutions across Canada" },
-  { name: "Contact Us", href: "/contact", description: "Get in touch with our team or learn about our contact information" },
+  {
+    name: "Partner With Us",
+    href: "/partner",
+    description:
+      "Join us in creating affordable housing solutions across Canada",
+  },
+  {
+    name: "Contact Us",
+    href: "/contact",
+    description:
+      "Get in touch with our team or learn about our contact information",
+  },
 ];
 
 export const Header = () => {
@@ -35,7 +68,9 @@ export const Header = () => {
   const [connectDropdownOpen, setConnectDropdownOpen] = useState(false);
 
   // Mobile accordion state
-  const [activeMobileDropdown, setActiveMobileDropdown] = useState<string | null>(null);
+  const [activeMobileDropdown, setActiveMobileDropdown] = useState<
+    string | null
+  >(null);
 
   // Smooth scroll detection with throttling
   useEffect(() => {
@@ -61,7 +96,7 @@ export const Header = () => {
     };
     if (mobileMenuOpen) {
       document.addEventListener("keydown", handleEscape);
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = "";
     } else {
       document.body.style.overflow = "";
     }
@@ -79,19 +114,29 @@ export const Header = () => {
   };
 
   const handleMobileDropdownToggle = (dropdownName: string) => {
-    setActiveMobileDropdown(activeMobileDropdown === dropdownName ? null : dropdownName);
+    setActiveMobileDropdown(
+      activeMobileDropdown === dropdownName ? null : dropdownName,
+    );
   };
 
   return (
     <>
       <header className={`header ${isScrolled ? "shrunk" : ""}`}>
-        <nav className="w-full flex items-center justify-between px-3 lg:px-8 h-full">
+        <nav className="w-full flex items-center justify-between px-3 lg:px-10 h-full">
           {/* Left side: Logo */}
-          <div className="flex items-center gap-x-6 h-full pb-2">
+          <div className="flex items-center gap-x-6 h-full pt-1 pb-3">
             <a href="/" className="flex items-center">
               <picture>
                 <source srcSet={anhartLogoWebp} type="image/webp" />
-                <img src={anhartLogoPng} alt="Anhart" className="header-logo" width="405" height="160" loading="eager" fetchPriority="high" />
+                <img
+                  src={anhartLogoPng}
+                  alt="Anhart"
+                  className="header-logo"
+                  width="405"
+                  height="160"
+                  loading="eager"
+                  fetchPriority="high"
+                />
               </picture>
             </a>
 
@@ -112,7 +157,11 @@ export const Header = () => {
           {/* Mobile menu button */}
           <div className="flex lg:hidden h-full items-center">
             <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
-              {mobileMenuOpen ? <X className="h-9 w-9" /> : <Menu className="h-9 w-9" />}
+              {mobileMenuOpen ? (
+                <X className="h-9 w-9" />
+              ) : (
+                <Menu className="h-9 w-9" />
+              )}
             </Button>
           </div>
 
@@ -147,8 +196,11 @@ export const Header = () => {
 
       {/* Mobile overlay */}
       <div
-        className={`lg:hidden fixed inset-0 bg-black/50 transition-opacity duration-300 ${mobileMenuOpen ? "opacity-100 z-40" : "opacity-0 pointer-events-none -z-10"
-          }`}
+        className={`lg:hidden fixed inset-0 bg-black/50 transition-opacity duration-300 ${
+          mobileMenuOpen
+            ? "opacity-100 z-40"
+            : "opacity-0 pointer-events-none -z-10"
+        }`}
         onClick={() => setMobileMenuOpen(false)}
       />
 
@@ -170,7 +222,7 @@ export const Header = () => {
 const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
   // NOTE: Ensure these numbers match your CSS .header height EXACTLY
   const headerHeight = isScrolled ? 64 : 72;
-  
+
   // Use a ref to manage the timeout so we can clear it if the user moves mouse back
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -188,7 +240,9 @@ const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
   };
 
   return (
-    <> {/* REFACTORED: No more wrapper div */}
+    <>
+      {" "}
+      {/* REFACTORED: No more wrapper div */}
       <button
         className="header-nav-link flex items-center h-full px-5"
         onClick={() => setOpen(!open)}
@@ -197,19 +251,18 @@ const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
       >
         {title}
         <ChevronDown
-          className={`ml-2 h-5 w-5 text-gray-400/40 transition-transform duration-200 ${open ? "rotate-180" : ""
-            }`}
+          className={`ml-2 h-5 w-5 text-gray-400/40 transition-transform duration-200 ${
+            open ? "rotate-180" : ""
+          }`}
         />
       </button>
-
       <div
-        className={`fixed right-4 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${open
-            ? "opacity-100 visible"
-            : "opacity-0 invisible"
-          }`}
+        className={`fixed right-4 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${
+          open ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
         style={{
           // FIX: Subtract 1px to overlap the border and kill the gap
-          top: `${headerHeight - 1}px`, 
+          top: `${headerHeight - 1}px`,
           maxHeight: `calc(100vh - ${headerHeight}px)`,
           height: "auto",
         }}
@@ -223,7 +276,9 @@ const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
                 key={item.name}
                 href={item.href}
                 className={`block px-4 py-3 hover:bg-primary/10 hover:text-primary transition-all duration-[50ms] rounded-lg ${
-                  open ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
+                  open
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 -translate-y-2"
                 }`}
                 style={{ transitionDelay: `${index * 25}ms` }}
               >
@@ -263,19 +318,20 @@ const ConnectButton = ({ items, open, setOpen, isScrolled }: any) => {
 
   const handleScrollToContact = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const contactSection = document.getElementById('contact');
+    const contactSection = document.getElementById("contact");
     if (contactSection) {
       const headerOffset = headerHeight;
       const elementPosition = contactSection.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerOffset;
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     } else {
       // Fallback: navigate to home page with hash
-      window.location.href = '/#contact';
+      window.location.href = "/#contact";
     }
     setOpen(false);
   };
@@ -292,16 +348,16 @@ const ConnectButton = ({ items, open, setOpen, isScrolled }: any) => {
       >
         Connect With Us
         <ChevronDown
-          className={`ml-2 h-4 w-4 text-white transition-transform duration-200 ${open ? "rotate-180" : ""
-            }`}
+          className={`ml-2 h-4 w-4 text-white transition-transform duration-200 ${
+            open ? "rotate-180" : ""
+          }`}
         />
       </button>
 
       <div
-        className={`fixed right-4 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${open
-            ? "opacity-100 visible"
-            : "opacity-0 invisible"
-          }`}
+        className={`fixed right-4 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${
+          open ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
         style={{
           top: `${headerHeight - 1}px`,
           maxHeight: `calc(100vh - ${headerHeight}px)`,
@@ -317,7 +373,9 @@ const ConnectButton = ({ items, open, setOpen, isScrolled }: any) => {
                 key={item.name}
                 href={item.href}
                 className={`block px-4 py-3 hover:bg-primary/20 hover:text-primary transition-all duration-[50ms] rounded-lg ${
-                  open ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
+                  open
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 -translate-y-2"
                 }`}
                 style={{ transitionDelay: `${index * 25}ms` }}
               >
@@ -354,17 +412,24 @@ const MobileMenu = ({
     style={{ transform: open ? "translateX(0)" : "translateX(-100%)" }}
   >
     {/* Mobile Header with Logo */}
-    <div className="px-6 py-6 border-b border-border bg-background/80 backdrop-blur-sm">
+    <div className="px-4 py-4 border-b border-border bg-background/80 backdrop-blur-sm">
       <div className="flex items-center">
         <picture>
           <source srcSet={anhartLogoWebp} type="image/webp" />
-          <img src={anhartLogoPng} alt="Anhart" className="h-10 w-auto" width="405" height="160" loading="lazy" />
+          <img
+            src={anhartLogoPng}
+            alt="Anhart"
+            className="h-10 w-auto"
+            width="405"
+            height="160"
+            loading="lazy"
+          />
         </picture>
       </div>
     </div>
 
     <div className="px-6 py-6">
-      <nav className="space-y-1" role="navigation">
+      <nav className="space-y-2" role="navigation">
         {navigation.map((item: any) => (
           <a
             key={item.name}
@@ -421,9 +486,13 @@ const MobileAccordionDropdown = ({
       onClick={onToggle}
     >
       {title}
-      <ChevronDown className={`ml-1 h-4 w-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+      <ChevronDown
+        className={`ml-1 h-4 w-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+      />
     </button>
-    <div className={`overflow-hidden transition-all duration-300 ${isOpen ? "max-h-60" : "max-h-0"}`}>
+    <div
+      className={`overflow-hidden transition-all duration-300 ${isOpen ? "max-h-60" : "max-h-0"}`}
+    >
       <div className="mt-1 space-y-1">
         {items.map((item: any) => (
           <a
