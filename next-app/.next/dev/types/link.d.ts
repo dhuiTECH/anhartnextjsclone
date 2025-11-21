@@ -48,6 +48,7 @@ declare namespace __next_route_internal_types__ {
     | `/partners`
     | `/portfolio`
     | `/sample-page`
+    | `/sitemap-blog.xml`
     | `/stories`
     | `/this-is-us`
     | `/what-is-anhart`

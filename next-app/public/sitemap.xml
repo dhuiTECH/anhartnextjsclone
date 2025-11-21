@@ -7,7 +7,7 @@
     <lastmod>2025-11-21</lastmod>
   </sitemap>
   
-  <!-- Blog Posts Sitemap -->
+  <!-- Blog Posts Sitemap (Dynamic - Auto-generated from database) -->
   <sitemap>
     <loc>https://anhart.ca/sitemap-blog.xml</loc>
     <lastmod>2025-11-21</lastmod>
