@@ -20,6 +20,8 @@ const nextConfig = {
     optimizeCss: true,
     // Optimize package imports to reduce bundle size
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+    // Ensure modern browser targets are used to avoid unnecessary polyfills
+    esmExternals: true,
   },
   
   // Headers to improve CSS loading performance
@@ -44,7 +46,7 @@ const nextConfig = {
       exclude: ['error', 'warn'],
     } : false,
   },
-  // Configure SWC to target modern browsers
+  // Configure SWC to target modern browsers and avoid unnecessary polyfills
   swcMinify: true,
   
   // Redirects
