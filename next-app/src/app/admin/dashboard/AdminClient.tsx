@@ -466,6 +466,64 @@ export default function AdminClient({ user }: { user: any }) {
   };
 
   // ============================================================================
+  // DELETE FUNCTION
+  // ============================================================================
+  
+  /**
+   * deletePost
+   * 
+   * Purpose: Delete a blog post from the Supabase database.
+   * Removes the post permanently and clears the form if the deleted post
+   * was being edited.
+   * 
+   * @param postId - The unique identifier of the post to delete
+   */
+  const deletePost = async (postId: string) => {
+    // Find the post to get its title for confirmation
+    const postToDelete = posts.find((p) => p.id === postId);
+    if (!postToDelete) {
+      alert("Post not found");
+      return;
+    }
+
+    // Confirmation dialog with post title
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${postToDelete.title}"?\n\nThis action cannot be undone.`
+    );
+
+    if (!confirmed) return;
+
+    setLoading(true);
+    try {
+      // Delete the post from Supabase
+      const { error } = await supabase
+        .from("blog_posts")
+        .delete()
+        .eq("id", postId);
+
+      if (error) {
+        alert("Error deleting post: " + error.message);
+        setLoading(false);
+        return;
+      }
+
+      // If the deleted post was being edited, reset the form
+      if (selectedPostId === postId) {
+        switchToNewMode();
+      }
+
+      // Refresh the post list
+      await loadPosts();
+      
+      alert(`Post "${postToDelete.title}" has been deleted successfully.`);
+    } catch (error: any) {
+      alert("Error deleting post: " + (error.message || "Unknown error"));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ============================================================================
   // PUBLISH/UPDATE FUNCTIONS
   // ============================================================================
   
@@ -747,6 +805,17 @@ export default function AdminClient({ user }: { user: any }) {
                 </option>
               ))}
             </select>
+            {/* Delete Button - Only shown when a post is selected for editing */}
+            {mode === "edit" && selectedPostId && (
+              <button
+                onClick={() => deletePost(selectedPostId)}
+                disabled={loading}
+                className="px-4 py-2 rounded font-medium bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                title="Delete this blog post"
+              >
+                🗑️ Delete
+              </button>
+            )}
           </div>
           {/* Edit Mode Indicator - Shows current post slug (read-only) */}
           {mode === "edit" && (
