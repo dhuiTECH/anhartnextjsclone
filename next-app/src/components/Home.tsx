@@ -702,7 +702,7 @@ const Home = () => {
               - Left: Contact form with validation
               - Right: Company details and contact information
            */}
-        <section className="py-16 bg-muted/30">
+        <section id="contact" className="py-16 bg-muted/30">
           <div className="mx-auto max-w-6xl px-6 lg:px-8">
             <div className="text-center mb-12">
               <ScrollAnimationWrapper direction="top">

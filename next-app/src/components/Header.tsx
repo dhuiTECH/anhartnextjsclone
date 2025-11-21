@@ -86,7 +86,7 @@ export const Header = () => {
     <>
       <header className={`header ${isScrolled ? "shrunk" : ""}`}>
         <nav className="w-full flex items-center justify-between px-3 lg:px-8 h-full">
-          {/* Left side: Logo + About + Portfolio */}
+          {/* Left side: Logo */}
           <div className="flex items-center gap-x-6 h-full">
             <a href="/" className="flex items-center">
               <picture>
@@ -106,7 +106,19 @@ export const Header = () => {
                   {item.name}
                 </a>
               ))}
+            </div>
+          </div>
 
+          {/* Mobile menu button */}
+          <div className="flex lg:hidden h-full items-center">
+            <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
+              {mobileMenuOpen ? <X className="h-9 w-9" /> : <Menu className="h-9 w-9" />}
+            </Button>
+          </div>
+
+          {/* Right side: About + Portfolio + Connect With Us button */}
+          <div className="hidden lg:flex h-full items-center gap-x-6">
+            <div className="flex h-full text-lg">
               <Dropdown
                 title="About"
                 items={aboutUsDropdown}
@@ -123,17 +135,6 @@ export const Header = () => {
                 isScrolled={isScrolled}
               />
             </div>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="flex lg:hidden h-full items-center">
-            <Button variant="ghost" size="icon" onClick={toggleMobileMenu}>
-              {mobileMenuOpen ? <X className="h-9 w-9" /> : <Menu className="h-9 w-9" />}
-            </Button>
-          </div>
-
-          {/* Right side: Connect With Us button */}
-          <div className="hidden lg:flex h-full items-center">
             <ConnectButton
               items={connectDropdown}
               open={connectDropdownOpen}
@@ -202,7 +203,7 @@ const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
       </button>
 
       <div
-        className={`fixed left-4 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${open
+        className={`fixed right-4 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${open
             ? "opacity-100 visible"
             : "opacity-0 invisible"
           }`}
@@ -215,7 +216,7 @@ const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="bg-background/95 backdrop-blur-md border-r border-border shadow-lg rounded-lg overflow-hidden">
+        <div className="bg-background/95 backdrop-blur-md border-l border-border shadow-lg rounded-lg overflow-hidden">
           <div className="py-4 px-4">
             {items.map((item: any, index: number) => (
               <a
@@ -260,13 +261,32 @@ const ConnectButton = ({ items, open, setOpen, isScrolled }: any) => {
     }, 150);
   };
 
+  const handleScrollToContact = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      const headerOffset = headerHeight;
+      const elementPosition = contactSection.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    } else {
+      // Fallback: navigate to home page with hash
+      window.location.href = '/#contact';
+    }
+    setOpen(false);
+  };
+
   return (
     // Wrapper here is needed for flex positioning in the parent, but logic is consistent
     <div className="relative h-full flex items-center">
       <button
         className="connect-nav-button flex items-center px-8 py-3 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all duration-200"
         style={{ borderRadius: "50px" }}
-        onClick={() => setOpen(!open)}
+        onClick={handleScrollToContact}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
