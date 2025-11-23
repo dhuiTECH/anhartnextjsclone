@@ -355,7 +355,7 @@ const ConnectButton = ({ items, open, setOpen, isScrolled }: any) => {
       </button>
 
       <div
-        className={`absolute right-0 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${
+        className={`absolute left-0 w-[380px] z-50 transition-opacity duration-[50ms] pt-4 ${
           open ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         style={{
