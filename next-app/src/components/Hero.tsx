@@ -70,12 +70,15 @@ export const Hero = () => {
   ) => {
     let value = e.target.value;
     
-    // Validate date format to only allow YYYY-MM-DD
+    // Validate date format - limit year to 4 digits
     if (e.target.name === "preferredDate" && value) {
-      const parts = value.split("-");
-      if (parts[0] && parts[0].length > 4) {
-        // Truncate year to 4 digits
-        value = value.substring(0, 4) + (value.length > 4 ? value.substring(4) : "");
+      const match = value.match(/^(\d{0,4})(-)?(\d{0,2})?(-)?(\d{0,2})?$/);
+      if (!match) {
+        return; // Don't update if format is invalid
+      }
+      // Prevent year from being longer than 4 digits
+      if (value.includes("-") && value.split("-")[0].length > 4) {
+        value = value.split("-")[0].substring(0, 4) + "-" + value.split("-").slice(1).join("-");
       }
     }
     
@@ -396,10 +399,9 @@ export const Hero = () => {
                               ref={timeInputRef}
                               id="preferredTime"
                               name="preferredTime"
-                              type="text"
+                              type="time"
                               value={formData.preferredTime}
                               onChange={handleInputChange}
-                              placeholder="e.g., 2:30 PM"
                               className="mt-0.5 h-9 text-sm"
                             />
                           </div>
@@ -570,10 +572,9 @@ export const Hero = () => {
                               ref={timeInputRef}
                               id="preferredTime"
                               name="preferredTime"
-                              type="text"
+                              type="time"
                               value={formData.preferredTime}
                               onChange={handleInputChange}
-                              placeholder="e.g., 2:30 PM"
                               className="mt-0.5 h-9 text-sm"
                             />
                           </div>
