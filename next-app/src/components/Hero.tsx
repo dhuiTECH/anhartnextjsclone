@@ -30,6 +30,8 @@ const GOOGLE_SHEET_URL =
 export const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const dateInputRef = useRef<HTMLInputElement>(null);
+  const timeInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -67,6 +69,18 @@ export const Hero = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const openDatePicker = () => {
+    if (dateInputRef.current) {
+      dateInputRef.current.showPicker?.();
+    }
+  };
+
+  const openTimePicker = () => {
+    if (timeInputRef.current) {
+      timeInputRef.current.showPicker?.();
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -367,23 +381,29 @@ export const Hero = () => {
                           <div>
                             <Label htmlFor="preferredDate" className="text-sm">Preferred Date</Label>
                             <Input
+                              ref={dateInputRef}
                               id="preferredDate"
                               name="preferredDate"
                               type="date"
                               value={formData.preferredDate}
                               onChange={handleInputChange}
-                              className="mt-0.5 h-9 text-sm"
+                              onClick={openDatePicker}
+                              onFocus={openDatePicker}
+                              className="mt-0.5 h-9 text-sm cursor-pointer"
                             />
                           </div>
                           <div>
                             <Label htmlFor="preferredTime" className="text-sm">Preferred Time</Label>
                             <Input
+                              ref={timeInputRef}
                               id="preferredTime"
                               name="preferredTime"
                               type="time"
                               value={formData.preferredTime}
                               onChange={handleInputChange}
-                              className="mt-0.5 h-9 text-sm"
+                              onClick={openTimePicker}
+                              onFocus={openTimePicker}
+                              className="mt-0.5 h-9 text-sm cursor-pointer"
                             />
                           </div>
                         </div>
@@ -538,23 +558,29 @@ export const Hero = () => {
                           <div>
                             <Label htmlFor="preferredDate" className="text-sm">Preferred Date</Label>
                             <Input
+                              ref={dateInputRef}
                               id="preferredDate"
                               name="preferredDate"
                               type="date"
                               value={formData.preferredDate}
                               onChange={handleInputChange}
-                              className="mt-0.5 h-9 text-sm"
+                              onClick={openDatePicker}
+                              onFocus={openDatePicker}
+                              className="mt-0.5 h-9 text-sm cursor-pointer"
                             />
                           </div>
                           <div>
                             <Label htmlFor="preferredTime" className="text-sm">Preferred Time</Label>
                             <Input
+                              ref={timeInputRef}
                               id="preferredTime"
                               name="preferredTime"
                               type="time"
                               value={formData.preferredTime}
                               onChange={handleInputChange}
-                              className="mt-0.5 h-9 text-sm"
+                              onClick={openTimePicker}
+                              onFocus={openTimePicker}
+                              className="mt-0.5 h-9 text-sm cursor-pointer"
                             />
                           </div>
                         </div>
