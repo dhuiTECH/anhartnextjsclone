@@ -55,7 +55,6 @@ declare namespace __next_route_internal_types__ {
     | `/wp-admin`
   type DynamicRoutes<T extends string = string> = 
     | `/blog/${SafeSlug<T>}`
-    | `/projects/${SafeSlug<T>}`
     | `/wp-content/${CatchAllSlug<T>}`
 
   type RouteImpl<T> = 
