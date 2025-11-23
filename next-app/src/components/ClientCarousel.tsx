@@ -14,6 +14,9 @@ import OTTVALImg from "@/assets/OTTVAL.png";
 import SVImg from "@/assets/SV.png";
 import TPOSImg from "@/assets/TPOS.png";
 import GLCImg from "@/assets/GLC.png";
+import ATCOImg from "@/assets/partnercarousel/atco.jpg";
+import LCLAImg from "@/assets/partnercarousel/lcla.jpg";
+import MWGImg from "@/assets/partnercarousel/markwilson.jpg";
 
 // Helper to extract .src from Next.js static imports
 const getImageSrc = (img: any): string => typeof img === 'string' ? img : img?.src || '';
@@ -140,6 +143,27 @@ export const ClientCarousel: React.FC<{
       logo: getImageSrc(GLCImg),
       alt: "gottaloveCanada",
       website: "https://gottalovecanada.ca/",
+    },
+    {
+      id: 13,
+      name: "ATCO",
+      logo: getImageSrc(ATCOImg),
+      alt: "ATCO Logo",
+      website: "https://www.atco.com/en-ca.html",
+    },
+    {
+      id: 14,
+      name: "Leduc Community Living Association",
+      logo: getImageSrc(LCLAImg),
+      alt: "Leduc Community Living Association Logo",
+      website: "https://www.lcla.ca/",
+    },
+    {
+      id: 15,
+      name: "Mark Wilson Group",
+      logo: getImageSrc(MWGImg),
+      alt: "Mark Wilson Group Logo",
+      website: "https://markwilsongroup.ca/",
     },
   ];
 
