@@ -97,15 +97,32 @@ export const Hero = () => {
 
     setIsSubmitting(true);
 
-    const form = e.currentTarget;
-    const data = new FormData(form);
-    data.append("turnstile_token", turnstileToken);
-
     try {
-      const res = await fetch(GOOGLE_SHEET_URL, { method: "POST", body: data });
+      // Convert form data to URL-encoded format for Google Apps Script
+      const body = new URLSearchParams();
+      body.append("name", formData.name);
+      body.append("email", formData.email);
+      body.append("phone", formData.phone);
+      body.append("location", formData.location);
+      body.append("message", formData.message);
+      body.append("preferredDate", formData.preferredDate);
+      body.append("preferredTime", formData.preferredTime);
+      body.append("form_type", "booking");
+      body.append("turnstile_token", turnstileToken);
+      body.append("timestamp", new Date().toISOString());
+      body.append("userAgent", navigator.userAgent);
+      body.append("referrer", document.referrer);
+
+      const res = await fetch(GOOGLE_SHEET_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: body.toString(),
+      });
+
       if (res.ok) {
         setIsSuccess(true);
-        form.reset();
         setFormData({
           name: "",
           email: "",

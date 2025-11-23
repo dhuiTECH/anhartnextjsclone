@@ -1,1 +1,11 @@
-{"version":4,"routes":{"/projects/jubilee-rooms":{},"/projects/the-ryder":{},"/projects/162-main-st":{},"/projects/dodson-hotel":{},"/projects/skeena-house":{},"/projects/metson-rooms":{},"/projects/the-oppenheimer-park-initiative":{},"/projects/kwas-house":{},"/projects/merritt-village":{},"/projects/179-main-626-alexander":{},"/projects/anhart-sustainable-villages":{},"/projects/modular-villages":{}},"dynamicRoutes":{"/projects/[slug]":{"dataRoute":null,"dataRouteRegex":null,"fallback":null,"fallbackRevalidate":false,"fallbackSourceRoute":"/projects/[slug]","routeRegex":"^\\/projects\\/([^/]+?)(?:\\/)?$","allowHeader":[]}},"notFoundRoutes":[],"preview":{"previewModeId":"6c20bbd02088cb50e1684dc5911e1987","previewModeSigningKey":"7d26c8d6d7cbbcdb0393dd073aa3cd4ae45a69b2c122b85ab1290386027e0975","previewModeEncryptionKey":"514116de3142f022413cbe74b39279f207d4b5fe2724ab776ea14371e27ef8cb"}}
+{
+  "version": 4,
+  "routes": {},
+  "dynamicRoutes": {},
+  "notFoundRoutes": [],
+  "preview": {
+    "previewModeId": "6692a958626bca42e8013c2ef4d36550",
+    "previewModeSigningKey": "170d6d3d0dbe92cd7a92814af33852410709c6b06fb61eb2647c246f52ccf5ee",
+    "previewModeEncryptionKey": "f6014dab795b28deb9d10349da72dcbe163e237af8434f51953132c54b3866cb"
+  }
+}
