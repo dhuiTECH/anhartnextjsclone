@@ -384,11 +384,12 @@ export const Hero = () => {
                               ref={dateInputRef}
                               id="preferredDate"
                               name="preferredDate"
-                              type="date"
+                              type="text"
                               value={formData.preferredDate}
                               onChange={handleInputChange}
                               onClick={openDatePicker}
                               onFocus={openDatePicker}
+                              placeholder="YYYY-MM-DD"
                               className="mt-0.5 h-9 text-sm cursor-pointer"
                             />
                           </div>
@@ -398,11 +399,12 @@ export const Hero = () => {
                               ref={timeInputRef}
                               id="preferredTime"
                               name="preferredTime"
-                              type="time"
+                              type="text"
                               value={formData.preferredTime}
                               onChange={handleInputChange}
                               onClick={openTimePicker}
                               onFocus={openTimePicker}
+                              placeholder="HH:MM"
                               className="mt-0.5 h-9 text-sm cursor-pointer"
                             />
                           </div>
@@ -561,11 +563,12 @@ export const Hero = () => {
                               ref={dateInputRef}
                               id="preferredDate"
                               name="preferredDate"
-                              type="date"
+                              type="text"
                               value={formData.preferredDate}
                               onChange={handleInputChange}
                               onClick={openDatePicker}
                               onFocus={openDatePicker}
+                              placeholder="YYYY-MM-DD"
                               className="mt-0.5 h-9 text-sm cursor-pointer"
                             />
                           </div>
@@ -575,11 +578,12 @@ export const Hero = () => {
                               ref={timeInputRef}
                               id="preferredTime"
                               name="preferredTime"
-                              type="time"
+                              type="text"
                               value={formData.preferredTime}
                               onChange={handleInputChange}
                               onClick={openTimePicker}
                               onFocus={openTimePicker}
+                              placeholder="HH:MM"
                               className="mt-0.5 h-9 text-sm cursor-pointer"
                             />
                           </div>
