@@ -48,8 +48,8 @@ const Portfolio = () => {
   // Scroll position and visible projects restoration
   useEffect(() => {
     // Restore scroll position and visible projects when component mounts
-    const savedScrollPosition = sessionStorage.getItem('portfolioScrollPosition');
-    const savedVisibleProjects = sessionStorage.getItem('portfolioVisibleProjects');
+    const savedScrollPosition = localStorage.getItem('portfolioScrollPosition');
+    const savedVisibleProjects = localStorage.getItem('portfolioVisibleProjects');
     
     if (savedVisibleProjects) {
       setVisibleProjects(parseInt(savedVisibleProjects));
@@ -59,22 +59,11 @@ const Portfolio = () => {
       // Use setTimeout to ensure DOM is fully rendered before scrolling
       setTimeout(() => {
         window.scrollTo(0, parseInt(savedScrollPosition));
-        sessionStorage.removeItem('portfolioScrollPosition');
-        sessionStorage.removeItem('portfolioVisibleProjects');
-      }, 100);
+        localStorage.removeItem('portfolioScrollPosition');
+        localStorage.removeItem('portfolioVisibleProjects');
+      }, 150);
     }
   }, []);
-
-  // Save scroll position and visible projects when leaving the page
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      sessionStorage.setItem('portfolioScrollPosition', String(window.scrollY));
-      sessionStorage.setItem('portfolioVisibleProjects', String(visibleProjects));
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [visibleProjects]);
 
   /**
    * Handles project card click to open detailed modal view
@@ -206,7 +195,10 @@ const Portfolio = () => {
 
                       <Link
                         href={`/projects/${generateProjectSlug(project.title)}`}
-                        onClick={() => sessionStorage.setItem('portfolioScrollPosition', String(window.scrollY))}
+                        onClick={() => {
+                          localStorage.setItem('portfolioScrollPosition', String(window.scrollY));
+                          localStorage.setItem('portfolioVisibleProjects', String(visibleProjects));
+                        }}
                         className="w-full inline-flex items-center justify-center bg-primary hover:bg-primary/90 text-primary-foreground transition-colors px-4 py-2 rounded-md font-medium"
                         aria-label={`View details for ${project.title}`}
                       >
