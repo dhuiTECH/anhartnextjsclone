@@ -355,7 +355,7 @@ const ConnectButton = ({ items, open, setOpen, isScrolled }: any) => {
       </button>
 
       <div
-        className={`absolute left-0 w-[380px] z-50 transition-opacity duration-[50ms] pt-4 ${
+        className={`absolute right-0 w-[380px] z-50 transition-opacity duration-[50ms] pt-4 ${
           open ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         style={{
@@ -366,7 +366,7 @@ const ConnectButton = ({ items, open, setOpen, isScrolled }: any) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="bg-background/95 backdrop-blur-md border-l border-border shadow-lg rounded-lg overflow-hidden">
+        <div className="bg-background/95 backdrop-blur-md border-r border-border shadow-lg rounded-lg overflow-hidden">
           <div className="py-4 px-4">
             {items.map((item: any, index: number) => (
               <a
