@@ -255,7 +255,7 @@ const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
         />
       </button>
       <div
-        className={`absolute left-0 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${
+        className={`absolute left-0 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 overflow-visible ${
           open ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         style={{
