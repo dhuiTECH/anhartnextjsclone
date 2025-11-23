@@ -182,6 +182,7 @@ export const Header = () => {
                 open={portfolioDropdownOpen}
                 setOpen={setPortfolioDropdownOpen}
                 isScrolled={isScrolled}
+                align="right"
               />
             </div>
             <ConnectButton
@@ -219,7 +220,7 @@ export const Header = () => {
   );
 };
 
-const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
+const Dropdown = ({ title, items, open, setOpen, isScrolled, align = "left" }: any) => {
   // NOTE: Ensure these numbers match your CSS .header height EXACTLY
   const headerHeight = isScrolled ? 64 : 72;
 
@@ -255,9 +256,9 @@ const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
         />
       </button>
       <div
-        className={`absolute left-0 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${
-          open ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
+        className={`absolute w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${
+          align === "right" ? "right-0" : "left-0"
+        } ${open ? "opacity-100 visible" : "opacity-0 invisible"}`}
         style={{
           top: `${headerHeight - 1}px`,
           maxHeight: `calc(100vh - ${headerHeight}px)`,
