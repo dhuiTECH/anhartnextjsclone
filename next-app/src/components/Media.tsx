@@ -900,7 +900,7 @@ const Media = () => {
               {/* 2x2 Grid */}
               <div className="grid grid-cols-2 gap-6">
                 {getCurrentPageItems(pressReleases, currentPressPage).map((article, index) => <ScrollAnimationWrapper key={article.id} direction="bottom" delay={200 + index * 50}>
-                    <Card className="hover:shadow-sm sm:hover:shadow-lg transition-shadow duration-300">
+                    <Card className="h-full flex flex-col hover:shadow-sm sm:hover:shadow-lg transition-shadow duration-300">
                         <CardHeader>
                           <div className="flex items-center justify-between mb-2">
                             <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">
@@ -918,9 +918,9 @@ const Media = () => {
                           </div>
                         </CardHeader>
                         
-                        <CardContent>
+                        <CardContent className="flex-1 flex flex-col justify-between">
                           <p className="text-muted-foreground mb-4">{article.excerpt}</p>
-                          <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => handleArticleAction(article)}>
+                          <Button variant="outline" size="sm" className="flex items-center gap-2 w-fit" onClick={() => handleArticleAction(article)}>
                             {article.type === "external" ? <>
                                 <ExternalLink className="h-4 w-4" />
                                 Read Full Article
