@@ -1,0 +1,252 @@
+import { Metadata } from 'next';
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
+import { notFound } from 'next/navigation';
+import { portfolioProjectsData } from '@/data/portfolio-server';
+import { generateProjectSlug, getProjectBySlug } from '@/lib/slug';
+import { MapPin, Calendar, Users, Building } from 'lucide-react';
+import OptimizedImage from '@/components/OptimizedImage';
+import { StatusBadge } from '@/components/shared/StatusBadge';
+import { ScrollAnimationWrapper } from '@/components/animations/ScrollAnimationWrapper';
+
+export async function generateStaticParams() {
+  return portfolioProjectsData.map((project) => ({
+    slug: generateProjectSlug(project.title),
+  }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug, portfolioProjectsData);
+
+  if (!project) {
+    return {
+      title: 'Project Not Found',
+      description: 'The requested project could not be found.',
+    };
+  }
+
+  const title = `${project.title} - Affordable Housing Project | Anhart`;
+  const description = project.description || `Learn more about ${project.title}, an affordable housing project by Anhart located in ${project.location}.`;
+  const imageUrl = project.image
+    ? `https://anhart.ca/images/${project.image}.png`
+    : 'https://anhart.ca/images/portfolio-hero.jpg';
+
+  return {
+    title,
+    description,
+    keywords: [
+      project.title,
+      'affordable housing',
+      'housing project',
+      project.location,
+      project.type,
+      'Anhart',
+    ].join(', '),
+    authors: [{ name: 'Anhart' }],
+    openGraph: {
+      title,
+      description,
+      url: `https://anhart.ca/projects/${slug}`,
+      siteName: 'Anhart',
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: project.title,
+        },
+      ],
+      locale: 'en_CA',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [imageUrl],
+      site: '@anhart_housing',
+      creator: '@anhart_housing',
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+  };
+}
+
+export default async function ProjectPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug, portfolioProjectsData);
+
+  if (!project) {
+    notFound();
+  }
+
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'RealEstateProject',
+    name: project.title,
+    description: project.description,
+    location: {
+      '@type': 'Place',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: project.location,
+        addressCountry: 'CA',
+      },
+    },
+    numberOfUnits: project.units ? parseInt(String(project.units)) : undefined,
+    url: `https://anhart.ca/projects/${slug}`,
+    status: project.status || 'completed',
+    dateCompleted: project.year || project.completion_date,
+    projectType: project.type || 'Affordable Housing',
+    organization: {
+      '@type': 'Organization',
+      name: 'Anhart',
+      url: 'https://anhart.ca',
+    },
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main className="py-16">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+        <div className="mx-auto max-w-4xl px-6 lg:px-8">
+          <ScrollAnimationWrapper direction="top" delay={0}>
+            {/* Back Link */}
+            <a
+              href="/portfolio"
+              className="text-primary hover:text-primary/80 transition-colors mb-8 inline-flex items-center gap-2"
+            >
+              ← Back to Portfolio
+            </a>
+
+            {/* Project Image */}
+            {project.image && (
+              <div className="mb-12 rounded-lg overflow-hidden">
+                <OptimizedImage
+                  imageName={project.image}
+                  alt={project.title}
+                  category="portfolio"
+                  className="w-full h-full object-cover"
+                  aspectRatio="16/9"
+                  loading="eager"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 100%"
+                />
+              </div>
+            )}
+
+            {/* Project Header */}
+            <div className="mb-12">
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <h1 className="text-4xl font-bold text-foreground">{project.title}</h1>
+                <StatusBadge status={project.status || ''} />
+              </div>
+
+              {/* Project Meta Info */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 border-y border-muted">
+                {project.location && (
+                  <div className="flex items-start gap-2">
+                    <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Location</p>
+                      <p className="font-semibold text-foreground">{project.location}</p>
+                    </div>
+                  </div>
+                )}
+
+                {(project.year || project.completion_date) && (
+                  <div className="flex items-start gap-2">
+                    <Calendar className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Completed</p>
+                      <p className="font-semibold text-foreground">{project.year || project.completion_date}</p>
+                    </div>
+                  </div>
+                )}
+
+                {project.units && (
+                  <div className="flex items-start gap-2">
+                    <Users className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Units</p>
+                      <p className="font-semibold text-foreground">{project.units}</p>
+                    </div>
+                  </div>
+                )}
+
+                {project.type && (
+                  <div className="flex items-start gap-2">
+                    <Building className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">Type</p>
+                      <p className="font-semibold text-foreground">{project.type}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="mb-12 space-y-6">
+              <div>
+                <h2 className="text-2xl font-bold text-foreground mb-4">Project Overview</h2>
+                <p className="text-lg text-muted-foreground leading-relaxed">{project.description}</p>
+              </div>
+
+              {/* Highlights */}
+              {project.highlights && project.highlights.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-bold text-foreground mb-4">Key Highlights</h3>
+                  <ul className="space-y-3">
+                    {project.highlights.map((highlight, index) => (
+                      <li key={index} className="flex items-start gap-3">
+                        <span className="text-primary font-bold flex-shrink-0">•</span>
+                        <span className="text-muted-foreground">{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* CTA Section */}
+            <div className="bg-muted/30 rounded-lg p-8 text-center">
+              <h3 className="text-2xl font-bold text-foreground mb-4">Learn More About Our Work</h3>
+              <p className="text-muted-foreground mb-6">
+                Anhart is committed to building 20,000 affordable homes by 2045. Explore more of our projects and initiatives.
+              </p>
+              <a
+                href="/portfolio"
+                className="inline-block px-8 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors font-semibold"
+              >
+                View All Projects
+              </a>
+            </div>
+          </ScrollAnimationWrapper>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
