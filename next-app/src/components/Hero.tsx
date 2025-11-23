@@ -385,9 +385,10 @@ export const Hero = () => {
                               ref={timeInputRef}
                               id="preferredTime"
                               name="preferredTime"
-                              type="time"
+                              type="text"
                               value={formData.preferredTime}
                               onChange={handleInputChange}
+                              placeholder="e.g., 2:30 PM"
                               className="mt-0.5 h-9 text-sm"
                             />
                           </div>
@@ -558,9 +559,10 @@ export const Hero = () => {
                               ref={timeInputRef}
                               id="preferredTime"
                               name="preferredTime"
-                              type="time"
+                              type="text"
                               value={formData.preferredTime}
                               onChange={handleInputChange}
+                              placeholder="e.g., 2:30 PM"
                               className="mt-0.5 h-9 text-sm"
                             />
                           </div>
