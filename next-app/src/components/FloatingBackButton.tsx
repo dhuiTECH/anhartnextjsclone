@@ -32,8 +32,8 @@ export function FloatingBackButton() {
   }, []);
 
   const handleClick = () => {
-    // Save scroll position before leaving
-    sessionStorage.setItem('portfolioScrollPosition', String(sessionStorage.getItem('portfolioScrollPosition') || 0));
+    // Scroll position and visible projects are already saved by Portfolio component
+    // Nothing additional needed here
   };
 
   return (
