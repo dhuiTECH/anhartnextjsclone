@@ -1,0 +1,269 @@
+// Simplified Google Apps Script for Anhart Form Submissions
+// Handles form submissions and saves them to Google Sheets
+
+const ALLOWED_ORIGINS = [
+  'https://www.anhart.ca',
+  'https://www.staging.anhart.ca',
+  'https://20e626fa-0378-4012-9cbe-6de81c265661.lovableproject.com', // Add this for testing
+  'https://anhartca.lovable.app'
+];
+
+function doGet(e) {
+  return doPost(e); // Google Apps Script web apps require doGet for deployment
+}
+
+function doPost(e) {
+  try {
+    // Get actual origin from request headers
+    const origin = e.parameter.origin || '';
+    
+    let data;
+    if (e.postData && e.postData.type === "application/json") {
+      data = JSON.parse(e.postData.contents);
+    } else {
+      data = e.parameter;
+    }
+
+    // Validate submission
+    const securityCheck = validateSubmission(data);
+    if (!securityCheck.valid) {
+      return createJsonResponse(
+        { success: false, error: "Invalid submission: " + securityCheck.reason },
+        origin
+      );
+    }
+
+    // Check rate limit
+    if (!checkRateLimit(data.email)) {
+      return createJsonResponse(
+        { success: false, error: "Rate limit exceeded. Please try again later." },
+        origin
+      );
+    }
+
+    // Save to sheet
+    saveToSheet(data);
+
+    // Send emails
+    sendConfirmationEmail(data);
+    sendAdminNotification(data);
+
+    return createJsonResponse(
+      { success: true, message: "Form submitted successfully" },
+      origin
+    );
+
+  } catch (error) {
+    return createJsonResponse(
+      { success: false, error: error.message },
+      e.parameter.origin || ''
+    );
+  }
+}
+
+function doOptions(e) {
+  const origin = e.parameter.origin || (e.headers && e.headers.origin);
+  const output = ContentService.createTextOutput("")
+    .setMimeType(ContentService.MimeType.TEXT);
+
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    output.addHeader("Access-Control-Allow-Origin", origin);
+    output.addHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    output.addHeader("Access-Control-Allow-Headers", "Content-Type");
+  }
+
+  return output;
+}
+
+function createJsonResponse(payload, origin) {
+  const output = ContentService.createTextOutput(JSON.stringify(payload))
+    .setMimeType(ContentService.MimeType.JSON);
+  
+  // Add CORS headers if origin is allowed
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    output.addHeader('Access-Control-Allow-Origin', origin);
+    output.addHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    output.addHeader('Access-Control-Allow-Headers', 'Content-Type');
+  }
+  
+  return output;
+}
+
+function saveToSheet(data) {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const timestamp = new Date();
+  
+  sheet.appendRow([
+    timestamp,
+    data.name || '',
+    data.email || '',
+    data.phone || '',
+    data.organization || '',
+    data.subject || '',
+    data.message || '',
+    data.form_type || '',
+    data.investment_amount || '',
+    data.preferredDate || '',  
+    data.preferredTime || '',  
+    data.user_id || '',
+    data.userAgent || '',
+    data.referrer || ''
+  ]);
+}
+
+function validateSubmission(data) {
+  if (!data.name || data.name.trim().length < 2) {
+    return { valid: false, reason: 'Invalid name' };
+  }
+  
+  if (!data.email || !isValidEmail(data.email)) {
+    return { valid: false, reason: 'Invalid email' };
+  }
+  
+  if (!data.message || data.message.trim().length < 10) {
+    return { valid: false, reason: 'Message too short' };
+  }
+
+  const suspiciousPatterns = [
+    /<script/i,
+    /javascript:/i,
+    /on\w+\s*=/i,
+    /href\s*=\s*["']javascript:/i,
+    /<iframe/i,
+    /<object/i,
+    /<embed/i
+  ];
+
+  const allText = `${data.name} ${data.email} ${data.message}`.toLowerCase();
+  for (const pattern of suspiciousPatterns) {
+    if (pattern.test(allText)) {
+      return { valid: false, reason: 'Suspicious content detected' };
+    }
+  }
+
+  if (data.message.length > 5000) {
+    return { valid: false, reason: 'Message too long' };
+  }
+  
+  return { valid: true };
+}
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function checkRateLimit(email) {
+  const key = 'rate_' + email.replace(/[^a-zA-Z0-9]/g, '');
+  const props = PropertiesService.getScriptProperties();
+  const data = props.getProperty(key);
+
+  if (data) {
+    const { count, timestamp } = JSON.parse(data);
+    const oneHourAgo = Date.now() - (60 * 60 * 1000);
+    
+    if (timestamp > oneHourAgo && count >= 3) {
+      return false;
+    }
+  }
+
+  const newCount = data ? JSON.parse(data).count + 1 : 1;
+  props.setProperty(key, JSON.stringify({
+    count: newCount,
+    timestamp: Date.now()
+  }));
+
+  return true;
+}
+
+function sendConfirmationEmail(data) {
+  try {
+    const subject = "Thank You for Your Submission - Anhart Investments";
+    const body = `
+      <html><body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <div style="max-width:600px;margin:0 auto;padding:20px;">
+          <div style="text-align:center;margin-bottom:20px;">
+            <h1 style="color:#D32F2F;margin:0;font-size:28px;">Anhart Affordable Housing</h1>
+          </div>
+          <div style="background:#f8f9fa;padding:30px;border-radius:8px;">
+            <p>Dear ${data.name},</p>
+            <p>Thank you for reaching out to Anhart Affordable Housing. 
+               We have received your ${getFormTypeDescription(data.form_type)} submission and will connect with you soon.</p>
+            <div style="background:white;padding:20px;border-radius:6px;margin:20px 0;border-left:4px solid #D32F2F;">
+              <p><strong>Name:</strong> ${data.name}</p>
+              <p><strong>Email:</strong> ${data.email}</p>
+              ${data.phone ? `<p><strong>Phone:</strong> ${data.phone}</p>` : ''}
+              ${data.organization ? `<p><strong>Organization:</strong> ${data.organization}</p>` : ''}
+              ${data.subject ? `<p><strong>Subject:</strong> ${data.subject}</p>` : ''}
+              ${data.investment_amount ? `<p><strong>Investment Amount:</strong> ${data.investment_amount}</p>` : ''}
+              <p><strong>Message:</strong><br>${data.message}</p>
+            </div>
+            <p>Best regards,<br>The Anhart Team</p>
+          </div>
+        </div>
+      </body></html>
+    `;
+
+    GmailApp.sendEmail(data.email, subject, '', {
+      htmlBody: body,
+      from: 'info@anhart.ca',
+      name: 'Anhart Affordable Housing'
+    });
+  } catch (error) {
+    console.error('Error sending confirmation email:', error);
+  }
+}
+
+function sendAdminNotification(data) {
+  try {
+    const subject = `New ${getFormTypeDescription(data.form_type)} Submission - Anhart Website`;
+    const body = `
+      <html><body style="font-family: Arial, sans-serif; line-height:1.6; color:#333;">
+        <div style="max-width:600px;margin:0 auto;padding:20px;">
+          <h2>Submission Details</h2>
+          <p><strong>Form Type:</strong> ${getFormTypeDescription(data.form_type)}</p>
+          <p><strong>Name:</strong> ${data.name}</p>
+          <p><strong>Email:</strong> ${data.email}</p>
+          <p><strong>Phone:</strong> ${data.phone || 'Not provided'}</p>
+          <p><strong>Organization:</strong> ${data.organization || 'Not provided'}</p>
+          <p><strong>Subject:</strong> ${data.subject || 'Not provided'}</p>
+          ${data.investment_amount ? `<p><strong>Investment Amount:</strong> ${data.investment_amount}</p>` : ''}
+          <p><strong>Message:</strong><br>${data.message}</p>
+          ${data.preferredDate ? `<p><strong>Preferred Date:</strong> ${data.preferredDate}</p>` : ''}
+${data.preferredTime ? `<p><strong>Preferred Time:</strong> ${data.preferredTime}</p>` : ''}
+          <p><strong>User Agent:</strong> ${data.userAgent || 'Not provided'}</p>
+          <p><strong>Referrer:</strong> ${data.referrer || 'Not provided'}</p>
+          <p><strong>Submitted:</strong> ${new Date().toLocaleString()}</p>
+        </div>
+      </body></html>
+    `;
+
+    GmailApp.sendEmail('info@anhart.ca', subject, '', {
+      htmlBody: body,
+      name: 'Anhart Website'
+    });
+  } catch (error) {
+    console.error('Error sending admin notification:', error);
+  }
+}
+
+function getFormTypeDescription(formType) {
+  const descriptions = {
+    'home': 'contact',
+    'contact': 'contact',
+    'limited_partnership': 'limited partnership investment',
+    'partner': 'partnership'
+  };
+  return descriptions[formType] || 'form';
+}
+
+function setupSheet() {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const headers = [
+    'Timestamp', 'Name', 'Email', 'Phone', 'Organization', 'Subject', 'Message',
+    'Form Type', 'Investment Amount', 'Preferred Date', 'Preferred Time', 'User ID', 'User Agent', 'Referrer'
+  ];
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+  sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
+  sheet.getRange(1, 1, 1, headers.length).setBackground('#D32F2F');
+  sheet.getRange(1, 1, 1, headers.length).setFontColor('white');
+}
