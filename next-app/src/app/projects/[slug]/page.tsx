@@ -8,6 +8,7 @@ import { MapPin, Calendar, Users, Building } from 'lucide-react';
 import OptimizedImage from '@/components/OptimizedImage';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { ScrollAnimationWrapper } from '@/components/animations/ScrollAnimationWrapper';
+import { FloatingBackButton } from '@/components/FloatingBackButton';
 
 export async function generateStaticParams() {
   return portfolioProjectsData.map((project) => ({
@@ -126,6 +127,7 @@ export default async function ProjectPage({
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <FloatingBackButton />
       <main className="py-16">
         <script
           type="application/ld+json"
@@ -133,13 +135,6 @@ export default async function ProjectPage({
         />
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
           <ScrollAnimationWrapper direction="top" delay={0}>
-            {/* Back Link */}
-            <a
-              href="/portfolio"
-              className="text-primary hover:text-primary/80 transition-colors mb-8 inline-flex items-center gap-2"
-            >
-              ← Back to Portfolio
-            </a>
 
             {/* Project Image */}
             {project.image && (

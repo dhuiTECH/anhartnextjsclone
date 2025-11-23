@@ -12,7 +12,7 @@ import { HeroBanner } from "@/components/shared/HeroBanner";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { StatsSection } from "@/components/shared/StatsSection";
 import OptimizedImage from "@/components/OptimizedImage";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { projectStructuredData } from "@/lib/structuredData";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { generateProjectSlug } from "@/lib/slug";
@@ -44,6 +44,29 @@ const Portfolio = () => {
 
   // projects data extracted to @/data/portfolio-detailed.ts
   const projects = portfolioDetailedProjects;
+
+  // Scroll position restoration
+  useEffect(() => {
+    // Restore scroll position when component mounts
+    const savedScrollPosition = sessionStorage.getItem('portfolioScrollPosition');
+    if (savedScrollPosition) {
+      // Use setTimeout to ensure DOM is fully rendered before scrolling
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPosition));
+        sessionStorage.removeItem('portfolioScrollPosition');
+      }, 100);
+    }
+  }, []);
+
+  // Save scroll position when leaving the page
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      sessionStorage.setItem('portfolioScrollPosition', String(window.scrollY));
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
 
   /**
    * Handles project card click to open detailed modal view
@@ -175,6 +198,7 @@ const Portfolio = () => {
 
                       <Link
                         href={`/projects/${generateProjectSlug(project.title)}`}
+                        onClick={() => sessionStorage.setItem('portfolioScrollPosition', String(window.scrollY))}
                         className="w-full inline-flex items-center justify-center bg-primary hover:bg-primary/90 text-primary-foreground transition-colors px-4 py-2 rounded-md font-medium"
                         aria-label={`View details for ${project.title}`}
                       >
