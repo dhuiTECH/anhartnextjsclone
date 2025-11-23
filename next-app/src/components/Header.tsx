@@ -240,9 +240,7 @@ const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
   };
 
   return (
-    <>
-      {" "}
-      {/* REFACTORED: No more wrapper div */}
+    <div className="relative h-full flex items-center">
       <button
         className="header-nav-link flex items-center h-full px-5"
         onClick={() => setOpen(!open)}
@@ -257,11 +255,10 @@ const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
         />
       </button>
       <div
-        className={`fixed right-4 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${
+        className={`absolute left-0 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${
           open ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         style={{
-          // FIX: Subtract 1px to overlap the border and kill the gap
           top: `${headerHeight - 1}px`,
           maxHeight: `calc(100vh - ${headerHeight}px)`,
           height: "auto",
@@ -295,7 +292,7 @@ const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -358,7 +355,7 @@ const ConnectButton = ({ items, open, setOpen, isScrolled }: any) => {
       </button>
 
       <div
-        className={`fixed right-4 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${
+        className={`absolute right-0 w-[450px] z-50 transition-opacity duration-[50ms] pt-4 ${
           open ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
         style={{
