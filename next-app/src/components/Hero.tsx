@@ -37,6 +37,8 @@ export const Hero = () => {
     phone: "",
     location: "",
     message: "",
+    preferredDate: "",
+    preferredTime: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -93,6 +95,8 @@ export const Hero = () => {
           phone: "",
           location: "",
           message: "",
+          preferredDate: "",
+          preferredTime: "",
         });
         setTurnstileToken(null);
         setTurnstileKey((prev) => prev + 1);
@@ -359,6 +363,30 @@ export const Hero = () => {
                             className="mt-0.5"
                           />
                         </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <Label htmlFor="preferredDate" className="text-sm">Preferred Date</Label>
+                            <Input
+                              id="preferredDate"
+                              name="preferredDate"
+                              type="date"
+                              value={formData.preferredDate}
+                              onChange={handleInputChange}
+                              className="mt-0.5 h-9 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="preferredTime" className="text-sm">Preferred Time</Label>
+                            <Input
+                              id="preferredTime"
+                              name="preferredTime"
+                              type="time"
+                              value={formData.preferredTime}
+                              onChange={handleInputChange}
+                              className="mt-0.5 h-9 text-sm"
+                            />
+                          </div>
+                        </div>
                         {!isSuccess && (
                           <div className="flex justify-center py-1" key={turnstileKey}>
                             <Turnstile
@@ -505,6 +533,30 @@ export const Hero = () => {
                             required
                             className="mt-0.5"
                           />
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <Label htmlFor="preferredDate" className="text-sm">Preferred Date</Label>
+                            <Input
+                              id="preferredDate"
+                              name="preferredDate"
+                              type="date"
+                              value={formData.preferredDate}
+                              onChange={handleInputChange}
+                              className="mt-0.5 h-9 text-sm"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="preferredTime" className="text-sm">Preferred Time</Label>
+                            <Input
+                              id="preferredTime"
+                              name="preferredTime"
+                              type="time"
+                              value={formData.preferredTime}
+                              onChange={handleInputChange}
+                              className="mt-0.5 h-9 text-sm"
+                            />
+                          </div>
                         </div>
                         {!isSuccess && (
                           <div className="flex justify-center py-1" key={turnstileKey}>
