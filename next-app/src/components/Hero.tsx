@@ -18,9 +18,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Turnstile } from "@/components/Turnstile";
-import TimePicker from "react-time-picker";
-import "react-time-picker/dist/TimePicker.css";
-import "react-clock/dist/Clock.css";
 
 const anhartLogoWebpSrc =
   typeof anhartLogoWebp === "string" ? anhartLogoWebp : anhartLogoWebp?.src || "";
@@ -70,10 +67,6 @@ export const Hero = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleTimeChange = (value: string | null) => {
-    setFormData({ ...formData, preferredTime: value || "" });
   };
 
   const handleSubmit = async (e) => {
@@ -384,14 +377,14 @@ export const Hero = () => {
                           </div>
                           <div>
                             <Label htmlFor="preferredTime" className="text-sm">Preferred Time</Label>
-                            <div className="mt-0.5">
-                              <TimePicker
-                                onChange={handleTimeChange}
-                                value={formData.preferredTime || null}
-                                disableClock={false}
-                                clockIcon={null}
-                              />
-                            </div>
+                            <Input
+                              id="preferredTime"
+                              name="preferredTime"
+                              type="time"
+                              value={formData.preferredTime}
+                              onChange={handleInputChange}
+                              className="mt-0.5 h-9 text-sm"
+                            />
                           </div>
                         </div>
                         {!isSuccess && (
@@ -555,14 +548,14 @@ export const Hero = () => {
                           </div>
                           <div>
                             <Label htmlFor="preferredTime" className="text-sm">Preferred Time</Label>
-                            <div className="mt-0.5">
-                              <TimePicker
-                                onChange={handleTimeChange}
-                                value={formData.preferredTime || null}
-                                disableClock={false}
-                                clockIcon={null}
-                              />
-                            </div>
+                            <Input
+                              id="preferredTime"
+                              name="preferredTime"
+                              type="time"
+                              value={formData.preferredTime}
+                              onChange={handleInputChange}
+                              className="mt-0.5 h-9 text-sm"
+                            />
                           </div>
                         </div>
                         {!isSuccess && (
