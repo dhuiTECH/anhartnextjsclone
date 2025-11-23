@@ -71,17 +71,6 @@ export const Hero = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const openDatePicker = () => {
-    if (dateInputRef.current) {
-      dateInputRef.current.showPicker?.();
-    }
-  };
-
-  const openTimePicker = () => {
-    if (timeInputRef.current) {
-      timeInputRef.current.showPicker?.();
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -387,9 +376,7 @@ export const Hero = () => {
                               type="date"
                               value={formData.preferredDate}
                               onChange={handleInputChange}
-                              onClick={openDatePicker}
-                              onFocus={openDatePicker}
-                              className="mt-0.5 h-9 text-sm cursor-pointer"
+                              className="mt-0.5 h-9 text-sm"
                             />
                           </div>
                           <div>
@@ -401,9 +388,7 @@ export const Hero = () => {
                               type="time"
                               value={formData.preferredTime}
                               onChange={handleInputChange}
-                              onClick={openTimePicker}
-                              onFocus={openTimePicker}
-                              className="mt-0.5 h-9 text-sm cursor-pointer"
+                              className="mt-0.5 h-9 text-sm"
                             />
                           </div>
                         </div>
@@ -564,9 +549,7 @@ export const Hero = () => {
                               type="date"
                               value={formData.preferredDate}
                               onChange={handleInputChange}
-                              onClick={openDatePicker}
-                              onFocus={openDatePicker}
-                              className="mt-0.5 h-9 text-sm cursor-pointer"
+                              className="mt-0.5 h-9 text-sm"
                             />
                           </div>
                           <div>
@@ -578,9 +561,7 @@ export const Hero = () => {
                               type="time"
                               value={formData.preferredTime}
                               onChange={handleInputChange}
-                              onClick={openTimePicker}
-                              onFocus={openTimePicker}
-                              className="mt-0.5 h-9 text-sm cursor-pointer"
+                              className="mt-0.5 h-9 text-sm"
                             />
                           </div>
                         </div>
