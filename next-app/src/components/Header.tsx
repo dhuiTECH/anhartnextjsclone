@@ -124,7 +124,7 @@ export const Header = () => {
       <header className={`header ${isScrolled ? "shrunk" : ""}`}>
         <nav className="w-full flex items-center justify-between px-3 lg:px-10 h-full">
           {/* Left side: Logo */}
-          <div className="flex items-center gap-x-6 h-full py-2">
+          <div className="flex items-center gap-x-6 h-full py-4">
             <a href="/" className="flex items-center">
               <picture>
                 <source srcSet={anhartLogoWebp} type="image/webp" />
@@ -166,7 +166,7 @@ export const Header = () => {
           </div>
 
           {/* Right side: About + Portfolio + Connect With Us button */}
-          <div className="hidden lg:flex h-full items-center gap-x-6">
+          <div className="hidden lg:flex h-full items-center gap-x-6 py-4">
             <div className="flex h-full text-lg">
               <Dropdown
                 title="About"
