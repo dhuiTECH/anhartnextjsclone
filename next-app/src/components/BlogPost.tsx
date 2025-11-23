@@ -164,7 +164,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
       <Header />
       <main>
         {/* Hero Section with Featured Image */}
-        <section className="relative w-full h-[800px] overflow-hidden pb-3">
+        <section className="relative w-full h-[300px] sm:h-[400px] md:h-[600px] lg:h-[800px] overflow-visible pb-3">
           <div className="absolute inset-0 bg-muted">
             <img
               src={normalizeImageUrl(post.featuredImage)}
@@ -182,7 +182,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           </div>
-          <div className="relative min-h-[600px] md:min-h-[700px] flex items-end">
+          <div className="relative min-h-[300px] sm:min-h-[350px] md:min-h-[600px] lg:min-h-[700px] flex items-end">
             <div className="mx-auto max-w-4xl px-6 lg:px-8 pb-16 pt-32 w-full">
               <ScrollAnimationWrapper direction="bottom">
                 <Link
@@ -235,8 +235,8 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
         </section>
 
         {/* Article Content */}
-        <section className="py-16 bg-background">
-          <div className="mx-auto max-w-4xl px-6 lg:px-8">
+        <section className="py-8 sm:py-12 md:py-16 bg-background w-full overflow-x-hidden">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 w-full">
             <ScrollAnimationWrapper direction="bottom">
               <style jsx global>{`
                 .prose pre {
@@ -248,6 +248,8 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                   border-radius: 0.5em !important;
                   overflow-x: auto !important;
                   margin: 1.5em 0 !important;
+                  max-width: 100% !important;
+                  word-break: break-word !important;
                 }
                 .prose pre code {
                   background: none !important;
@@ -255,6 +257,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                   font-size: 0.9em !important;
                   padding: 0 !important;
                   border-radius: 0 !important;
+                  word-break: break-word !important;
                 }
                 .prose code {
                   background: #f3f4f6 !important;
@@ -264,13 +267,27 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                   font-family:
                     "JetBrainsMono", "Fira Code", "Courier New", monospace !important;
                   font-size: 0.9em !important;
+                  word-break: break-word !important;
                 }
                 .prose pre code.hljs {
                   padding: 0 !important;
                 }
+                .prose {
+                  width: 100% !important;
+                  overflow-x: auto !important;
+                }
+                .prose p, .prose li, .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+                  word-break: break-word !important;
+                  overflow-wrap: break-word !important;
+                }
+                .prose img {
+                  max-width: 100% !important;
+                  height: auto !important;
+                }
               `}</style>
-              <article className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary hover:prose-a:text-primary-dark prose-strong:text-foreground prose-img:rounded-lg prose-img:shadow-lg">
+              <article className="prose sm:prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary hover:prose-a:text-primary-dark prose-strong:text-foreground prose-img:rounded-lg prose-img:shadow-lg w-full">
                 <div 
+                  className="w-full overflow-x-hidden"
                   dangerouslySetInnerHTML={{ 
                     __html: post.content
                   }} 
