@@ -15,6 +15,8 @@ import OptimizedImage from "@/components/OptimizedImage";
 import { useState } from "react";
 import { projectStructuredData } from "@/lib/structuredData";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
+import { generateProjectSlug } from "@/lib/slug";
+import Link from "next/link";
 
 // =============================================================================
 // EXTRACTED DATA IMPORTS
@@ -171,14 +173,14 @@ const Portfolio = () => {
                         </div>
                       </div>
 
-                      <Button
-                        onClick={() => handleViewDetails(project)}
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-colors"
+                      <Link
+                        href={`/projects/${generateProjectSlug(project.title)}`}
+                        className="w-full inline-flex items-center justify-center bg-primary hover:bg-primary/90 text-primary-foreground transition-colors px-4 py-2 rounded-md font-medium"
                         aria-label={`View details for ${project.title}`}
                       >
                         View Details
                         <ExternalLink className="w-4 h-4 ml-2" />
-                      </Button>
+                      </Link>
                     </CardContent>
                   </Card>
                 </ScrollAnimationWrapper>
