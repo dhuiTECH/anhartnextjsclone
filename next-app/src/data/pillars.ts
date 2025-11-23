@@ -42,7 +42,7 @@ export const howDoWeDoItPillars = [
     image: "expert-consultation",
     backTitle: "Altruism in Action",
     backDescription:
-      "A key part of our system involves guiding impact investors to secure patient capital, ensuring financial goals are aligned with long-term community well-being. We make it easy to help navigate the financing process, breaking down complexities so partners can focus on creating housing solutions.",
+      "A key part of our system involves guiding impact investors to secure patient capital, ensuring financial goals are aligned with long-term community well-being.",
     backImage: "systemsNetwork",
   },
   {
