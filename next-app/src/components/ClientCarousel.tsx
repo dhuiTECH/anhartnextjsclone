@@ -15,7 +15,7 @@ import SVImg from "@/assets/SV.png";
 import TPOSImg from "@/assets/TPOS.png";
 import GLCImg from "@/assets/GLC.png";
 import ATCOImg from "@/assets/partnercarousel/atco.jpg";
-import LCLAImg from "@/assets/partnercarousel/lcla.jpg";
+import LCLAImg from "@/assets/partnercarousel/lcla.png";
 import MWGImg from "@/assets/partnercarousel/markwilson.jpg";
 
 // Helper to extract .src from Next.js static imports
