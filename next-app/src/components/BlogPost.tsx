@@ -358,8 +358,8 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
         )}
 
         {/* CTA Section */}
-        <section className="py-8 sm:py-12 md:py-16 bg-background">
-          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+        <section className="py-16 bg-background">
+          <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
             <ScrollAnimationWrapper direction="bottom">
               <h2 className="text-3xl font-bold text-foreground mb-4">
                 Learn More About Our Work
