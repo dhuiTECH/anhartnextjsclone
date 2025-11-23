@@ -35,12 +35,15 @@ declare namespace __next_route_internal_types__ {
     | `/`
     | `/about`
     | `/about-us`
+    | `/admin/dashboard`
+    | `/admin/login`
     | `/blog`
     | `/contact`
     | `/contact-us`
     | `/limited-partnership`
     | `/media`
     | `/member-login`
+    | `/member/dashboard`
     | `/partner`
     | `/partners`
     | `/portfolio`
@@ -50,7 +53,10 @@ declare namespace __next_route_internal_types__ {
     | `/this-is-us`
     | `/what-is-anhart`
     | `/wp-admin`
-  type DynamicRoutes<T extends string = string> = never
+  type DynamicRoutes<T extends string = string> = 
+    | `/blog/${SafeSlug<T>}`
+    | `/projects/${SafeSlug<T>}`
+    | `/wp-content/${CatchAllSlug<T>}`
 
   type RouteImpl<T> = 
     | StaticRoutes
@@ -173,11 +179,6 @@ declare module 'next/form' {
      * - If `action` is a function, it will be called when the form is submitted. See the [React docs](https://react.dev/reference/react-dom/components/form#props) for more.
      */
     action: __next_route_internal_types__.RouteImpl<RouteInferType> | ((formData: FormData) => void)
-  } & FormRestProps
-
-  export default function Form<RouteType>(props: FormProps<RouteType>): JSX.Element
-}
-_.RouteImpl<RouteInferType> | ((formData: FormData) => void)
   } & FormRestProps
 
   export default function Form<RouteType>(props: FormProps<RouteType>): JSX.Element

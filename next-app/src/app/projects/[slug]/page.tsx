@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { notFound } from 'next/navigation';
-import { portfolioDetailedProjects } from '@/data';
+import { portfolioProjects } from '@/data/portfolio';
 import { generateProjectSlug, getProjectBySlug } from '@/lib/slug';
 import { MapPin, Calendar, Users, Building } from 'lucide-react';
 import OptimizedImage from '@/components/OptimizedImage';
@@ -10,7 +10,7 @@ import { StatusBadge } from '@/components/shared/StatusBadge';
 import { ScrollAnimationWrapper } from '@/components/animations/ScrollAnimationWrapper';
 
 export async function generateStaticParams() {
-  return portfolioDetailedProjects.map((project) => ({
+  return portfolioProjects.map((project) => ({
     slug: generateProjectSlug(project.title),
   }));
 }
@@ -21,7 +21,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProjectBySlug(slug, portfolioDetailedProjects);
+  const project = getProjectBySlug(slug, portfolioProjects);
 
   if (!project) {
     return {
@@ -118,7 +118,7 @@ export default async function ProjectPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const project = getProjectBySlug(slug, portfolioDetailedProjects);
+  const project = getProjectBySlug(slug, portfolioProjects);
 
   if (!project) {
     notFound();
