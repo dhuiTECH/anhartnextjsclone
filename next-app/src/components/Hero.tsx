@@ -68,7 +68,18 @@ export const Hero = () => {
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    let value = e.target.value;
+    
+    // Validate date format to only allow YYYY-MM-DD
+    if (e.target.name === "preferredDate" && value) {
+      const parts = value.split("-");
+      if (parts[0] && parts[0].length > 4) {
+        // Truncate year to 4 digits
+        value = value.substring(0, 4) + (value.length > 4 ? value.substring(4) : "");
+      }
+    }
+    
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
 
