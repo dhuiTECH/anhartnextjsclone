@@ -718,7 +718,7 @@ const Media = () => {
               {mediaGallery.map((item, index) => {
               const MediaIcon = getMediaIcon(item.type);
               return <ScrollAnimationWrapper key={item.id} direction="bottom" delay={200 + index * 50}>
-                  <Card className="overflow-hidden hover:shadow-sm sm:hover:shadow-lg transition-shadow duration-300 group">
+                  <Card className="h-full flex flex-col overflow-hidden hover:shadow-sm sm:hover:shadow-lg transition-shadow duration-300 group">
                       <div onClick={() => openVideoModal(item)} className="relative h-48 rounded-xl overflow-hidden group cursor-pointer bg-muted">
                         <img 
                           src={item.thumbnail} 
@@ -750,7 +750,7 @@ const Media = () => {
                         <CardTitle className="text-lg line-clamp-2">{item.title}</CardTitle>
                       </CardHeader>
                       
-                      <CardContent>
+                      <CardContent className="flex-1 flex flex-col justify-between">
                         <p className="text-muted-foreground mb-4 text-sm">{item.description}</p>
                         <Button variant="outline" size="sm" className="w-full" onClick={() => openVideoModal(item)}>
                           View Video
