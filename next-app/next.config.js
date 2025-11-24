@@ -24,11 +24,42 @@ const nextConfig = {
     esmExternals: true,
   },
   
-  // Headers to improve CSS loading performance
+  // Headers to improve CSS loading performance and Core Web Vitals
   async headers() {
     return [
       {
         source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/mediaAssets/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+          {
+            key: 'Content-Type',
+            value: 'video/:ext*',
+          },
+        ],
+      },
+      {
+        source: '/images/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/assets/:path*',
         headers: [
           {
             key: 'Cache-Control',
