@@ -357,33 +357,23 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
           </section>
         )}
 
-        {/* CTA Section */}
+        {/* Partnership CTA Section */}
         <section className="py-16 bg-background">
           <div className="mx-auto max-w-4xl px-6 lg:px-8 text-center">
             <ScrollAnimationWrapper direction="bottom">
               <h2 className="text-3xl font-bold text-foreground mb-4">
-                Learn More About Our Work
+                Ready for Partnerships?
               </h2>
               <p className="text-lg text-muted-foreground mb-8">
-                Discover how Anhart is creating quality affordable housing
-                across British Columbia
+                Ready to explore partnerships to build affordable homes and communities? Let's discuss how we can work together to create sustainable housing solutions across Canada.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/portfolio"
-                  onClick={() => window.scrollTo(0, 0)}
-                  className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-base font-semibold text-primary-foreground hover:bg-primary-dark transition-colors"
-                >
-                  View Our Projects
-                </Link>
-                <Link
-                  href="/contact"
-                  onClick={() => window.scrollTo(0, 0)}
-                  className="inline-flex items-center justify-center rounded-md border border-border bg-background px-6 py-3 text-base font-semibold text-foreground hover:bg-muted transition-colors"
-                >
-                  Get in Touch
-                </Link>
-              </div>
+              <Link
+                href="/contact"
+                onClick={() => window.scrollTo(0, 0)}
+                className="inline-flex items-center justify-center rounded-md bg-primary px-8 py-3 text-base font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
+              >
+                Contact Us
+              </Link>
             </ScrollAnimationWrapper>
           </div>
         </section>
