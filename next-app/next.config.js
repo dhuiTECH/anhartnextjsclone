@@ -12,12 +12,6 @@ const nextConfig = {
     ignoreDuringBuilds: process.env.NODE_ENV === 'production',
   },
   experimental: {
-    // Enable CSS optimization to inline critical CSS and defer non-critical CSS
-    // This reduces render-blocking resources and improves LCP
-    // Next.js uses Critters to automatically inline critical CSS and defer non-critical CSS
-    // Critical CSS (above-the-fold) is inlined in <style> tags
-    // Non-critical CSS is loaded asynchronously with media="print" and swapped to "all" on load
-    optimizeCss: true,
     // Optimize package imports to reduce bundle size
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
     // Ensure modern browser targets are used to avoid unnecessary polyfills
