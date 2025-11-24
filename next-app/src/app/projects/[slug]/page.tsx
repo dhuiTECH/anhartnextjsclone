@@ -227,15 +227,15 @@ export default async function ProjectPage({
 
             {/* CTA Section */}
             <div className="bg-muted/30 rounded-lg p-8 text-center">
-              <h3 className="text-2xl font-bold text-foreground mb-4">Learn More About Our Work</h3>
+              <h3 className="text-2xl font-bold text-foreground mb-4">Ready for Partnerships?</h3>
               <p className="text-muted-foreground mb-6">
-                Anhart is committed to building 20,000 affordable homes by 2045. Explore more of our projects and initiatives.
+                We're building 20,000 affordable homes by 2045. If you're ready to explore partnerships or collaborate with us to build thriving affordable communities, let's connect.
               </p>
               <a
-                href="/portfolio"
+                href="/contact"
                 className="inline-block px-8 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors font-semibold"
               >
-                View All Projects
+                Contact Us
               </a>
             </div>
           </ScrollAnimationWrapper>
