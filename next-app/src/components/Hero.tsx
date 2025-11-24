@@ -156,13 +156,6 @@ export const Hero = () => {
   }, []);
 
   useEffect(() => {
-    // PSI-only fallback — real users see full video
-    if (videoRef.current && document.documentElement.dataset.psiMode === "true") {
-      videoRef.current.style.display = "none";
-    }
-  }, []);
-
-  useEffect(() => {
     if (!isMobile) {
       // Disable parallax on mobile
       let rafId: number | null = null;
