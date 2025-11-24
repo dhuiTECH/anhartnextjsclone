@@ -430,6 +430,13 @@ const MobileMenu = ({
 
     <div className="px-6 py-6">
       <nav className="space-y-2" role="navigation">
+        <a
+          href="/"
+          className="block px-4 py-3 text-base font-semibold text-foreground hover:text-primary rounded-lg transition-all duration-200"
+          onClick={closeMenu}
+        >
+          Home
+        </a>
         {navigation.map((item: any) => (
           <a
             key={item.name}
