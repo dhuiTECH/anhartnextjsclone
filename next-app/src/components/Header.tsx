@@ -89,19 +89,22 @@ export const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Esc key to close mobile menu
+  // Esc key to close mobile menu and lock body scroll
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && mobileMenuOpen) setMobileMenuOpen(false);
     };
     if (mobileMenuOpen) {
       document.addEventListener("keydown", handleEscape);
-      document.body.style.overflow = "";
+      // Lock body scroll when menu is open
+      document.body.style.overflow = "hidden";
     } else {
+      // Restore body scroll when menu is closed
       document.body.style.overflow = "";
     }
     return () => {
       document.removeEventListener("keydown", handleEscape);
+      // Cleanup: restore scroll when component unmounts
       document.body.style.overflow = "";
     };
   }, [mobileMenuOpen]);
