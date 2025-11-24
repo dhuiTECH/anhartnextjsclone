@@ -15,14 +15,14 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.anhart.ca"),
   title: {
-    default: "Anhart – Affordable Housing Developer in Canada",
+    default: "Anhart - Affordable Housing Developer in Canada",
     template: "%s | Anhart",
   },
   description:
     "Anhart is a vertically integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045.",
   alternates: { canonical: "https://www.anhart.ca" },
   openGraph: {
-    title: "Anhart – Affordable Housing Developer in Canada",
+    title: "Anhart - Affordable Housing Developer in Canada",
     description:
       "Anhart is a vertically integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045.",
     url: "https://www.anhart.ca",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Anhart – Affordable Housing Developer in Canada",
+    title: "Anhart - Affordable Housing Developer in Canada",
     description:
       "Anhart is a vertically integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045.",
     images: ["/og-image.jpg"],
