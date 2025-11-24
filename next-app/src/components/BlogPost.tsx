@@ -183,28 +183,28 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           </div>
           <div className="relative min-h-[300px] sm:min-h-[350px] md:min-h-[600px] lg:min-h-[700px] flex items-end">
-            <div className="mx-auto max-w-4xl px-6 lg:px-8 pb-16 pt-32 w-full">
+            <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 pb-8 sm:pb-16 pt-12 sm:pt-32 w-full">
               <ScrollAnimationWrapper direction="bottom">
                 <Link
                   href="/blog"
-                  className="inline-flex items-center text-white hover:text-primary mb-6 transition-colors group"
+                  className="inline-flex items-center text-white hover:text-primary mb-4 sm:mb-6 transition-colors group text-sm sm:text-base"
                 >
                   <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
                   Back to Blog
                 </Link>
 
-                <div className="flex items-center gap-4 mb-6">
-                  <Badge className="bg-primary text-primary-foreground">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
+                  <Badge className="bg-primary text-primary-foreground text-xs sm:text-sm">
                     {post.category}
                   </Badge>
-                  <div className="flex items-center text-white/90">
-                    <Calendar className="mr-2 h-4 w-4" />
+                  <div className="flex items-center text-white/90 text-xs sm:text-sm">
+                    <Calendar className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
                     <span>{formatDate(post.publishDate)}</span>
                   </div>
                 </div>
 
                 <h1 
-                  className="text-4xl md:text-5xl font-bold text-white mb-4"
+                  className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 leading-tight"
                   style={{
                     textShadow: '2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.7)'
                   }}
@@ -213,7 +213,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                 </h1>
                 {post.subtitle && (
                   <p 
-                    className="text-xl text-white/90 font-light mb-4 max-w-3xl italic"
+                    className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 font-light mb-3 sm:mb-4 max-w-3xl italic leading-snug"
                     style={{
                       textShadow: '1px 1px 6px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 0, 0, 0.4)'
                     }}
@@ -222,7 +222,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                   </p>
                 )}
                 <p 
-                  className="text-md text-white/80 max-w-xl"
+                  className="text-xs sm:text-sm md:text-base text-white/80 max-w-xl leading-relaxed"
                   style={{
                     textShadow: '1px 1px 4px rgba(0, 0, 0, 0.6)'
                   }}
