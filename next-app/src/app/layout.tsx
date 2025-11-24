@@ -71,20 +71,13 @@ export default function RootLayout({
   return (
     <html lang="en-CA">
       <head>
-        {/* Preconnect to same origin first for faster CSS/JS loading */}
         <link rel="preconnect" href="https://www.anhart.ca" crossOrigin="anonymous" />
-        
-        {/* Preconnect to Google Fonts (critical for LCP) - use preconnect, not just dns-prefetch */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
-        {/* Preconnect to critical third-party origins for faster page load */}
         <link rel="preconnect" href="https://hxqbbyglhubcgfkbqltu.supabase.co" />
         <link rel="dns-prefetch" href="https://hxqbbyglhubcgfkbqltu.supabase.co" />
         <link rel="preconnect" href="https://challenges.cloudflare.com" />
         <link rel="dns-prefetch" href="https://challenges.cloudflare.com" />
-        
-        {/* Preload LCP video - Hero background video is likely the LCP element */}
         <link
           rel="preload"
           href="/mediaAssets/hero-background-video.mp4"
@@ -92,9 +85,6 @@ export default function RootLayout({
           type="video/mp4"
           fetchPriority="high"
         />
-        
-        {/* Preload critical images for LCP optimization */}
-        {/* These will be discovered earlier by the HTML parser */}
         <link
           rel="preload"
           href="/images/anhart-logo-text.webp"
@@ -109,17 +99,12 @@ export default function RootLayout({
           type="image/png"
           fetchPriority="high"
         />
-        
-        {/* Preload inter font for better LCP */}
         <link
           rel="preload"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
           as="style"
           fetchPriority="high"
         />
-        
-        
-        {/* Google Analytics - loaded async for non-blocking */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`}
           strategy="afterInteractive"
@@ -139,21 +124,16 @@ export default function RootLayout({
             `,
           }}
         />
-        
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={inter.className}>
-        <Providers>{children}</Providers>
-        {/* Cloudflare Turnstile Script - loaded after interactive for non-blocking */}
-        <Script
+      <body className={inter.className}><Providers>{children}</Providers><Script
           src="https://challenges.cloudflare.com/turnstile/v0/api.js"
           strategy="afterInteractive"
           async
-        />
-      </body>
+        /></body>
     </html>
   );
 }
