@@ -222,7 +222,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                   </p>
                 )}
                 <p 
-                  className="text-xs sm:text-sm md:text-base text-white/80 max-w-xl leading-relaxed"
+                  className="hidden sm:block text-xs sm:text-sm md:text-base text-white/80 max-w-xl leading-relaxed"
                   style={{
                     textShadow: '1px 1px 4px rgba(0, 0, 0, 0.6)'
                   }}
