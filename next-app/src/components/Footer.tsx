@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, Fragment } from "react";
+import React, { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -123,10 +123,10 @@ export const Footer = () => {
                       </h4>
                       <button onClick={() => openGoogleMapsSearch(AddressUtils.getGoogleMapsAddress())} className="block text-sm leading-6 text-background/80 hover:text-background transition-colors duration-200 group text-left focus:outline-none focus:ring-2 focus:ring-background/50 focus:ring-opacity-50 rounded p-1">
                         <address className="not-italic group-hover:underline">
-                          {AddressUtils.getAddressLines().map((line, index) => <Fragment key={index}>
+                          {AddressUtils.getAddressLines().map((line, index) => <React.Fragment key={index}>
                               {line}
                               {index < AddressUtils.getAddressLines().length - 1 && <br />}
-                            </Fragment>)}
+                            </React.Fragment>)}
                         </address>
                       </button>
                     </div>

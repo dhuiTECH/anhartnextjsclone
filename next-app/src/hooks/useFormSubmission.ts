@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
+// ... (Interface FormData and validateFormData/isValidEmail are unchanged)
+
 interface FormData {
   name: string;
   email: string;

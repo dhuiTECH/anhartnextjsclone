@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ImageService } from '@/services/imageService';
 import { ImageSize, ImageFormat, ImageCategory } from '@/types/images';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -54,7 +54,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   const finalLoading = loading || config.loading;
 
   // Safety timeout: force image to be visible after 2 seconds even if onLoad doesn't fire
-  useEffect(() => {
+  React.useEffect(() => {
     const timer = setTimeout(() => {
       if (!isLoaded && !hasError) {
         console.warn(`Image ${imageName} load event didn't fire, making visible anyway`);

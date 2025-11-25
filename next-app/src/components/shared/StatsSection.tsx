@@ -1,3 +1,4 @@
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { ScrollAnimationWrapper } from '@/components/animations/ScrollAnimationWrapper';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { X, ChevronLeft, ChevronRight, BarChart3, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PerformanceSummary from "./metrics/PerformanceSummary";

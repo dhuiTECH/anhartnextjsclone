@@ -1,3 +1,4 @@
+import React from "react";
 import comBuildImg from "@/assets/partnercarousel/communitybuilder.jpg";
 import AACImg from "@/assets/partnercarousel/AAC.png";
 import cleanStartImg from "@/assets/partnercarousel/cleanstart.png";

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect, Children } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -66,7 +66,7 @@ export const HorizontalScrollCarousel: React.FC<{
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(0);
-  const childrenArray = Children.toArray(children);
+  const childrenArray = React.Children.toArray(children);
   const totalPages = Math.ceil(childrenArray.length / itemsPerPage);
 
   /**
@@ -413,7 +413,7 @@ export const HorizontalScrollCarousel: React.FC<{
             'md:grid md:grid-cols-2 lg:grid-cols-3', // Desktop: Grid layout
             'md:gap-8'
           )}>
-            {Children.map(children, (child, index) => (
+            {React.Children.map(children, (child, index) => (
               <div
                 key={index}
                 className={cn(

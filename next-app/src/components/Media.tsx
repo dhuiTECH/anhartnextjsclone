@@ -9,7 +9,7 @@ import { AlertCircle, Play, Image, Newspaper, Calendar, ExternalLink, FileText, 
 import { HeroBanner } from "@/components/shared/HeroBanner";
 import { HorizontalScrollCarousel } from "@/components/shared/HorizontalScrollCarousel";
 import { MediaItem, PdfDocument, PressRelease } from "@/types/common";
-import { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 // Hero image now uses image registry system
 
