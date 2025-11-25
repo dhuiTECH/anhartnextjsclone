@@ -100,9 +100,7 @@ interface ProjectGalleryModalProps {
   onClose: () => void;
   projects: ProjectData[];
 }
-export const ProjectGalleryModal: React.FC<{
-  children?: React.ReactNode;
-}> = ({ isOpen, onClose, projects, children }) => {
+export const ProjectGalleryModal: React.FC<ProjectGalleryModalProps> = ({ isOpen, onClose, projects, children }) => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "completed":

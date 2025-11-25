@@ -234,10 +234,9 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
                     </div>
 
                     {project.status && (
-                      <StatusBadge
-                        status={project.status}
-                        className="self-start text-sm px-3 py-1"
-                      />
+                      <div className="self-start text-sm px-3 py-1 rounded-md bg-green-100 text-green-800 border border-green-200">
+                        {project.status}
+                      </div>
                     )}
                   </div>
 
