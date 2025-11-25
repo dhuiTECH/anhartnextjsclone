@@ -124,10 +124,10 @@ export const Header = () => {
 
   return (
     <>
-      <header className={`header ${isScrolled ? "shrunk" : ""}`}>
-        <nav className="w-full flex items-center justify-between px-3 lg:px-10 h-full">
+      <header className={`header ${isScrolled ? "shrunk" : ""} pt-1`}>
+        <nav className="w-full flex items-center justify-between px-3 lg:px-12 h-full">
           {/* Left side: Logo */}
-          <div className="flex items-center gap-x-6 h-full pt-2 pb-4">
+          <div className="flex items-center gap-x-6 h-full pt-1 pb-2">
             <a href="/" className="flex items-center">
               <picture>
                 <source srcSet={anhartLogoWebp} type="image/webp" />
@@ -169,7 +169,7 @@ export const Header = () => {
           </div>
 
           {/* Right side: About + Portfolio + Connect With Us button */}
-          <div className="hidden lg:flex h-full items-center gap-x-6 pt-2 pb-4">
+          <div className="hidden lg:flex h-full items-center gap-x-6">
             <div className="flex h-full text-lg">
               <Dropdown
                 title="About"
@@ -224,7 +224,7 @@ export const Header = () => {
 
 const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
   // NOTE: Ensure these numbers match your CSS .header height EXACTLY
-  const headerHeight = isScrolled ? 64 : 72;
+  const headerHeight = isScrolled ? 64 : 70;
 
   // Use a ref to manage the timeout so we can clear it if the user moves mouse back
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -300,7 +300,7 @@ const Dropdown = ({ title, items, open, setOpen, isScrolled }: any) => {
 };
 
 const ConnectButton = ({ items, open, setOpen, isScrolled }: any) => {
-  const headerHeight = isScrolled ? 64 : 72;
+  const headerHeight = isScrolled ? 68 : 76;
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleMouseEnter = () => {

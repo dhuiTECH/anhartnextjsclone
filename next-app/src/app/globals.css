@@ -262,7 +262,7 @@ html {
     @apply sticky top-0 z-50 bg-background/95 backdrop-blur-sm;
     will-change: transform, height, padding;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    height: 72px;
+    height: 76px;
 
     padding: 0; 
   
