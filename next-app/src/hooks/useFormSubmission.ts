@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 // ... (Interface FormData and validateFormData/isValidEmail are unchanged)
 
