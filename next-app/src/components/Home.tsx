@@ -51,8 +51,16 @@ import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
-import ProjectModal from "@/components/ProjectModal";
-import { ProjectGalleryModal } from "@/components/ProjectGalleryModal";
+// Dynamically import modals to reduce initial bundle size
+import dynamic from 'next/dynamic';
+const ProjectModal = dynamic(() => import("@/components/ProjectModal").then(mod => mod.default), {
+  ssr: false,
+  loading: () => null, // Modals handle their own loading state
+});
+const ProjectGalleryModal = dynamic(() => import("@/components/ProjectGalleryModal").then(mod => mod.ProjectGalleryModal), {
+  ssr: false,
+  loading: () => null,
+});
 import { ClientCarousel } from "@/components/ClientCarousel";
 import { GlobalPartners } from "@/components/GlobalPartners";
 import { ThreeCardSection } from "@/components/shared/ThreeCardSection";
