@@ -20,7 +20,9 @@ import { Label } from "@/components/ui/label";
 import { Turnstile } from "@/components/Turnstile";
 
 const anhartLogoWebpSrc =
-  typeof anhartLogoWebp === "string" ? anhartLogoWebp : anhartLogoWebp?.src || "";
+  typeof anhartLogoWebp === "string"
+    ? anhartLogoWebp
+    : anhartLogoWebp?.src || "";
 const anhartLogoPngSrc =
   typeof anhartLogoPng === "string" ? anhartLogoPng : anhartLogoPng?.src || "";
 
@@ -69,7 +71,7 @@ export const Hero = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     let value = e.target.value;
-    
+
     // Validate date format - limit year to 4 digits
     if (e.target.name === "preferredDate" && value) {
       const match = value.match(/^(\d{0,4})(-)?(\d{0,2})?(-)?(\d{0,2})?$/);
@@ -78,13 +80,15 @@ export const Hero = () => {
       }
       // Prevent year from being longer than 4 digits
       if (value.includes("-") && value.split("-")[0].length > 4) {
-        value = value.split("-")[0].substring(0, 4) + "-" + value.split("-").slice(1).join("-");
+        value =
+          value.split("-")[0].substring(0, 4) +
+          "-" +
+          value.split("-").slice(1).join("-");
       }
     }
-    
+
     setFormData({ ...formData, [e.target.name]: value });
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -164,7 +168,7 @@ export const Hero = () => {
         if (rafId !== null) {
           cancelAnimationFrame(rafId);
         }
-        
+
         // Batch DOM reads and writes using requestAnimationFrame
         rafId = requestAnimationFrame(() => {
           const scrolled = window.pageYOffset;
@@ -206,6 +210,7 @@ export const Hero = () => {
           alt=""
           className="w-full h-full object-contain object-center"
           aria-hidden="true"
+          fetchPriority="high"
         />
       </picture>
       {/* Fallback background gradient */}
@@ -224,10 +229,14 @@ export const Hero = () => {
         muted
         playsInline
         preload="auto"
-        {...({ fetchPriority: "high" } as React.VideoHTMLAttributes<HTMLVideoElement>)}
+        {...({
+          fetchPriority: "high",
+        } as React.VideoHTMLAttributes<HTMLVideoElement>)}
         aria-label="Background video showing housing development animation"
         onError={() => {
-          console.warn("Hero background video failed to load, using fallback gradient");
+          console.warn(
+            "Hero background video failed to load, using fallback gradient",
+          );
           setVideoError(true);
         }}
       >
@@ -240,7 +249,8 @@ export const Hero = () => {
           style={{
             height: isMobile ? "100vh" : "150vh",
             minHeight: isMobile ? "100vh" : "150vh",
-            background: "linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%)",
+            background:
+              "linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%)",
           }}
           aria-hidden="true"
         />
@@ -336,7 +346,9 @@ export const Hero = () => {
                     ) : (
                       <form onSubmit={handleSubmit} className="space-y-2">
                         <div>
-                          <Label htmlFor="name" className="text-sm">Name</Label>
+                          <Label htmlFor="name" className="text-sm">
+                            Name
+                          </Label>
                           <Input
                             id="name"
                             name="name"
@@ -348,7 +360,9 @@ export const Hero = () => {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="email" className="text-sm">Email</Label>
+                          <Label htmlFor="email" className="text-sm">
+                            Email
+                          </Label>
                           <Input
                             id="email"
                             name="email"
@@ -361,7 +375,9 @@ export const Hero = () => {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="phone" className="text-sm">Phone (optional)</Label>
+                          <Label htmlFor="phone" className="text-sm">
+                            Phone (optional)
+                          </Label>
                           <Input
                             id="phone"
                             name="phone"
@@ -373,7 +389,9 @@ export const Hero = () => {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="location" className="text-sm">Location</Label>
+                          <Label htmlFor="location" className="text-sm">
+                            Location
+                          </Label>
                           <Input
                             id="location"
                             name="location"
@@ -385,7 +403,9 @@ export const Hero = () => {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="message" className="text-sm">Message</Label>
+                          <Label htmlFor="message" className="text-sm">
+                            Message
+                          </Label>
                           <Textarea
                             id="message"
                             name="message"
@@ -399,7 +419,9 @@ export const Hero = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                           <div>
-                            <Label htmlFor="preferredDate" className="text-sm">Preferred Date</Label>
+                            <Label htmlFor="preferredDate" className="text-sm">
+                              Preferred Date
+                            </Label>
                             <Input
                               ref={dateInputRef}
                               id="preferredDate"
@@ -411,7 +433,9 @@ export const Hero = () => {
                             />
                           </div>
                           <div>
-                            <Label htmlFor="preferredTime" className="text-sm">Preferred Time</Label>
+                            <Label htmlFor="preferredTime" className="text-sm">
+                              Preferred Time
+                            </Label>
                             <Input
                               ref={timeInputRef}
                               id="preferredTime"
@@ -424,7 +448,10 @@ export const Hero = () => {
                           </div>
                         </div>
                         {!isSuccess && (
-                          <div className="flex justify-center py-1" key={turnstileKey}>
+                          <div
+                            className="flex justify-center py-1"
+                            key={turnstileKey}
+                          >
                             <Turnstile
                               siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
                               onSuccess={handleTurnstileSuccess}
@@ -509,7 +536,9 @@ export const Hero = () => {
                     ) : (
                       <form onSubmit={handleSubmit} className="space-y-2">
                         <div>
-                          <Label htmlFor="name" className="text-sm">Name</Label>
+                          <Label htmlFor="name" className="text-sm">
+                            Name
+                          </Label>
                           <Input
                             id="name"
                             name="name"
@@ -521,7 +550,9 @@ export const Hero = () => {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="email" className="text-sm">Email</Label>
+                          <Label htmlFor="email" className="text-sm">
+                            Email
+                          </Label>
                           <Input
                             id="email"
                             name="email"
@@ -534,7 +565,9 @@ export const Hero = () => {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="phone" className="text-sm">Phone (optional)</Label>
+                          <Label htmlFor="phone" className="text-sm">
+                            Phone (optional)
+                          </Label>
                           <Input
                             id="phone"
                             name="phone"
@@ -546,7 +579,9 @@ export const Hero = () => {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="location" className="text-sm">Location</Label>
+                          <Label htmlFor="location" className="text-sm">
+                            Location
+                          </Label>
                           <Input
                             id="location"
                             name="location"
@@ -558,7 +593,9 @@ export const Hero = () => {
                           />
                         </div>
                         <div>
-                          <Label htmlFor="message" className="text-sm">Message</Label>
+                          <Label htmlFor="message" className="text-sm">
+                            Message
+                          </Label>
                           <Textarea
                             id="message"
                             name="message"
@@ -572,7 +609,9 @@ export const Hero = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                           <div>
-                            <Label htmlFor="preferredDate" className="text-sm">Preferred Date</Label>
+                            <Label htmlFor="preferredDate" className="text-sm">
+                              Preferred Date
+                            </Label>
                             <Input
                               ref={dateInputRef}
                               id="preferredDate"
@@ -584,7 +623,9 @@ export const Hero = () => {
                             />
                           </div>
                           <div>
-                            <Label htmlFor="preferredTime" className="text-sm">Preferred Time</Label>
+                            <Label htmlFor="preferredTime" className="text-sm">
+                              Preferred Time
+                            </Label>
                             <Input
                               ref={timeInputRef}
                               id="preferredTime"
@@ -597,7 +638,10 @@ export const Hero = () => {
                           </div>
                         </div>
                         {!isSuccess && (
-                          <div className="flex justify-center py-1" key={turnstileKey}>
+                          <div
+                            className="flex justify-center py-1"
+                            key={turnstileKey}
+                          >
                             <Turnstile
                               siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
                               onSuccess={handleTurnstileSuccess}
@@ -627,9 +671,7 @@ export const Hero = () => {
         </div>
       </div>
       {/* Scroll Down Arrow */}
-      <div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40"
-      >
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40">
         <div className="flex flex-col items-center gap-2">
           <ChevronDown
             strokeWidth={2.5}
@@ -640,4 +682,3 @@ export const Hero = () => {
     </section>
   );
 };
-
