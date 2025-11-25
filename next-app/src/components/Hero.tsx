@@ -203,14 +203,23 @@ export const Hero = () => {
       aria-label="Hero section with affordable housing information"
     >
       {/* Anhart logo as backdrop with WebP/PNG fallback */}
-      <picture className="absolute inset-0 z-0 flex items-center justify-center opacity-30">
+      <picture className="absolute inset-0 z-0 flex items-center justify-center opacity-30 pointer-events-none">
         <source srcSet={anhartLogoWebpSrc} type="image/webp" />
         <img
           src={anhartLogoPngSrc}
           alt=""
           className="w-full h-full object-contain object-center"
           aria-hidden="true"
-          fetchPriority="high"
+          loading="lazy"
+          fetchPriority="low"
+          width="1200"
+          height="600"
+          style={{ 
+            maxWidth: '100%',
+            maxHeight: '100%',
+            objectFit: 'contain',
+            opacity: 0.3
+          }}
         />
       </picture>
       {/* Fallback background gradient */}
@@ -219,17 +228,18 @@ export const Hero = () => {
       {/* Optimized for LCP: Use poster image and lazy load video to improve initial page load */}
       <video
         ref={videoRef}
-        className={`absolute top-0 left-0 w-full object-cover z-[1] ${videoError ? "hidden" : ""}`}
+        className={`absolute top-0 left-0 w-full h-full object-cover z-[1] ${videoError ? "hidden" : ""}`}
         style={{
           height: isMobile ? "100vh" : "150vh", // ADJUST THIS: Original 150vh on desktop for parallax—reduce to 130vh if too tall
           minHeight: isMobile ? "100vh" : "150vh",
+          objectFit: "cover",
         }}
         autoPlay
         loop
         muted
         playsInline
         preload="metadata"
-        poster="/images/anhart-logo-text.webp"
+        poster=""
         aria-label="Background video showing housing development animation"
         onError={() => {
           console.warn(

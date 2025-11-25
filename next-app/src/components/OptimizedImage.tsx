@@ -3,7 +3,6 @@
 import React, { useState, useMemo } from 'react';
 import { ImageService } from '@/services/imageService';
 import { ImageSize, ImageFormat, ImageCategory } from '@/types/images';
-import { Skeleton } from '@/components/ui/skeleton';
 import { imageRegistry } from '@/assets/registry';
 
 interface OptimizedImageProps {
@@ -37,7 +36,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [forceVisible, setForceVisible] = useState(false);
+  const [setForceVisible] = useState(false);
 
   // Get configuration from category with defaults
   const config = ImageService.getImageConfig(category) || {
@@ -77,7 +76,6 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   // Generate srcSet for responsive images
   const webpSrcSet = useMemo(() => ImageService.getImageSrcSet(imageName, 'webp'), [imageName]);
-  const avifSrcSet = useMemo(() => ImageService.getImageSrcSet(imageName, 'avif'), [imageName]);
   const fallbackSrc = useMemo(() => ImageService.getImageSrc(imageName, 'fallback', size), [imageName, size]);
 
   // Get image dimensions from registry for proper aspect ratio and layout stability

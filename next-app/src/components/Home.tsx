@@ -106,7 +106,6 @@ import {
   Globe,
   ExternalLink,
   ArrowRight,
-  ArrowLeft,
   X,
   Calendar,
   Clock,
