@@ -3,7 +3,11 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
-import ProjectModal from "@/components/ProjectModal";
+import dynamic from 'next/dynamic';
+const ProjectModal = dynamic(() => import("@/components/ProjectModal").then(mod => mod.default), {
+  ssr: false,
+  loading: () => null,
+});
 import { ProjectData } from "@/types/project";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

@@ -14,7 +14,7 @@ import { useFormSubmission } from "@/hooks/useFormSubmission";
 import { CONTACT_INFO, AddressUtils } from "@/config/address";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { Turnstile } from "@/components/Turnstile";
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import contactHeroImg from "@/assets/baseAssets/contact-hero-1280x720.webp";
 
 const contactHero = typeof contactHeroImg === 'string' ? contactHeroImg : contactHeroImg?.src || '';

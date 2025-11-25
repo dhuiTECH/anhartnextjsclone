@@ -30,7 +30,7 @@ import Link from "next/link";
 // =============================================================================
 // REACT & HOOKS IMPORTS
 // =============================================================================
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Fragment } from "react";
 
 // =============================================================================
 // CUSTOM HOOKS
@@ -885,12 +885,12 @@ const Home = () => {
                           >
                             {AddressUtils.getAddressLines().map(
                               (line, index) => (
-                                <React.Fragment key={index}>
+                                <Fragment key={index}>
                                   {line}
                                   {index <
                                     AddressUtils.getAddressLines().length -
                                       1 && <br />}
-                                </React.Fragment>
+                                </Fragment>
                               ),
                             )}
                           </button>

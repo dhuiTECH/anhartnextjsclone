@@ -107,20 +107,15 @@ export default function RootLayout({
           type="image/png"
           fetchPriority="high"
         />
-        <link
-          rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-          as="style"
-          fetchPriority="high"
-        />
+        {/* Font CSS preload removed - Next.js font optimization handles this automatically */}
+        {/* Google Analytics - Load after user interaction to improve initial page load */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`}
-          strategy="afterInteractive"
-          async
+          strategy="lazyOnload"
         />
         <Script
           id="google-analytics"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -128,6 +123,7 @@ export default function RootLayout({
               gtag('js', new Date());
               gtag('config', '${process.env.NEXT_PUBLIC_GA_TRACKING_ID}', {
                 page_path: window.location.pathname,
+                send_page_view: false
               });
             `,
           }}
@@ -137,11 +133,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={inter.className}><Providers>{children}</Providers><Script
-          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-          strategy="afterInteractive"
-          async
-        /></body>
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
+        {/* Turnstile loads only when needed (lazy loaded by components) */}
+      </body>
     </html>
   );
 }

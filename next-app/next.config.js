@@ -135,6 +135,9 @@ const nextConfig = {
   // Configure SWC to target modern browsers and avoid unnecessary polyfills
   swcMinify: true,
   
+  // Production optimizations
+  productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundles
+  
   // Redirects - consolidated from vercel.json to avoid duplicate redirect handling
   // All redirects should be here, not in vercel.json
   async redirects() {

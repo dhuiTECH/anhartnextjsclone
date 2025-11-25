@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import comBuildImg from "@/assets/partnercarousel/communitybuilder.jpg";
 import AACImg from "@/assets/partnercarousel/AAC.png";

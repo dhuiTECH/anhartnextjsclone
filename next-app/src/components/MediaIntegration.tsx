@@ -18,7 +18,6 @@ import Head from "next/head";
  * @since 2025
  */
 
-import React from 'react';
 
 interface MediaIntegrationProps {
   title?: string;

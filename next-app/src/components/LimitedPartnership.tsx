@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { FileText, Users, DollarSign, Building, Shield, Target, Calendar, Mail, CheckCircle, ArrowRight, TrendingUp, Heart, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { Turnstile } from "@/components/Turnstile";
 
 // Partnership expectations - what we expect from limited partners
