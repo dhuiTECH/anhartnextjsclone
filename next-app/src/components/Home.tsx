@@ -30,7 +30,7 @@ import Link from "next/link";
 // =============================================================================
 // REACT & HOOKS IMPORTS
 // =============================================================================
-import { useState, useEffect, useCallback, Fragment } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 // =============================================================================
 // CUSTOM HOOKS
@@ -51,16 +51,8 @@ import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
-// Dynamically import modals to reduce initial bundle size
-import dynamic from 'next/dynamic';
-const ProjectModal = dynamic(() => import("@/components/ProjectModal").then(mod => mod.default), {
-  ssr: false,
-  loading: () => null, // Modals handle their own loading state
-});
-const ProjectGalleryModal = dynamic(() => import("@/components/ProjectGalleryModal").then(mod => mod.ProjectGalleryModal), {
-  ssr: false,
-  loading: () => null,
-});
+import ProjectModal from "@/components/ProjectModal";
+import { ProjectGalleryModal } from "@/components/ProjectGalleryModal";
 import { ClientCarousel } from "@/components/ClientCarousel";
 import { GlobalPartners } from "@/components/GlobalPartners";
 import { ThreeCardSection } from "@/components/shared/ThreeCardSection";
@@ -885,12 +877,12 @@ const Home = () => {
                           >
                             {AddressUtils.getAddressLines().map(
                               (line, index) => (
-                                <Fragment key={index}>
+                                <React.Fragment key={index}>
                                   {line}
                                   {index <
                                     AddressUtils.getAddressLines().length -
                                       1 && <br />}
-                                </Fragment>
+                                </React.Fragment>
                               ),
                             )}
                           </button>

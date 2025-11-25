@@ -13,56 +13,10 @@ const nextConfig = {
   },
   experimental: {
     // Optimize package imports to reduce bundle size
-    // This reduces bundle size by only importing used components
-    optimizePackageImports: [
-      'lucide-react', 
-      '@radix-ui/react-icons',
-      '@radix-ui/react-dialog',
-      '@radix-ui/react-dropdown-menu',
-      '@radix-ui/react-select',
-      '@radix-ui/react-tabs',
-      '@radix-ui/react-toast',
-      '@radix-ui/react-accordion',
-      '@radix-ui/react-alert-dialog',
-      '@radix-ui/react-avatar',
-      '@radix-ui/react-checkbox',
-      '@radix-ui/react-collapsible',
-      '@radix-ui/react-label',
-      '@radix-ui/react-popover',
-      '@radix-ui/react-progress',
-      '@radix-ui/react-radio-group',
-      '@radix-ui/react-scroll-area',
-      '@radix-ui/react-separator',
-      '@radix-ui/react-slider',
-      '@radix-ui/react-slot',
-      '@radix-ui/react-switch',
-      '@radix-ui/react-toggle',
-      '@radix-ui/react-tooltip',
-    ],
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
     // Ensure modern browser targets are used to avoid unnecessary polyfills
     esmExternals: true,
   },
-  
-  // Image optimization settings
-  images: {
-    // Enable automatic image optimization
-    formats: ['image/webp', 'image/avif'],
-    // Device sizes for responsive images
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    // Image sizes for different breakpoints
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    // Minimum quality (1-100)
-    minimumCacheTTL: 60,
-    // Disable static image imports optimization warning
-    dangerouslyAllowSVG: true,
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-  },
-  
-  // Output configuration for better optimization
-  output: 'standalone',
-  
-  // Compression settings
-  compress: true,
   
   // Headers to improve CSS loading performance, compression, and Core Web Vitals
   async headers() {
@@ -134,9 +88,6 @@ const nextConfig = {
   },
   // Configure SWC to target modern browsers and avoid unnecessary polyfills
   swcMinify: true,
-  
-  // Production optimizations
-  productionBrowserSourceMaps: false, // Disable source maps in production for smaller bundles
   
   // Redirects - consolidated from vercel.json to avoid duplicate redirect handling
   // All redirects should be here, not in vercel.json
