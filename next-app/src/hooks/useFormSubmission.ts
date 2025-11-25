@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast"; // Fixed: using correct path
+import { useToast } from "@/components/ui/use-toast";
 
 // ... (Interface FormData and validateFormData/isValidEmail are unchanged)
 
