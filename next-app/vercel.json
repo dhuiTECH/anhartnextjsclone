@@ -3,36 +3,5 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "outputDirectory": ".next",
-  "redirects": [
-    {
-      "source": "/the-ryder",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/tag/news",
-      "destination": "/blog",
-      "permanent": true
-    },
-    {
-      "source": "/about-us",
-      "destination": "/about",
-      "permanent": true
-    },
-    {
-      "source": "/contact-us",
-      "destination": "/contact",
-      "permanent": true
-    },
-    {
-      "source": "/work",
-      "destination": "/portfolio",
-      "permanent": true
-    },
-    {
-      "source": "/impact",
-      "destination": "/limited-partnership"
-    }
-  ]
+  "outputDirectory": ".next"
 }

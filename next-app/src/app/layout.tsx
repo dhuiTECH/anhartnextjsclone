@@ -71,12 +71,20 @@ export default function RootLayout({
   return (
     <html lang="en-CA">
       <head>
-        <link rel="preconnect" href="https://www.anhart.ca" crossOrigin="anonymous" />
+        {/* Critical preconnects (keep to max ~4 origins) */}
+        {/* Google Fonts - font CSS and font files are LCP-critical */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://hxqbbyglhubcgfkbqltu.supabase.co" />
+
+        {/* Supabase - used for auth and edge functions; early connect helps LCP */}
+        <link
+          rel="preconnect"
+          href="https://hxqbbyglhubcgfkbqltu.supabase.co"
+          crossOrigin="anonymous"
+        />
         <link rel="dns-prefetch" href="https://hxqbbyglhubcgfkbqltu.supabase.co" />
-        <link rel="preconnect" href="https://challenges.cloudflare.com" />
+
+        {/* Turnstile is not LCP-critical, so we only dns-prefetch (no preconnect) */}
         <link rel="dns-prefetch" href="https://challenges.cloudflare.com" />
         <link
           rel="preload"

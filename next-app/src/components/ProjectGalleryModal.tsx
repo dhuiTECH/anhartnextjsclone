@@ -1,10 +1,23 @@
-'use client';
+"use client";
 
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { X, MapPin, Calendar, Users, Building, ExternalLink } from "lucide-react";
+import {
+  X,
+  MapPin,
+  Calendar,
+  Users,
+  Building,
+  ExternalLink,
+} from "lucide-react";
 import { ProjectData } from "@/types/project";
 
 // Portfolio image imports
@@ -24,7 +37,7 @@ import img162Main_2 from "@/assets/162Main_2.png";
 import img162MainSt from "@/assets/162MainSt.webp";
 import imgDodsonsRooms_1 from "@/assets/DodsonsRooms_1.png";
 import imgMeritt_TH_1 from "@/assets/Meritt_TH_1.png";
-import imgTheRyder from "@/assets/TheRyder.jpeg";
+import imgTheRyder from "@/assets/TheRyder.png";
 import imgRyder_2 from "@/assets/Ryder_2.png";
 import imgModularH_1 from "@/assets/ModularH_1.png";
 import imgAFS_1 from "@/assets/AFS_1.png";
@@ -33,7 +46,9 @@ import imgAffordableLiving from "@/assets/affordable-living-complex.jpg";
 import imgUrbanRenewal from "@/assets/urban-renewal-project.jpg";
 
 // Function to get image paths with WebP and PNG fallback
-const getImagePaths = (imageName: string): { webp?: string; fallback: string } => {
+const getImagePaths = (
+  imageName: string,
+): { webp?: string; fallback: string } => {
   const imageMap: Record<string, any> = {
     // Portfolio images
     "Jubilee-Sign": imgJubileeSign,
@@ -62,14 +77,17 @@ const getImagePaths = (imageName: string): { webp?: string; fallback: string } =
     "urban-renewal-project": imgUrbanRenewal,
   };
   const image = imageMap[imageName];
-  const imageSrc = typeof image === 'string' ? image : image?.src || imageName;
-  
+  const imageSrc = typeof image === "string" ? image : image?.src || imageName;
+
   // Check if image is already WebP
-  const isWebP = imageSrc.includes('.webp') || imageName.includes('St') || imageName === '162MainSt';
-  
+  const isWebP =
+    imageSrc.includes(".webp") ||
+    imageName.includes("St") ||
+    imageName === "162MainSt";
+
   return {
     webp: isWebP ? imageSrc : undefined,
-    fallback: imageSrc
+    fallback: imageSrc,
   };
 };
 
@@ -84,12 +102,7 @@ interface ProjectGalleryModalProps {
 }
 export const ProjectGalleryModal: React.FC<{
   children?: React.ReactNode;
-}> = ({
-  isOpen,
-  onClose,
-  projects,
-  children
-}) => {
+}> = ({ isOpen, onClose, projects, children }) => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "completed":
@@ -121,7 +134,9 @@ export const ProjectGalleryModal: React.FC<{
         </Button>
 
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center">Our Project Portfolio</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-center">
+            Our Project Portfolio
+          </DialogTitle>
         </DialogHeader>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
@@ -135,14 +150,18 @@ export const ProjectGalleryModal: React.FC<{
                   const imagePaths = getImagePaths(project.image);
                   return (
                     <picture>
-                      {imagePaths.webp && <source srcSet={imagePaths.webp} type="image/webp" />}
+                      {imagePaths.webp && (
+                        <source srcSet={imagePaths.webp} type="image/webp" />
+                      )}
                       <img
                         src={imagePaths.fallback}
                         alt={project.title}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                         onError={(e) => {
-                          (e.currentTarget as HTMLElement).style.display = "none";
-                          const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                          (e.currentTarget as HTMLElement).style.display =
+                            "none";
+                          const fallback = e.currentTarget
+                            .nextElementSibling as HTMLElement;
                           if (fallback) fallback.style.display = "flex";
                         }}
                       />
@@ -161,8 +180,12 @@ export const ProjectGalleryModal: React.FC<{
 
               <div className="p-4">
                 <div className="flex items-start justify-between mb-2">
-                  <h3 className="text-lg font-semibold text-foreground">{project.title}</h3>
-                  <Badge className={`ml-2 text-xs ${getStatusColor(project.status)}`}>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {project.title}
+                  </h3>
+                  <Badge
+                    className={`ml-2 text-xs ${getStatusColor(project.status)}`}
+                  >
                     {project.status.replace("-", " ")}
                   </Badge>
                 </div>
@@ -176,7 +199,10 @@ export const ProjectGalleryModal: React.FC<{
                   {(project.year || project.completion_date) && (
                     <div className="flex items-center text-sm text-muted-foreground">
                       <Calendar className="w-4 h-4 mr-1" />
-                      {project.year || (project.completion_date ? new Date(project.completion_date).getFullYear() : "")}
+                      {project.year ||
+                        (project.completion_date
+                          ? new Date(project.completion_date).getFullYear()
+                          : "")}
                     </div>
                   )}
 
@@ -195,18 +221,24 @@ export const ProjectGalleryModal: React.FC<{
                   )}
                 </div>
 
-                <p className="text-sm text-muted-foreground mb-3">{project.description}</p>
+                <p className="text-sm text-muted-foreground mb-3">
+                  {project.description}
+                </p>
 
                 {project.highlights && project.highlights.length > 0 && (
                   <div className="space-y-1">
-                    <h4 className="text-xs font-semibold text-foreground">Key Highlights:</h4>
+                    <h4 className="text-xs font-semibold text-foreground">
+                      Key Highlights:
+                    </h4>
                     <ul className="text-xs text-muted-foreground space-y-1">
-                      {project.highlights.slice(0, 3).map((highlight, index) => (
-                        <li key={index} className="flex items-start">
-                          <span className="w-1 h-1 bg-primary rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
-                          {highlight}
-                        </li>
-                      ))}
+                      {project.highlights
+                        .slice(0, 3)
+                        .map((highlight, index) => (
+                          <li key={index} className="flex items-start">
+                            <span className="w-1 h-1 bg-primary rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
+                            {highlight}
+                          </li>
+                        ))}
                     </ul>
                   </div>
                 )}
@@ -222,7 +254,11 @@ export const ProjectGalleryModal: React.FC<{
             className="group hover:bg-primary hover:text-primary-foreground transition-colors"
             asChild
           >
-            <a href="https://anhart.ca/portfolio" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://anhart.ca/portfolio"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               View All Projects
               <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </a>

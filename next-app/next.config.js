@@ -18,10 +18,11 @@ const nextConfig = {
     esmExternals: true,
   },
   
-  // Headers to improve CSS loading performance and Core Web Vitals
+  // Headers to improve CSS loading performance, compression, and Core Web Vitals
   async headers() {
     return [
       {
+        // Static assets - long cache, immutable
         source: '/_next/static/:path*',
         headers: [
           {
@@ -31,6 +32,18 @@ const nextConfig = {
         ],
       },
       {
+        // Text assets (HTML, CSS, JS, JSON) - Vercel automatically compresses these
+        // We just set appropriate cache headers
+        source: '/:path*.{html,css,js,json,svg,xml}',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600, must-revalidate',
+          },
+        ],
+      },
+      {
+        // Media assets - long cache
         source: '/mediaAssets/:path*',
         headers: [
           {
@@ -44,6 +57,7 @@ const nextConfig = {
         ],
       },
       {
+        // Images - long cache
         source: '/images/:path*',
         headers: [
           {
@@ -53,6 +67,7 @@ const nextConfig = {
         ],
       },
       {
+        // Other assets - long cache
         source: '/assets/:path*',
         headers: [
           {
@@ -74,13 +89,44 @@ const nextConfig = {
   // Configure SWC to target modern browsers and avoid unnecessary polyfills
   swcMinify: true,
   
-  // Redirects
+  // Redirects - consolidated from vercel.json to avoid duplicate redirect handling
+  // All redirects should be here, not in vercel.json
   async redirects() {
     return [
       {
         source: '/partners',
         destination: '/partner',
         permanent: true, // 301 redirect
+      },
+      {
+        source: '/the-ryder',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/tag/news',
+        destination: '/blog',
+        permanent: true,
+      },
+      {
+        source: '/about-us',
+        destination: '/about',
+        permanent: true,
+      },
+      {
+        source: '/contact-us',
+        destination: '/contact',
+        permanent: true,
+      },
+      {
+        source: '/work',
+        destination: '/portfolio',
+        permanent: true,
+      },
+      {
+        source: '/impact',
+        destination: '/limited-partnership',
+        permanent: true,
       },
     ];
   },

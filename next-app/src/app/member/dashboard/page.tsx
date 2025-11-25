@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import MemberClient from './MemberClient';
 import type { Database } from '@/integrations/supabase/types';
 
@@ -28,12 +29,14 @@ export default async function MemberDashboard() {
   );
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return <p className="p-8">Redirecting to login...</p>;
+  if (!user) {
+    redirect('/member-login');
+  }
 
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
   
   if (profile?.role !== 'member') {
-    return <p className="p-8 text-red-600">Access denied: Member only. Your role: {profile?.role || 'none'}</p>;
+    redirect('/member-login');
   }
 
   const { data: files } = await supabase.storage.from('member-files').list('', { limit: 100 });

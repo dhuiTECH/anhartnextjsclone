@@ -1,6 +1,5 @@
 'use client';
 
-import Head from "next/head";
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -54,11 +53,6 @@ const MemberLogin = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Head>
-        <title>Member Login - Anhart</title>
-        <meta name="description" content="Secure member access to Anhart's contact form management dashboard. View and export form submissions." />
-        <meta name="robots" content="noindex, nofollow" />
-      </Head>
       <Header />
       {/* Digital Bookkeeper Link */}
       <div className="bg-blue-50 border-b border-blue-200">

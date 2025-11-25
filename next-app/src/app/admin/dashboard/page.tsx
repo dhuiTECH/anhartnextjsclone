@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import AdminClientWrapper from './AdminClientWrapper';
 import type { Database } from '@/integrations/supabase/types';
 
@@ -28,10 +29,14 @@ export default async function AdminDashboard() {
   );
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return <p className="p-8">Redirecting to login...</p>;
+  if (!user) {
+    redirect('/admin/login');
+  }
 
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-  if (profile?.role !== 'admin') return <p className="p-8 text-red-600">Access denied: Admin only.</p>;
+  if (profile?.role !== 'admin') {
+    redirect('/admin/login');
+  }
 
   return <AdminClientWrapper user={user} />;
 }
