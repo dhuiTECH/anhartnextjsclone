@@ -128,3 +128,4 @@ Update these files to use `@/hooks/use-toast`:
 `src/lib/utils.ts` - Simple `cn()` function wrapper
 **Status**: ✅ **Keep** - Standard shadcn/ui pattern, not redundant
 
+
