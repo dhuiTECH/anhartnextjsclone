@@ -86,13 +86,8 @@ export default function RootLayout({
 
         {/* Turnstile is not LCP-critical, so we only dns-prefetch (no preconnect) */}
         <link rel="dns-prefetch" href="https://challenges.cloudflare.com" />
-        <link
-          rel="preload"
-          href="/mediaAssets/hero-background-video.mp4"
-          as="video"
-          type="video/mp4"
-          fetchPriority="high"
-        />
+        
+        {/* Critical LCP images - only preload the most important ones */}
         <link
           rel="preload"
           href="/images/anhart-logo-text.webp"
@@ -107,20 +102,24 @@ export default function RootLayout({
           type="image/png"
           fetchPriority="high"
         />
+        
+        {/* Font CSS preload for faster font rendering */}
         <link
           rel="preload"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
           as="style"
           fetchPriority="high"
         />
+        
+        {/* Defer non-critical scripts to improve LCP */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`}
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           async
         />
         <Script
           id="google-analytics"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
@@ -137,11 +136,15 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={inter.className}><Providers>{children}</Providers><Script
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
+        {/* Defer Turnstile script - only needed when forms are visible */}
+        <Script
           src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           async
-        /></body>
+        />
+      </body>
     </html>
   );
 }

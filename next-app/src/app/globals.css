@@ -69,13 +69,6 @@
   }
 }
 
-/* === Original index.css === */
-/* Fonts are loaded via preload in index.html for better performance */
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* Performance optimization: prevent forced reflows */
 @layer utilities {
   .gpu-accelerated {
@@ -567,4 +560,51 @@ html {
 [data-card-interactive] h6 {
   user-select: text;
   -webkit-user-select: text;
+}
+
+/* Performance optimizations */
+/* Reduce repaints and reflows */
+* {
+  box-sizing: border-box;
+}
+
+/* Optimize font rendering */
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimize animations for better performance */
+@media (prefers-reduced-motion: no-preference) {
+  .animate-scale-in,
+  .animate-fade-in,
+  .animate-slide-in-left,
+  .animate-slide-in-right,
+  .animate-slide-in-up,
+  .animate-slide-in-down {
+    will-change: transform, opacity;
+  }
+}
+
+/* Remove will-change after animation completes to free up resources */
+.animate-scale-in,
+.animate-fade-in,
+.animate-slide-in-left,
+.animate-slide-in-right,
+.animate-slide-in-up,
+.animate-slide-in-down {
+  animation-fill-mode: both;
+}
+
+/* Optimize image loading */
+img {
+  content-visibility: auto;
+}
+
+/* Reduce layout shifts */
+video,
+img {
+  height: auto;
+  max-width: 100%;
 }

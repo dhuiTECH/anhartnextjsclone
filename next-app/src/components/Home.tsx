@@ -51,17 +51,39 @@ import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
-import ProjectModal from "@/components/ProjectModal";
-import { ProjectGalleryModal } from "@/components/ProjectGalleryModal";
-import { ClientCarousel } from "@/components/ClientCarousel";
-import { GlobalPartners } from "@/components/GlobalPartners";
-import { ThreeCardSection } from "@/components/shared/ThreeCardSection";
-import MetricsModal from "@/components/MetricsModal";
-import { FAQSection } from "@/components/FAQSection";
-import { Turnstile } from "@/components/Turnstile";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { OurFocusSection } from "@/components/OurFocusSection";
+import { ThreeCardSection } from "@/components/shared/ThreeCardSection";
+import { FAQSection } from "@/components/FAQSection";
+import { Turnstile } from "@/components/Turnstile";
 // OptimizedImage import removed - using high-fidelity images
+
+// =============================================================================
+// LAZY LOADED COMPONENTS (Code splitting for better performance)
+// =============================================================================
+// Only lazy load modals and components that are not immediately visible
+// This reduces initial bundle size significantly
+import dynamic from "next/dynamic";
+
+const ProjectModal = dynamic(() => import("@/components/ProjectModal"), {
+  ssr: false,
+  loading: () => null, // Modals don't need loading state until opened
+});
+
+const ProjectGalleryModal = dynamic(() => import("@/components/ProjectGalleryModal").then(mod => ({ default: mod.ProjectGalleryModal })), {
+  ssr: false,
+  loading: () => null,
+});
+
+const MetricsModal = dynamic(() => import("@/components/MetricsModal"), {
+  ssr: false,
+  loading: () => null,
+});
+
+const ClientCarousel = dynamic(() => import("@/components/ClientCarousel").then(mod => ({ default: mod.ClientCarousel })), {
+  ssr: false,
+  loading: () => null,
+});
 
 // =============================================================================
 // UI COMPONENT IMPORTS
@@ -77,6 +99,7 @@ import { Badge } from "@/components/ui/badge";
 // =============================================================================
 // ICON IMPORTS
 // =============================================================================
+// Icons are tree-shaken via optimizePackageImports in next.config.js
 import {
   Home as HomeIcon,
   Heart,
