@@ -215,7 +215,40 @@ export default async function ProjectPage({
                     // Handle H2 headings
                     return <h3 key={idx} className="text-xl font-bold text-foreground mt-8 mb-4">{paragraph.replace('##', '').trim()}</h3>;
                   }
-                  return <p key={idx} className="text-base text-muted-foreground leading-relaxed mb-4">{paragraph}</p>;
+                  // Parse markdown links [text](url) in paragraph
+                  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+                  const parts = [];
+                  let lastIndex = 0;
+                  let match;
+                  
+                  while ((match = linkRegex.exec(paragraph)) !== null) {
+                    // Add text before link
+                    if (match.index > lastIndex) {
+                      parts.push(paragraph.substring(lastIndex, match.index));
+                    }
+                    // Add link
+                    parts.push(
+                      <a 
+                        key={`link-${match.index}`}
+                        href={match[2]}
+                        className="text-primary font-semibold underline hover:opacity-80 transition-opacity"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {match[1]}
+                      </a>
+                    );
+                    lastIndex = linkRegex.lastIndex;
+                  }
+                  
+                  // Add remaining text
+                  if (lastIndex < paragraph.length) {
+                    parts.push(paragraph.substring(lastIndex));
+                  }
+                  
+                  return parts.length > 1 ? 
+                    <p key={idx} className="text-base text-muted-foreground leading-relaxed mb-4">{parts}</p> :
+                    <p key={idx} className="text-base text-muted-foreground leading-relaxed mb-4">{paragraph}</p>;
                 })}
               </div>
 
