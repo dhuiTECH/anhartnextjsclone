@@ -202,6 +202,31 @@ export const portfolioDetailedProjects: ProjectData[] = [
     ],
   },
   {
+    id: 16,
+    title: "Modular Homes Factory",
+    location: "Hope, BC",
+    year: "2024",
+    units: 120,
+    description:
+      "Advanced prefabrication facility for manufacturing modular homes, scaling affordable housing production with a planned capacity of 120+ units annually.",
+    briefDescription:
+      "Advanced manufacturing facility producing 120+ modular homes annually through innovative prefabrication technology and sustainable building practices.",
+    comprehensiveDetails:
+      "The Modular Homes Factory represents Anhart's commitment to scaling affordable housing production through advanced manufacturing technology. Located in Hope, BC, this state-of-the-art prefabrication facility is designed to manufacture 120+ modular homes annually. The factory employs cutting-edge construction techniques and sustainable building standards to create high-quality, affordable homes efficiently. By centralizing manufacturing in a purpose-built facility, we reduce construction costs, improve quality control, and accelerate production timelines. This innovative approach to housing production supports our ambitious goal of creating 20,000 homes by 2045 while maintaining the highest standards of affordability, sustainability, and quality. The factory creates local jobs and demonstrates how technology can be leveraged to address the housing crisis at scale.",
+    image: "ModularFactory",
+    status: "in-progress",
+    type: "Manufacturing Facility",
+    highlights: [
+      "120+ units annual manufacturing capacity",
+      "Advanced prefabrication technology",
+      "Sustainable building standards",
+      "Scales affordable housing production",
+      "Supports 20,000 homes by 2045 goal",
+      "Strategic rural location in Hope, BC",
+      "Local job creation and economic impact",
+    ],
+  },
+  {
     id: 7,
     title: "The Oppenheimer Park Initiative",
     location: "1335 Howe, Vancouver, BC",

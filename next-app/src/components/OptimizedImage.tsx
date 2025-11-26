@@ -36,7 +36,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [forceVisible, setForceVisible] = useState(false);
+  const [, setForceVisible] = useState(false);
 
   // Get configuration from category with defaults
   const config = ImageService.getImageConfig(category) || {
