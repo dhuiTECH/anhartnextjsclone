@@ -151,4 +151,24 @@ export const portfolioProjects: ProjectData[] = [
       "Community-focused amenities",
     ],
   },
+  {
+    id: 16,
+    title: "Modular Homes Factory",
+    location: "Hope, BC",
+    year: "2024",
+    units: 120,
+    description:
+      "Advanced prefabrication facility for manufacturing modular homes, scaling affordable housing production with a planned capacity of 120+ units annually.",
+    image: "ModularFactory",
+    status: "in-progress",
+    type: "Manufacturing Facility",
+    highlights: [
+      "120+ units annual manufacturing capacity",
+      "Advanced prefabrication technology",
+      "Sustainable building standards",
+      "Scales affordable housing production",
+      "Supports 20,000 homes by 2045 goal",
+      "Strategic rural location in Hope, BC",
+    ],
+  },
 ];
