@@ -1,92 +1,13 @@
 /* 
- * Next.js Global Styles
+ * Next.js Global Styles - Optimized
  * This file combines Tailwind CSS with your original React app styles
- * - Tailwind CSS utilities and component system
- * - Original index.css content (if found)
- * - Original App.css content (if found)
  */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 84% 4.9%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 84% 4.9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    margin: 0;
-    padding: 0;
-  }
-}
-
-/* Performance optimization: prevent forced reflows */
-@layer utilities {
-  .gpu-accelerated {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-  }
-}
-
-/* Smooth scrolling for the entire page */
-html {
-  scroll-behavior: smooth;
-  margin: 0;
-  padding: 0;
-}
-
 /* Anhart Design System */
-
 @layer base {
   :root {
     /* Core Brand Colors - Warm Red Accent Theme */
@@ -190,45 +111,26 @@ html {
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-}
 
-@layer base {
+  /* Global reset and base styles */
   * {
     @apply border-border font-roboto;
+    box-sizing: border-box;
   }
 
-  /* Global body default - Roboto for everything */
+  html {
+    scroll-behavior: smooth;
+    margin: 0;
+    padding: 0;
+  }
+
   body {
     @apply font-roboto bg-background text-foreground;
     margin: 0;
     padding: 0;
-  }
-
-  /* All text elements use Roboto by default */
-  p,
-  button,
-  a,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  span,
-  div,
-  input,
-  textarea,
-  select,
-  label,
-  li,
-  ul,
-  ol,
-  table,
-  th,
-  td {
-    @apply font-roboto;
-    margin: 0;
-    padding: 0;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Keep Merriweather for special cases only */
@@ -236,36 +138,44 @@ html {
     @apply font-merriweather;
   }
 
-  /* Or a special box */
   .font-special-box {
     @apply font-merriweather text-lg text-accent;
+  }
+
+  /* Optimize image loading and reduce layout shifts */
+  img,
+  video {
+    height: auto;
+    max-width: 100%;
+    content-visibility: auto;
+  }
+}
+
+/* Performance optimization: prevent forced reflows */
+@layer utilities {
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
   }
 }
 
 @layer components {
-
   /* Dialog-specific font styling */
-  .dialog-content {
-    @apply font-roboto;
-  }
-
   .dialog-header {
-    @apply font-roboto font-bold;
+    @apply font-bold;
   }
 
   .dialog-title {
-    @apply font-roboto text-xl font-bold;
+    @apply text-xl font-bold;
   }
 
   /* Header shrink-on-scroll effect */
   .header {
     @apply sticky top-0 z-50 bg-background/95 backdrop-blur-sm;
-    will-change: transform, height, padding;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     height: 76px;
-
-    padding: 0; 
-  
+    padding: 0;
     border-bottom: 1px solid #E5E5E5;
   }
 
@@ -285,11 +195,9 @@ html {
   }
 
   .header-nav-link {
-    @apply text-lg font-semibold text-[#333333] hover:text-primary transition-all duration-200 pr-1 rounded-md h-full;
-    
+    @apply text-lg font-semibold text-[#333333] hover:text-primary pr-1 rounded-md h-full;
     display: flex;
     align-items: center;
-    
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -300,19 +208,19 @@ html {
   /* Mobile responsive adjustments */
   @media (max-width: 1024px) {
     .header {
-      height: 64px; 
+      height: 64px;
     }
-  
+
     .header.shrunk {
       height: 56px;
     }
-  
+
     .header-logo {
-      height: 42px; 
+      height: 42px;
     }
 
     .header.shrunk .header-logo {
-       height: 36px;
+      height: 36px;
     }
   }
 
@@ -456,7 +364,6 @@ html {
 
   /* Respect reduced motion preference */
   @media (prefers-reduced-motion: reduce) {
-
     .animate-slide-in-left,
     .animate-slide-in-right,
     .animate-slide-in-up,
@@ -534,14 +441,12 @@ html {
 }
 
 /* Mobile touch scrolling fixes */
-/* Enable smooth vertical scrolling on card sections */
 [data-section="our-focus"],
 [data-section="how-we-do-it"] {
   touch-action: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-/* Allow scrolling while preserving tap interactions on cards */
 [data-section="our-focus"] .card,
 [data-section="how-we-do-it"] .card,
 [data-card-interactive] {
@@ -550,7 +455,6 @@ html {
   user-select: none;
 }
 
-/* Ensure card content allows text selection when needed */
 [data-card-interactive] p,
 [data-card-interactive] h1,
 [data-card-interactive] h2,
@@ -560,19 +464,6 @@ html {
 [data-card-interactive] h6 {
   user-select: text;
   -webkit-user-select: text;
-}
-
-/* Performance optimizations */
-/* Reduce repaints and reflows */
-* {
-  box-sizing: border-box;
-}
-
-/* Optimize font rendering */
-body {
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Optimize animations for better performance */
@@ -587,7 +478,7 @@ body {
   }
 }
 
-/* Remove will-change after animation completes to free up resources */
+/* Animation fill mode for proper completion */
 .animate-scale-in,
 .animate-fade-in,
 .animate-slide-in-left,
@@ -595,18 +486,6 @@ body {
 .animate-slide-in-up,
 .animate-slide-in-down {
   animation-fill-mode: both;
-}
-
-/* Optimize image loading */
-img {
-  content-visibility: auto;
-}
-
-/* Reduce layout shifts */
-video,
-img {
-  height: auto;
-  max-width: 100%;
 }
 
 /* Prevent hero backdrop logo from causing layout shifts */
