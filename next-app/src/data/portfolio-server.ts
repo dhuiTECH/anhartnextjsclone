@@ -250,7 +250,7 @@ export const portfolioProjectsData: ProjectData[] = [
     description: "A townhouse development in Merritt, BC, designed to provide private ownership opportunities and shared community infrastructure.",
     briefDescription: "45-unit townhouse village providing affordable homeownership and community-building opportunities.",
     comprehensiveDetails: "Merritt Village represents an innovative approach to affordable housing with emphasis on ownership and community resilience.",
-    image: "Meritt_TH_1",
+    image: "Merritt",
     status: "in-progress",
     type: "Townhouse Community",
     highlights: [
