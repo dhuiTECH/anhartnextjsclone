@@ -1,20 +1,44 @@
+"use client";
+
 /**
- * Server-side portfolio data (no 'use client' directive)
- * Used for SSR and static generation of project pages
- * Complete list of all Anhart projects
+ * =============================================================================
+ * PORTFOLIO SERVER DATA
+ * =============================================================================
+ *
+ * Portfolio Projects Data Structure
+ *
+ * Contains the complete portfolio of projects for the Portfolio page.
+ * This data includes all project details with comprehensive information
+ * for the portfolio gallery display.
+ *
+ * Each project includes:
+ * - Basic info: id, title, location, year, completion_date
+ * - Project details: units, description, status, type
+ * - Visual: image path
+ * - Highlights: array of key project achievements
+ *
+ * @source src/pages/Portfolio.tsx - projects variable
  */
 
+// =============================================================================
+// TYPE IMPORTS
+// =============================================================================
 import { ProjectData } from "@/types/project";
 
-export const portfolioProjectsData: ProjectData[] = [
+// =============================================================================
+// PORTFOLIO PROJECTS DATA
+// =============================================================================
+
+export const portfolioProjects: ProjectData[] = [
   {
     id: 1,
     title: "Jubilee Rooms",
     location: "235 Main, Vancouver, BC",
     year: "2000",
     units: 80,
-    description:
-      "Our foundational project in Vancouver's Downtown Eastside, transforming a historic building into affordable housing through innovative renovation.",
+    description: "Our foundational project in Vancouver's Downtown Eastside, transforming a historic building into affordable housing through innovative renovation.",
+    briefDescription: "Historic rooming house revitalized into 80 affordable units, marking the beginning of our housing-first mission in Vancouver's Downtown Eastside.",
+    comprehensiveDetails: "The Jubilee Rooms project represents the cornerstone of Anhart's affordable housing mission. This historic building renovation in Vancouver's Downtown Eastside created 80 affordable housing units while preserving the architectural character of the original structure. The project demonstrated our innovative approach to transforming existing buildings into dignified, safe, and affordable housing solutions. Through careful renovation techniques and community-centered design, we established a model for sustainable urban housing development that continues to guide our work today.",
     image: "Jubilee-Sign",
     status: "completed",
     type: "Historic Renovation",
@@ -23,8 +47,6 @@ export const portfolioProjectsData: ProjectData[] = [
       "Historic building preservation",
       "Downtown Eastside community investment",
       "Foundational project that launched our mission",
-      "Innovative renovation techniques",
-      "Community support services integration",
     ],
   },
   {
@@ -33,17 +55,15 @@ export const portfolioProjectsData: ProjectData[] = [
     location: "1270 Ryder, Hope, BC",
     year: "2021",
     units: 40,
-    description:
-      "Delivering 40 modular homes that expand affordable housing efforts in rural and remote communities while fostering resident stability and self-sufficiency.",
+    description: "Delivering 40 modular homes that expand affordable housing efforts in rural and remote communities while fostering resident stability and self-sufficiency.",
+    briefDescription: "40 modular homes in Hope, BC, expanding affordable housing in rural communities with a focus on stability, self-sufficiency, and community-building.",
+    comprehensiveDetails: "The Ryder project represents Anhart's commitment to addressing housing needs in rural and remote communities across British Columbia.",
     image: "Ryder_1",
     status: "completed",
     type: "Modular Housing",
     highlights: [
       "40 affordable modular homes delivered",
       "Rural and remote community focus",
-      "First development of affordable housing",
-      "Prioritization eligibility for under-served community members",
-      "Sustainable building materials",
     ],
   },
   {
@@ -52,17 +72,15 @@ export const portfolioProjectsData: ProjectData[] = [
     location: "Vancouver, BC",
     year: "2023",
     units: 69,
-    description:
-      "Inner-city development that provides affordable homes with integrated support services for individuals facing mental health challenges and low incomes.",
+    description: "Inner-city development that provides affordable homes with integrated support services for individuals facing mental health challenges and low incomes.",
+    briefDescription: "69-unit affordable housing project combining independent suites with on-site support services for vulnerable inner-city residents.",
+    comprehensiveDetails: "162 Main St represents a groundbreaking approach to addressing homelessness and mental health challenges in Vancouver's urban core.",
     image: "162Main",
     status: "completed",
     type: "Micro-Suites",
     highlights: [
       "69 micro-suite units for transitional housing",
       "Bridge from shelter to permanent housing",
-      "Comprehensive support services",
-      "Mix of micro-dwellings and retail markets",
-      "Community integration focus",
     ],
   },
   {
@@ -71,152 +89,174 @@ export const portfolioProjectsData: ProjectData[] = [
     location: "25 East Hastings, Vancouver, BC",
     year: "2004",
     units: 71,
-    description:
-      "Historic hotel conversion providing 71 supportive housing units for low-income residents in Vancouver's Downtown Eastside.",
+    description: "Historic hotel conversion providing 71 supportive housing units for low-income residents in Vancouver's Downtown Eastside.",
+    briefDescription: "71-unit affordable housing development created through the renovation of the historic Dodson Hotel.",
+    comprehensiveDetails: "The Dodson Hotel was acquired and renovated by Anhart impact investors in 2004 to provide safe, clean, and supportive housing.",
     image: "DodsonsRooms_1",
     status: "completed",
     type: "Hotel Conversion",
     highlights: [
       "65 affordable housing units",
-      "Historic hotel conversion",
-      "Preserved architectural character",
-      "Downtown Eastside revitalization",
-      "Community-centered design",
-      "Long-term affordability secured",
     ],
   },
   {
     id: 5,
-    title: "Skeena House",
-    location: "3475 East Hastings, Vancouver, BC",
-    year: "2012",
-    units: 57,
-    description:
-      "Former Ramada Inn converted into permanent affordable housing through partnership between the City of Vancouver, BC Housing, Vancouver Aboriginal Friendship Centre Society, Community Builders Benevolence Group and Anhart Community Housing Society.",
-    image: "skeena",
+    title: "The Oppenhiemer",
+    location: "Vancouver, BC",
+    year: "2020",
+    units: 93,
+    description: "A transformative urban development creating 93 affordable housing units for vulnerable populations.",
+    briefDescription: "93-unit affordable housing development addressing urban affordability crisis.",
+    comprehensiveDetails: "The Oppenhiemer project demonstrates innovative urban housing development.",
+    image: "TheOppenhiemer",
     status: "completed",
-    type: "Temporary Housing",
+    type: "Mixed-Use Development",
     highlights: [
-      "Conversion of hotels into permanent, affordable housing",
-      "Provided initiatives for the transition of shelter mats to stable housing",
-      "Partnership-driven solutions with Vancouver Aboriginal Friendship Centre Society",
-      "Culturally Inclusive Community Engagement",
-      "Priority for Indigenous communities",
+      "93 affordable housing units",
     ],
   },
   {
     id: 6,
-    title: "Metson Rooms",
-    location: "1060 Howe, Vancouver, BC",
-    year: "2013",
-    units: 100,
-    description:
-      "Transformation of a 100-room hotel in downtown Vancouver into affordable housing through partnership between the City of Vancouver, Community Builders Benevolence Group and Anhart Community Housing Society.",
-    image: "1060howe",
+    title: "AFS Building",
+    location: "Vancouver, BC",
+    year: "2022",
+    units: 120,
+    description: "Multi-unit residential development with community spaces.",
+    briefDescription: "120-unit development with integrated community facilities.",
+    comprehensiveDetails: "AFS Building represents modern affordable housing development.",
+    image: "AFS_1",
     status: "completed",
-    type: "Hotel Conversion",
+    type: "Residential",
     highlights: [
-      "Provided affordable housing for at-risk individuals",
-      "Long-term hotel lease as affordable housing model",
-      "Provided housing in a high-demand urban area",
-      "Self-organizing community with in-house resident support",
-      "Stable housing in Vancouver's downtown location",
+      "120 units",
     ],
   },
   {
     id: 7,
-    title: "The Oppenheimer Park Initiative",
-    location: "1335 Howe, Vancouver, BC",
-    year: "2016",
-    units: 160,
-    description:
-      "Relocation of 150 persons experiencing homelessness at an encampment in Oppenheimer Park that also housed another 150 persons over a 30 month period.",
-    image: "TheOppenhiemer",
-    status: "completed",
-    type: "Temporary Housing",
+    title: "Kwas Building",
+    location: "BC",
+    year: "2023",
+    units: 85,
+    description: "Contemporary affordable housing project.",
+    briefDescription: "85-unit affordable housing development.",
+    comprehensiveDetails: "Kwas Building project details.",
+    image: "Kwas",
+    status: "in-progress",
+    type: "Residential",
     highlights: [
-      "160-room leased hotel",
-      "Emergency housing for 300+ individuals",
-      "Bridge toward long-term housing solutions",
-      "Wrap-around services and transition supports",
-      "Rapid, scalable response to homelessness",
+      "85 units",
     ],
   },
   {
     id: 8,
-    title: "Kwas House",
-    location: "477 Hudson St, Hope, BC",
-    year: "2026",
-    units: 14,
-    description:
-      "A 14-unit supportive housing project in Hope, BC, for adults with cognitive challenges and seniors, featuring a community kitchen and shared living spaces, developed in partnership with the Fraser Inclusive and Supportive Housing Society (FISH).",
-    image: "Kwas",
+    title: "Maternity Housing",
+    location: "BC",
+    year: "2023",
+    units: 40,
+    description: "Specialized housing for mothers and families.",
+    briefDescription: "40-unit specialized housing project.",
+    comprehensiveDetails: "Maternity Housing project details.",
+    image: "Maternity",
     status: "in-progress",
-    type: "Supportive Housing",
+    type: "Specialized Housing",
     highlights: [
-      "14 affordable housing units",
-      "Partnership with Fraser Inclusive and Supportive Housing Society (FISH)",
-      "Housing for adults with cognitive challenges and seniors",
-      "Property generously donated by a community member",
-      "Includes community kitchen and social spaces",
-      "Focus on independent living with peer support",
+      "40 units for families",
     ],
   },
   {
     id: 9,
-    title: "Merritt Village",
-    location: "3757 De Wolf Way, Merritt, BC",
-    year: "2026",
-    units: 46,
-    description: "Strategic development addressing housing needs in rural BC communities with sustainable design.",
-    image: "Merritt",
-    status: "in-progress",
-    type: "Sustainable Development",
+    title: "Merritt TH",
+    location: "Merritt, BC",
+    year: "2022",
+    units: 32,
+    description: "Townhouse development in Merritt.",
+    briefDescription: "32-unit townhouse development.",
+    comprehensiveDetails: "Merritt TH project details.",
+    image: "Meritt_TH_1",
+    status: "completed",
+    type: "Townhouses",
     highlights: [
-      "46 units of entry-level two- and three-bedroom townhomes",
-      "Five-acre site with family-friendly amenities",
-      "Provisions for local non-profits to purchase units",
-      "Sustainable design with community-centered ownership model",
-      "Rural housing shortage solution",
-      "Mountain views and green spaces",
+      "32 townhouse units",
     ],
   },
   {
     id: 10,
-    title: "179 Main & 626 Alexander",
-    location: "Vancouver, BC",
-    year: "2018, 2020",
-    units: 14,
-    description:
-      "Two mixed-income projects providing affordable rental apartments through private investment at 626 Alexander and 179 Main.",
-    image: "affordapartment",
+    title: "The Merritt",
+    location: "Merritt, BC",
+    year: "2021",
+    units: 28,
+    description: "Affordable housing in Merritt.",
+    briefDescription: "28-unit affordable housing project.",
+    comprehensiveDetails: "The Merritt project details.",
+    image: "Merritt",
     status: "completed",
-    type: "Multi-Phase Development",
+    type: "Residential",
     highlights: [
-      "14 affordable apartment units (9 + 5)",
-      "Inner-city location advantages",
-      "Modern design integration",
-      "Two-phase development approach",
-      "Transit-accessible location",
-      "Community-focused amenities",
+      "28 units",
     ],
   },
   {
     id: 11,
-    title: "Anhart Sustainable Villages",
-    location: "Multiple Locations",
-    year: "2030",
-    units: 50,
-    description:
-      "International development initiative working with local communities in regions of Africa to build 6 maternity clinics, approximately 50 homes, and 5 schools, contributing to our 20,000 homes goal by 2045.",
-    image: "Maternity",
-    status: "in-progress",
-    type: "Multi-Site Initiative",
+    title: "FISH Building",
+    location: "Vancouver, BC",
+    year: "2020",
+    units: 55,
+    description: "Community-focused affordable housing.",
+    briefDescription: "55-unit community housing development.",
+    comprehensiveDetails: "FISH Building project details.",
+    image: "FISH",
+    status: "completed",
+    type: "Community Housing",
     highlights: [
-      "6 maternity clinics in African regions",
-      "Approximately 50 homes built",
-      "5 schools constructed",
-      "Local community partnerships",
+      "55 units with community spaces",
+    ],
+  },
+  {
+    id: 12,
+    title: "K Landing",
+    location: "BC",
+    year: "2022",
+    units: 50,
+    description: "Waterfront affordable housing development.",
+    briefDescription: "50-unit waterfront housing project.",
+    comprehensiveDetails: "K Landing project details.",
+    image: "KLanding",
+    status: "in-progress",
+    type: "Waterfront Development",
+    highlights: [
+      "50 waterfront units",
+    ],
+  },
+  {
+    id: 13,
+    title: "Modular Homes",
+    location: "Hope, BC",
+    year: "2023",
+    units: 50,
+    description: "Prefabricated housing solution for affordability.",
+    briefDescription: "50-unit modular housing development.",
+    comprehensiveDetails: "Modular homes project demonstrating prefabrication benefits.",
+    image: "ModularH_1",
+    status: "in-progress",
+    type: "Modular Housing",
+    highlights: [
+      "50 prefabricated units",
+      "Rapid deployment capability",
+    ],
+  },
+  {
+    id: 14,
+    title: "International Projects",
+    location: "Multiple Locations",
+    year: "2024",
+    units: 200,
+    description: "Global expansion of our affordable housing model.",
+    briefDescription: "200+ unit international development initiative.",
+    comprehensiveDetails: "International expansion of Anhart's mission.",
+    image: "OurVision",
+    status: "in-progress",
+    type: "International",
+    highlights: [
       "International development focus",
       "Contributes to 20,000-unit goal by 2045",
     ],
@@ -227,8 +267,7 @@ export const portfolioProjectsData: ProjectData[] = [
     location: "1051 Nelson Avenue, Hope, BC",
     year: "2024",
     units: 6,
-    description:
-      "Display units showcasing 6 different types of modular homes. Check them out at https://anhartconstruction.ca/modular/",
+    description: "Display units showcasing 6 different types of modular homes. Check them out at https://anhartconstruction.ca/modular/",
     image: "ModularH_1",
     status: "in-progress",
     type: "Modular Tiny Homes",
@@ -248,13 +287,9 @@ export const portfolioProjectsData: ProjectData[] = [
     location: "Hope, BC",
     year: "2024",
     units: 120,
-    description:
-    description:
-      "The Modular Homes Factory is Anhart's flagship manufacturing facility dedicated to solving the affordable housing crisis through industrial-scale modular home production. Located in Hope, BC, this state-of-the-art prefabrication plant manufactures 120+ complete modular homes annually.\n\n## Why Factory-Built Homes are the Future of Canadian Housing\n\nFactory-built modular homes represent a paradigm shift in Canadian housing construction. Unlike traditional site-built homes vulnerable to weather delays and inconsistent quality, our manufacturing process delivers homes 50-60% faster while maintaining superior quality control. This means faster delivery to families, no weather setbacks during construction, and completely predictable costs—critical advantages for addressing Canada's affordable housing crisis.\n\n## Our Climate-Controlled Manufacturing Process\n\nSuperior Quality Control\n\nEvery component is manufactured in a climate-controlled environment with rigorous multi-stage inspections. Our dry materials eliminate moisture and mold risks, and every unit adheres strictly to Canadian building codes and exceeds provincial standards. This precision manufacturing ensures consistent quality that on-site construction cannot match.\n\nSustainable & Low-Waste Building\n\nWe're committed to environmental responsibility through engineered materials, in-plant recycling programs, and reduced construction waste. Factory manufacturing generates 50-60% less waste than traditional construction, while our sustainable material sourcing supports Canada's environmental goals.\n\n## Built for Canadian Climates and Standards\n\nOur modular homes are specifically engineered for Canadian climates with 2x6 wall framing, premium insulation exceeding code requirements, and energy-efficient HVAC systems. We meet or exceed Energy Step Code standards and support Net Zero initiatives, aligning with government priorities for sustainable housing across Canada.\n\n## Factory Overview: From Design to Delivery\n\n**Design & Engineering**: Projects begin with custom designs tailored to local needs and climate requirements. Our team utilizes advanced computer-aided design (CAD) systems to ensure each modular home meets specific site conditions and regional building codes while optimizing for energy efficiency and affordability.\n\n**Fabrication**: In our climate-controlled manufacturing facility, robotic systems and precision assembly lines construct wall, floor, and roof modules with remarkable consistency and speed. This industrial approach eliminates weather delays and ensures every component meets exact specifications, resulting in superior quality compared to traditional on-site construction.\n\n**Quality Assurance**: Each completed module undergoes rigorous multi-stage inspection for structural integrity, electrical systems, plumbing installations, and finishing quality. Our quality control process exceeds Canadian building code requirements and ensures every home delivered meets Anhart's high standards for durability and livability.\n\n**Shipping & On-Site Assembly**: Completed modules are carefully transported to site and professionally assembled by our installation team. This final stage reduces total on-site construction time from 6-9 months down to just 2-3 weeks, dramatically accelerating housing delivery without compromising quality or safety.\n\nThis fully integrated manufacturing process delivers affordable, high-quality modular homes rapidly—providing a scalable solution to Canada's housing crisis while maintaining exceptional craftsmanship and affordability.",
-    briefDescription:
-      "Leading modular home manufacturer in British Columbia producing 120+ prefabricated affordable housing units annually through innovative offsite construction and sustainable building practices for rapid deployment.",
-    comprehensiveDetails:
-      "The Modular Homes Factory is Anhart's flagship manufacturing facility dedicated to solving the affordable housing crisis through industrial-scale modular home production. Located strategically in Hope, BC, this state-of-the-art prefabrication plant manufactures 120+ complete modular homes annually, representing a transformative approach to residential construction.\n\nAdvanced Manufacturing Process: Our facility utilizes computer-aided design (CAD), robotic manufacturing systems, and quality-controlled assembly lines to produce prefabricated housing components with precision and consistency. Each modular home is constructed in a climate-controlled environment, eliminating weather-related delays and ensuring superior craftsmanship compared to traditional on-site construction methods.\n\nAffordable Housing Solutions: By consolidating manufacturing operations, we significantly reduce construction costs—typically 30-40% lower than conventional stick-built homes. These cost savings translate directly into more affordable housing options for low-income families, first-time homebuyers, and underserved communities across Canada.\n\nSustainability & Energy Efficiency: Every modular home manufactured meets rigorous environmental standards, featuring energy-efficient insulation, sustainable materials, and renewable energy integration capabilities. Our commitment to green building practices reduces operational costs for residents while contributing to Canada's climate goals.\n\nRapid Deployment & Housing Crisis Response: Modular construction reduces on-site assembly time from 6-9 months to 2-3 months, enabling rapid response to housing shortages and emergency housing needs. This acceleration is critical for addressing Canada's affordable housing crisis.\n\nEconomic Impact & Local Employment: The facility creates skilled manufacturing jobs in Hope, BC, stimulating local economic growth while building the workforce expertise needed for nationwide housing production scaling.\n\nContribution to 20,000 Homes Goal: This manufacturing capacity is instrumental in Anhart's mission to develop 20,000 affordable homes by 2045, providing a sustainable, scalable solution to housing affordability across Canada.",
+    description: "The Modular Homes Factory is Anhart's flagship manufacturing facility dedicated to solving the affordable housing crisis through industrial-scale modular home production. Located in Hope, BC, this state-of-the-art prefabrication plant manufactures 120+ complete modular homes annually.\n\n## Why Factory-Built Homes are the Future of Canadian Housing\n\nFactory-built modular homes represent a paradigm shift in Canadian housing construction. Unlike traditional site-built homes vulnerable to weather delays and inconsistent quality, our manufacturing process delivers homes 50-60% faster while maintaining superior quality control. This means faster delivery to families, no weather setbacks during construction, and completely predictable costs—critical advantages for addressing Canada's affordable housing crisis.\n\n## Our Climate-Controlled Manufacturing Process\n\nSuperior Quality Control\n\nEvery component is manufactured in a climate-controlled environment with rigorous multi-stage inspections. Our dry materials eliminate moisture and mold risks, and every unit adheres strictly to Canadian building codes and exceeds provincial standards. This precision manufacturing ensures consistent quality that on-site construction cannot match.\n\nSustainable & Low-Waste Building\n\nWe're committed to environmental responsibility through engineered materials, in-plant recycling programs, and reduced construction waste. Factory manufacturing generates 50-60% less waste than traditional construction, while our sustainable material sourcing supports Canada's environmental goals.\n\n## Built for Canadian Climates and Standards\n\nOur modular homes are specifically engineered for Canadian climates with 2x6 wall framing, premium insulation exceeding code requirements, and energy-efficient HVAC systems. We meet or exceed Energy Step Code standards and support Net Zero initiatives, aligning with government priorities for sustainable housing across Canada.\n\n## Factory Overview: From Design to Delivery\n\nDesign & Engineering: Projects begin with custom designs tailored to local needs and climate requirements. Our team utilizes advanced computer-aided design (CAD) systems to ensure each modular home meets specific site conditions and regional building codes while optimizing for energy efficiency and affordability.\n\nFabrication: In our climate-controlled manufacturing facility, robotic systems and precision assembly lines construct wall, floor, and roof modules with remarkable consistency and speed. This industrial approach eliminates weather delays and ensures every component meets exact specifications, resulting in superior quality compared to traditional on-site construction.\n\nQuality Assurance: Each completed module undergoes rigorous multi-stage inspection for structural integrity, electrical systems, plumbing installations, and finishing quality. Our quality control process exceeds Canadian building code requirements and ensures every home delivered meets Anhart's high standards for durability and livability.\n\nShipping & On-Site Assembly: Completed modules are carefully transported to site and professionally assembled by our installation team. This final stage reduces total on-site construction time from 6-9 months down to just 2-3 weeks, dramatically accelerating housing delivery without compromising quality or safety.\n\nThis fully integrated manufacturing process delivers affordable, high-quality modular homes rapidly—providing a scalable solution to Canada's housing crisis while maintaining exceptional craftsmanship and affordability.",
+    briefDescription: "Leading modular home manufacturer in British Columbia producing 120+ prefabricated affordable housing units annually through innovative offsite construction and sustainable building practices for rapid deployment.",
+    comprehensiveDetails: "The Modular Homes Factory is Anhart's flagship manufacturing facility dedicated to solving the affordable housing crisis through industrial-scale modular home production. Located strategically in Hope, BC, this state-of-the-art prefabrication plant manufactures 120+ complete modular homes annually, representing a transformative approach to residential construction.\n\nAdvanced Manufacturing Process: Our facility utilizes computer-aided design (CAD), robotic manufacturing systems, and quality-controlled assembly lines to produce prefabricated housing components with precision and consistency. Each modular home is constructed in a climate-controlled environment, eliminating weather-related delays and ensuring superior craftsmanship compared to traditional on-site construction methods.\n\nAffordable Housing Solutions: By consolidating manufacturing operations, we significantly reduce construction costs—typically 30-40% lower than conventional stick-built homes. These cost savings translate directly into more affordable housing options for low-income families, first-time homebuyers, and underserved communities across Canada.\n\nSustainability & Energy Efficiency: Every modular home manufactured meets rigorous environmental standards, featuring energy-efficient insulation, sustainable materials, and renewable energy integration capabilities. Our commitment to green building practices reduces operational costs for residents while contributing to Canada's climate goals.\n\nRapid Deployment & Housing Crisis Response: Modular construction reduces on-site assembly time from 6-9 months to 2-3 months, enabling rapid response to housing shortages and emergency housing needs. This acceleration is critical for addressing Canada's affordable housing crisis.\n\nEconomic Impact & Local Employment: The facility creates skilled manufacturing jobs in Hope, BC, stimulating local economic growth while building the workforce expertise needed for nationwide housing production scaling.\n\nContribution to 20,000 Homes Goal: This manufacturing capacity is instrumental in Anhart's mission to develop 20,000 affordable homes by 2045, providing a sustainable, scalable solution to housing affordability across Canada.",
     image: "ModularFactoryCard",
     status: "in-progress",
     type: "Manufacturing Facility",
