@@ -88,6 +88,10 @@ import ModularFactoryMd from './baseAssets/ModularFactory-384x216.webp';
 import ModularFactoryLg from './baseAssets/ModularFactory-512x288.webp';
 import ModularFactoryXl from './baseAssets/ModularFactory-640x360.webp';
 import ModularFactoryFallback from './ModularFactory.jpg';
+import ModularFactoryCardSm from './baseAssets/ModularFactoryCard-320x180.webp';
+import ModularFactoryCardMd from './baseAssets/ModularFactoryCard-384x216.webp';
+import ModularFactoryCardLg from './baseAssets/ModularFactoryCard-512x288.webp';
+import ModularFactoryCardXl from './baseAssets/ModularFactoryCard-640x360.webp';
 import OurApproachSm from './baseAssets/OurApproach-320x285.webp';
 import OurApproachMd from './baseAssets/OurApproach-384x342.webp';
 import OurApproachLg from './baseAssets/OurApproach-512x456.webp';
@@ -293,6 +297,11 @@ export const imageRegistry: Record<string, ImageEntry> = {
   'ModularFactory': {
     webp: { sm: ModularFactorySm, md: ModularFactoryMd, lg: ModularFactoryLg, xl: ModularFactoryXl },
     fallback: ModularFactoryFallback,
+    dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
+  },
+  'ModularFactoryCard': {
+    webp: { sm: ModularFactoryCardSm, md: ModularFactoryCardMd, lg: ModularFactoryCardLg, xl: ModularFactoryCardXl },
+    fallback: ModularFactoryCardSm,
     dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
   },
   'OurApproach': {
