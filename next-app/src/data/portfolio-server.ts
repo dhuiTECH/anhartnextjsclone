@@ -269,7 +269,7 @@ export const portfolioProjectsData: ProjectData[] = [
     description: "An international initiative building 200 sustainable housing units in African regions, advancing Anhart's global mission for equitable development.",
     briefDescription: "200-unit international development initiative providing sustainable housing in African communities.",
     comprehensiveDetails: "Anhart Sustainable Villages represents Anhart's global commitment to affordable housing and sustainable community development.",
-    image: "Merritt",
+    image: "Maternity",
     status: "in-progress",
     type: "International Sustainable",
     highlights: [
