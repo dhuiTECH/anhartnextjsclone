@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * =============================================================================
@@ -256,7 +256,8 @@ export const portfolioDetailedProjects: ProjectData[] = [
     location: "3757 De Wolf Way, Merritt, BC",
     year: "2026",
     units: 46,
-    description: "Strategic development addressing housing needs in rural BC communities with sustainable design.",
+    description:
+      "Strategic development addressing housing needs in rural BC communities with sustainable design.",
     briefDescription:
       "A townhouse development in Merritt, BC, designed to provide affordable housing while supporting local non-profits and fostering inclusive community living.",
     comprehensiveDetails:
