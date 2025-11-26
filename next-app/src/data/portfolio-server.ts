@@ -106,7 +106,7 @@ export const portfolioProjectsData: ProjectData[] = [
     description: "A supportive housing facility providing secure lodging and transitional housing for vulnerable residents in Vancouver's inner city.",
     briefDescription: "85-unit supportive housing development addressing homelessness and providing transitional pathways.",
     comprehensiveDetails: "Skeena House provides supportive housing services for vulnerable populations.",
-    image: "SkeenaHouse",
+    image: "skeena",
     status: "completed",
     type: "Supportive Housing",
     highlights: [
@@ -122,7 +122,7 @@ export const portfolioProjectsData: ProjectData[] = [
     description: "A 100-room hotel providing affordable housing with on-site support services for vulnerable inner-city residents.",
     briefDescription: "100-unit hotel conversion providing affordable rooms and support services.",
     comprehensiveDetails: "Metson Rooms was converted from a historic hotel to provide safe, affordable housing with wraparound support services.",
-    image: "MetsonRooms",
+    image: "DodsonsRooms_1",
     status: "completed",
     type: "Hotel Conversion",
     highlights: [
@@ -154,7 +154,7 @@ export const portfolioProjectsData: ProjectData[] = [
     description: "A transformative pair of housing developments providing 140 affordable units across two prime downtown Vancouver locations.",
     briefDescription: "140-unit development across two downtown Vancouver properties providing affordable housing.",
     comprehensiveDetails: "The 179 Main and 626 Alexander properties represent strategic urban infill development.",
-    image: "MainAlexander",
+    image: "179Main",
     status: "completed",
     type: "Urban Infill",
     highlights: [
@@ -250,7 +250,7 @@ export const portfolioProjectsData: ProjectData[] = [
     description: "A townhouse development in Merritt, BC, designed to provide private ownership opportunities and shared community infrastructure.",
     briefDescription: "45-unit townhouse village providing affordable homeownership and community-building opportunities.",
     comprehensiveDetails: "Merritt Village represents an innovative approach to affordable housing with emphasis on ownership and community resilience.",
-    image: "MerrittVillage",
+    image: "Meritt_TH_1",
     status: "in-progress",
     type: "Townhouse Community",
     highlights: [
@@ -269,7 +269,7 @@ export const portfolioProjectsData: ProjectData[] = [
     description: "An international initiative building 200 sustainable housing units in African regions, advancing Anhart's global mission for equitable development.",
     briefDescription: "200-unit international development initiative providing sustainable housing in African communities.",
     comprehensiveDetails: "Adhart Sustainable Villages represents Anhart's global commitment to affordable housing and sustainable community development.",
-    image: "SustainableVillages",
+    image: "OurVision",
     status: "in-progress",
     type: "International Sustainable",
     highlights: [
