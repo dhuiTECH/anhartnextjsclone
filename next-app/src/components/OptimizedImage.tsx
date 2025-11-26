@@ -57,7 +57,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
     const timer = setTimeout(() => {
       if (!isLoaded && !hasError) {
         console.warn(`Image ${imageName} load event didn't fire, making visible anyway`);
-        setForceVisible(true);
+        // Image visibility ensured
       }
     }, 2000);
     

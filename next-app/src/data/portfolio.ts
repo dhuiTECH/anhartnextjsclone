@@ -159,7 +159,7 @@ export const portfolioProjects: ProjectData[] = [
     units: 120,
     description:
       "Advanced prefabrication facility for manufacturing modular homes, scaling affordable housing production with a planned capacity of 120+ units annually.",
-    image: "ModularFactory",
+    image: "ModularH_1",
     status: "in-progress",
     type: "Manufacturing Facility",
     highlights: [

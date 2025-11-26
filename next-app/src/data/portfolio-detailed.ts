@@ -213,7 +213,7 @@ export const portfolioDetailedProjects: ProjectData[] = [
       "Advanced manufacturing facility producing 120+ modular homes annually through innovative prefabrication technology and sustainable building practices.",
     comprehensiveDetails:
       "The Modular Homes Factory represents Anhart's commitment to scaling affordable housing production through advanced manufacturing technology. Located in Hope, BC, this state-of-the-art prefabrication facility is designed to manufacture 120+ modular homes annually. The factory employs cutting-edge construction techniques and sustainable building standards to create high-quality, affordable homes efficiently. By centralizing manufacturing in a purpose-built facility, we reduce construction costs, improve quality control, and accelerate production timelines. This innovative approach to housing production supports our ambitious goal of creating 20,000 homes by 2045 while maintaining the highest standards of affordability, sustainability, and quality. The factory creates local jobs and demonstrates how technology can be leveraged to address the housing crisis at scale.",
-    image: "ModularFactory",
+    image: "ModularH_1",
     status: "in-progress",
     type: "Manufacturing Facility",
     highlights: [
