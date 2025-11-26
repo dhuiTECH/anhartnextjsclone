@@ -31,7 +31,7 @@ export async function generateMetadata({
     };
   }
 
-  const title = project.title === "162 Main St" ? "162 Main St | Affordable Micro-Suites & Supportive Housing Vancouver" : project.title === "The Ryder" ? "The Ryder Hope BC | Modular Affordable Housing Development | Anhart" : `${project.title} - Affordable Housing Project | Anhart`;
+  const title = project.title === "162 Main St" ? "162 Main St | Affordable Micro-Suites & Supportive Housing Vancouver" : project.title === "The Ryder" ? "The Ryder Hope BC | Modular Affordable Housing Development | Anhart" : project.title === "Dodson Hotel" ? "Dodson Hotel | Historic Supportive Housing & SRO Renewal Vancouver" : `${project.title} - Affordable Housing Project | Anhart`;
   const description = project.description || `Learn more about ${project.title}, an affordable housing project by Anhart located in ${project.location}.`;
   const imageUrl = project.image
     ? `https://anhart.ca/images/${project.image}.png`
@@ -141,7 +141,7 @@ export default async function ProjectPage({
               <div className="mb-12 rounded-lg overflow-hidden">
                 <OptimizedImage
                   imageName={project.image}
-                  alt={project.title === "Metson Rooms" ? "Metson Rooms exterior 1060 Howe Street Vancouver affordable housing hotel conversion" : project.title === "162 Main St" ? "Exterior view of 162 Main St Vancouver affordable micro-suite housing development" : project.title === "The Ryder" ? "The Ryder 1270 Ryder Street Hope BC modular affordable housing exterior" : project.title}
+                  alt={project.title === "Metson Rooms" ? "Metson Rooms exterior 1060 Howe Street Vancouver affordable housing hotel conversion" : project.title === "162 Main St" ? "Exterior view of 162 Main St Vancouver affordable micro-suite housing development" : project.title === "The Ryder" ? "The Ryder 1270 Ryder Street Hope BC modular affordable housing exterior" : project.title === "Dodson Hotel" ? "Dodson Hotel exterior 25 East Hastings Vancouver heritage supportive housing" : project.title}
                   category="portfolio"
                   className="w-full h-full object-cover"
                   aspectRatio="16/9"
