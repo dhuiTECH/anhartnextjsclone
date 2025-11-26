@@ -212,13 +212,13 @@ export const Hero = () => {
           aria-hidden="true"
           loading="lazy"
           fetchPriority="low"
-          width="1200"
-          height="600"
+          width="100%"
+          height="100%"
           style={{ 
             maxWidth: '100%',
             maxHeight: '100%',
             objectFit: 'contain',
-            opacity: 0.3
+            opacity: 1.0
           }}
         />
       </picture>
