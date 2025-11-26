@@ -141,7 +141,7 @@ export default async function ProjectPage({
               <div className="mb-12 rounded-lg overflow-hidden">
                 <OptimizedImage
                   imageName={project.image}
-                  alt={project.title}
+                  alt={project.title === "Metson Rooms" ? "Metson Rooms exterior 1060 Howe Street Vancouver affordable housing hotel conversion" : project.title}
                   category="portfolio"
                   className="w-full h-full object-cover"
                   aspectRatio="16/9"
