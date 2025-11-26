@@ -122,7 +122,7 @@ export const portfolioProjectsData: ProjectData[] = [
     description: "A 100-room hotel providing affordable housing with on-site support services for vulnerable inner-city residents.",
     briefDescription: "100-unit hotel conversion providing affordable rooms and support services.",
     comprehensiveDetails: "Metson Rooms was converted from a historic hotel to provide safe, affordable housing with wraparound support services.",
-    image: "DodsonsRooms_1",
+    image: "1060howe",
     status: "completed",
     type: "Hotel Conversion",
     highlights: [
