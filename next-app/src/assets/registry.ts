@@ -28,6 +28,7 @@ import thinkingStatueLaptopLg from './baseAssets/thinkingStatueLaptop-512x288.we
 import thinkingStatueLaptopXl from './baseAssets/thinkingStatueLaptop-640x360.webp';
 import img1060howeSm from './baseAssets/1060howe-320x190.webp';
 import img1060howeMd from './baseAssets/1060howe-384x228.webp';
+import img1060howeFallback from './1060howe.jpg';
 import img162MainSm from './baseAssets/162Main-320x180.webp';
 import img162MainMd from './baseAssets/162Main-384x216.webp';
 import img162MainLg from './baseAssets/162Main-512x288.webp';
@@ -226,7 +227,7 @@ export interface ImageEntry {
 export const imageRegistry: Record<string, ImageEntry> = {
   '1060howe': {
     webp: { sm: img1060howeSm, md: img1060howeMd },
-    fallback: img1060howeSm,
+    fallback: img1060howeFallback,
     dimensions: { sm: { width: 320, height: 190 }, md: { width: 384, height: 228 } },
   },
   '162Main': {
