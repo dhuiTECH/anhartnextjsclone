@@ -31,7 +31,7 @@ const aboutUsDropdown = [
 const portfolioDropdown = [
   {
     name: "Projects",
-    href: "/portfolio",
+    href: "/projects",
     description:
       "Explore a few of our affordable housing projects across Canada",
   },
