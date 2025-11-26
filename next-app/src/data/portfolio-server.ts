@@ -29,7 +29,7 @@ import { ProjectData } from "@/types/project";
 // PORTFOLIO PROJECTS DATA
 // =============================================================================
 
-export const portfolioProjects: ProjectData[] = [
+export const portfolioProjectsData: ProjectData[] = [
   {
     id: 1,
     title: "Jubilee Rooms",
