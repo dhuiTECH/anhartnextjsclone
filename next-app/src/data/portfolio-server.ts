@@ -262,7 +262,7 @@ export const portfolioProjectsData: ProjectData[] = [
     id: 14,
     title: "Merritt Village",
     location: "3757 De Wolf Way, Merritt, BC",
-    year: "2026",
+    year: "2027",
     units: 45,
     description: "A townhouse development in Merritt, BC, designed to provide private ownership opportunities and shared community infrastructure.",
     briefDescription: "45-unit townhouse village providing affordable homeownership and community-building opportunities.",
