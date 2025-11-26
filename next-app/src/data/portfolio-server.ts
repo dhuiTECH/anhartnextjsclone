@@ -195,7 +195,7 @@ export const portfolioProjectsData: ProjectData[] = [
     id: 10,
     title: "Kwas House",
     location: "Hope, BC",
-    year: "2023",
+    year: "2027",
     units: 14,
     description: "Kwas House is a specialized inclusive housing development located at 477 Hudson Bay Street in Hope, BC. Developed in partnership with the Fraser Inclusive and Supportive Housing Society (FISH), this project was designed to address a critical gap in the housing market: safe, independent living for adults with cognitive disabilities and seniors.\n\nThe 3-storey building features 14 purpose-built rental units that foster a \"neighbour-helping-neighbour\" community model. By combining independent suites with shared amenity spaces, Kwas House allows residents to live with autonomy while remaining connected to vital support networks.\n\n## Operations & Management\n\nThis project was developed by Anhart on behalf of the Fraser Inclusive and Supportive Housing Society (FISH), who now own and operate the building.\n\nFISH is a parent-led non-profit dedicated to creating housing solutions that allow loved ones to stay in their home community of Hope rather than being displaced to larger cities for care.\n\nHousing Inquiries: For information on eligibility and availability at Kwas House, please visit the [Kwas House / FISH Society website](https://www.kwashouse.org/) or contact them at info@kwashouse.org.",
     briefDescription: "14-unit inclusive housing development for adults with cognitive disabilities and seniors in Hope, BC.",
