@@ -204,9 +204,19 @@ export default async function ProjectPage({
 
             {/* Description */}
             <div className="mb-12 space-y-6">
-              <div>
+              <div className="prose prose-lg max-w-none">
                 <h2 className="text-2xl font-bold text-foreground mb-4">Project Overview</h2>
-                <p className="text-lg text-muted-foreground leading-relaxed">{project.description}</p>
+                {project.description && project.description.split('\n\n').map((paragraph, idx) => {
+                  if (paragraph.startsWith('###')) {
+                    // Handle H3 headings (must check before ##)
+                    return <h4 key={idx} className="text-lg font-semibold text-foreground mt-6 mb-3">{paragraph.replace('###', '').trim()}</h4>;
+                  }
+                  if (paragraph.startsWith('##')) {
+                    // Handle H2 headings
+                    return <h3 key={idx} className="text-xl font-bold text-foreground mt-8 mb-4">{paragraph.replace('##', '').trim()}</h3>;
+                  }
+                  return <p key={idx} className="text-base text-muted-foreground leading-relaxed mb-4">{paragraph}</p>;
+                })}
               </div>
 
               {/* Highlights */}
