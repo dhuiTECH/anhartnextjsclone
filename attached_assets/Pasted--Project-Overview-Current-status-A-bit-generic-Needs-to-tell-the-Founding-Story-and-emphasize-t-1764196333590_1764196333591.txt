@@ -1,0 +1,39 @@
+"Project Overview"
+Current status: A bit generic. Needs to tell the "Founding Story" and emphasize the risk/reward of this early project.
+
+Copy/Paste this expanded version:
+
+The Jubilee Rooms (235 Main St) serves as the foundational cornerstone of Anhart’s history. Completed in 2000, this project involved the acquisition and extensive renovation of a derelict historic hotel on the corner of Main and Powell.
+
+At a time when few developers were investing in the Downtown Eastside, this project proved our core thesis: that private capital could be effectively mobilized to solve public housing crises. By transforming a neglected property into 80 units of safe, affordable housing, the Jubilee Rooms set the standard for SRO (Single Room Occupancy) revitalization in Vancouver.
+
+2. Add Section: "Operations & Management"
+Crucial Update: Since the building was sold to the Province in 2018, you must direct tenants to the current operator, RainCity Housing.
+
+Suggested Header: Operations & Management
+
+While developed and originally managed by Anhart, the Jubilee Rooms is now part of the provincial supportive housing portfolio to ensure its affordability in perpetuity.
+
+The building is currently operated by RainCity Housing, providing residents with 24/7 support services and meal programs.
+
+Tenant Inquiries: For all inquiries regarding housing applications or tenant support at this location, please visit the RainCity Housing Jubilee Rooms page.
+
+3. Expand "Key Highlights"
+Current status: Good, but let's make them punchier for SEO.
+
+Copy/Paste these bullets:
+
+80 Affordable Homes: Preserved critical low-income housing stock in a rapidly gentrifying neighbourhood.
+
+Heritage Preservation: Restored the character of the turn-of-the-century building while upgrading life-safety systems and plumbing.
+
+The "First" Project: The success of the Jubilee Rooms launched Anhart’s broader mission, leading to the creation of over 15 subsequent social impact developments.
+
+Community Catalyst: Demonstrated the viability of the "Social Enterprise" model in real estate, influencing housing policy in the Downtown Eastside.
+
+4. Technical SEO Updates
+Page Title Tag: Jubilee Rooms | Historic SRO Renovation & Affordable Housing Vancouver
+
+Image Alt Text: Update your main image alt tag to:
+
+Jubilee Rooms exterior 235 Main Street Vancouver historic hotel renovation
