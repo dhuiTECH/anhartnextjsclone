@@ -1,0 +1,39 @@
+Rewrite "Project Overview"
+Current status: Too generic. It needs to mention the "Hotel Conversion" strategy and the specific focus on Indigenous support.
+
+Copy/Paste this expanded version:
+
+Skeena House is a vital supportive housing site located at 3475 East Hastings Street in the Hastings-Sunrise neighbourhood. Originally a commercial hotel, the property was acquired and rapidly converted into housing to provide an immediate response to the city’s homelessness crisis.
+
+Developed in partnership with the Vancouver Aboriginal Friendship Centre Society (VAFCS), this project prioritizes housing for Indigenous individuals, offering a culturally safe environment that fosters community connection and stability.
+
+2. Add Section: "Operations & Management"
+Important: Use this section to route traffic to VAFCS, who manages the intake.
+
+Suggested Header: Operations & Management
+
+Skeena House is operated by the Vancouver Aboriginal Friendship Centre Society (VAFCS).
+
+The society provides 24/7 on-site support, including access to cultural programming, health resources, and meals, ensuring residents receive holistic care rooted in Indigenous values.
+
+Housing Inquiries: For information on eligibility and vacancy at Skeena House, please contact the VAFCS Housing & Shelter Department directly.
+
+3. Expand "Key Highlights"
+Current status: A single bullet point. We need to add the "Speed" and "Partnership" angles.
+
+Copy/Paste these bullets:
+
+85 Supportive Homes: Provides secure, self-contained units for individuals transitioning out of displacement.
+
+Rapid Conversion: Demonstrates the efficiency of adaptive reuse, transforming an existing hotel into fully functional housing in a fraction of the time required for new construction.
+
+Indigenous-Led Support: Operations are grounded in Indigenous advocacy and cultural wellness, addressing the disproportionate representation of Indigenous peoples in the homeless population.
+
+Decentralized Location: Located outside the Downtown Eastside, providing residents with a quieter community setting while remaining close to transit and amenities.
+
+4. Technical SEO Updates
+Page Title Tag: Skeena House | Indigenous-Led Supportive Housing Vancouver
+
+Image Alt Text: Update your main image tag to:
+
+Skeena House exterior 3475 East Hastings Vancouver supportive housing hotel conversion
