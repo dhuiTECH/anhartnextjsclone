@@ -242,4 +242,25 @@ export const portfolioProjectsData: ProjectData[] = [
       "Learn more at https://anhartconstruction.ca/",
     ],
   },
+  {
+    id: 16,
+    title: "Modular Homes Factory",
+    location: "Hope, BC",
+    year: "2025",
+    units: 120,
+    description:
+      "State-of-the-art manufacturing facility producing prefabricated modular homes for rapid deployment across Canada. Designed to scale affordable housing production while maintaining quality and sustainability standards.",
+    image: "ModularH_1",
+    status: "in-progress",
+    type: "Manufacturing Facility",
+    highlights: [
+      "120+ units annual production capacity",
+      "Advanced prefabrication technology",
+      "Sustainable material sourcing",
+      "Rapid deployment across Canada",
+      "Quality-controlled manufacturing process",
+      "Support for Anhart's 20,000-unit goal by 2045",
+      "Local job creation in Hope, BC",
+    ],
+  },
 ];
