@@ -1,0 +1,32 @@
+Anhart Sustainable Villages represents our commitment to global equity, extending our mission beyond Canada to the developing world. The flagship initiative is currently underway in Homa Bay, Kenya, where we are constructing a community of 200 sustainable homes for families facing extreme housing insecurity.
+
+Unlike traditional aid, this project utilizes Earthbag (Superadobe) construction—an eco-friendly, seismically sound method that uses locally sourced soil and labor. This approach not only lowers the carbon footprint but also keeps investment dollars within the local economy, creating jobs and skills training for community members.
+
+2. Add Section: "Partnership Model"
+International projects live or die by their partners. You need to show that this is community-led, not just "charity."
+
+Suggested Header: Community-Led Development
+
+We believe the most sustainable solutions are locally rooted. Anhart acts as a catalyst—providing capital, architectural planning, and project management oversight—while our local on-ground partners lead the construction and tenant selection process.
+
+This Community Land Trust model ensures that the housing remains affordable in perpetuity and that the village infrastructure (water, sanitation, and solar power) is maintained by the community, for the community.
+
+3. Expand "Key Highlights"
+Current status: Generic. Let's make it technical and impressive.
+
+Copy/Paste these bullets:
+
+Earthbag Technology: Utilizes thermal-mass construction that naturally regulates temperature, requiring zero energy for cooling in hot climates.
+
+Economic Empowerment: The construction process employs over 100 local workers, providing income and transferring valuable trade skills to the region.
+
+Holistic Infrastructure: The village includes clean water access, solar lighting, and communal agricultural spaces to support food security.
+
+Scalable Prototype: Designed as a blueprint for low-cost, high-durability housing that can be replicated in other regions of the Global South.
+
+4. Technical SEO Updates
+Page Title Tag: Anhart Sustainable Villages | Earthbag Housing Kenya & International Development
+
+Image Alt Text: Update your main image tag to:
+
+Earthbag sustainable housing construction site in Homa Bay Kenya Anhart Villages
