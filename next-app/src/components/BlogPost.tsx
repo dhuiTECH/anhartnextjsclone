@@ -177,17 +177,6 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
           <div className="relative min-h-[300px] sm:min-h-[350px] md:min-h-[600px] lg:min-h-[700px] flex items-end">
             <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 pb-8 sm:pb-16 pt-12 sm:pt-32 w-full">
               <ScrollAnimationWrapper direction="bottom">
-                {/* Breadcrumb Navigation */}
-                <div className="mb-4 sm:mb-6">
-                  <Breadcrumb
-                    items={[
-                      { name: "Blog", url: "/blog" },
-                      { name: post.title, url: `/blog/${post.slug}` },
-                    ]}
-                    className="text-white/90 [&_a]:text-white/90 [&_a:hover]:text-primary [&_span]:text-white"
-                  />
-                </div>
-
                 <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
                   <Badge className="bg-primary text-primary-foreground text-xs sm:text-sm">
                     {post.category}
@@ -226,6 +215,18 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                 </p>
               </ScrollAnimationWrapper>
             </div>
+          </div>
+        </section>
+
+        {/* Breadcrumb Navigation - After Hero */}
+        <section className="bg-background border-b border-muted">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            <Breadcrumb
+              items={[
+                { name: "Blog", url: "/blog" },
+                { name: post.title, url: `/blog/${post.slug}` },
+              ]}
+            />
           </div>
         </section>
 
