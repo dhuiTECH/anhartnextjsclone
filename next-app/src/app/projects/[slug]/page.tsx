@@ -254,7 +254,7 @@ export default async function ProjectPage({
 
               {/* Highlights */}
               {project.highlights && project.highlights.length > 0 && (
-                <div className="border-4 border-red-500 rounded-lg p-6">
+                <div>
                   <h3 className="text-xl font-bold text-foreground mb-4">Key Highlights</h3>
                   <ul className="space-y-3">
                     {project.highlights.map((highlight, index) => (
