@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
+import { useTurnstile } from "@/hooks/useTurnstile";
 import {
   Dialog,
   DialogClose,
@@ -53,21 +54,7 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Turnstile state
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [turnstileKey, setTurnstileKey] = useState(0);
-
-  // Turnstile callbacks (memoized to prevent re-render loops)
-  const handleTurnstileSuccess = useCallback((token: string) => {
-    setTurnstileToken(token);
-  }, []);
-
-  const handleTurnstileError = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
-
-  const handleTurnstileExpire = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
+  const { token: turnstileToken, key: turnstileKey, reset: resetTurnstile, handlers: turnstileHandlers } = useTurnstile();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -138,8 +125,7 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
           preferredDate: "",
           preferredTime: "",
         });
-        setTurnstileToken(null);
-        setTurnstileKey((prev) => prev + 1);
+        resetTurnstile();
         setTimeout(() => {
           setIsDialogOpen(false);
           setIsSuccess(false);
@@ -301,9 +287,9 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
               >
                 <Turnstile
                   siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
-                  onSuccess={handleTurnstileSuccess}
-                  onError={handleTurnstileError}
-                  onExpire={handleTurnstileExpire}
+                  onSuccess={turnstileHandlers.onSuccess}
+                  onError={turnstileHandlers.onError}
+                  onExpire={turnstileHandlers.onExpire}
                   theme="auto"
                   size="invisible"
                 />

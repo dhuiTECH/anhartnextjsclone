@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +10,7 @@ import anhartLogoWhitePng from "@/assets/anhart-logo-white.png";
 import { CONTACT_INFO, AddressUtils } from "@/config/address";
 import { openGoogleMapsSearch } from "@/utils/externalLinks";
 import { useNewsletterSubscription } from "@/hooks/useNewsletterSubscription";
+import { useTurnstile } from "@/hooks/useTurnstile";
 import { Turnstile } from "@/components/Turnstile";
 
 const anhartLogoWhiteWebpSrc = typeof anhartLogoWhiteWebp === 'string' ? anhartLogoWhiteWebp : anhartLogoWhiteWebp?.src || '';
@@ -35,8 +36,6 @@ const socialLinks = [{
 }];
 export const Footer = () => {
   const [email, setEmail] = useState("");
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [turnstileKey, setTurnstileKey] = useState(0);
   const [honeypot, setHoneypot] = useState("");
   
   const {
@@ -44,18 +43,8 @@ export const Footer = () => {
     isSubmitting
   } = useNewsletterSubscription();
 
-  // Turnstile callbacks (memoized to prevent re-render loops)
-  const handleTurnstileSuccess = useCallback((token: string) => {
-    setTurnstileToken(token);
-  }, []);
-
-  const handleTurnstileError = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
-
-  const handleTurnstileExpire = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
+  // Turnstile state
+  const { token: turnstileToken, key: turnstileKey, reset: resetTurnstile, handlers: turnstileHandlers } = useTurnstile();
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,8 +64,7 @@ export const Footer = () => {
     if (success) {
       setEmail(""); // Clear form on success
       setHoneypot(""); // Clear honeypot
-      setTurnstileToken(null);
-      setTurnstileKey((prev) => prev + 1); // Reset Turnstile
+      resetTurnstile();
     }
   };
   return (
@@ -185,9 +173,9 @@ export const Footer = () => {
                       <div key={turnstileKey}>
                         <Turnstile
                           siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
-                          onSuccess={handleTurnstileSuccess}
-                          onError={handleTurnstileError}
-                          onExpire={handleTurnstileExpire}
+                          onSuccess={turnstileHandlers.onSuccess}
+                          onError={turnstileHandlers.onError}
+                          onExpire={turnstileHandlers.onExpire}
                           theme="auto"
                           size="invisible"
                         />
@@ -320,9 +308,9 @@ export const Footer = () => {
                   <div key={turnstileKey}>
                     <Turnstile
                       siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
-                      onSuccess={handleTurnstileSuccess}
-                      onError={handleTurnstileError}
-                      onExpire={handleTurnstileExpire}
+                      onSuccess={turnstileHandlers.onSuccess}
+                      onError={turnstileHandlers.onError}
+                      onExpire={turnstileHandlers.onExpire}
                       theme="auto"
                       size="invisible"
                     />

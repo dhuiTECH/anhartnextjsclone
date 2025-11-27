@@ -7,8 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { FileText, Users, DollarSign, Building, Shield, Target, Calendar, Mail, CheckCircle, ArrowRight, TrendingUp, Heart, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
+import { useTurnstile } from "@/hooks/useTurnstile";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { Turnstile } from "@/components/Turnstile";
 
 // Partnership expectations - what we expect from limited partners
@@ -174,21 +175,7 @@ export const LimitedPartnership = () => {
   const [gestureStartY, setGestureStartY] = useState(0);
   
   // Turnstile state
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [turnstileKey, setTurnstileKey] = useState(0);
-  
-  // Turnstile callbacks (memoized to prevent re-render loops)
-  const handleTurnstileSuccess = useCallback((token: string) => {
-    setTurnstileToken(token);
-  }, []);
-  
-  const handleTurnstileError = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
-  
-  const handleTurnstileExpire = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
+  const { token: turnstileToken, key: turnstileKey, reset: resetTurnstile, handlers: turnstileHandlers } = useTurnstile();
 
   // =============================================================================
   // NAVIGATION FUNCTIONS
@@ -385,8 +372,7 @@ export const LimitedPartnership = () => {
     });
     if (success) {
       form.reset();
-      setTurnstileToken(null);
-      setTurnstileKey((prev) => prev + 1);
+      resetTurnstile();
     }
   };
   return <section id="limited-partnership" className="py-12 md:py-24 bg-gradient-to-br from-muted/20 via-muted/30 to-muted/40 sm:py-[50px] relative overflow-hidden">
@@ -1263,9 +1249,9 @@ export const LimitedPartnership = () => {
                 <div className="flex justify-center" key={turnstileKey}>
                   <Turnstile
                     siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
-                    onSuccess={handleTurnstileSuccess}
-                    onError={handleTurnstileError}
-                    onExpire={handleTurnstileExpire}
+                    onSuccess={turnstileHandlers.onSuccess}
+                    onError={turnstileHandlers.onError}
+                    onExpire={turnstileHandlers.onExpire}
                     theme="auto"
                     size="normal"
                   />

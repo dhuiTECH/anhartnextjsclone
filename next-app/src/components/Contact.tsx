@@ -11,10 +11,11 @@ import { Label } from "@/components/ui/label";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { GoogleMapEmbed } from "@/components/shared/GoogleMaps";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
+import { useTurnstile } from "@/hooks/useTurnstile";
 import { CONTACT_INFO, AddressUtils } from "@/config/address";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { Turnstile } from "@/components/Turnstile";
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import contactHeroImg from "@/assets/baseAssets/contact-hero-1280x720.webp";
 
 const contactHero = typeof contactHeroImg === 'string' ? contactHeroImg : contactHeroImg?.src || '';
@@ -47,38 +48,20 @@ export const Contact = () => {
   const [isSubscribing, setIsSubscribing] = useState(false);
   
   // Turnstile state for contact form
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [turnstileKey, setTurnstileKey] = useState(0);
+  const { 
+    token: turnstileToken, 
+    key: turnstileKey, 
+    reset: resetTurnstile, 
+    handlers: turnstileHandlers 
+  } = useTurnstile();
   
   // Turnstile state for newsletter form
-  const [newsletterTurnstileToken, setNewsletterTurnstileToken] = useState<string | null>(null);
-  const [newsletterTurnstileKey, setNewsletterTurnstileKey] = useState(0);
-  
-  // Turnstile callbacks for contact form (memoized)
-  const handleTurnstileSuccess = useCallback((token: string) => {
-    setTurnstileToken(token);
-  }, []);
-  
-  const handleTurnstileError = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
-  
-  const handleTurnstileExpire = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
-  
-  // Turnstile callbacks for newsletter form (memoized)
-  const handleNewsletterTurnstileSuccess = useCallback((token: string) => {
-    setNewsletterTurnstileToken(token);
-  }, []);
-  
-  const handleNewsletterTurnstileError = useCallback(() => {
-    setNewsletterTurnstileToken(null);
-  }, []);
-  
-  const handleNewsletterTurnstileExpire = useCallback(() => {
-    setNewsletterTurnstileToken(null);
-  }, []);
+  const { 
+    token: newsletterTurnstileToken, 
+    key: newsletterTurnstileKey, 
+    reset: resetNewsletterTurnstile, 
+    handlers: newsletterTurnstileHandlers 
+  } = useTurnstile();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -110,8 +93,7 @@ export const Contact = () => {
     });
     if (success) {
       form.reset();
-      setTurnstileToken(null);
-      setTurnstileKey((prev) => prev + 1);
+      resetTurnstile();
     }
   };
   const handleSubscribeSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -145,8 +127,7 @@ export const Contact = () => {
       });
       if (success) {
         form.reset();
-        setNewsletterTurnstileToken(null);
-        setNewsletterTurnstileKey((prev) => prev + 1);
+        resetNewsletterTurnstile();
       }
     } finally {
       setIsSubscribing(false);
@@ -252,9 +233,9 @@ export const Contact = () => {
                     <div className="flex justify-center" key={newsletterTurnstileKey}>
                       <Turnstile
                         siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
-                        onSuccess={handleNewsletterTurnstileSuccess}
-                        onError={handleNewsletterTurnstileError}
-                        onExpire={handleNewsletterTurnstileExpire}
+                        onSuccess={newsletterTurnstileHandlers.onSuccess}
+                        onError={newsletterTurnstileHandlers.onError}
+                        onExpire={newsletterTurnstileHandlers.onExpire}
                         theme="auto"
                         size="normal"
                       />
@@ -359,9 +340,9 @@ export const Contact = () => {
                   <div className="flex justify-center" key={turnstileKey}>
                     <Turnstile
                       siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
-                      onSuccess={handleTurnstileSuccess}
-                      onError={handleTurnstileError}
-                      onExpire={handleTurnstileExpire}
+                      onSuccess={turnstileHandlers.onSuccess}
+                      onError={turnstileHandlers.onError}
+                      onExpire={turnstileHandlers.onExpire}
                       theme="auto"
                       size="normal"
                     />

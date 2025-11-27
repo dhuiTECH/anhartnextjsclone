@@ -30,13 +30,14 @@ import Link from "next/link";
 // =============================================================================
 // REACT & HOOKS IMPORTS
 // =============================================================================
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 
 // =============================================================================
 // CUSTOM HOOKS
 // =============================================================================
 import { useCountUp } from "@/hooks/useCountUp";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
+import { useTurnstile } from "@/hooks/useTurnstile";
 
 // =============================================================================
 // CONFIGURATION IMPORTS
@@ -205,39 +206,13 @@ const Home = () => {
    * Turnstile State Management
    * Tracks the Cloudflare Turnstile token for form submission
    */
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [turnstileKey, setTurnstileKey] = useState(0); // Key to force Turnstile reset
+  const { token: turnstileToken, key: turnstileKey, reset: resetTurnstile, handlers: turnstileHandlers } = useTurnstile();
 
   /**
    * Featured Blogs State Management
    * Stores the featured blog posts to display
    */
   const [featuredBlogs, setFeaturedBlogs] = useState<BlogPost[]>([]);
-
-  // =============================================================================
-  // TURNSTILE CALLBACKS (Memoized to prevent re-render loops)
-  // =============================================================================
-
-  /**
-   * Turnstile success callback - memoized to prevent infinite re-renders
-   */
-  const handleTurnstileSuccess = useCallback((token: string) => {
-    setTurnstileToken(token);
-  }, []);
-
-  /**
-   * Turnstile error callback - memoized to prevent infinite re-renders
-   */
-  const handleTurnstileError = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
-
-  /**
-   * Turnstile expire callback - memoized to prevent infinite re-renders
-   */
-  const handleTurnstileExpire = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
 
   // =============================================================================
   // EVENT HANDLERS
@@ -285,8 +260,7 @@ const Home = () => {
     // Reset form and Turnstile on successful submission
     if (success) {
       form.reset();
-      setTurnstileToken(null);
-      setTurnstileKey((prev) => prev + 1); // Force Turnstile to reset by changing key
+      resetTurnstile();
     }
   };
 
@@ -858,9 +832,9 @@ const Home = () => {
                       <div className="flex justify-center" key={turnstileKey}>
                         <Turnstile
                           siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
-                          onSuccess={handleTurnstileSuccess}
-                          onError={handleTurnstileError}
-                          onExpire={handleTurnstileExpire}
+                          onSuccess={turnstileHandlers.onSuccess}
+                          onError={turnstileHandlers.onError}
+                          onExpire={turnstileHandlers.onExpire}
                           theme="auto"
                           size="normal"
                         />
