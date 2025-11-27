@@ -8,6 +8,7 @@ import OptimizedImage from '@/components/OptimizedImage';
 import { cn } from '@/lib/utils';
 import { ScrollAnimationWrapper } from '@/components/animations/ScrollAnimationWrapper';
 import { FlippableCard } from '@/components/shared/FlippableCard';
+import { getCardImageAltText } from '@/lib/altText';
 
 /**
  * ThreeCardSection Component
@@ -421,14 +422,14 @@ export const ThreeCardSection: React.FC<{
           {showImages && card.image && <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
               {card.image.startsWith('http') ?
           // Use regular img tag for external URLs only
-          <img src={card.image} alt={card.title} className="w-full h-full object-cover" loading="lazy" decoding="async" onError={e => {
+          <img src={card.image} alt={getCardImageAltText(card.title, card.description)} className="w-full h-full object-cover" loading="lazy" decoding="async" onError={e => {
             logger.warn('Image failed to load', { component: 'ThreeCardSection', imageUrl: card.image });
             (e.currentTarget as HTMLElement).style.display = 'none';
             const fallback = e.currentTarget.nextElementSibling as HTMLElement;
             if (fallback) fallback.style.display = 'flex';
           }} /> :
           // Use OptimizedImage for all other images
-          <OptimizedImage imageName={card.image} alt={card.title} category="initiative" className="w-full h-full" aspectRatio="16/9" loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />}
+          <OptimizedImage imageName={card.image} alt={getCardImageAltText(card.title, card.description)} category="initiative" className="w-full h-full" aspectRatio="16/9" loading="lazy" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" />}
               {/* Fallback for failed images */}
               <div className="w-full h-full bg-muted flex items-center justify-center" style={{
             display: 'none'

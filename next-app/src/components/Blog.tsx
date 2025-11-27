@@ -14,6 +14,7 @@ import { getSortedPosts, BlogPost as BlogPostType } from "@/data/blog";
 import { useState, useMemo, useEffect } from "react";
 import { logger } from "@/utils/logger";
 import { HeroBanner } from "@/components/shared/HeroBanner";
+import { getBlogListingAltText } from "@/lib/altText";
 
 /**
  * Blog Listing Page
@@ -164,7 +165,7 @@ const Blog = () => {
                           <div className="relative h-48 overflow-hidden">
                             <img
                               src={normalizeImageUrl(post.featuredImage)}
-                              alt={post.title}
+                              alt={getBlogListingAltText(post.title, post.category)}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               loading="lazy"
                               onError={(e) => {

@@ -43,6 +43,7 @@ import { ExternalLink } from "lucide-react";
 // DATA IMPORTS
 // =============================================================================
 import { ourFocusData, FocusCard, OurFocusPage } from "@/data/our-focus";
+import { getPortfolioListingAltText } from "@/lib/altText";
 
 // =============================================================================
 // IMAGE SERVICE IMPORTS
@@ -150,7 +151,7 @@ const FocusCardComponent: React.FC<FocusCardProps> = ({ card, onViewDetails }) =
               )}
               <img
                 src={imageData.fallback}
-                alt={card.exampleProject.name}
+                alt={getPortfolioListingAltText(card.exampleProject.name, card.exampleProject.location, card.exampleProject.type)}
                 className="w-full h-full object-cover object-center group-hover:brightness-110 transition-all duration-300"
                 loading="lazy"
                 decoding="async"
@@ -246,7 +247,7 @@ const ProjectDetailsModal: React.FC<ProjectDetailsModalProps> = ({ isOpen, onClo
                       )}
                       <img
                         src={imageData.fallback}
-                        alt={card.exampleProject.name}
+                        alt={getPortfolioListingAltText(card.exampleProject.name, card.exampleProject.location, card.exampleProject.type)}
                         className="w-full h-full object-cover object-center"
                         loading="lazy"
                         decoding="async"

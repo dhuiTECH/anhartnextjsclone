@@ -118,6 +118,7 @@ import {
 // =============================================================================
 import { ProjectData } from "@/types/project";
 import { BlogPost, getFeaturedPosts } from "@/data/blog";
+import { getBlogListingAltText } from "@/lib/altText";
 
 // =============================================================================
 // DATA & CONFIGURATION IMPORTS
@@ -976,7 +977,7 @@ const Home = () => {
                             <div className="relative h-48 overflow-hidden">
                               <img
                                 src={normalizeImageUrl(post.featuredImage)}
-                                alt={post.title}
+                                alt={getBlogListingAltText(post.title, post.category)}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 loading="lazy"
                                 onError={(e) => {

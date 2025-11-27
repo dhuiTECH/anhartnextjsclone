@@ -17,6 +17,7 @@ import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationW
 // =============================================================================
 // EXTRACTED DATA IMPORTS
 // =============================================================================
+import { getMediaImageAltText } from "@/lib/altText";
 import { mediaGallery,
 // @source: src/pages/Media.tsx - mediaGallery variable
 pdfDocuments,
@@ -723,7 +724,7 @@ const Media = () => {
                       <div onClick={() => openVideoModal(item)} className="relative h-48 rounded-xl overflow-hidden group cursor-pointer bg-muted">
                         <img 
                           src={item.thumbnail} 
-                          alt={item.title}
+                          alt={getMediaImageAltText(item.title, item.type)}
                           className="w-full h-full object-cover"
                           loading="lazy"
                           onError={(e) => {
@@ -801,7 +802,7 @@ const Media = () => {
                                 <div onClick={() => openVideoModal(mediaGallery[currentMediaIndex])} className="relative h-48 rounded-xl overflow-hidden group cursor-pointer bg-muted">
                                   <img 
                                     src={mediaGallery[currentMediaIndex].thumbnail} 
-                                    alt={mediaGallery[currentMediaIndex].title}
+                                    alt={getMediaImageAltText(mediaGallery[currentMediaIndex].title, mediaGallery[currentMediaIndex].type)}
                                     className="w-full h-full object-cover"
                                     loading="lazy"
                                     onError={(e) => {

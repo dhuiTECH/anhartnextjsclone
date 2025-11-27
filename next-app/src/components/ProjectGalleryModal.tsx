@@ -19,6 +19,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { ProjectData } from "@/types/project";
+import { getProjectAltText } from "@/lib/altText";
 
 // Portfolio image imports
 import imgJubileeSign from "@/assets/portfolioAssets/Jubilee-Sign.jpg";
@@ -153,7 +154,7 @@ export const ProjectGalleryModal: React.FC<ProjectGalleryModalProps> = ({ isOpen
                       )}
                       <img
                         src={imagePaths.fallback}
-                        alt={project.title}
+                        alt={getProjectAltText(project.title, project.location, project.type)}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                         onError={(e) => {
                           (e.currentTarget as HTMLElement).style.display =

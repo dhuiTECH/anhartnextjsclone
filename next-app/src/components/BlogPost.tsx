@@ -17,6 +17,7 @@ import {
   getRelatedPosts,
   BlogPost as BlogPostType,
 } from "@/data/blog";
+import { getBlogPostAltText, getBlogListingAltText } from "@/lib/altText";
 
 /**
  * Individual Blog Post Page
@@ -163,7 +164,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
           <div className="absolute inset-0 bg-muted">
             <img
               src={normalizeImageUrl(post.featuredImage)}
-              alt={post.title}
+              alt={getBlogPostAltText(post.title, post.category)}
               className="w-full h-full object-cover"
               loading="eager"
               onError={(e) => {
@@ -316,7 +317,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                         <div className="relative h-48 overflow-hidden">
                           <img
                             src={normalizeImageUrl(relatedPost.featuredImage)}
-                            alt={relatedPost.title}
+                            alt={getBlogListingAltText(relatedPost.title, relatedPost.category)}
                             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                             loading="lazy"
                             onError={(e) => {

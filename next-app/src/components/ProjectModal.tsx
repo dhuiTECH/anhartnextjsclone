@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { ProjectData } from "@/types/project";
 import { StatusBadge } from "@/components/shared/StatusBadge";
+import { getProjectAltText } from "@/lib/altText";
 
 // Portfolio image imports
 import imgJubileeSign from "@/assets/portfolioAssets/Jubilee-Sign.jpg";
@@ -175,7 +176,7 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
                           )}
                           <img
                             src={imagePaths.fallback}
-                            alt={project.title}
+                            alt={getProjectAltText(project.title, project.location, project.type)}
                             className="w-full h-full object-cover"
                             loading="lazy"
                             decoding="async"

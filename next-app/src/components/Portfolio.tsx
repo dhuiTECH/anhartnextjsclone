@@ -17,6 +17,7 @@ import { projectStructuredData } from "@/lib/structuredData";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { generateProjectSlug } from "@/lib/slug";
 import Link from "next/link";
+import { getPortfolioListingAltText } from "@/lib/altText";
 
 // =============================================================================
 // EXTRACTED DATA IMPORTS
@@ -149,7 +150,7 @@ const Portfolio = () => {
                       {project.image ? (
                         <OptimizedImage
                           imageName={project.image}
-                          alt={project.title}
+                          alt={getPortfolioListingAltText(project.title, project.location, project.type)}
                           category="portfolio"
                           className="w-full h-full rounded-sm object-cover"
                           aspectRatio="16/9"
