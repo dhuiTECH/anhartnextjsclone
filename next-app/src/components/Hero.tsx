@@ -1,23 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import anhartLogoWebp from "@/assets/anhart-logo.webp";
 import anhartLogoPng from "@/assets/anhart-logo.png";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
-import { useEffect, useRef, useState, useCallback } from "react";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Turnstile } from "@/components/Turnstile";
+import { useRef, useState } from "react";
+import { BookingFormDialog } from "@/components/BookingFormDialog";
+import { useParallax } from "@/hooks/useParallax";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const anhartLogoWebpSrc =
   typeof anhartLogoWebp === "string"
@@ -26,176 +16,22 @@ const anhartLogoWebpSrc =
 const anhartLogoPngSrc =
   typeof anhartLogoPng === "string" ? anhartLogoPng : anhartLogoPng?.src || "";
 
-const GOOGLE_SHEET_URL =
-  "https://script.google.com/macros/s/AKfycbzfMQYjHKQSR5lOwodWizxUoY4NgB1y03O3tAbHSBCV4ZgpgDbu-4xNbkUTl18lTZzw/exec";
-
 export const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const dateInputRef = useRef<HTMLInputElement>(null);
-  const timeInputRef = useRef<HTMLInputElement>(null);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    location: "",
-    message: "",
-    preferredDate: "",
-    preferredTime: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
   const [videoError, setVideoError] = useState(false);
 
-  // Turnstile state
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [turnstileKey, setTurnstileKey] = useState(0);
-
-  // Turnstile callbacks (memoized to prevent re-render loops)
-  const handleTurnstileSuccess = useCallback((token: string) => {
-    setTurnstileToken(token);
-  }, []);
-
-  const handleTurnstileError = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
-
-  const handleTurnstileExpire = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    let value = e.target.value;
-
-    // Validate date format - limit year to 4 digits
-    if (e.target.name === "preferredDate" && value) {
-      const match = value.match(/^(\d{0,4})(-)?(\d{0,2})?(-)?(\d{0,2})?$/);
-      if (!match) {
-        return; // Don't update if format is invalid
-      }
-      // Prevent year from being longer than 4 digits
-      if (value.includes("-") && value.split("-")[0].length > 4) {
-        value =
-          value.split("-")[0].substring(0, 4) +
-          "-" +
-          value.split("-").slice(1).join("-");
-      }
-    }
-
-    setFormData({ ...formData, [e.target.name]: value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Validate Turnstile token
-    if (!turnstileToken) {
-      alert("Please complete the verification.");
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      // Convert form data to URL-encoded format for Google Apps Script
-      const body = new URLSearchParams();
-      body.append("name", formData.name);
-      body.append("email", formData.email);
-      body.append("phone", formData.phone);
-      body.append("location", formData.location);
-      body.append("message", formData.message);
-      body.append("preferredDate", formData.preferredDate);
-      body.append("preferredTime", formData.preferredTime);
-      body.append("form_type", "booking");
-      body.append("turnstile_token", turnstileToken);
-      body.append("timestamp", new Date().toISOString());
-      body.append("userAgent", navigator.userAgent);
-      body.append("referrer", document.referrer);
-
-      const res = await fetch(GOOGLE_SHEET_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: body.toString(),
-      });
-
-      if (res.ok) {
-        setIsSuccess(true);
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          location: "",
-          message: "",
-          preferredDate: "",
-          preferredTime: "",
-        });
-        setTurnstileToken(null);
-        setTurnstileKey((prev) => prev + 1);
-        setTimeout(() => {
-          setIsDialogOpen(false);
-          setIsSuccess(false);
-        }, 3000);
-      } else {
-        alert("Failed. Try again.");
-      }
-    } catch {
-      alert("No internet.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  useEffect(() => {
-    setIsMobile(window.innerWidth < 640);
-    const handleResize = () => setIsMobile(window.innerWidth < 640);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    if (!isMobile) {
-      // Disable parallax on mobile
-      let rafId: number | null = null;
-      const handleScroll = () => {
-        // Cancel any pending animation frame
-        if (rafId !== null) {
-          cancelAnimationFrame(rafId);
-        }
-
-        // Batch DOM reads and writes using requestAnimationFrame
-        rafId = requestAnimationFrame(() => {
-          const scrolled = window.pageYOffset;
-          const heroHeight = window.innerHeight * 0.85; // ADJUST THIS: Original was 0.85—increase to 0.95 for more parallax room, but watch for overlap
-          if (scrolled <= heroHeight) {
-            const videoRate = scrolled * -0.5;
-            const contentRate = scrolled * 0.15;
-            // Batch all DOM writes together
-            if (videoRef.current) {
-              videoRef.current.style.transform = `translateY(${videoRate}px)`;
-            }
-            if (contentRef.current) {
-              contentRef.current.style.transform = `translateY(${contentRate}px)`;
-            }
-          }
-          rafId = null;
-        });
-      };
-      window.addEventListener("scroll", handleScroll, { passive: true });
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-        if (rafId !== null) {
-          cancelAnimationFrame(rafId);
-        }
-      };
-    }
-  }, [isMobile]);
+  // Apply parallax effect (disabled on mobile)
+  useParallax({
+    videoRef,
+    contentRef,
+    enabled: !isMobile,
+    videoRate: -0.5,
+    contentRate: 0.15,
+    heroHeightMultiplier: 0.85,
+  });
 
   return (
     <section
@@ -315,14 +151,8 @@ export const Hero = () => {
                 delay={400}
                 className="flex-1"
               >
-                <Dialog
-                  open={isDialogOpen}
-                  onOpenChange={(open) => {
-                    setIsDialogOpen(open);
-                    if (!open) setIsSuccess(false);
-                  }}
-                >
-                  <DialogTrigger asChild>
+                <BookingFormDialog
+                  trigger={
                     <Button
                       name="Book Now"
                       size="sm"
@@ -331,158 +161,9 @@ export const Hero = () => {
                     >
                       Book Now
                     </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-md border border-primary/20 shadow-2xl p-3 sm:p-4">
-                    <DialogClose className="absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                      <X className="h-4 w-4" />
-                      <span className="sr-only">Close</span>
-                    </DialogClose>
-                    <DialogHeader className="pb-0">
-                      <DialogTitle className="text-lg font-bold text-primary">
-                        Free Consultation
-                      </DialogTitle>
-                    </DialogHeader>
-                    {isSuccess ? (
-                      <div className="text-center py-2">
-                        <p className="text-green-600 font-semibold text-sm">
-                          Your form has been successfully sent!
-                        </p>
-                        <p className="text-muted-foreground mt-1 text-xs">
-                          We will reach out within 24-48 hours.
-                        </p>
-                      </div>
-                    ) : (
-                      <form onSubmit={handleSubmit} className="space-y-2">
-                        <div>
-                          <Label htmlFor="name" className="text-sm">
-                            Name
-                          </Label>
-                          <Input
-                            id="name"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                            placeholder="Your full name"
-                            required
-                            className="mt-0.5 h-9"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="email" className="text-sm">
-                            Email
-                          </Label>
-                          <Input
-                            id="email"
-                            name="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            placeholder="your.email@example.com"
-                            required
-                            className="mt-0.5 h-9"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="phone" className="text-sm">
-                            Phone (optional)
-                          </Label>
-                          <Input
-                            id="phone"
-                            name="phone"
-                            type="tel"
-                            value={formData.phone}
-                            onChange={handleInputChange}
-                            placeholder="(123) 456-7890"
-                            className="mt-0.5 h-9"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="location" className="text-sm">
-                            Location
-                          </Label>
-                          <Input
-                            id="location"
-                            name="location"
-                            value={formData.location}
-                            onChange={handleInputChange}
-                            placeholder="e.g., Toronto, ON"
-                            required
-                            className="mt-0.5 h-9"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="message" className="text-sm">
-                            Message
-                          </Label>
-                          <Textarea
-                            id="message"
-                            name="message"
-                            value={formData.message}
-                            onChange={handleInputChange}
-                            placeholder="Details about your project..."
-                            rows={3}
-                            required
-                            className="mt-0.5"
-                          />
-                        </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div>
-                            <Label htmlFor="preferredDate" className="text-sm">
-                              Preferred Date
-                            </Label>
-                            <Input
-                              ref={dateInputRef}
-                              id="preferredDate"
-                              name="preferredDate"
-                              type="date"
-                              value={formData.preferredDate}
-                              onChange={handleInputChange}
-                              className="mt-0.5 h-9 text-sm"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="preferredTime" className="text-sm">
-                              Preferred Time
-                            </Label>
-                            <Input
-                              ref={timeInputRef}
-                              id="preferredTime"
-                              name="preferredTime"
-                              type="time"
-                              value={formData.preferredTime}
-                              onChange={handleInputChange}
-                              className="mt-0.5 h-9 text-sm"
-                            />
-                          </div>
-                        </div>
-                        {!isSuccess && (
-                          <div
-                            className="flex justify-center py-1"
-                            key={turnstileKey}
-                          >
-                            <Turnstile
-                              siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
-                              onSuccess={handleTurnstileSuccess}
-                              onError={handleTurnstileError}
-                              onExpire={handleTurnstileExpire}
-                              theme="auto"
-                              size="invisible"
-                            />
-                          </div>
-                        )}
-                        <DialogFooter className="pt-1">
-                          <Button
-                            type="submit"
-                            disabled={isSubmitting || !turnstileToken}
-                            className="w-full sm:w-auto h-9"
-                          >
-                            {isSubmitting ? "Sending..." : "Send"}
-                          </Button>
-                        </DialogFooter>
-                      </form>
-                    )}
-                  </DialogContent>
-                </Dialog>
+                  }
+                  titleSize="sm"
+                />
               </ScrollAnimationWrapper>
             </div>
             {/* Desktop: Original buttons */}
@@ -505,14 +186,8 @@ export const Hero = () => {
                 </a>
               </ScrollAnimationWrapper>
               <ScrollAnimationWrapper direction="bottom" delay={400}>
-                <Dialog
-                  open={isDialogOpen}
-                  onOpenChange={(open) => {
-                    setIsDialogOpen(open);
-                    if (!open) setIsSuccess(false);
-                  }}
-                >
-                  <DialogTrigger asChild>
+                <BookingFormDialog
+                  trigger={
                     <Button
                       name="Book Now"
                       size="lg"
@@ -521,158 +196,9 @@ export const Hero = () => {
                     >
                       Book Now
                     </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-md bg-white/95 backdrop-blur-md border border-primary/20 shadow-2xl p-3 sm:p-4">
-                    <DialogClose className="absolute right-2 top-2 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-                      <X className="h-4 w-4" />
-                      <span className="sr-only">Close</span>
-                    </DialogClose>
-                    <DialogHeader className="">
-                      <DialogTitle className="text-xl font-bold text-primary">
-                        Free Consultation
-                      </DialogTitle>
-                    </DialogHeader>
-                    {isSuccess ? (
-                      <div className="text-center py-2">
-                        <p className="text-green-600 font-semibold text-sm">
-                          Your form has been successfully sent!
-                        </p>
-                        <p className="text-muted-foreground mt-1 text-xs">
-                          We will reach out within 24-48 hours.
-                        </p>
-                      </div>
-                    ) : (
-                      <form onSubmit={handleSubmit} className="space-y-2">
-                        <div>
-                          <Label htmlFor="name" className="text-sm">
-                            Name
-                          </Label>
-                          <Input
-                            id="name"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                            placeholder="Your full name"
-                            required
-                            className="mt-0.5 h-9"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="email" className="text-sm">
-                            Email
-                          </Label>
-                          <Input
-                            id="email"
-                            name="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            placeholder="your.email@example.com"
-                            required
-                            className="mt-0.5 h-9"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="phone" className="text-sm">
-                            Phone (optional)
-                          </Label>
-                          <Input
-                            id="phone"
-                            name="phone"
-                            type="tel"
-                            value={formData.phone}
-                            onChange={handleInputChange}
-                            placeholder="(123) 456-7890"
-                            className="mt-0.5 h-9"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="location" className="text-sm">
-                            Location
-                          </Label>
-                          <Input
-                            id="location"
-                            name="location"
-                            value={formData.location}
-                            onChange={handleInputChange}
-                            placeholder="e.g., Toronto, ON"
-                            required
-                            className="mt-0.5 h-9"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="message" className="text-sm">
-                            Message
-                          </Label>
-                          <Textarea
-                            id="message"
-                            name="message"
-                            value={formData.message}
-                            onChange={handleInputChange}
-                            placeholder="Details about your project..."
-                            rows={3}
-                            required
-                            className="mt-0.5"
-                          />
-                        </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div>
-                            <Label htmlFor="preferredDate" className="text-sm">
-                              Preferred Date
-                            </Label>
-                            <Input
-                              ref={dateInputRef}
-                              id="preferredDate"
-                              name="preferredDate"
-                              type="date"
-                              value={formData.preferredDate}
-                              onChange={handleInputChange}
-                              className="mt-0.5 h-9 text-sm"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="preferredTime" className="text-sm">
-                              Preferred Time
-                            </Label>
-                            <Input
-                              ref={timeInputRef}
-                              id="preferredTime"
-                              name="preferredTime"
-                              type="time"
-                              value={formData.preferredTime}
-                              onChange={handleInputChange}
-                              className="mt-0.5 h-9 text-sm"
-                            />
-                          </div>
-                        </div>
-                        {!isSuccess && (
-                          <div
-                            className="flex justify-center py-1"
-                            key={turnstileKey}
-                          >
-                            <Turnstile
-                              siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
-                              onSuccess={handleTurnstileSuccess}
-                              onError={handleTurnstileError}
-                              onExpire={handleTurnstileExpire}
-                              theme="auto"
-                              size="invisible"
-                            />
-                          </div>
-                        )}
-                        <DialogFooter className="pt-1">
-                          <Button
-                            type="submit"
-                            disabled={isSubmitting || !turnstileToken}
-                            className="w-full sm:w-auto h-9"
-                          >
-                            {isSubmitting ? "Sending..." : "Send"}
-                          </Button>
-                        </DialogFooter>
-                      </form>
-                    )}
-                  </DialogContent>
-                </Dialog>
+                  }
+                  titleSize="lg"
+                />
               </ScrollAnimationWrapper>
             </div>
           </div>
