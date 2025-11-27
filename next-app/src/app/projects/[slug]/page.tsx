@@ -254,12 +254,12 @@ export default async function ProjectPage({
 
               {/* Highlights */}
               {project.highlights && project.highlights.length > 0 && (
-                <div>
+                <div className="border-2 border-red-500 rounded-lg p-6">
                   <h3 className="text-xl font-bold text-foreground mb-4">Key Highlights</h3>
                   <ul className="space-y-3">
                     {project.highlights.map((highlight, index) => (
                       <li key={index} className="flex items-start gap-3">
-                        <span className="text-primary font-bold flex-shrink-0">•</span>
+                        <span className="text-red-500 font-bold flex-shrink-0">•</span>
                         <span className="text-muted-foreground">{highlight}</span>
                       </li>
                     ))}
