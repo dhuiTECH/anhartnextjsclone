@@ -10,6 +10,7 @@ import { HeroBanner } from "@/components/shared/HeroBanner";
 import { HorizontalScrollCarousel } from "@/components/shared/HorizontalScrollCarousel";
 import { MediaItem, PdfDocument, PressRelease } from "@/types/common";
 import React, { useRef, useState, useEffect } from "react";
+import { logger } from "@/utils/logger";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 // Hero image now uses image registry system
 
@@ -190,7 +191,7 @@ const Media = () => {
         throw new Error('PDF not accessible');
       }
     } catch (error) {
-      console.warn('PDF accessibility check failed:', error);
+      logger.warn('PDF accessibility check failed', error, { component: 'Media' });
       setPdfError(true);
       setPdfLoadTimeout(false);
     } finally {
@@ -216,7 +217,7 @@ const Media = () => {
       link.click();
       document.body.removeChild(link);
     } catch (error) {
-      console.error('Download failed:', error);
+      logger.error('Download failed', error, { component: 'Media' });
       // Fallback to opening in new tab
       window.open(pdf.url, '_blank', 'noopener,noreferrer');
     }

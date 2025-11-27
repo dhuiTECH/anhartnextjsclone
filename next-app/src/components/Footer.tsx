@@ -11,6 +11,7 @@ import { CONTACT_INFO, AddressUtils } from "@/config/address";
 import { openGoogleMapsSearch } from "@/utils/externalLinks";
 import { useNewsletterSubscription } from "@/hooks/useNewsletterSubscription";
 import { useTurnstile } from "@/hooks/useTurnstile";
+import { logger } from "@/utils/logger";
 import { Turnstile } from "@/components/Turnstile";
 
 const anhartLogoWhiteWebpSrc = typeof anhartLogoWhiteWebp === 'string' ? anhartLogoWhiteWebp : anhartLogoWhiteWebp?.src || '';
@@ -51,8 +52,8 @@ export const Footer = () => {
     
     // Honeypot check - if filled, it's likely a bot
     if (honeypot && honeypot.trim() !== "") {
-      console.log("Bot detected via honeypot");
-      return; // Silently reject the submission
+      // Silently reject bot submissions - no logging needed
+      return;
     }
 
     // Validate Turnstile token

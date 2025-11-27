@@ -101,7 +101,7 @@ export default async function ProjectPage({
 
   const structuredData = {
     '@context': 'https://schema.org',
-    '@type': 'RealEstateProject',
+    '@type': 'RealEstateDeveloper',
     name: project.title,
     description: project.description,
     location: {

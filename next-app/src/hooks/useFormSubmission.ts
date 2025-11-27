@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { logger } from "@/utils/logger";
 
 // ... (Interface FormData and validateFormData/isValidEmail are unchanged)
 
@@ -88,11 +89,9 @@ export const useFormSubmission = () => {
           description: validationErrors.join(", "),
           variant: "destructive",
         });
-        console.error("Client-side validation errors:", validationErrors);
+        logger.error("Client-side validation errors", { validationErrors });
         return false;
       }
-
-      console.log("Submitting form data to Google Sheets:", formData);
 
       // Build URL-encoded body exactly as Google Apps Script expects
       const body = new URLSearchParams();
@@ -109,8 +108,6 @@ export const useFormSubmission = () => {
       body.append("userAgent", navigator.userAgent);
       body.append("referrer", document.referrer);
 
-      console.log("Request body:", body.toString());
-
       const response = await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
         headers: {
@@ -119,12 +116,13 @@ export const useFormSubmission = () => {
         body: body.toString(),
       });
 
-      console.log("Response status:", response.status, response.statusText);
-
       // --- Enhanced HTTP Error Handling ---
       if (!response.ok) {
         // Log the full response status for debugging
-        console.error("HTTP Error during submission:", response.status, response.statusText);
+        logger.error("HTTP Error during submission", new Error(`Status: ${response.status} ${response.statusText}`), {
+          status: response.status,
+          statusText: response.statusText,
+        });
 
         // Try to get more info from the response body if it's text
         let errorBodyText = `Status: ${response.status} ${response.statusText}`;
@@ -151,7 +149,7 @@ export const useFormSubmission = () => {
         return true;
       } else {
         // Log the specific error from the Google Apps Script response
-        console.error("Google Script Error:", result.error || "No specific error message provided.");
+        logger.error("Google Script Error", new Error(result.error || "No specific error message provided"));
 
         // Display the specific error from the script, if available
         const description = result.error || "The server rejected your submission. Please try again.";
@@ -164,7 +162,7 @@ export const useFormSubmission = () => {
       }
     } catch (error) {
       // --- Enhanced Unexpected Error Handling ---
-      console.error("Unexpected error:", error);
+      logger.error("Unexpected error during form submission", error);
 
       // Determine the error message to display
       let errorMessage = "An unexpected error occurred. Please try again.";

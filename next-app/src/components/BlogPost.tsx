@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { logger } from "@/utils/logger";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
@@ -34,16 +35,9 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
       if (post) {
         try {
           const related = await getRelatedPosts(post);
-          console.log(
-            "BlogPost component: Related posts count:",
-            related.length,
-          );
           setRelatedPosts(related);
         } catch (error) {
-          console.error(
-            "BlogPost component: Error fetching related posts:",
-            error,
-          );
+          logger.error("BlogPost component: Error fetching related posts", error, { component: 'BlogPost' });
         }
       }
     };
@@ -172,10 +166,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
               className="w-full h-full object-cover"
               loading="eager"
               onError={(e) => {
-                console.error(
-                  "Failed to load blog header image:",
-                  post.featuredImage,
-                );
+                logger.warn("Failed to load blog header image", { component: 'BlogPost', imageUrl: post.featuredImage });
                 const target = e.target as HTMLImageElement;
                 target.style.display = "none";
               }}
@@ -324,10 +315,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                             loading="lazy"
                             onError={(e) => {
-                              console.error(
-                                "Failed to load related post image:",
-                                relatedPost.featuredImage,
-                              );
+                              logger.warn("Failed to load related post image", { component: 'BlogPost', imageUrl: relatedPost.featuredImage });
                               const target = e.target as HTMLImageElement;
                               target.style.display = "none";
                             }}

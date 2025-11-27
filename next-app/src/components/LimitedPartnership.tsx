@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { FileText, Users, DollarSign, Building, Shield, Target, Calendar, Mail, CheckCircle, ArrowRight, TrendingUp, Heart, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
 import { useTurnstile } from "@/hooks/useTurnstile";
+import { logger } from "@/utils/logger";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import React, { useState } from "react";
 import { Turnstile } from "@/components/Turnstile";
@@ -349,13 +350,13 @@ export const LimitedPartnership = () => {
     // Check honeypot field - if filled, it's likely a bot
     const honeypot = formData.get('website') as string;
     if (honeypot && honeypot.trim() !== "") {
-      console.log("Bot detected via honeypot");
-      return; // Silently reject the submission
+      // Silently reject bot submissions - no logging needed
+      return;
     }
     
     // Validate Turnstile token
     if (!turnstileToken) {
-      console.error("Turnstile verification required");
+      // Silently return - Turnstile widget should handle user feedback
       return;
     }
     

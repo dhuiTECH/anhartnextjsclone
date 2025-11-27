@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { logger } from "@/utils/logger";
 
 declare global {
   interface Window {
@@ -92,7 +93,7 @@ export const Turnstile = ({
       try {
         window.turnstile.remove(widgetIdRef.current);
       } catch (error) {
-        console.error("Error removing existing Turnstile:", error);
+        logger.error("Error removing existing Turnstile", error, { component: "Turnstile" });
       }
       widgetIdRef.current = null;
     }
@@ -119,7 +120,7 @@ export const Turnstile = ({
 
       widgetIdRef.current = widgetId;
     } catch (error) {
-      console.error("Error rendering Turnstile:", error);
+      logger.error("Error rendering Turnstile", error, { component: "Turnstile" });
     }
 
     return () => {
@@ -127,7 +128,7 @@ export const Turnstile = ({
         try {
           window.turnstile.remove(widgetIdRef.current);
         } catch (error) {
-          console.error("Error removing Turnstile:", error);
+          logger.error("Error removing Turnstile", error, { component: "Turnstile" });
         }
         widgetIdRef.current = null;
       }

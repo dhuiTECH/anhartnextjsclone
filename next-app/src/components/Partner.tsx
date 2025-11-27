@@ -10,11 +10,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { DollarSign, Users, Award } from "lucide-react";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
+import { useTurnstile } from "@/hooks/useTurnstile";
+import { logger } from "@/utils/logger";
 import { ThreeCardSection } from "@/components/shared/ThreeCardSection";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { Turnstile } from "@/components/Turnstile";
 import partnerHeroImg from "@/assets/partner-hero-friendly.jpg";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 const partnerHero = typeof partnerHeroImg === 'string' ? partnerHeroImg : partnerHeroImg?.src || '';
 
@@ -25,21 +27,7 @@ const Partner = () => {
   } = useFormSubmission();
   
   // Turnstile state
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [turnstileKey, setTurnstileKey] = useState(0);
-  
-  // Turnstile callbacks (memoized to prevent re-render loops)
-  const handleTurnstileSuccess = useCallback((token: string) => {
-    setTurnstileToken(token);
-  }, []);
-  
-  const handleTurnstileError = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
-  
-  const handleTurnstileExpire = useCallback(() => {
-    setTurnstileToken(null);
-  }, []);
+  const { token: turnstileToken, key: turnstileKey, reset: resetTurnstile, handlers: turnstileHandlers } = useTurnstile();
   // Partner benefits data - structured for ThreeCardSection component
   const partnerBenefits = [{
     id: 1,
@@ -65,13 +53,13 @@ const Partner = () => {
     // Check honeypot field - if filled, it's likely a bot
     const honeypot = formData.get('website') as string;
     if (honeypot && honeypot.trim() !== "") {
-      console.log("Bot detected via honeypot");
-      return; // Silently reject the submission
+      // Silently reject bot submissions - no logging needed
+      return;
     }
     
     // Validate Turnstile token
     if (!turnstileToken) {
-      console.error("Turnstile verification required");
+      // Silently return - Turnstile widget should handle user feedback
       return;
     }
 
@@ -95,12 +83,10 @@ const Partner = () => {
       form_type: 'partner',
       turnstile_token: turnstileToken || undefined,
     };
-    console.log('Submitting partner form data:', submissionData);
     const success = await submitForm(submissionData);
     if (success) {
       form.reset();
-      setTurnstileToken(null);
-      setTurnstileKey((prev) => prev + 1);
+      resetTurnstile();
     }
   };
   return <div className="min-h-screen bg-background">
@@ -254,9 +240,9 @@ const Partner = () => {
                     <div className="flex justify-center" key={turnstileKey}>
                       <Turnstile
                         siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
-                        onSuccess={handleTurnstileSuccess}
-                        onError={handleTurnstileError}
-                        onExpire={handleTurnstileExpire}
+                        onSuccess={turnstileHandlers.onSuccess}
+                        onError={turnstileHandlers.onError}
+                        onExpire={turnstileHandlers.onExpire}
                         theme="auto"
                         size="normal"
                       />

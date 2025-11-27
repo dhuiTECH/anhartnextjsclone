@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Clock, Search, ArrowRight } from "lucide-react";
 import { getSortedPosts, BlogPost as BlogPostType } from "@/data/blog";
 import { useState, useMemo, useEffect } from "react";
+import { logger } from "@/utils/logger";
 import { HeroBanner } from "@/components/shared/HeroBanner";
 
 /**
@@ -167,10 +168,7 @@ const Blog = () => {
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               loading="lazy"
                               onError={(e) => {
-                                console.error(
-                                  "Failed to load blog listing image:",
-                                  post.featuredImage,
-                                );
+                                logger.warn("Failed to load blog listing image", { component: 'Blog', imageUrl: post.featuredImage });
                                 const target = e.target as HTMLImageElement;
                                 target.style.display = "none";
                               }}

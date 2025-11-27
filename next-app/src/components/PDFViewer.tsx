@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
+import { logger } from '@/utils/logger';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download } from 'lucide-react';
@@ -48,7 +49,7 @@ export const PDFViewer: React.FC<{
   const onDocumentLoadError = (error: Error) => {
     setError('Failed to load PDF document');
     setLoading(false);
-    console.error('PDF load error:', error);
+    logger.error('PDF load error', error, { component: 'PDFViewer' });
   };
 
   const goToPrevPage = () => {

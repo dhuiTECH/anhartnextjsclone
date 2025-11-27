@@ -24,6 +24,7 @@ import Link from 'next/link';
 // REACT IMPORTS
 // =============================================================================
 import React, { useState, useRef, useEffect } from "react";
+import { logger } from "@/utils/logger";
 
 // =============================================================================
 // COMPONENT IMPORTS
@@ -87,7 +88,7 @@ const getResponsiveImageData = (imageName: string): { webpSrcSet: string; fallba
   
   // Check if image exists in registry
   if (!ImageService.hasImage(registryName)) {
-    console.warn(`Image ${imageName} (mapped to ${registryName}) not found in registry`);
+    logger.warn(`Image ${imageName} (mapped to ${registryName}) not found in registry`, { component: 'OurFocusSection', imageName, registryName });
     return {
       webpSrcSet: '',
       fallback: ''

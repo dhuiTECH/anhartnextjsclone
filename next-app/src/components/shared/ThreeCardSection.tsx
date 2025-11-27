@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
+import { logger } from '@/utils/logger';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import OptimizedImage from '@/components/OptimizedImage';
@@ -421,7 +422,7 @@ export const ThreeCardSection: React.FC<{
               {card.image.startsWith('http') ?
           // Use regular img tag for external URLs only
           <img src={card.image} alt={card.title} className="w-full h-full object-cover" loading="lazy" decoding="async" onError={e => {
-            console.log('Image failed to load:', card.image);
+            logger.warn('Image failed to load', { component: 'ThreeCardSection', imageUrl: card.image });
             (e.currentTarget as HTMLElement).style.display = 'none';
             const fallback = e.currentTarget.nextElementSibling as HTMLElement;
             if (fallback) fallback.style.display = 'flex';

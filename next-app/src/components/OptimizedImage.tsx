@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { logger } from '@/utils/logger';
 import { ImageService } from '@/services/imageService';
 import { ImageSize, ImageFormat, ImageCategory } from '@/types/images';
 import { imageRegistry } from '@/assets/registry';
@@ -55,7 +56,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   React.useEffect(() => {
     const timer = setTimeout(() => {
       if (!isLoaded && !hasError) {
-        console.warn(`Image ${imageName} load event didn't fire, making visible anyway`);
+        logger.warn(`Image ${imageName} load event didn't fire, making visible anyway`, { component: 'OptimizedImage', imageName });
         // Image visibility ensured
       }
     }, 2000);
@@ -93,7 +94,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   // Check if image exists
   if (!ImageService.hasImage(imageName)) {
-    console.warn(`Image ${imageName} not found in registry`);
+    logger.warn(`Image ${imageName} not found in registry`, { component: 'OptimizedImage', imageName });
     return (
       <div className={`relative overflow-hidden bg-gray-100 flex items-center justify-center ${className}`}>
         <span className="text-sm text-gray-500">Image not found</span>

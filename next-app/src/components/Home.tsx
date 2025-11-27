@@ -38,6 +38,7 @@ import React, { useState, useEffect } from "react";
 import { useCountUp } from "@/hooks/useCountUp";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
 import { useTurnstile } from "@/hooks/useTurnstile";
+import { logger } from "@/utils/logger";
 
 // =============================================================================
 // CONFIGURATION IMPORTS
@@ -235,14 +236,14 @@ const Home = () => {
     // Check honeypot field - if filled, it's likely a bot
     const honeypot = formData.get("website") as string;
     if (honeypot && honeypot.trim() !== "") {
-      console.log("Bot detected via honeypot");
-      return; // Silently reject the submission
+      // Silently reject bot submissions - no logging needed
+      return;
     }
 
     // Validate Turnstile token
     if (!turnstileToken) {
-      console.error("Turnstile verification required");
-      return; // Prevent submission without Turnstile verification
+      // Silently return - Turnstile widget should handle user feedback
+      return;
     }
 
     // Submit form data using the custom hook
@@ -320,7 +321,7 @@ const Home = () => {
         const posts = await getFeaturedPosts();
         setFeaturedBlogs(posts);
       } catch (error) {
-        console.error("Error fetching featured blogs:", error);
+        logger.error("Error fetching featured blogs", error, { component: "Home" });
       }
     };
     fetchFeaturedBlogs();

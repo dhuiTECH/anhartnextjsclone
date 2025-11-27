@@ -1,5 +1,7 @@
 'use client';
 
+import { logger } from './logger';
+
 /**
  * Enhanced External Links Utility
  * 
@@ -16,7 +18,7 @@
 export const openExternalLink = (url: string, fallbackUrl?: string): void => {
   // Validate URL first
   if (!url || !isValidUrl(url)) {
-    console.error('Invalid URL provided:', url);
+    logger.error('Invalid URL provided', new Error(`Invalid URL: ${url}`), { component: 'externalLinks' });
     showExternalLinkInstructions(url, fallbackUrl);
     return;
   }
@@ -37,13 +39,13 @@ export const openExternalLink = (url: string, fallbackUrl?: string): void => {
           throw new Error('Popup was closed immediately');
         }
       } catch (e) {
-        console.warn('Popup may have been blocked:', e);
+        logger.warn('Popup may have been blocked', e, { component: 'externalLinks' });
         fallbackToAlternativeMethods(url, fallbackUrl);
       }
     }, 100);
     
   } catch (error) {
-    console.warn('window.open failed:', error);
+    logger.warn('window.open failed', error, { component: 'externalLinks' });
     fallbackToAlternativeMethods(url, fallbackUrl);
   }
 };
@@ -90,7 +92,7 @@ const fallbackToAlternativeMethods = (url: string, fallbackUrl?: string): void =
     }, 100);
     
   } catch (fallbackError) {
-    console.error('All automatic methods failed:', fallbackError);
+    logger.error('All automatic methods failed', fallbackError, { component: 'externalLinks' });
     showExternalLinkInstructions(url, fallbackUrl);
   }
 };
@@ -100,7 +102,7 @@ const fallbackToAlternativeMethods = (url: string, fallbackUrl?: string): void =
  */
 export const openGoogleMapsDirections = (address: string, origin?: string): void => {
   if (!address?.trim()) {
-    console.error('No address provided for Google Maps');
+    logger.error('No address provided for Google Maps', new Error('Empty address'), { component: 'externalLinks' });
     return;
   }
 
@@ -125,7 +127,7 @@ export const openGoogleMapsDirections = (address: string, origin?: string): void
  */
 export const openGoogleMapsSearch = (address: string): void => {
   if (!address?.trim()) {
-    console.error('No address provided for Google Maps search');
+    logger.error('No address provided for Google Maps search', new Error('Empty address'), { component: 'externalLinks' });
     return;
   }
 
@@ -195,7 +197,7 @@ const legacyCopyToClipboard = (text: string, fallbackMessage: string): void => {
     }
     
   } catch (err) {
-    console.error('Failed to copy to clipboard:', err);
+    logger.error('Failed to copy to clipboard', err, { component: 'externalLinks' });
     alert(fallbackMessage);
   }
 };
@@ -219,14 +221,14 @@ export const createSafeExternalLinkHandler = (url: string, fallbackUrl?: string)
  */
 export const navigateToExternalLink = (url: string): void => {
   if (!isValidUrl(url)) {
-    console.error('Invalid URL provided:', url);
+    logger.error('Invalid URL provided', new Error(`Invalid URL: ${url}`), { component: 'externalLinks' });
     return;
   }
 
   try {
     window.location.assign(url);
   } catch (error) {
-    console.error('Navigation failed:', error);
+    logger.error('Navigation failed', error, { component: 'externalLinks' });
     showExternalLinkInstructions(url);
   }
 };

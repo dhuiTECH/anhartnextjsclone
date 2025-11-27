@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useTurnstile } from "@/hooks/useTurnstile";
+import { logger } from "@/utils/logger";
 import {
   Dialog,
   DialogClose,
@@ -84,7 +85,7 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
 
     // Validate Turnstile token
     if (!turnstileToken) {
-      alert("Please complete the verification.");
+      // Silently return - Turnstile widget should handle user feedback
       return;
     }
 
@@ -131,10 +132,17 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
           setIsSuccess(false);
         }, 3000);
       } else {
-        alert("Failed. Try again.");
+        logger.error("Form submission failed", new Error(`HTTP ${res.status}`), {
+          component: "BookingFormDialog",
+          status: res.status,
+        });
+        // Error will be handled by toast notification if we integrate useFormSubmission
       }
-    } catch {
-      alert("No internet.");
+    } catch (error) {
+      logger.error("Network error during form submission", error, {
+        component: "BookingFormDialog",
+      });
+      // Error will be handled by toast notification if we integrate useFormSubmission
     } finally {
       setIsSubmitting(false);
     }

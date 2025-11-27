@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useToast } from '@/components/ui/use-toast';
+import { logger } from '@/utils/logger';
 import { supabase } from '@/integrations/supabase/client';
 
 // Rate limiting: Store last submission time per email
@@ -77,7 +78,6 @@ export const useNewsletterSubscription = () => {
     setIsSubmitting(true);
     
     try {
-      console.log('Subscribing email to newsletter via Supabase:', normalizedEmail);
       
       // TODO: Verify Turnstile token server-side for production
       // For now, we rely on client-side validation
@@ -105,7 +105,7 @@ export const useNewsletterSubscription = () => {
           return false;
         }
         
-        console.error("Supabase Error:", error);
+        logger.error("Supabase Error during newsletter subscription", error);
         throw error;
       }
 
@@ -128,7 +128,7 @@ export const useNewsletterSubscription = () => {
       attempts.count += 1;
       submissionAttempts.current.set(normalizedEmail, attempts);
       
-      console.error('Unexpected error:', error);
+      logger.error('Unexpected error during newsletter subscription', error);
       toast({
         title: "Subscription Error",
         description: error?.message || "An unexpected error occurred. Please try again.",

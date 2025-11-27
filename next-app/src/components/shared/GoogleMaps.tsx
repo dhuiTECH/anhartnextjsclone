@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { logger } from '@/utils/logger';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -82,7 +83,7 @@ export const GoogleMapEmbed: React.FC<{
     };
     
     script.onerror = () => {
-      console.error('Failed to load Google Maps API');
+      logger.error('Failed to load Google Maps API', new Error('Script load failed'), { component: 'GoogleMaps' });
       setMapError(true);
     };
 
@@ -146,7 +147,7 @@ export const GoogleMapEmbed: React.FC<{
         infoWindow.open(map, marker);
 
       } else {
-        console.error('Geocoding failed:', status);
+        logger.error('Geocoding failed', new Error(`Status: ${status}`), { component: 'GoogleMaps', status });
         setMapError(true);
       }
     });

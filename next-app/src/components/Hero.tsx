@@ -8,6 +8,7 @@ import { useRef, useState } from "react";
 import { BookingFormDialog } from "@/components/BookingFormDialog";
 import { useParallax } from "@/hooks/useParallax";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { logger } from "@/utils/logger";
 
 const anhartLogoWebpSrc =
   typeof anhartLogoWebp === "string"
@@ -78,9 +79,9 @@ export const Hero = () => {
         poster=""
         aria-label="Background video showing housing development animation"
         onError={() => {
-          console.warn(
-            "Hero background video failed to load, using fallback gradient",
-          );
+          logger.warn("Hero background video failed to load, using fallback gradient", {
+            component: "Hero",
+          });
           setVideoError(true);
         }}
       >

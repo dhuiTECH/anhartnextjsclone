@@ -9,6 +9,7 @@
 
 import { imageRegistry, imageConfigs } from '@/assets/registry';
 import { ImageSize, ImageFormat, ImageCategory } from '@/types/images';
+import { logger } from '@/utils/logger';
 
 export class ImageService {
   /**
@@ -34,7 +35,7 @@ export class ImageService {
   ): string {
     const image = imageRegistry[imageName];
     if (!image) {
-      console.warn(`Image ${imageName} not found in registry`);
+      logger.warn(`Image ${imageName} not found in registry`, { component: 'ImageService', imageName });
       return '';
     }
     
@@ -51,18 +52,18 @@ export class ImageService {
   static getImageSrcSet(imageName: string, format: ImageFormat = 'webp'): string {
     const image = imageRegistry[imageName];
     if (!image) {
-      console.warn(`Image ${imageName} not found in registry`);
+      logger.warn(`Image ${imageName} not found in registry`, { component: 'ImageService', imageName });
       return '';
     }
     
     if (format === 'avif') {
-      console.warn(`AVIF format not supported in registry, falling back to webp for ${imageName}`);
+      logger.warn(`AVIF format not supported in registry, falling back to webp for ${imageName}`, { component: 'ImageService', imageName });
       format = 'webp';
     }
     
     const variants = image[format];
     if (!variants) {
-      console.warn(`Format ${format} not found for image ${imageName}, using fallback`);
+      logger.warn(`Format ${format} not found for image ${imageName}, using fallback`, { component: 'ImageService', imageName, format });
       return this.getUrlString(image.fallback);
     }
     
@@ -166,7 +167,7 @@ export class ImageService {
     try {
       await Promise.all(promises);
     } catch (error) {
-      console.warn('Some images failed to preload:', error);
+      logger.warn('Some images failed to preload', error, { component: 'ImageService' });
     }
   }
 

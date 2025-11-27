@@ -12,6 +12,7 @@ import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { GoogleMapEmbed } from "@/components/shared/GoogleMaps";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
 import { useTurnstile } from "@/hooks/useTurnstile";
+import { logger } from "@/utils/logger";
 import { CONTACT_INFO, AddressUtils } from "@/config/address";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { Turnstile } from "@/components/Turnstile";
@@ -70,13 +71,13 @@ export const Contact = () => {
     // Check honeypot field - if filled, it's likely a bot
     const honeypot = formData.get("website") as string;
     if (honeypot && honeypot.trim() !== "") {
-      console.log("Bot detected via honeypot");
-      return; // Silently reject the submission
+      // Silently reject bot submissions - no logging needed
+      return;
     }
     
     // Validate Turnstile token
     if (!turnstileToken) {
-      console.error("Turnstile verification required");
+      // Silently return - Turnstile widget should handle user feedback
       return;
     }
     
@@ -109,7 +110,7 @@ export const Contact = () => {
     
     // Validate Turnstile token
     if (!newsletterTurnstileToken) {
-      console.error("Turnstile verification required");
+      // Silently return - Turnstile widget should handle user feedback
       return;
     }
     
