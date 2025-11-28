@@ -125,15 +125,40 @@ export const GlobalPartners: React.FC<{
         .partner-card {
           flex-shrink: 0;
           display: flex;
+          flex-direction: column;
           align-items: center;
-          justify-center;
+          justify-content: flex-start;
           padding: 1.5rem 2rem;
           background: white;
           border-radius: 0.75rem;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
           transition: all 0.3s ease;
           min-width: 200px;
-          height: 120px;
+          height: auto;
+          text-decoration: none;
+          gap: 0.75rem;
+        }
+
+        .partner-card-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          gap: 0.75rem;
+        }
+
+        .partner-name {
+          text-align: center;
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: #000000;
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          white-space: normal;
+          line-height: 1.3;
+          max-width: 100%;
         }
 
         .partner-card:hover {
@@ -168,13 +193,17 @@ export const GlobalPartners: React.FC<{
 
           .partner-card {
             min-width: 160px;
-            height: 100px;
+            height: auto;
             padding: 1rem 1.5rem;
           }
 
           .partner-logo {
             max-width: 120px;
             max-height: 60px;
+          }
+
+          .partner-name {
+            font-size: 0.75rem;
           }
         }
 
@@ -186,13 +215,17 @@ export const GlobalPartners: React.FC<{
 
           .partner-card {
             min-width: 140px;
-            height: 80px;
+            height: auto;
             padding: 0.75rem 1rem;
           }
 
           .partner-logo {
             max-width: 100px;
             max-height: 50px;
+          }
+
+          .partner-name {
+            font-size: 0.7rem;
           }
         }
       `}</style>
