@@ -93,7 +93,10 @@ export const GlobalPartners: React.FC<{
                   className="partner-card"
                   aria-label={`Visit ${partner.name}`}
                 >
-                  <img src={partner.logo} alt={partner.alt} className="partner-logo" loading="lazy" decoding="async" />
+                  <div className="partner-card-content">
+                    <img src={partner.logo} alt={partner.alt} className="partner-logo" loading="lazy" decoding="async" />
+                    <span className="partner-name">{partner.name}</span>
+                  </div>
                 </a>
               ))}
             </div>
