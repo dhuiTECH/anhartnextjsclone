@@ -365,16 +365,15 @@ export const ClientCarousel: React.FC<{
                       {clients.slice(pageIndex * clientsPerPage, (pageIndex + 1) * clientsPerPage).map((client) => (
                         <div
                           key={client.id}
-                          className="flex flex-col items-center justify-center p-8 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 min-h-[320px] border border-muted"
+                          className="flex items-center justify-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 min-h-[160px] border border-muted"
                         >
-                          <a href={client.website} target="_blank" className="flex items-center justify-center mb-6 flex-shrink-0">
+                          <a href={client.website} target="_blank">
                             <img
                               src={client.logo}
                               alt={client.alt}
-                              className="max-w-full max-h-32 object-contain transition-transform duration-300 hover:scale-105"
+                              className="max-w-full max-h-28 object-contain transition-transform duration-300 hover:scale-105"
                             />
                           </a>
-                          <p className="text-center text-base font-medium text-foreground leading-relaxed">{client.name}</p>
                         </div>
                       ))}
                     </div>
