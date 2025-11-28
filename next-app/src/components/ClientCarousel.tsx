@@ -363,17 +363,17 @@ export const ClientCarousel: React.FC<{
                   <div key={pageIndex} className="w-full flex-shrink-0">
                     <div className="grid grid-cols-3 gap-8 px-4">
                       {clients.slice(pageIndex * clientsPerPage, (pageIndex + 1) * clientsPerPage).map((client) => (
-                        <div
-                          key={client.id}
-                          className="flex items-center justify-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 min-h-[160px] border border-muted"
-                        >
-                          <a href={client.website} target="_blank">
-                            <img
-                              src={client.logo}
-                              alt={client.alt}
-                              className="max-w-full max-h-28 object-contain transition-transform duration-300 hover:scale-105"
-                            />
-                          </a>
+                        <div key={client.id} className="flex flex-col items-center justify-start">
+                          <div className="flex items-center justify-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 min-h-[160px] w-full border border-muted">
+                            <a href={client.website} target="_blank">
+                              <img
+                                src={client.logo}
+                                alt={client.alt}
+                                className="max-w-full max-h-28 object-contain transition-transform duration-300 hover:scale-105"
+                              />
+                            </a>
+                          </div>
+                          <p className="text-center mt-3 text-sm font-semibold text-foreground">{client.name}</p>
                         </div>
                       ))}
                     </div>
