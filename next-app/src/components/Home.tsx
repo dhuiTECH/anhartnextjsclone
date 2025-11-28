@@ -567,7 +567,7 @@ const Home = () => {
                 <p className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">
                   Homes Created
                 </p>
-                <p className="text-xs text-gray-300 group-hover:text-gray-200 transition-colors duration-300 mt-1 italic">(click us)</p>
+                <p className="text-xs text-gray-300 group-hover:text-gray-200 transition-colors duration-300 mt-1 italic">learn more &gt;</p>
               </div>
 
               <div
@@ -597,7 +597,7 @@ const Home = () => {
                 <p className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">
                   Patient Capital
                 </p>
-                <p className="text-xs text-gray-300 group-hover:text-gray-200 transition-colors duration-300 mt-1 italic">(click us)</p>
+                <p className="text-xs text-gray-300 group-hover:text-gray-200 transition-colors duration-300 mt-1 italic">learn more &gt;</p>
               </div>
 
               <div
@@ -627,7 +627,7 @@ const Home = () => {
                 <p className="text-muted-foreground group-hover:text-foreground transition-colors duration-300">
                   Global Partners
                 </p>
-                <p className="text-xs text-gray-300 group-hover:text-gray-200 transition-colors duration-300 mt-1 italic">(click us)</p>
+                <p className="text-xs text-gray-300 group-hover:text-gray-200 transition-colors duration-300 mt-1 italic">learn more &gt;</p>
               </div>
             </div>
           </div>
