@@ -374,13 +374,14 @@ export const ClientCarousel: React.FC<{
                             </a>
                           </div>
                           <p 
-                            className="text-center mt-3 text-sm font-semibold text-foreground"
+                            className="text-center mt-3 text-sm font-semibold"
                             style={{
                               display: 'block !important',
                               visibility: 'visible !important',
                               opacity: 1,
                               height: 'auto !important',
-                              width: '100%'
+                              width: '100%',
+                              color: '#000000'
                             }}
                           >
                             {client.name}
@@ -505,7 +506,17 @@ export const ClientCarousel: React.FC<{
 
             {/* Client Name - Mobile/Tablet */}
             <div className="text-center mt-4">
-              <h3 className="text-lg font-semibold text-foreground">{clients[currentPage].name}</h3>
+              <h3 
+                className="text-lg font-semibold"
+                style={{
+                  display: 'block !important',
+                  visibility: 'visible !important',
+                  opacity: 1,
+                  color: '#000000'
+                }}
+              >
+                {clients[currentPage].name}
+              </h3>
             </div>
           </div>
         </div>
