@@ -373,7 +373,18 @@ export const ClientCarousel: React.FC<{
                               />
                             </a>
                           </div>
-                          <p className="text-center mt-3 text-sm font-semibold text-foreground">{client.name}</p>
+                          <p 
+                            className="text-center mt-3 text-sm font-semibold text-foreground"
+                            style={{
+                              display: 'block !important',
+                              visibility: 'visible !important',
+                              opacity: 1,
+                              height: 'auto !important',
+                              width: '100%'
+                            }}
+                          >
+                            {client.name}
+                          </p>
                         </div>
                       ))}
                     </div>

@@ -1,0 +1,55 @@
+1. HTML Inspection & Modification
+Action: Verify the React component rendering the partner card (PartnerCard.js) includes the partner name text element for all screen sizes.
+
+Crucial Step: Check if the partner name text (<p className={styles.name}>{partnerName}</p>) is conditionally rendered based on screen size or a prop that might be set to false on desktop. If it is, remove the conditional rendering so the text is always present in the DOM.
+
+Example Component Check (PartnerCard.js):
+JavaScript
+
+const PartnerCard = ({ partnerName, logoSrc, isMobile }) => {
+  return (
+    <div className={styles.card} tabIndex={0}>
+      <img src={logoSrc} alt={`${partnerName} Logo`} />
+      
+      {/* 🛑 If you see something like {isMobile && <p>...</p>}, REMOVE the conditional part */}
+      <p className={styles.name}>{partnerName}</p>
+    </div>
+  );
+};
+2. Aggressive CSS Override
+If the text is present in the HTML but still hidden, it means a powerful CSS rule is hiding it. We need to use specific CSS to aggressively force it to display.
+
+Location: In your partner card CSS module or global stylesheet.
+
+Action: Apply the following styles using an important selector to ensure it overrides any conflicting display: none.
+
+CSS
+
+/* PartnerCard.module.css or equivalent */
+
+.name {
+  /* Step 1: Force the element to appear */
+  display: block !important;
+  
+  /* Step 2: Ensure it has no forced zero height/width */
+  height: auto !important;
+  width: auto !important;
+  
+  /* Step 3: Ensure it is fully visible and not pushed off-screen */
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: static !important; /* Or relative, if needed for layout */
+
+  /* Positioning and styling (based on your layout) */
+  text-align: center;
+  margin-top: 10px; 
+  font-size: 14px;
+}
+
+/* Ensure no media query targets .name to set display: none or opacity: 0 */
+3. Verification
+Browser Inspector: Use the browser's developer tools (F12) to inspect the element just below the logo (where the text should be).
+
+If the element is not visible, check its CSS rules in the inspector to see which rule is setting display: none or visibility: hidden. Remove that specific rule from your source code.
+
+Visual Check: Confirm the partner names (e.g., "anhart affordable construction") are now visible below each logo box on the web view.
