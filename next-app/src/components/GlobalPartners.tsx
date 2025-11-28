@@ -6,7 +6,8 @@ import GWAImg from "@/assets/partnercarousel/gwa_architecture.png";
 import smartantImg from "@/assets/partnercarousel/smartant.png";
 
 // Helper to extract .src from Next.js static imports
-const getImageSrc = (img: any): string => typeof img === 'string' ? img : img?.src || '';
+const getImageSrc = (img: any): string =>
+  typeof img === "string" ? img : img?.src || "";
 
 interface Partner {
   id: number;
@@ -18,11 +19,7 @@ interface Partner {
 
 export const GlobalPartners: React.FC<{
   children?: React.ReactNode;
-}> = (
-  {
-    children
-  }
-) => {
+}> = ({ children }) => {
   const partners: Partner[] = [
     {
       id: 1,
@@ -65,7 +62,10 @@ export const GlobalPartners: React.FC<{
   const allPartners = [...partners, ...partners];
 
   return (
-    <section className="py-12 overflow-hidden" style={{ backgroundColor: "#f5f5f5" }}>
+    <section
+      className="py-12 overflow-hidden"
+      style={{ backgroundColor: "#f5f5f5" }}
+    >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Subheader */}
         <div className="text-center mb-8">
@@ -94,7 +94,13 @@ export const GlobalPartners: React.FC<{
                   aria-label={`Visit ${partner.name}`}
                 >
                   <div className="partner-card-content">
-                    <img src={partner.logo} alt={partner.alt} className="partner-logo" loading="lazy" decoding="async" />
+                    <img
+                      src={partner.logo}
+                      alt={partner.alt}
+                      className="partner-logo"
+                      loading="lazy"
+                      decoding="async"
+                    />
                     <span className="partner-name">{partner.name}</span>
                   </div>
                 </a>
@@ -128,7 +134,7 @@ export const GlobalPartners: React.FC<{
           flex-direction: column;
           align-items: center;
           justify-content: flex-start;
-          padding: 1.5rem 2rem;
+          padding: 0.5rem 2rem 1.5rem 2rem;
           background: white;
           border-radius: 0.75rem;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -159,6 +165,7 @@ export const GlobalPartners: React.FC<{
           white-space: normal;
           line-height: 1.3;
           max-width: 100%;
+          padding: 2rem 0.5rem;
         }
 
         .partner-card:hover {
