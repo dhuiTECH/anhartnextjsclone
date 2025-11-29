@@ -134,7 +134,7 @@ const Partner = () => {
             
             {/* SINGLE HORIZONTAL ICONS IMAGE */}
             <div className="relative mb-12">
-              <img src="/images/anhart-partnership-model-icons-only.png" alt="Anhart partnership model: Community Need + Community Partner + Anhart Support = Sustainable Revenue + Long-term Impact" className="w-full max-w-8xl mx-auto block" loading="lazy" decoding="async" />
+              <img src="/images/anhart-partnership-model-icons-only.webp" alt="Anhart partnership model: Community Need + Community Partner + Anhart Support = Sustainable Revenue + Long-term Impact" className="w-full max-w-8xl mx-auto block" loading="lazy" decoding="async" />
             </div>
             
             {/* TEXT SECTIONS BELOW - 4-column layout aligned with icons above */}
