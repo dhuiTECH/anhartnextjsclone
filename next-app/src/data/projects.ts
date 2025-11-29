@@ -31,8 +31,8 @@
 
 export const projectPages = [
   {
-    title: "Affordable Rental and Renewals & Support",
-    description: "Transforming communities through innovative affordable housing.",
+    title: "Completed Projects",
+    description: "Successfully delivering affordable housing solutions",
     projects: [
       {
         id: 1,
@@ -97,29 +97,9 @@ export const projectPages = [
     ],
   },
   {
-    title: "Affordable Home Ownership",
-    description: "Providing low-cost intergenerational homes",
+    title: "In-Progress & Planned Projects",
+    description: "Building the future of affordable housing",
     projects: [
-      {
-        id: 4,
-        title: "Affordable Town Homes",
-        originalTitle: "Merritt, BC Townhomes",
-        description:
-          "Multigenerational townhomes designed to balance privacy, shared space and equity to strengthen communities.",
-        image: "merritt",
-        location: "Merritt, BC",
-        completion_date: "2026",
-        units: 35,
-        status: "planned" as const,
-        type: "Townhomes",
-        highlights: [
-          "48 multigenerational townhome units",
-          "Balanced privacy and community design",
-          "Affordable ownership opportunities",
-          "Rural community revitalization",
-          "Enviromental efficient housing",
-        ],
-      },
       {
         id: 5,
         title: "Low-cost standalone housing",
@@ -156,6 +136,26 @@ export const projectPages = [
           "Private ownership opportunities",
           "Community resilience focus",
           "Innovative modular construction",
+        ],
+      },
+      {
+        id: 4,
+        title: "Affordable Town Homes",
+        originalTitle: "Merritt, BC Townhomes",
+        description:
+          "Multigenerational townhomes designed to balance privacy, shared space and equity to strengthen communities.",
+        image: "merritt",
+        location: "Merritt, BC",
+        completion_date: "2026",
+        units: 35,
+        status: "planned" as const,
+        type: "Townhomes",
+        highlights: [
+          "48 multigenerational townhome units",
+          "Balanced privacy and community design",
+          "Affordable ownership opportunities",
+          "Rural community revitalization",
+          "Enviromental efficient housing",
         ],
       },
     ],
