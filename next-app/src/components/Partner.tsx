@@ -114,9 +114,9 @@ const Partner = () => {
         <section className="bg-gradient-to-br from-white via-white to-red-50/30 py-10">
           <div className="max-w-6xl mx-auto px-6 text-center">
             <ScrollAnimationWrapper direction="top" delay={0}>
-              <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
+              <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
                 Partner with Us
-              </h1>
+              </h2>
             </ScrollAnimationWrapper>
             <ScrollAnimationWrapper direction="top" delay={100}>
               <p className="text-xl md:text-2xl text-muted-foreground mb-6 font-medium">Join us in building affordable homes that create lasting community impact</p>

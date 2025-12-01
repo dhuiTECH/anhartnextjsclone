@@ -509,9 +509,9 @@ const Home = () => {
            */}
         <section id="statistics-section" className="py-16 bg-muted/30">
           <div className="mx-auto max-w-6xl px-6 lg:px-8 text-center">
-            <h1 className="text-3xl font-bold tracking-tight text-foreground mb-6 text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6 text-center">
               Launched By Impact Investors, Community-Led, Non-Profit Housing
-            </h1>
+            </h2>
             <p className="text-base sm:text-lg lg:text-xl leading-7 text-gray-700/95 mb-8">
               {/* Mobile text */}
               <span className="block sm:hidden">
