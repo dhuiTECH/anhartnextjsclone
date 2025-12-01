@@ -42,6 +42,22 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/'],
       },
+      // Allow additional Bing crawlers (msnbot, adidxbot, BingPreview)
+      {
+        userAgent: 'msnbot',
+        allow: '/',
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/'],
+      },
+      {
+        userAgent: 'adidxbot',
+        allow: '/',
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/'],
+      },
+      {
+        userAgent: 'BingPreview',
+        allow: '/',
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/'],
+      },
       // Allow social media bots
       {
         userAgent: 'Twitterbot',
