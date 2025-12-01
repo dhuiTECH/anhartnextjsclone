@@ -291,16 +291,6 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                 />
               </article>
 
-              {/* Return to Blogs Link */}
-              <div className="flex justify-end mt-8 pt-4">
-                <Link 
-                  href="/blog"
-                  className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors"
-                >
-                  ← Return to blogs
-                </Link>
-              </div>
-
               {/* Author and Reading Time - REMOVED from here */}
             </ScrollAnimationWrapper>
           </div>
