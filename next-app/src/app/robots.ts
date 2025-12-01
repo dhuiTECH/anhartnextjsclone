@@ -134,6 +134,6 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: 'https://anhart.ca/sitemap.xml',
-    host: 'https://anhart.ca',
+    host: 'anhart.ca',
   };
 }
