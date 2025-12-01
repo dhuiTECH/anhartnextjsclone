@@ -30,6 +30,7 @@ import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import lowlight from "../../lowlight-config";
+import { submitBlogPostToIndexNow } from "@/lib/indexnow";
 
 /**
  * BlogPost Interface
@@ -612,6 +613,25 @@ export default function AdminClient({ user }: { user: any }) {
       else {
         alert("Updated! Refreshing post list...");
         await loadPosts(); // Refresh the post list
+        
+        // Submit to IndexNow for faster indexing
+        if (selectedPostId) {
+          const { data: post } = await supabase
+            .from("blog_posts")
+            .select("slug")
+            .eq("id", selectedPostId)
+            .single();
+          
+          if (post?.slug) {
+            try {
+              await submitBlogPostToIndexNow(post.slug);
+              console.log("Submitted to IndexNow:", post.slug);
+            } catch (indexNowError) {
+              console.warn("IndexNow submission failed:", indexNowError);
+              // Don't show error to user - IndexNow is optional
+            }
+          }
+        }
       }
     } 
     // ========================================================================
@@ -648,6 +668,15 @@ export default function AdminClient({ user }: { user: any }) {
         alert("Published! View: /blog/" + newSlug);
         switchToNewMode(); // Reset form for next post
         await loadPosts(); // Refresh the post list
+        
+        // Submit to IndexNow for faster indexing
+        try {
+          await submitBlogPostToIndexNow(newSlug);
+          console.log("Submitted to IndexNow:", newSlug);
+        } catch (indexNowError) {
+          console.warn("IndexNow submission failed:", indexNowError);
+          // Don't show error to user - IndexNow is optional
+        }
       }
     }
   };
