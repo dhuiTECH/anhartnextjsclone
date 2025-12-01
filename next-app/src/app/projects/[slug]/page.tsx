@@ -243,7 +243,7 @@ export default async function ProjectPage({
                         href={match[2]}
                         className="text-primary font-semibold underline hover:opacity-80 transition-opacity"
                         target="_blank"
-                        rel="noopener noreferrer"
+                        rel="noopener noreferrer nofollow"
                       >
                         {match[1]}
                       </a>

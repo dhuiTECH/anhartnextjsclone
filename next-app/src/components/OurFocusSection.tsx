@@ -314,7 +314,7 @@ const ProjectDetailsModal: React.FC<ProjectDetailsModalProps> = ({ isOpen, onClo
                     variant="outline"
                     className="w-full hover:bg-primary hover:text-primary-foreground transition-colors"
                   >
-                    <a href={card.link} target="_blank" rel="noopener noreferrer">
+                    <a href={card.link} target="_blank" rel="noopener noreferrer nofollow">
                       For more information about modular homes
                       <ExternalLink className="w-4 h-4 ml-2" />
                     </a>
@@ -977,7 +977,7 @@ export const OurFocusSection: React.FC<OurFocusSectionProps> = ({ className = ""
               className="group hover:bg-primary hover:text-primary-foreground transition-colors"
               asChild
             >
-              <a href="https://anhart.ca/portfolio" target="_blank" rel="noopener noreferrer "aria-label="View all projects" title="View all projects">
+              <a href="https://anhart.ca/portfolio" aria-label="View all projects" title="View all projects">
                 View All Projects
                 <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </a>

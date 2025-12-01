@@ -5,12 +5,19 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow: '/',
+        allow: [
+          '/',
+          '/_next/static/css/',
+          '/_next/static/chunks/',
+          '/_next/static/media/',
+        ],
         disallow: [
           '/admin/',
           '/api/',
           '/member/dashboard/',
-          '/_next/',
+          '/_next/static/_buildManifest.js',
+          '/_next/static/_ssgManifest.js',
+          '/_next/static/webpack/',
           '/static/',
           '/private/',
           '/internal/',
@@ -23,8 +30,13 @@ export default function robots(): MetadataRoute.Robots {
       // Allow Googlebot full access for better indexing
       {
         userAgent: 'Googlebot',
-        allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/'],
+        allow: [
+          '/',
+          '/_next/static/css/',
+          '/_next/static/chunks/',
+          '/_next/static/media/',
+        ],
+        disallow: ['/admin/', '/api/', '/member/dashboard/'],
       },
       {
         userAgent: 'Googlebot-Image',
@@ -36,27 +48,47 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: ['/admin/', '/api/', '/member/dashboard/'],
       },
-      // Allow Bingbot full access
+      // Allow Bingbot full access (including CSS/JS for proper rendering)
       {
         userAgent: 'Bingbot',
-        allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/'],
+        allow: [
+          '/',
+          '/_next/static/css/',
+          '/_next/static/chunks/',
+          '/_next/static/media/',
+        ],
+        disallow: ['/admin/', '/api/', '/member/dashboard/'],
       },
       // Allow additional Bing crawlers (msnbot, adidxbot, BingPreview)
       {
         userAgent: 'msnbot',
-        allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/'],
+        allow: [
+          '/',
+          '/_next/static/css/',
+          '/_next/static/chunks/',
+          '/_next/static/media/',
+        ],
+        disallow: ['/admin/', '/api/', '/member/dashboard/'],
       },
       {
         userAgent: 'adidxbot',
-        allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/'],
+        allow: [
+          '/',
+          '/_next/static/css/',
+          '/_next/static/chunks/',
+          '/_next/static/media/',
+        ],
+        disallow: ['/admin/', '/api/', '/member/dashboard/'],
       },
       {
         userAgent: 'BingPreview',
-        allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/'],
+        allow: [
+          '/',
+          '/_next/static/css/',
+          '/_next/static/chunks/',
+          '/_next/static/media/',
+        ],
+        disallow: ['/admin/', '/api/', '/member/dashboard/'],
       },
       // Allow social media bots
       {

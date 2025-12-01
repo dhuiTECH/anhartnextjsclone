@@ -60,7 +60,7 @@ const convertUrlsToLinks = (text: string) => {
           key={index}
           href={part}
           target="_blank"
-          rel="noopener noreferrer"
+          rel={part.includes('anhart.ca') ? 'noopener noreferrer' : 'noopener noreferrer nofollow'}
           className="text-primary hover:text-primary/80 underline transition-colors"
         >
           {part}

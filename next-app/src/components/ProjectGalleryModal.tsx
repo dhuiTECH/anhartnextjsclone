@@ -255,8 +255,6 @@ export const ProjectGalleryModal: React.FC<ProjectGalleryModalProps> = ({ isOpen
           >
             <a
               href="https://anhart.ca/portfolio"
-              target="_blank"
-              rel="noopener noreferrer"
             >
               View All Projects
               <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />

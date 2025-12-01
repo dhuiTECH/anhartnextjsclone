@@ -365,7 +365,7 @@ export const ClientCarousel: React.FC<{
                       {clients.slice(pageIndex * clientsPerPage, (pageIndex + 1) * clientsPerPage).map((client) => (
                         <div key={client.id} className="flex flex-col items-center justify-start">
                           <div className="flex items-center justify-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 min-h-[160px] w-full border border-muted">
-                            <a href={client.website} target="_blank">
+                            <a href={client.website} target="_blank" rel="noopener noreferrer nofollow">
                               <img
                                 src={client.logo}
                                 alt={client.alt}
@@ -492,6 +492,7 @@ export const ClientCarousel: React.FC<{
                   <a
                     href={clients[currentPage].website}
                     target="_blank"
+                    rel="noopener noreferrer nofollow"
                     className="block w-full h-full flex items-center justify-center"
                   >
                     <img

@@ -89,7 +89,7 @@ export const GlobalPartners: React.FC<{
                   key={`${partner.id}-${index}`}
                   href={partner.website}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   className="partner-card"
                   aria-label={`Visit ${partner.name}`}
                 >

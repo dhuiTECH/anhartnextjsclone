@@ -488,7 +488,7 @@ const Media = () => {
                   </div>}
           
                 <div className="absolute top-2 right-4 bg-black/60 text-white text-sm px-3 py-1 rounded-lg hover:bg-red-600 transition-colors pointer-events-none">
-                  <a className="pointer-events-auto" href="https://www.youtube.com/watch?v=LIjifKbBRpg" target="_blank" rel="noopener noreferrer">
+                  <a className="pointer-events-auto" href="https://www.youtube.com/watch?v=LIjifKbBRpg" target="_blank" rel="noopener noreferrer nofollow">
                     Watch on YouTube
                   </a>
                 </div>
@@ -1070,7 +1070,7 @@ const Media = () => {
                 </video>
                 
                 <div className="absolute top-2 right-4 bg-black/60 text-white text-sm px-3 py-1 rounded-lg hover:bg-red-600 transition-colors pointer-events-none">
-                  <a className="pointer-events-auto" href="https://youtu.be/h-Y6aceJmaw?si=UgFVJbwXHdPMpgWi" target="_blank" rel="noopener noreferrer">
+                  <a className="pointer-events-auto" href="https://youtu.be/h-Y6aceJmaw?si=UgFVJbwXHdPMpgWi" target="_blank" rel="noopener noreferrer nofollow">
                     Watch on YouTube
                   </a>
                 </div>

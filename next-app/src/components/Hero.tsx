@@ -132,8 +132,6 @@ export const Hero = () => {
               >
                 <a
                   href="https://anhart.ca/portfolio"
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="block"
                 >
                   <Button
