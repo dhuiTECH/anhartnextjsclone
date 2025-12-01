@@ -50,6 +50,9 @@ export async function generateMetadata({
       'Anhart',
     ].join(', '),
     authors: [{ name: 'Anhart' }],
+    alternates: {
+      canonical: `https://anhart.ca/projects/${slug}`,
+    },
     openGraph: {
       title,
       description,

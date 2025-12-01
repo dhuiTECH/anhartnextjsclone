@@ -30,14 +30,18 @@ export async function submitToIndexNow(
     // Get key from parameter, environment variable, or use default
     const verificationKey = key || process.env.NEXT_PUBLIC_INDEXNOW_KEY || '4ab9b2d18280488dbd072cff98dc2626';
 
-    // Normalize URLs to absolute URLs
+    // Normalize URLs to absolute URLs and ensure non-www
     const absoluteUrls = urls.map((url) => {
+      let normalizedUrl: string;
       if (url.startsWith('http://') || url.startsWith('https://')) {
-        return url;
+        normalizedUrl = url;
+      } else {
+        // Remove leading slash if present
+        const path = url.startsWith('/') ? url.slice(1) : url;
+        normalizedUrl = `${BASE_URL}/${path}`;
       }
-      // Remove leading slash if present
-      const path = url.startsWith('/') ? url.slice(1) : url;
-      return `${BASE_URL}/${path}`;
+      // Normalize to always use non-www version
+      return normalizedUrl.replace(/^https?:\/\/(www\.)?anhart\.ca/, 'https://anhart.ca');
     });
 
     // Extract host from base URL

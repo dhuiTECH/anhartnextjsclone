@@ -20,11 +20,17 @@ const SEO = ({
   structuredData
 }: SEOProps) => {
   const fullTitle = title.includes("Anhart") ? title : `${title} | Anhart`;
-  const fullUrl = url.startsWith("http") ? url : `https://anhart.ca${url}`;
+  let fullUrl = url.startsWith("http") ? url : `https://anhart.ca${url}`;
+  
+  // Normalize URL to always use non-www version for canonical links
+  fullUrl = fullUrl.replace(/^https?:\/\/(www\.)?anhart\.ca/, "https://anhart.ca");
   
   // Handle both string and object image types (Next.js static imports return objects)
   const imageStr = typeof image === 'string' ? image : (image as any)?.src || '/images/anhart-logo.png';
-  const fullImage = imageStr.startsWith("http") ? imageStr : `https://anhart.ca${imageStr}`;
+  let fullImage = imageStr.startsWith("http") ? imageStr : `https://anhart.ca${imageStr}`;
+  
+  // Normalize image URL to always use non-www version
+  fullImage = fullImage.replace(/^https?:\/\/(www\.)?anhart\.ca/, "https://anhart.ca");
 
   return (
     <Head>
