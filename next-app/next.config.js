@@ -103,19 +103,8 @@ const nextConfig = {
   // All redirects should be here, not in vercel.json
   async redirects() {
     return [
-      // Redirect www to non-www for SEO (301 permanent redirect)
-      // This is a backup - middleware also handles this
-      {
-        source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'www.anhart.ca',
-          },
-        ],
-        destination: 'https://anhart.ca/:path*',
-        permanent: true,
-      },
+      // Note: www to non-www redirect is handled in middleware.ts
+      // to avoid conflicts and redirect loops
       {
         source: '/partners',
         destination: '/partner',

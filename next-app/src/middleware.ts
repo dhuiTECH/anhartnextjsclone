@@ -3,11 +3,17 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get("host") || "";
+  
+  // Remove port if present for comparison
+  const hostnameWithoutPort = hostname.split(":")[0];
 
   // Redirect www.anhart.ca to anhart.ca (301 permanent redirect for SEO)
-  if (hostname === "www.anhart.ca" || hostname.startsWith("www.anhart.ca:")) {
+  // Only redirect if we're actually on www, to prevent redirect loops
+  if (hostnameWithoutPort === "www.anhart.ca") {
     const url = request.nextUrl.clone();
-    url.hostname = "anhart.ca";
+    url.host = "anhart.ca";
+    url.protocol = "https:";
+    
     return NextResponse.redirect(url, 301);
   }
 
