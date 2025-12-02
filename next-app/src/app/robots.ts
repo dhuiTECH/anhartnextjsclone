@@ -30,12 +30,7 @@ export default function robots(): MetadataRoute.Robots {
       // Allow Googlebot full access for better indexing
       {
         userAgent: 'Googlebot',
-        allow: [
-          '/',
-          '/_next/static/css/',
-          '/_next/static/chunks/',
-          '/_next/static/media/',
-        ],
+        allow: '/',
         disallow: ['/admin/', '/api/', '/member/dashboard/'],
       },
       {
@@ -51,12 +46,7 @@ export default function robots(): MetadataRoute.Robots {
       // Allow Bingbot full access (including CSS/JS for proper rendering)
       {
         userAgent: 'Bingbot',
-        allow: [
-          '/',
-          '/_next/static/css/',
-          '/_next/static/chunks/',
-          '/_next/static/media/',
-        ],
+        allow: '/',
         disallow: ['/admin/', '/api/', '/member/dashboard/'],
       },
       // Allow additional Bing crawlers (msnbot, adidxbot, BingPreview)
@@ -134,6 +124,6 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: 'https://anhart.ca/sitemap.xml',
-    host: 'anhart.ca',
+    host: 'https://anhart.ca',
   };
 }
