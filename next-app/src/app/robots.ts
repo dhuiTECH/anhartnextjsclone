@@ -7,17 +7,12 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: '*',
         allow: [
           '/',
-          '/_next/static/css/',
-          '/_next/static/chunks/',
-          '/_next/static/media/',
         ],
         disallow: [
           '/admin/',
           '/api/',
           '/member/dashboard/',
-          '/_next/static/_buildManifest.js',
-          '/_next/static/_ssgManifest.js',
-          '/_next/static/webpack/',
+          '/_next/static/',
           '/static/',
           '/private/',
           '/internal/',
@@ -52,33 +47,18 @@ export default function robots(): MetadataRoute.Robots {
       // Allow additional Bing crawlers (msnbot, adidxbot, BingPreview)
       {
         userAgent: 'msnbot',
-        allow: [
-          '/',
-          '/_next/static/css/',
-          '/_next/static/chunks/',
-          '/_next/static/media/',
-        ],
-        disallow: ['/admin/', '/api/', '/member/dashboard/'],
+        allow: '/',
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/static/'],
       },
       {
         userAgent: 'adidxbot',
-        allow: [
-          '/',
-          '/_next/static/css/',
-          '/_next/static/chunks/',
-          '/_next/static/media/',
-        ],
-        disallow: ['/admin/', '/api/', '/member/dashboard/'],
+        allow: '/',
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/static/'],
       },
       {
         userAgent: 'BingPreview',
-        allow: [
-          '/',
-          '/_next/static/css/',
-          '/_next/static/chunks/',
-          '/_next/static/media/',
-        ],
-        disallow: ['/admin/', '/api/', '/member/dashboard/'],
+        allow: '/',
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/static/'],
       },
       // Allow social media bots
       {

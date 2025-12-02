@@ -4,6 +4,9 @@ import Blog from '@/components/Blog';
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Insights, news, and updates about affordable housing in Canada from Anhart.',
+  alternates: {
+    canonical: 'https://anhart.ca/blog',
+  },
 };
 
 export default function BlogPage() {

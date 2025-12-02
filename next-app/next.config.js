@@ -32,12 +32,16 @@ const nextConfig = {
   async headers() {
     return [
       {
-        // Static assets - long cache, immutable
+        // Static assets - long cache, immutable, but don't index in search engines
         source: '/_next/static/:path*',
         headers: [
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
+          },
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex',
           },
         ],
       },
