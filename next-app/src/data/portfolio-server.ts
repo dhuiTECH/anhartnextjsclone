@@ -334,6 +334,43 @@ export const portfolioProjectsData: ProjectData[] = [
       "50 waterfront units",
     ],
   },
+  {
+      id: 18,
+        title: "Hope Modular Housing",
+        location: "Hope, BC",
+        year: "2023",
+        units: 50,
+        description: "A strategic housing development providing 50 essential units through efficient modular construction.",
+        briefDescription: "50-unit modular development focused on affordability and speed.",
+        comprehensiveDetails: "This project represents a forward-thinking approach to the housing crisis in British Columbia. By manufacturing units in a controlled facility and assembling them on-site in Hope, the project minimizes construction waste and site disturbance. The result is a durable, high-quality residential complex delivered on an expedited schedule.",
+        image: "ModularH_1",
+        status: "in-progress",
+        type: "Modular Housing",
+        highlights: [
+          "50 precision-engineered units",
+          "Minimizes site disturbance",
+          "Cost-effective development strategy",
+          "Energy-efficient design"
+    ],
+  },
+  {
+      id: 19,
+        title: "Global Housing Partnerships",
+        location: "Multiple International Locations",
+        year: "2024",
+        units: 200,
+        description: "A strategic expansion of our affordable housing framework into international markets, fostering global community resilience.",
+        briefDescription: "200-unit pilot phase of our international development strategy.",
+        comprehensiveDetails: "This initiative marks a pivotal step in Anhart’s growth, translating our successful Canadian housing model to underserved regions abroad. By collaborating with local organizations and utilizing scalable construction methodologies, these initial 200 units serve as the foundation for our long-term commitment to tackling the global housing crisis.",
+        image: "OurVision",
+        status: "in-progress",
+        type: "International",
+        highlights: [
+          "Scalable cross-border partnerships",
+          "Adapting the Anhart model globally",
+          "Critical step toward 2045 goals",
+          "Focus on knowledge exchange"
+    ],
   },
   {
     id: 20,
