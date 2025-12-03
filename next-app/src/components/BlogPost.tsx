@@ -39,11 +39,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
           const related = await getRelatedPosts(post);
           setRelatedPosts(related);
         } catch (error) {
-          logger.error(
-            "BlogPost component: Error fetching related posts",
-            error,
-            { component: "BlogPost" },
-          );
+          logger.error("BlogPost component: Error fetching related posts", error, { component: 'BlogPost' });
         }
       }
     };
@@ -93,25 +89,26 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
   // Helper function to normalize image URLs
   const normalizeImageUrl = (url: string | undefined | null): string => {
     if (!url) return "/blog/default.jpg";
-
+    
     // If it's already a full URL (http/https), return as is
     if (url.startsWith("http://") || url.startsWith("https://")) {
       return url;
     }
-
+    
     // If it's a data URL, return as is
     if (url.startsWith("data:")) {
       return url;
     }
-
+    
     // If it starts with /, it's an absolute path - add domain
     if (url.startsWith("/")) {
       return `https://anhart.ca${url}`;
     }
-
+    
     // Otherwise, treat as relative path and add domain
     return `https://anhart.ca/${url}`;
   };
+
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -171,10 +168,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
               className="w-full h-full object-cover"
               loading="eager"
               onError={(e) => {
-                logger.warn("Failed to load blog header image", {
-                  component: "BlogPost",
-                  imageUrl: post.featuredImage,
-                });
+                logger.warn("Failed to load blog header image", { component: 'BlogPost', imageUrl: post.featuredImage });
                 const target = e.target as HTMLImageElement;
                 target.style.display = "none";
               }}
@@ -194,30 +188,28 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                   </div>
                 </div>
 
-                <h1
+                <h1 
                   className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 leading-tight"
                   style={{
-                    textShadow:
-                      "2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.7)",
+                    textShadow: '2px 2px 8px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.7)'
                   }}
                 >
                   {post.title}
                 </h1>
                 {post.subtitle && (
-                  <p
+                  <p 
                     className="text-sm sm:text-base md:text-lg lg:text-xl text-white/90 font-light mb-3 sm:mb-4 max-w-3xl italic leading-snug"
                     style={{
-                      textShadow:
-                        "1px 1px 6px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 0, 0, 0.4)",
+                      textShadow: '1px 1px 6px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 0, 0, 0.4)'
                     }}
                   >
                     {post.subtitle}
                   </p>
                 )}
-                <p
+                <p 
                   className="hidden sm:block text-xs sm:text-sm md:text-base text-white/80 max-w-xl leading-relaxed"
                   style={{
-                    textShadow: "1px 1px 4px rgba(0, 0, 0, 0.6)",
+                    textShadow: '1px 1px 4px rgba(0, 0, 0, 0.6)'
                   }}
                 >
                   {post.excerpt}
@@ -281,14 +273,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                   width: 100% !important;
                   overflow-x: auto !important;
                 }
-                .prose p,
-                .prose li,
-                .prose h1,
-                .prose h2,
-                .prose h3,
-                .prose h4,
-                .prose h5,
-                .prose h6 {
+                .prose p, .prose li, .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
                   word-break: break-word !important;
                   overflow-wrap: break-word !important;
                 }
@@ -298,16 +283,16 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                 }
               `}</style>
               <article className="prose sm:prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary hover:prose-a:text-primary-dark prose-strong:text-foreground prose-img:rounded-lg prose-img:shadow-lg w-full">
-                <div
+                <div 
                   className="w-full overflow-x-hidden"
-                  dangerouslySetInnerHTML={{
-                    __html: post.content,
-                  }}
+                  dangerouslySetInnerHTML={{ 
+                    __html: post.content
+                  }} 
                 />
               </article>
               {/* Return to Blogs Link */}
               <div className="flex justify-end mt-8 pt-4">
-                <Link
+                <Link 
                   href="/blog"
                   className="text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors"
                 >
@@ -340,17 +325,11 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                         <div className="relative h-48 overflow-hidden">
                           <img
                             src={normalizeImageUrl(relatedPost.featuredImage)}
-                            alt={getBlogListingAltText(
-                              relatedPost.title,
-                              relatedPost.category,
-                            )}
+                            alt={getBlogListingAltText(relatedPost.title, relatedPost.category)}
                             className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                             loading="lazy"
                             onError={(e) => {
-                              logger.warn("Failed to load related post image", {
-                                component: "BlogPost",
-                                imageUrl: relatedPost.featuredImage,
-                              });
+                              logger.warn("Failed to load related post image", { component: 'BlogPost', imageUrl: relatedPost.featuredImage });
                               const target = e.target as HTMLImageElement;
                               target.style.display = "none";
                             }}
