@@ -334,17 +334,32 @@ export const Footer = () => {
           </div>
 
           {/* Footer Bottom - Community Commons */}
-          <div className="mt-4 border-t border-background/20 pt-6 lg:pt-8">
-            <div className="text-center">
-              <p className="text-xs leading-5 text-background/70">
-                © 2025 Anhart · Shared with the community.
-              </p>
-              <p className="text-xs leading-5 text-background/70 mt-2">
-                This work is released under a Community Commons philosophy—free to use, adapt, and share for the public good.
-              </p>
-            </div>
-          </div>
-        </div>
-      </footer>
-  );
-};
+                    <div className="mt-4 border-t border-background/20 pt-6 lg:pt-8">
+                      <div className="text-center">
+                        <p className="text-xs leading-5 text-background/70">
+                          © 2025 Anhart · Shared with the community.
+                        </p>
+                        <p className="text-xs leading-5 text-background/70 mt-2">
+                          This work is released under a Community Commons philosophy—free to use, adapt, and share for the public good.
+                        </p>
+
+                        {/* --- NEW AGENCY CREDIT SECTION --- */}
+                        <p className="text-xs leading-5 text-background/50 mt-4 pt-4 border-t border-background/10 w-1/2 mx-auto">
+                          Website Designed & Managed by{' '}
+                          <a 
+                            href="https://ddaiagency.com" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="hover:text-background transition-colors font-medium"
+                          >
+                            D&D AI Agency
+                          </a>
+                        </p>
+                        {/* ---------------------------------- */}
+
+                      </div>
+                    </div>
+                  </div>
+                </footer>
+            );
+          };
