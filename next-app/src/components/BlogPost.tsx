@@ -7,6 +7,7 @@ import { logger } from "@/utils/logger";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
+import { InternalLinksSection } from "@/components/InternalLinksSection";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { Badge } from "@/components/ui/badge";
@@ -359,6 +360,7 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
           </section>
         )}
 
+        <InternalLinksSection />
       </main>
       <Footer />
     </div>

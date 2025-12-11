@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
+import { InternalLinksSection } from "@/components/InternalLinksSection";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -213,6 +214,7 @@ const Blog = () => {
         </section>
 
       </main>
+      <InternalLinksSection />
       <Footer />
     </div>
   );

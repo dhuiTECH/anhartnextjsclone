@@ -3,6 +3,7 @@ import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { LimitedPartnership } from "@/components/LimitedPartnership";
 import limitedPartnershipHeroImage from "@/assets/partner-hero.jpg";
+import { InternalLinksSection } from "@/components/InternalLinksSection";
 import { FAQSchema } from "@/components/FAQSchema";
 
 const LimitedPartnershipPage = () => {
@@ -57,6 +58,7 @@ const LimitedPartnershipPage = () => {
 
         <LimitedPartnership />
       </main>
+      <InternalLinksSection />
       <Footer />
     </div>
   );

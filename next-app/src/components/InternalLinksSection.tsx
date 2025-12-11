@@ -1,15 +1,14 @@
 import Link from "next/link";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 
+// Standardized six-link set (3x2 layout)
 const internalLinks = [
   { name: "Our Story", href: "/about" },
   { name: "News & Media", href: "/media" },
   { name: "Partner With Us", href: "/partner" },
   { name: "Limited Partnership", href: "/limited-partnership" },
   { name: "Portfolio", href: "/portfolio" },
-  { name: "Projects", href: "/projects" },
   { name: "Blog", href: "/blog" },
-  { name: "Contact", href: "/contact" },
 ];
 
 export const InternalLinksSection = () => (
@@ -22,7 +21,7 @@ export const InternalLinksSection = () => (
         <p className="text-lg text-muted-foreground mb-8">
           Explore our story, media coverage, partnerships, and ways to connect with the team.
         </p>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-3 gap-3 sm:gap-4">
           {internalLinks.map((link) => (
             <Link
               key={link.href}
