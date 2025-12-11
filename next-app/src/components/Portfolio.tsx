@@ -3,7 +3,6 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
-import { InternalLinksSection } from "@/components/InternalLinksSection";
 import ProjectModal from "@/components/ProjectModal";
 import { ProjectData } from "@/types/project";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -241,7 +240,6 @@ const Portfolio = () => {
           </div>
         </section>
       </main>
-      <InternalLinksSection />
       <Footer />
 
       {/* Project Details Modal */}

@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { InternalLinksSection } from '@/components/InternalLinksSection';
 import { notFound } from 'next/navigation';
 import { portfolioProjectsData } from '@/data/portfolio-server';
 import { generateProjectSlug, getProjectBySlug } from '@/lib/slug';
@@ -298,7 +297,6 @@ export default async function ProjectPage({
           </ScrollAnimationWrapper>
         </div>
       </main>
-      <InternalLinksSection />
       <Footer />
     </div>
   );

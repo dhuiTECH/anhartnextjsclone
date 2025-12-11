@@ -4,7 +4,6 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { FAQSchema } from "@/components/FAQSchema";
-import { InternalLinksSection } from "@/components/InternalLinksSection";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users } from "lucide-react";
 import { organizationStructuredData } from "@/lib/structuredData";
@@ -728,7 +727,6 @@ const About = () => {
           </div>
         </section>
       </main>
-      <InternalLinksSection />
       <Footer />
 
       {/* Staff Contact Modal */}

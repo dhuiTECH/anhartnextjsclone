@@ -4,7 +4,6 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
 import { FAQSchema } from "@/components/FAQSchema";
-import { InternalLinksSection } from "@/components/InternalLinksSection";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, Play, Image, Newspaper, Calendar, ExternalLink, FileText, Download, Eye, X } from "lucide-react";
@@ -1148,7 +1147,6 @@ const Media = () => {
           </div>
          </section> */}
       </main>
-      <InternalLinksSection />
       <Footer />
     </div>;
 };

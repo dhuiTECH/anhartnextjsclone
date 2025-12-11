@@ -188,22 +188,6 @@ export const Footer = () => {
                   </div>
                 </div>
                 
-                {/* Quick Links */}
-                <div className="mt-4">
-                  <h3 className="text-lg font-semibold leading-7 text-background mb-6">
-                    Quick Links
-                  </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
-                    <a href="/portfolio" className="text-background/80 hover:text-background transition-colors">Portfolio</a>
-                    <a href="/projects" className="text-background/80 hover:text-background transition-colors">Projects</a>
-                    <a href="/limited-partnership" className="text-background/80 hover:text-background transition-colors">Limited Partnership</a>
-                    <a href="/partner" className="text-background/80 hover:text-background transition-colors">Partner With Us</a>
-                    <a href="/about" className="text-background/80 hover:text-background transition-colors">About Us</a>
-                    <a href="/media" className="text-background/80 hover:text-background transition-colors">Media</a>
-                    <a href="/blog" className="text-background/80 hover:text-background transition-colors">Blog</a>
-                    <a href="/contact" className="text-background/80 hover:text-background transition-colors">Contact</a>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -249,19 +233,6 @@ export const Footer = () => {
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="mt-6">
-              <h3 className="text-base font-semibold text-background mb-4">Quick Links</h3>
-              <div className="grid grid-cols-2 gap-3 text-sm">
-                <a href="/portfolio" className="text-background/80 hover:text-background transition-colors">Portfolio</a>
-                <a href="/projects" className="text-background/80 hover:text-background transition-colors">Projects</a>
-                <a href="/limited-partnership" className="text-background/80 hover:text-background transition-colors">Limited Partnership</a>
-                <a href="/partner" className="text-background/80 hover:text-background transition-colors">Partner With Us</a>
-                <a href="/about" className="text-background/80 hover:text-background transition-colors">About Us</a>
-                <a href="/media" className="text-background/80 hover:text-background transition-colors">Media</a>
-                <a href="/blog" className="text-background/80 hover:text-background transition-colors">Blog</a>
-                <a href="/contact" className="text-background/80 hover:text-background transition-colors">Contact</a>
               </div>
             </div>
           </div>
@@ -350,17 +321,6 @@ export const Footer = () => {
               </div>
             </div>
 
-            {/* Quick Links */}
-            <div className="grid grid-cols-2 gap-3 text-sm text-background/85">
-              <a href="/portfolio" className="hover:text-background transition-colors">Portfolio</a>
-              <a href="/projects" className="hover:text-background transition-colors">Projects</a>
-              <a href="/limited-partnership" className="hover:text-background transition-colors">Limited Partnership</a>
-              <a href="/partner" className="hover:text-background transition-colors">Partner With Us</a>
-              <a href="/about" className="hover:text-background transition-colors">About Us</a>
-              <a href="/media" className="hover:text-background transition-colors">Media</a>
-              <a href="/blog" className="hover:text-background transition-colors">Blog</a>
-              <a href="/contact" className="hover:text-background transition-colors">Contact</a>
-            </div>
           </div>
           
           {/* Staff Login Section - Centered */}
