@@ -203,6 +203,7 @@ export const LimitedPartnership = () => {
   const [currentBenefitsPage, setCurrentBenefitsPage] = useState(0);
   const [currentExpansionPage, setCurrentExpansionPage] = useState(0);
   const [currentSupportPage, setCurrentSupportPage] = useState(0);
+  const fallbackStrategyImage = "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80";
   const strategyData = [{
     name: 'Fixed Income',
     pillClass: 'bg-slate-700 text-white',
@@ -1258,11 +1259,17 @@ export const LimitedPartnership = () => {
                   <div className="sm:flex">
                     <div className="sm:w-1/2 h-56 sm:h-auto bg-stone-100 overflow-hidden">
                       <img
-                        src={selectedStrategy.image}
+                        src={selectedStrategy.image || fallbackStrategyImage}
                         alt={selectedStrategy.project}
                         className="h-full w-full object-cover"
                         loading="lazy"
                         decoding="async"
+                        onError={(e) => {
+                          const target = e.currentTarget;
+                          if (target.src !== fallbackStrategyImage) {
+                            target.src = fallbackStrategyImage;
+                          }
+                        }}
                       />
                     </div>
                     <div className="sm:w-1/2 p-6 space-y-4 text-[#2f4c2d]">
