@@ -56,9 +56,7 @@ interface ThreeCardSectionProps {
   className?: string;
   flippable?: boolean; // Enable card flipping functionality
 }
-export const ThreeCardSection: React.FC<{
-  children?: React.ReactNode;
-}> = ({
+export const ThreeCardSection: React.FC<ThreeCardSectionProps> = ({
   title,
   description,
   cards,
@@ -68,7 +66,6 @@ export const ThreeCardSection: React.FC<{
   onCardAction,
   className = '',
   flippable = false,
-  children
 }) => {
   // Carousel state (only used when layout === 'carousel')
   const [currentPage, setCurrentPage] = useState(0);

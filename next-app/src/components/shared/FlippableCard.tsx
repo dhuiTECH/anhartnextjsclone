@@ -28,14 +28,11 @@ interface FlippableCardProps {
   showImages?: boolean;
   onCardAction?: (card: CardData, index: number) => void;
 }
-export const FlippableCard: React.FC<{
-  children?: React.ReactNode;
-}> = ({
+export const FlippableCard: React.FC<FlippableCardProps> = ({
   card,
   index,
   showImages = false,
   onCardAction,
-  children
 }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const IconComponent = card.icon;

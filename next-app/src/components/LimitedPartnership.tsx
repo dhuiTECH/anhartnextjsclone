@@ -5,13 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { FileText, Users, DollarSign, Building, Shield, Target, Calendar, Mail, CheckCircle, ArrowRight, TrendingUp, Heart, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { FileText, Users, DollarSign, Building, Shield, Target, Calendar, Mail, CheckCircle, ArrowRight, TrendingUp, Heart, ChevronLeft, ChevronRight, ChevronDown, Lock, Leaf, MapPin, Phone } from "lucide-react";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
 import { useTurnstile } from "@/hooks/useTurnstile";
 import { logger } from "@/utils/logger";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Turnstile } from "@/components/Turnstile";
+import { AddressUtils, CONTACT_INFO } from "@/config/address";
 
 // Partnership expectations - what we expect from limited partners
 const partnershipExpectations = [{
@@ -142,6 +143,53 @@ const supportMethods = [{
   color: "muted"
 }];
 
+// Investment strategy selector data
+const strategyOptions = [{
+  name: "Fixed Income",
+  badgeClass: "bg-slate-700 text-white",
+  risk: "Low",
+  returns: "5-9%",
+  term: "5-10 Years",
+  project: "Vector Mortgage Trust",
+  image: "https://images.unsplash.com/photo-1529429617124-aee6d3ce0108?auto=format&fit=crop&w=1200&q=80",
+  equity: "$8,000,000",
+  irr: "7-10%",
+  minInvest: "$10,000"
+}, {
+  name: "Core Plus",
+  badgeClass: "bg-lime-600 text-white",
+  risk: "Low-Moderate",
+  returns: "9-15%",
+  term: "4-8 Years",
+  project: "600 Norfolk Street N LP",
+  image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+  equity: "$1,600,000",
+  irr: "11.4%",
+  minInvest: "$50,000"
+}, {
+  name: "Value Add",
+  badgeClass: "bg-orange-600 text-white",
+  risk: "Moderate-High",
+  returns: "12-18%",
+  term: "1-6 Years",
+  project: "Centra Apartments",
+  image: "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80",
+  equity: "$18,500,000",
+  irr: "17.5%",
+  minInvest: "$20,000"
+}, {
+  name: "Opportunistic",
+  badgeClass: "bg-red-800 text-white",
+  risk: "High",
+  returns: "18-27%",
+  term: "3-8 Years",
+  project: "Upper Mayfield Estates",
+  image: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80",
+  equity: "$21,900,000",
+  irr: "26.82%",
+  minInvest: "$5,000"
+}];
+
 export const LimitedPartnership = () => {
   const {
     submitForm,
@@ -155,6 +203,53 @@ export const LimitedPartnership = () => {
   const [currentBenefitsPage, setCurrentBenefitsPage] = useState(0);
   const [currentExpansionPage, setCurrentExpansionPage] = useState(0);
   const [currentSupportPage, setCurrentSupportPage] = useState(0);
+  const strategyData = [{
+    name: 'Fixed Income',
+    pillClass: 'bg-slate-700 text-white',
+    risk: 'Low',
+    return: '5-9%',
+    term: '5-10 Years',
+    project: 'Vector Mortgage Trust',
+    equity: '$8,000,000',
+    irr: '7-10%',
+    minInvest: '$10,000',
+    image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80'
+  }, {
+    name: 'Core Plus',
+    pillClass: 'bg-lime-600 text-white',
+    risk: 'Low-Moderate',
+    return: '9-15%',
+    term: '4-8 Years',
+    project: '600 Norfolk Street N LP',
+    equity: '$1,600,000',
+    irr: '11.4%',
+    minInvest: '$50,000',
+    image: 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80'
+  }, {
+    name: 'Value Add',
+    pillClass: 'bg-orange-600 text-white',
+    risk: 'Moderate-High',
+    return: '12-18%',
+    term: '1-6 Years',
+    project: 'Centra Apartments',
+    equity: '$18,500,000',
+    irr: '17.5%',
+    minInvest: '$20,000',
+    image: 'https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?auto=format&fit=crop&w=1200&q=80'
+  }, {
+    name: 'Opportunistic',
+    pillClass: 'bg-red-800 text-white',
+    risk: 'High',
+    return: '18-27%',
+    term: '3-8 Years',
+    project: 'Upper Mayfield Estates',
+    equity: '$21,900,000',
+    irr: '26.82%',
+    minInvest: '$5,000',
+    image: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80'
+  }];
+  const [selectedStrategy, setSelectedStrategy] = useState(strategyData[0]);
+  const [isStrategyCardVisible, setIsStrategyCardVisible] = useState(true);
   
   // =============================================================================
   // DISCLAIMER COLLAPSE STATE
@@ -376,30 +471,274 @@ export const LimitedPartnership = () => {
       resetTurnstile();
     }
   };
-  return <section id="limited-partnership" className="py-12 md:py-24 bg-gradient-to-br from-muted/20 via-muted/30 to-muted/40 sm:py-[50px] relative overflow-hidden">
+  useEffect(() => {
+    const tabs = Array.from(document.querySelectorAll<HTMLButtonElement>(".why-tab"));
+    const panels = Array.from(document.querySelectorAll<HTMLElement>(".why-panel"));
+
+    const deactivateAll = () => {
+      tabs.forEach(tab => {
+        tab.classList.remove("border-[#E57373]", "bg-rose-50", "text-[#1c1917]", "shadow-[0_10px_30px_-12px_rgba(229,115,115,0.35)]");
+        tab.classList.add("border-stone-200", "text-slate-700");
+      });
+      panels.forEach(panel => {
+        panel.classList.add("hidden");
+        panel.classList.remove("opacity-100");
+        panel.classList.add("opacity-0");
+      });
+    };
+
+    const activate = (targetId: string) => {
+      deactivateAll();
+      const targetTab = tabs.find(t => t.dataset.target === targetId);
+      const targetPanel = document.getElementById(targetId);
+      if (targetTab) {
+        targetTab.classList.remove("border-stone-200", "text-slate-700");
+        targetTab.classList.add("border-[#E57373]", "bg-rose-50", "text-[#1c1917]", "shadow-[0_10px_30px_-12px_rgba(229,115,115,0.35)]");
+      }
+      if (targetPanel) {
+        targetPanel.classList.remove("hidden");
+        requestAnimationFrame(() => {
+          targetPanel.classList.remove("opacity-0");
+          targetPanel.classList.add("opacity-100");
+        });
+      }
+    };
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        const target = tab.dataset.target;
+        if (target) activate(target);
+      });
+    });
+
+    // set default active
+    activate("content-1");
+
+    return () => {
+      tabs.forEach(tab => {
+        tab.replaceWith(tab.cloneNode(true));
+      });
+    };
+  }, []);
+
+  return <section id="limited-partnership" className="py-8 md:py-16 bg-gradient-to-br from-muted/20 via-muted/30 to-muted/40 sm:py-[40px] relative overflow-hidden">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))]"></div>
       
       <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
         
-        {/* Header Section with Enhanced Design */}
+        {/* Hero style header aligned with brand spec */}
         <ScrollAnimationWrapper direction="top" delay={0}>
-          <div className="text-center mb-8 md:mb-16">
-            <div className="relative inline-block">
-              <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 via-primary/30 to-red-400/20 rounded-2xl blur-lg"></div>
-              <div className="relative bg-gradient-to-r from-background/95 via-background to-background/95 rounded-2xl p-4 md:p-8 shadow-2xl border border-red-100/50 backdrop-blur-sm">
-                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4 md:mb-6">
-                  Limited Partnership Investment
-                </h2>
-                <p className="text-base md:text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">Learn about Anhart's Limited Partnership (LP) that invests in community-led housing solutions across Canada. Owned by a non-profit organization, our LP offers unique opportunities for both financial and social returns.</p>
+          <div className="mx-auto max-w-7xl px-6 lg:px-8 py-12 lg:py-16 overflow-hidden">
+            <div className="relative grid items-center gap-16 lg:gap-20 lg:grid-cols-2">
+              {/* Left copy */}
+              <div className="space-y-8">
+                <h1 className="text-5xl lg:text-6xl font-serif font-bold leading-tight text-[#1c1917]">
+                  Affordable Housing Limited Partnership for Accredited Canadian Investors
+                </h1>
+                <p className="font-sans text-lg text-stone-600 leading-relaxed max-w-2xl">
+                  Institutional-grade impact investments in Vancouver, BC with stable preferred returns backed by affordable housing assets across Canada. Built for accredited investors seeking community-scale outcomes.
+                </p>
+                <div className="flex flex-wrap items-center gap-3">
+                  <Button
+                    variant="default"
+                    asChild
+                    className="font-sans rounded-lg bg-[#E57373] border border-[#E57373] hover:bg-[#d65b5b] text-white shadow-[0_10px_30px_-12px_rgba(229,115,115,0.45)] px-7 sm:px-10 py-3 text-sm sm:text-base font-semibold tracking-wide"
+                  >
+                    <a href="#investment-inquiry">Start Investing</a>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    asChild
+                    className="font-sans rounded-lg border border-stone-300 text-stone-800 hover:bg-stone-50 px-7 sm:px-10 py-3 text-sm sm:text-base font-semibold tracking-wide"
+                  >
+                    <a href="#investment-strategy">View Offerings</a>
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-4 text-sm text-stone-600">
+                  <a href={`tel:${CONTACT_INFO.phone.replace(/[^\d]/g, '')}`} className="hover:text-[#E57373] transition-colors">
+                    Call {CONTACT_INFO.phone}
+                  </a>
+                  <span className="hidden sm:inline text-stone-400">•</span>
+                  <a href={`mailto:${CONTACT_INFO.email}`} className="hover:text-[#E57373] transition-colors">
+                    Email {CONTACT_INFO.email}
+                  </a>
+                  <span className="hidden sm:inline text-stone-400">•</span>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(AddressUtils.getGoogleMapsAddress())}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:text-[#E57373] transition-colors"
+                  >
+                    {AddressUtils.getShortAddress()}
+                  </a>
+                </div>
+                <div className="font-sans flex flex-wrap gap-6 text-xs font-semibold uppercase tracking-[0.18em] text-stone-600 mt-12">
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-[#E57373]" />
+                    Vetted Deals
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-[#E57373]" />
+                    1000+ Units Planned
+                  </div>
+                </div>
+              </div>
+
+              {/* Right card with decorative backdrop */}
+              <div className="relative flex justify-center lg:justify-end">
+                <div className="absolute -inset-4 -z-10 rotate-3 rounded-3xl bg-stone-100" aria-hidden="true"></div>
+                <Card className="relative w-full max-w-xl rounded-2xl border border-stone-100 bg-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)]">
+                  <CardContent className="p-6 sm:p-8 space-y-6">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="space-y-2">
+                        <p className="font-sans text-[10px] uppercase tracking-[0.18em] text-stone-400">
+                          Current Opportunity
+                        </p>
+                        <p className="font-sans text-2xl font-bold text-stone-900">
+                          Anhart National LP
+                        </p>
+                      </div>
+                      <span className="font-sans inline-flex items-center rounded-full bg-emerald-50 text-emerald-700 px-3 py-1 text-xs font-bold">
+                        Open for Funding
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-6 sm:gap-8">
+                      <div>
+                        <div className="font-sans text-4xl font-bold text-[#E57373] leading-none">2.0%</div>
+                        <p className="font-sans text-sm text-stone-500 mt-2">Pref Return + Profit</p>
+                      </div>
+                      <div className="flex flex-col items-start sm:items-end">
+                        <div className="font-sans text-4xl font-bold text-stone-900 leading-none">$16M</div>
+                        <p className="font-sans text-sm text-stone-500 mt-2 text-left sm:text-right">Capital Deployed</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4 rounded-xl border border-stone-100 bg-stone-50 px-4 py-4 mt-8">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-stone-200 text-[#E57373] flex-shrink-0">
+                        <TrendingUp className="h-5 w-5" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="font-sans font-semibold text-stone-900">Stable Cash Flow</p>
+                        <p className="font-sans text-sm text-stone-600">
+                          Returns generated from operational affordable housing assets across Canada.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </div>
         </ScrollAnimationWrapper>
 
+        {/* Why Invest Section - Brand theme */}
+        <ScrollAnimationWrapper direction="top" delay={50}>
+          <section className="bg-white rounded-3xl py-14 px-6 md:px-10 lg:px-14 shadow-2xl mt-10 lg:mt-16 mb-16 md:mb-24 border border-stone-100 font-roboto">
+            <div className="mx-auto max-w-6xl">
+              <div className="mb-10 space-y-3">
+                <p className="text-sm uppercase tracking-[0.24em] text-[#3b4d34] font-semibold">Why Invest</p>
+                <h3 className="text-3xl md:text-4xl font-bold leading-tight text-[#2f4c2d]">Direct deal investments that align with your goals and risk appetite.</h3>
+                <p className="text-sm md:text-base text-[#2f4c2d]/80 max-w-3xl">Choose a strategy to preview a representative portfolio example with key metrics.</p>
+              </div>
+              <div className="grid lg:grid-cols-2 gap-10 lg:gap-12">
+                {/* Left column feature buttons */}
+                <div className="space-y-4" id="why-invest-tabs">
+                  <button data-target="content-1" className="why-tab w-full text-left flex items-center gap-4 rounded-2xl border border-stone-200 px-5 py-5 bg-white/80 hover:border-stone-300 transition">
+                    <TrendingUp className="h-6 w-6 text-[#E57373]" />
+                    <span className="text-lg md:text-xl font-semibold text-slate-800">2% Preferred Return</span>
+                  </button>
+                  <button data-target="content-2" className="why-tab w-full text-left flex items-center gap-4 rounded-2xl border border-stone-200 px-5 py-5 bg-white/80 hover:border-stone-300 transition">
+                    <Building className="h-6 w-6 text-[#E57373]" />
+                    <span className="text-lg md:text-xl font-semibold text-slate-800">Direct Project Impact</span>
+                  </button>
+                  <button data-target="content-3" className="why-tab w-full text-left flex items-center gap-4 rounded-2xl border border-stone-200 px-5 py-5 bg-white/80 hover:border-stone-300 transition">
+                    <Heart className="h-6 w-6 text-[#E57373]" />
+                    <span className="text-lg md:text-xl font-semibold text-slate-800">Social Impact Returns</span>
+                  </button>
+                  <button data-target="content-4" className="why-tab w-full text-left flex items-center gap-4 rounded-2xl border border-stone-200 px-5 py-5 bg-white/80 hover:border-stone-300 transition">
+                    <Target className="h-6 w-6 text-[#E57373]" />
+                    <span className="text-lg md:text-xl font-semibold text-slate-800">Net Sale Proceeds</span>
+                  </button>
+                </div>
+
+                {/* Right column dynamic content */}
+                <div className="relative">
+                  <div id="content-1" className="why-panel rounded-2xl border border-stone-200 bg-white p-6 md:p-8 shadow-xl">
+                    <div className="relative h-64 md:h-80 rounded-xl overflow-hidden bg-gradient-to-br from-rose-50 via-white to-white flex items-center justify-center border border-rose-100">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E57373]/10 border border-[#E57373]/40 text-[#E57373]">
+                          <TrendingUp className="h-7 w-7" />
+                        </div>
+                        <span className="inline-flex items-center gap-2 rounded-full bg-[#E57373] text-white px-3 py-1 text-xs font-bold shadow-md">Semi-Annual Preferred</span>
+                      </div>
+                    </div>
+                    <div className="mt-5 space-y-2">
+                      <h4 className="text-xl font-semibold text-slate-900">2% Preferred Return</h4>
+                      <p className="text-stone-600 text-sm md:text-base">2% preferred rate of return, paid semi-annually, subject to the availability of distributable cash after expenses, debts, liabilities, and reserves. Returns depend on distributable cash and are not guaranteed.</p>
+                    </div>
+                  </div>
+
+                  <div id="content-2" className="why-panel hidden opacity-0 transition-opacity duration-300 rounded-2xl border border-stone-200 bg-white p-6 md:p-8 shadow-xl">
+                    <div className="relative h-64 md:h-80 rounded-xl overflow-hidden bg-gradient-to-br from-emerald-50 via-white to-white flex items-center justify-center border border-emerald-100">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E57373]/10 border border-[#E57373]/40 text-[#E57373]">
+                          <Building className="h-7 w-7" />
+                        </div>
+                        <span className="inline-flex items-center gap-2 rounded-full bg-[#E57373] text-white px-3 py-1 text-xs font-bold shadow-md">Project Updates</span>
+                      </div>
+                    </div>
+                    <div className="mt-5 space-y-2">
+                      <h4 className="text-xl font-semibold text-slate-900">Direct Project Impact & Transparency</h4>
+                      <p className="text-stone-600 text-sm md:text-base">Your investment directly funds affordable housing projects across Canada, with regular updates on project performance metrics, financial distributions, and social impact outcomes.</p>
+                    </div>
+                  </div>
+
+                  <div id="content-3" className="why-panel hidden opacity-0 transition-opacity duration-300 rounded-2xl border border-stone-200 bg-white p-6 md:p-8 shadow-xl">
+                    <div className="relative h-64 md:h-80 rounded-xl overflow-hidden bg-gradient-to-br from-rose-50 to-white flex items-center justify-center border border-stone-200">
+                      <div className="w-full max-w-sm">
+                        <div className="h-40 bg-gradient-to-br from-[#E57373]/25 via-[#E57373]/15 to-white rounded-xl relative overflow-hidden border border-rose-100">
+                          <div className="absolute inset-0 px-6 py-4 flex flex-col justify-between">
+                            <div className="text-slate-900 font-semibold">Social Impact</div>
+                            <div className="space-y-2 text-xs text-stone-600">
+                              <div className="flex items-center justify-between"><span>Community Benefit</span><span className="font-semibold text-[#E57373]">▲ durable</span></div>
+                              <div className="flex items-center justify-between"><span>Housing Stability</span><span className="font-semibold text-stone-500">↑ stronger</span></div>
+                            </div>
+                          </div>
+                          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white to-transparent"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-5 space-y-2">
+                      <h4 className="text-xl font-semibold text-slate-900">Social Impact Returns</h4>
+                      <p className="text-stone-600 text-sm md:text-base">Beyond financial returns, contribute to creating sustainable, affordable housing solutions that strengthen communities long-term.</p>
+                    </div>
+                  </div>
+
+                  <div id="content-4" className="why-panel hidden opacity-0 transition-opacity duration-300 rounded-2xl border border-stone-200 bg-white p-6 md:p-8 shadow-xl">
+                    <div className="relative h-64 md:h-80 rounded-xl overflow-hidden bg-gradient-to-br from-amber-50 via-white to-white flex items-center justify-center border border-amber-100">
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E57373]/10 border border-[#E57373]/40 text-[#E57373]">
+                          <Target className="h-7 w-7" />
+                        </div>
+                        <span className="inline-flex items-center gap-2 rounded-full bg-[#E57373] text-white px-3 py-1 text-xs font-bold shadow-md">Additional Upside</span>
+                      </div>
+                    </div>
+                    <div className="mt-5 space-y-2">
+                      <h4 className="text-xl font-semibold text-slate-900">Net Sale Proceeds</h4>
+                      <p className="text-stone-600 text-sm md:text-base">Distribution of net proceeds from sales of project lands or assets, providing additional return potential beyond ongoing cash flow distributions. Subject to distributable cash availability.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </ScrollAnimationWrapper>
+
         {/* Partnership Expectations Section - Enhanced */}
         <ScrollAnimationWrapper direction="left" delay={100}>
-          <div className="mb-8 md:mb-16">
+          <div className="mb-16 md:mb-24">
             <div className="text-center mb-8 md:mb-12">
               <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4 md:mb-6">What We Expect from Limited Partners</h3>
               <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
@@ -505,121 +844,6 @@ export const LimitedPartnership = () => {
                   </div>
                 </div>
               </ScrollAnimationWrapper>
-            </div>
-          </div>
-        </ScrollAnimationWrapper>
-
-        {/* What Partners Can Expect Section - Enhanced with Green Theme */}
-        <ScrollAnimationWrapper direction="right" delay={200}>
-          <div className="mb-8 md:mb-16 relative">
-            <div className="">
-              <div className="text-center mb-8 md:mb-12">
-                <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4 md:mb-6">What Limited Partners Receive</h3>
-                <p className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto">
-                  As a limited partner, you'll receive both financial returns and the satisfaction of creating meaningful social impact.
-                </p>
-              </div>
-              
-              {/* Desktop Layout - 2x2 Grid */}
-              <div className="hidden lg:grid lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                {partnerBenefits.map((benefit, index) => (
-                  <ScrollAnimationWrapper key={index} direction="top" delay={300 + (index * 100)}>
-                    <Card className="text-center border-l-4 border-l-green-500 hover:shadow-xl hover:scale-105 transition-all duration-300 group rounded-xl overflow-hidden bg-gradient-to-br from-white to-green-50/30 hover:from-green-50/50 hover:to-white h-full flex flex-col">
-                      <CardContent className="p-6 flex-1 flex flex-col">
-                        <div className="mx-auto w-12 h-12 bg-gradient-to-br from-green-500/20 to-green-400/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg group-hover:shadow-green-200/50">
-                          <benefit.icon className="w-6 h-6 text-green-500 group-hover:text-green-600 transition-colors duration-300" />
-                        </div>
-                        <h4 className="text-lg font-semibold mb-3">{benefit.title}</h4>
-                        <p className="text-sm text-muted-foreground">{benefit.description}</p>
-                      </CardContent>
-                    </Card>
-                  </ScrollAnimationWrapper>
-                ))}
-              </div>
-
-              {/* Tablet and Mobile Layout - Horizontal Scroll with Pagination */}
-              <div className="lg:hidden">
-                {/* Pagination Dots */}
-                <ScrollAnimationWrapper direction="top" delay={200}>
-                  <div className="flex justify-center items-center mb-6 space-x-2">
-                    {partnerBenefits.map((_, index) => (
-                      <button 
-                        key={index} 
-                        onClick={() => setCurrentBenefitsPage(index)} 
-                        className={`h-3 rounded-full transition-all duration-300 ${
-                          index === currentBenefitsPage 
-                            ? 'bg-green-500 w-8 shadow-lg shadow-green-500/30' 
-                            : 'bg-green-500/40 hover:bg-green-500/60 w-3'
-                        }`} 
-                        aria-label={`Go to page ${index + 1}`} 
-                      />
-                    ))}
-                  </div>
-                </ScrollAnimationWrapper>
-
-                {/* Navigation Container */}
-                <ScrollAnimationWrapper direction="bottom" delay={300}>
-                  <div 
-                    className={`relative touch-pan-x transition-all duration-300 ${isTouchActive ? 'shadow-2xl shadow-primary/20' : ''} ${
-                    isAnimating 
-                      ? swipeDirection === 'left' 
-                        ? 'animate-slide-out-left' 
-                        : 'animate-slide-out-right'
-                      : ''
-                  }`}
-                    onTouchStart={handleTouchStart}
-                    onTouchMove={handleTouchMove}
-                    onTouchEnd={() => handleTouchEnd('benefits')}
-                    onTouchCancel={handleTouchCancel}
-                    style={{ touchAction: 'auto' }}
-                  >
-                    {/* Previous Arrow - Overlaid on left */}
-                    <button 
-                      onClick={goToPreviousBenefitsPage} 
-                      className="absolute left-1 top-1/2 -translate-y-1/2 z-20 text-foreground/60 hover:text-foreground text-3xl font-bold transition-all duration-200 hover:scale-110" 
-                      aria-label="Previous benefit"
-                    >
-                      ‹
-                    </button>
-
-                    {/* Next Arrow - Overlaid on right */}
-                    <button 
-                      onClick={goToNextBenefitsPage} 
-                      className="absolute right-1 top-1/2 -translate-y-1/2 z-20 text-foreground/60 hover:text-foreground text-3xl font-bold transition-all duration-200 hover:scale-110" 
-                      aria-label="Next benefit"
-                    >
-                      ›
-                    </button>
-
-                    {/* Single Card Display - Full width content */}
-                    <div className="px-6">
-                      {partnerBenefits[currentBenefitsPage] && (
-                        <div className="flex justify-center">
-                          <div className="w-full max-w-sm">
-                            <ScrollAnimationWrapper direction="top" delay={300 + (currentBenefitsPage * 100)}>
-                              <Card className="text-center border-l-4 border-l-green-500 hover:shadow-xl hover:scale-105 transition-all duration-300 group rounded-xl overflow-hidden bg-gradient-to-br from-white to-green-50/30 hover:from-green-50/50 hover:to-white h-full">
-                                <CardContent className="p-6">
-                                  <div className="mx-auto w-12 h-12 bg-gradient-to-br from-green-500/20 to-green-400/20 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg group-hover:shadow-green-200/50">
-                                    {React.createElement(partnerBenefits[currentBenefitsPage].icon, {
-                                      className: "w-6 h-6 text-green-500"
-                                    })}
-                                  </div>
-                        <h4 className="text-lg font-semibold mb-3">
-                          {partnerBenefits[currentBenefitsPage].title}
-                        </h4>
-                                  <p className="text-sm text-muted-foreground">
-                                    {partnerBenefits[currentBenefitsPage].description}
-                                  </p>
-                                </CardContent>
-                              </Card>
-                            </ScrollAnimationWrapper>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </ScrollAnimationWrapper>
-              </div>
             </div>
           </div>
         </ScrollAnimationWrapper>
@@ -975,6 +1199,99 @@ export const LimitedPartnership = () => {
 
 
 
+        {/* Investment Strategy Selector */}
+        <section id="investment-strategy" className="bg-stone-50 rounded-3xl border border-stone-100 shadow-xl px-6 md:px-10 lg:px-14 py-12 md:py-16 mb-12 md:mb-16 font-roboto text-slate-800">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-8 md:mb-10">
+              <p className="text-sm uppercase tracking-[0.22em] text-slate-600 font-semibold">Investment Strategy Selector</p>
+              <h3 className="text-3xl md:text-4xl font-bold text-[#1c1917] mt-3">Direct deal investments that align with your goals and risk appetite.</h3>
+              <p className="text-slate-700 mt-3 max-w-3xl">Choose a strategy to instantly preview a representative portfolio example with key metrics.</p>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10 items-start">
+              {/* Left: Strategy list */}
+              <div className="lg:col-span-2 space-y-3">
+                <div className="grid grid-cols-4 text-xs sm:text-sm font-semibold text-slate-500 px-3">
+                  <span>Strategy</span>
+                  <span className="text-center">Risk Profile</span>
+                  <span className="text-center">Typical Return</span>
+                  <span className="text-center">Typical Term</span>
+                </div>
+                <div className="space-y-3">
+                  {strategyData.map((strategy) => {
+                    const isActive = selectedStrategy.name === strategy.name;
+                    return (
+                      <button
+                        key={strategy.name}
+                        onClick={() => {
+                          setIsStrategyCardVisible(false);
+                          setSelectedStrategy(strategy);
+                          setTimeout(() => setIsStrategyCardVisible(true), 20);
+                        }}
+                        className={`w-full transition-all duration-200 border ${
+                          isActive ? 'bg-white rounded-full shadow-md border-slate-200' : 'border-transparent'
+                        }`}
+                      >
+                  <div className="grid grid-cols-4 items-center gap-2 px-4 py-3 sm:py-4">
+                          <div className="flex items-center gap-3">
+                            <span className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${strategy.pillClass}`}>
+                              {strategy.name}
+                            </span>
+                          </div>
+                          <div className="text-center text-[#2f4c2d] text-sm">{strategy.risk}</div>
+                          <div className="text-center text-[#2f4c2d] text-sm">{strategy.return}</div>
+                          <div className="text-center text-[#2f4c2d] text-sm">{strategy.term}</div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Right: Portfolio card */}
+              <div className="lg:col-span-1 w-full">
+                <div
+                  className={`bg-white border border-stone-200 rounded-2xl shadow-lg overflow-hidden transition-opacity duration-300 ${
+                    isStrategyCardVisible ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  key={selectedStrategy.name}
+                >
+                  <div className="sm:flex">
+                    <div className="sm:w-1/2 h-56 sm:h-auto bg-stone-100 overflow-hidden">
+                      <img
+                        src={selectedStrategy.image}
+                        alt={selectedStrategy.project}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div className="sm:w-1/2 p-6 space-y-4 text-[#2f4c2d]">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.18em] text-[#2f4c2d]/70 font-semibold">Portfolio</p>
+                        <h4 className="text-2xl font-bold mt-1 leading-tight">{selectedStrategy.project}</h4>
+                      </div>
+                      <div className="space-y-3 text-sm">
+                        <div className="border-b border-stone-200 pb-2">
+                          <p className="text-xs uppercase tracking-[0.12em] text-[#2f4c2d]/80">Total Equity</p>
+                          <p className="text-lg font-bold leading-tight">{selectedStrategy.equity}</p>
+                        </div>
+                        <div className="border-b border-stone-200 pb-2">
+                          <p className="text-xs uppercase tracking-[0.12em] text-[#2f4c2d]/80">IRR</p>
+                          <p className="text-lg font-bold leading-tight">{selectedStrategy.irr}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.12em] text-[#2f4c2d]/80">Minimum Investment</p>
+                          <p className="text-lg font-bold leading-tight">{selectedStrategy.minInvest}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Additional Ways to Contribute */}
         <ScrollAnimationWrapper direction="top" delay={700}>
           <div className="mb-8 md:mb-16">
@@ -1191,7 +1508,7 @@ export const LimitedPartnership = () => {
         <ScrollAnimationWrapper direction="left" delay={700}>
           <div className="mx-auto mt-8 md:mt-16 grid max-w-6xl grid-cols-1 gap-6 md:gap-8 lg:grid-cols-2 lg:items-stretch">
             {/* Investment Inquiry Form */}
-            <Card className="shadow-lg flex flex-col h-full">
+            <Card id="investment-inquiry" className="shadow-lg flex flex-col h-full">
             <CardHeader className="pb-4">
               <CardTitle className="text-xl md:text-2xl">Investment Inquiry</CardTitle>
               <p className="text-sm md:text-base text-muted-foreground">
@@ -1283,6 +1600,37 @@ export const LimitedPartnership = () => {
                         <h4 className="font-semibold text-foreground mb-2">Keith Gordon</h4>
                         <p className="text-muted-foreground">Co-founder, Anhart Investments</p>
                         <p className="text-primary font-semibold">keith.gordon@anhart.ca</p>
+                      </div>
+                    </div>
+                    <div className="mt-4 space-y-3 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                        <Phone className="h-4 w-4 text-foreground" />
+                        <a
+                          href={`tel:${CONTACT_INFO.phone.replace(/[^\d]/g, '')}`}
+                          className="font-medium text-foreground hover:text-primary transition-colors"
+                        >
+                          {CONTACT_INFO.phone}
+                        </a>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Mail className="h-4 w-4 text-foreground" />
+                        <a
+                          href={`mailto:${CONTACT_INFO.email}`}
+                          className="font-medium text-foreground hover:text-primary transition-colors"
+                        >
+                          {CONTACT_INFO.email}
+                        </a>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <MapPin className="h-4 w-4 mt-0.5 text-foreground" />
+                        <a
+                          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(AddressUtils.getGoogleMapsAddress())}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-medium text-foreground hover:text-primary transition-colors"
+                        >
+                          {AddressUtils.getOneLineAddress()}
+                        </a>
                       </div>
                     </div>
                   </CardContent>

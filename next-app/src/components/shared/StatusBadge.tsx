@@ -16,12 +16,9 @@ interface StatusBadgeProps {
   className?: string;
 }
 
-export const StatusBadge: React.FC<{
-  children?: React.ReactNode;
-}> = ({
+export const StatusBadge: React.FC<StatusBadgeProps> = ({
   status,
   className,
-  children
 }) => {
   /**
    * Determines the appropriate CSS classes for different status types

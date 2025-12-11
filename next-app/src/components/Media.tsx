@@ -3,6 +3,8 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
+import { FAQSchema } from "@/components/FAQSchema";
+import { InternalLinksSection } from "@/components/InternalLinksSection";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, Play, Image, Newspaper, Calendar, ExternalLink, FileText, Download, Eye, X } from "lucide-react";
@@ -457,6 +459,26 @@ const Media = () => {
       <SEO title="News & Media" description="Stay updated with the latest news, media coverage, and press releases about Anhart's affordable housing projects and community impact across Canada." keywords="anhart news, affordable housing media, housing press releases, community development news, housing coverage, anhart press, housing media" url="/media" />
       <Header />
       <main>
+        <FAQSchema
+          pageUrl="https://anhart.ca/media"
+          faqs={[
+            {
+              question: "Where can I find your latest press releases?",
+              answer:
+                "Press releases and announcements are listed on our News & Media page, alongside recent coverage of Anhart’s projects.",
+            },
+            {
+              question: "How do I request interviews or access the media kit?",
+              answer:
+                "Use the media contact options on this page to request interviews, b-roll, photos, logos, and fact sheets for your story.",
+            },
+            {
+              question: "What assets are available for media use?",
+              answer:
+                "We provide press releases, high-resolution photos, graphics, video content, and downloadable media kits to support coverage of Anhart’s housing projects.",
+            },
+          ]}
+        />
         {/* Hero Banner - Media and news coverage overview */}
         <HeroBanner backgroundImage="media-hero" title="Latest News and Media Coverage" contentPosition="right" />
 
@@ -1126,6 +1148,7 @@ const Media = () => {
           </div>
          </section> */}
       </main>
+      <InternalLinksSection />
       <Footer />
     </div>;
 };

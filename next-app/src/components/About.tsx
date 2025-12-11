@@ -3,6 +3,8 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
+import { FAQSchema } from "@/components/FAQSchema";
+import { InternalLinksSection } from "@/components/InternalLinksSection";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users } from "lucide-react";
 import { organizationStructuredData } from "@/lib/structuredData";
@@ -248,6 +250,26 @@ const About = () => {
         keywords="about anhart, affordable housing team, housing professionals, community development, mission, values, leadership"
         url="/about"
         structuredData={organizationStructuredData}
+      />
+      <FAQSchema
+        pageUrl="https://anhart.ca/about"
+        faqs={[
+          {
+            question: "What does Anhart do?",
+            answer:
+              "Anhart is a vertically integrated affordable housing developer focused on modular homes, SRO conversions, and community-based housing across Canada.",
+          },
+          {
+            question: "Where does Anhart operate?",
+            answer:
+              "Anhart is based in Vancouver, BC and partners with communities across Canada to deliver affordable housing projects.",
+          },
+          {
+            question: "What is Anhart’s long-term housing goal?",
+            answer:
+              "Anhart is working toward building 20,000 affordable homes by 2045 through partnerships, modular builds, and adaptive reuse projects.",
+          },
+        ]}
       />
       <Header />
       <main>
@@ -706,6 +728,7 @@ const About = () => {
           </div>
         </section>
       </main>
+      <InternalLinksSection />
       <Footer />
 
       {/* Staff Contact Modal */}

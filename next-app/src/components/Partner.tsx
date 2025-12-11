@@ -3,6 +3,8 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import SEO from "@/components/SEO";
+import { FAQSchema } from "@/components/FAQSchema";
+import { InternalLinksSection } from "@/components/InternalLinksSection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -94,6 +96,23 @@ const Partner = () => {
       <Header />
       
       <main>
+        <FAQSchema
+          pageUrl="https://anhart.ca/partner"
+          faqs={[
+            {
+              question: "Who can partner with Anhart?",
+              answer: "We collaborate with municipalities, non-profits, Indigenous organizations, community operators, and aligned investors to advance affordable housing projects across Canada.",
+            },
+            {
+              question: "How do I start a partnership request?",
+              answer: "Submit the partnership form on this page with your contact details, organization, and project goals. Our team reviews each request and follows up directly.",
+            },
+            {
+              question: "What support does Anhart provide to partners?",
+              answer: "We bring development expertise, access to funding streams, and collaborative project delivery to help bring affordable housing from concept to completion.",
+            },
+          ]}
+        />
         {/* Hero Banner */}
         <section className="relative h-80 overflow-hidden">
           <div className="absolute inset-0 bg-cover bg-left bg-no-repeat" style={{
@@ -260,7 +279,7 @@ const Partner = () => {
           </div>
         </section>
       </main>
-
+      <InternalLinksSection />
       <Footer />
     </div>;
 };

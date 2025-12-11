@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
+import { CONTACT_INFO, OFFICE_ADDRESS } from "@/config/address";
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -20,6 +21,17 @@ export const metadata: Metadata = {
   },
   description:
     "Anhart is a vertically integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045.",
+  keywords: [
+    "affordable housing",
+    "affordable housing Vancouver",
+    "affordable housing Canada",
+    "housing developer Vancouver",
+    "housing developer Canada",
+    "modular housing BC",
+    "supportive housing",
+    "non-profit housing",
+    "Anhart",
+  ],
   alternates: { canonical: "https://anhart.ca" },
   openGraph: {
     title: "Anhart - Affordable Housing Developer in Canada",
@@ -45,27 +57,93 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const jsonLd = {
+  const organizationJsonLd = {
     "@context": "https://schema.org",
-    "@type": "RealEstateAgent",
-    "name": "Anhart",
-    "url": "https://anhart.ca",
-    "logo": "https://anhart.ca/images/anhart-logo.png",
-    "description": "Anhart is a vertically integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045.",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Vancouver",
-      "addressRegion": "BC",
-      "addressCountry": "CA"
-    },
-    "areaServed": {
-      "@type": "Country",
-      "name": "Canada"
-    },
-    "sameAs": [
+    "@type": "Organization",
+    "@id": "https://anhart.ca/#organization",
+    name: "Anhart",
+    url: "https://anhart.ca",
+    logo: "https://anhart.ca/images/anhart-logo.png",
+    email: CONTACT_INFO.email,
+    telephone: "+1-604-529-6259",
+    sameAs: [
       "https://www.linkedin.com/company/anhart",
-      "https://twitter.com/anhart_housing"
-    ]
+      "https://twitter.com/anhart_housing",
+      "https://www.facebook.com/anhartsolutions?rdid=RVW0ZiZ1JKyW8dI3&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2FnG5gD4iinFYGjyeT%2F",
+      "https://www.instagram.com/anharthousing/",
+      "https://x.com/anharthousing",
+    ],
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        telephone: "+1-604-529-6259",
+        email: CONTACT_INFO.email,
+        contactType: "customer service",
+        areaServed: "CA",
+        availableLanguage: ["English"],
+      },
+    ],
+  };
+
+  const localBusinessJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": "https://anhart.ca/#localbusiness",
+    name: "Anhart",
+    url: "https://anhart.ca",
+    image: "https://anhart.ca/images/anhart-logo.png",
+    description:
+      "Anhart is a vertically integrated affordable housing developer in Vancouver, BC. Modular homes, SRO conversions, open-source Community Commons. Building 20,000 homes by 2045.",
+    telephone: "+1-604-529-6259",
+    email: CONTACT_INFO.email,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: `${OFFICE_ADDRESS.suite}, ${OFFICE_ADDRESS.building}, ${OFFICE_ADDRESS.street}`,
+      addressLocality: OFFICE_ADDRESS.city,
+      addressRegion: OFFICE_ADDRESS.province,
+      postalCode: OFFICE_ADDRESS.postalCode,
+      addressCountry: "CA",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: OFFICE_ADDRESS.coordinates.lat,
+      longitude: OFFICE_ADDRESS.coordinates.lng,
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "Canada",
+    },
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+        ],
+        opens: "09:00",
+        closes: "17:00",
+      },
+    ],
+    sameAs: organizationJsonLd.sameAs,
+  };
+
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://anhart.ca/#website",
+    url: "https://anhart.ca",
+    name: "Anhart",
+    publisher: {
+      "@id": "https://anhart.ca/#organization",
+    },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: "https://anhart.ca/search?q={search_term_string}",
+      "query-input": "required name=search_term_string",
+    },
   };
 
   return (
@@ -133,7 +211,13 @@ export default function RootLayout({
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              organizationJsonLd,
+              localBusinessJsonLd,
+              websiteJsonLd,
+            ]),
+          }}
         />
       </head>
       <body className={inter.className}>

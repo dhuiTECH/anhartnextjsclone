@@ -29,9 +29,7 @@ interface InfoCardProps {
   children?: React.ReactNode;
 }
 
-export const InfoCard: React.FC<{
-  children?: React.ReactNode;
-}> = ({
+export const InfoCard: React.FC<InfoCardProps> = ({
   icon: Icon,
   title,
   description,
