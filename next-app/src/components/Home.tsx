@@ -836,7 +836,7 @@ const Home = () => {
                       {/* Cloudflare Turnstile Widget */}
                       <div className="flex justify-center" key={turnstileKey}>
                         <Turnstile
-                          siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
+                          siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
                           onSuccess={turnstileHandlers.onSuccess}
                           onError={turnstileHandlers.onError}
                           onExpire={turnstileHandlers.onExpire}

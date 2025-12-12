@@ -3,6 +3,28 @@ import { Resend } from "https://esm.sh/resend@2.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
+// Security: Rate limiting storage (in-memory, resets on function restart)
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const RATE_LIMIT_MAX_REQUESTS = 3; // Max 3 subscriptions per window per IP/email
+
+function checkRateLimit(identifier: string): { allowed: boolean; remaining: number; resetTime: number } {
+  const now = Date.now();
+  const record = rateLimitStore.get(identifier);
+  
+  if (!record || record.resetTime < now) {
+    rateLimitStore.set(identifier, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+    return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - 1, resetTime: now + RATE_LIMIT_WINDOW_MS };
+  }
+  
+  if (record.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return { allowed: false, remaining: 0, resetTime: record.resetTime };
+  }
+  
+  record.count += 1;
+  return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - record.count, resetTime: record.resetTime };
+}
+
 // Get allowed origins from environment variable (comma-separated)
 // Default to allowing all origins in development, but restrict in production
 const getAllowedOrigins = (): string[] => {
@@ -50,21 +72,87 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Security: Rate limiting
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
+                     req.headers.get("x-real-ip") || 
+                     "unknown";
+    
+    const ipRateLimit = checkRateLimit(`ip:${clientIp}`);
+    if (!ipRateLimit.allowed) {
+      const resetMinutes = Math.ceil((ipRateLimit.resetTime - Date.now()) / 60000);
+      return new Response(
+        JSON.stringify({ 
+          error: "Rate limit exceeded",
+          message: `Too many requests. Please try again in ${resetMinutes} minute(s).`
+        }),
+        { 
+          status: 429, 
+          headers: { 
+            "Content-Type": "application/json",
+            "Retry-After": String(Math.ceil((ipRateLimit.resetTime - Date.now()) / 1000)),
+            ...corsHeaders 
+          } 
+        }
+      );
+    }
+    
     const { email }: NewsletterRequest = await req.json();
-    // Log subscription (only domain for privacy)
-    console.log("Processing subscription for email domain:", email?.split('@')[1] || 'unknown');
-
-    if (!email || !email.includes("@")) {
+    
+    // Security: Server-side input validation
+    if (!email || typeof email !== 'string') {
       return new Response(
         JSON.stringify({ error: "Valid email address is required" }),
         { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return new Response(
+        JSON.stringify({ error: "Valid email address is required" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+    
+    // Validate email length
+    if (email.length > 255) {
+      return new Response(
+        JSON.stringify({ error: "Email address is too long" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+    
+    // Sanitize email: trim and lowercase
+    const sanitizedEmail = email.trim().toLowerCase();
+    
+    // Security: Additional rate limiting by email
+    const emailRateLimit = checkRateLimit(`email:${sanitizedEmail}`);
+    if (!emailRateLimit.allowed) {
+      const resetMinutes = Math.ceil((emailRateLimit.resetTime - Date.now()) / 60000);
+      return new Response(
+        JSON.stringify({ 
+          error: "Rate limit exceeded",
+          message: `Too many subscription attempts from this email. Please try again in ${resetMinutes} minute(s).`
+        }),
+        { 
+          status: 429, 
+          headers: { 
+            "Content-Type": "application/json",
+            "Retry-After": String(Math.ceil((emailRateLimit.resetTime - Date.now()) / 1000)),
+            ...corsHeaders 
+          } 
+        }
+      );
+    }
+    
+    // Log subscription (only domain for privacy)
+    console.log("Processing subscription for email domain:", sanitizedEmail.split('@')[1] || 'unknown');
 
-    // Send confirmation email to subscriber
+    // Send confirmation email to subscriber (using sanitized email)
     const subscriberResponse = await resend.emails.send({
       from: "Anhart Housing <info@anhart.ca>",
-      to: [email],
+      to: [sanitizedEmail],
       subject: "Welcome to Anhart Housing Newsletter!",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -104,7 +192,7 @@ const handler = async (req: Request): Promise<Response> => {
             A new user has subscribed to the Anhart Housing newsletter:
           </p>
           <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
-            <strong>Email:</strong> ${email}<br>
+            <strong>Email:</strong> ${sanitizedEmail.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m] || m))}<br>
             <strong>Subscribed at:</strong> ${new Date().toLocaleString()}
           </div>
         </div>

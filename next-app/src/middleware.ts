@@ -4,6 +4,16 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get("host") || "";
   
+  // Security: Force HTTPS in production
+  if (process.env.NODE_ENV === 'production') {
+    const protocol = request.headers.get('x-forwarded-proto') || request.nextUrl.protocol;
+    if (protocol !== 'https:') {
+      const url = request.nextUrl.clone();
+      url.protocol = 'https:';
+      return NextResponse.redirect(url, 301);
+    }
+  }
+  
   // Remove port if present for comparison
   const hostnameWithoutPort = hostname.split(":")[0];
 

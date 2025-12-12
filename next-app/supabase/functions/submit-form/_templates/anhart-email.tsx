@@ -9,6 +9,23 @@ interface AnhartEmailProps {
   form_type: string
 }
 
+// Security: HTML escape function to prevent XSS attacks
+function escapeHtml(text: string | null | undefined): string {
+  if (!text) return '';
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Security: Escape and preserve line breaks for messages
+function escapeHtmlWithLineBreaks(text: string | null | undefined): string {
+  if (!text) return '';
+  return escapeHtml(text).replace(/\n/g, '<br>');
+}
+
 export const generateAnhartEmailHtml = ({
   name,
   email,
@@ -34,6 +51,16 @@ export const generateAnhartEmailHtml = ({
     }
   }
 
+  // Security: Escape all user input to prevent XSS
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+  const safeMessage = escapeHtmlWithLineBreaks(message);
+  const safePhone = phone ? escapeHtml(phone) : null;
+  const safeOrganization = organization ? escapeHtml(organization) : null;
+  const safeSubject = subject ? escapeHtml(subject) : null;
+  const safeInvestmentAmount = investment_amount ? escapeHtml(investment_amount) : null;
+  const safeFormType = escapeHtml(getFormTypeDescription(form_type));
+
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -55,23 +82,23 @@ export const generateAnhartEmailHtml = ({
       </h1>
       
       <p style="font-size: 18px; color: #333333; margin: 0 0 20px 0;">
-        <strong>Dear ${name},</strong>
+        <strong>Dear ${safeName},</strong>
       </p>
       
       <p style="font-size: 16px; color: #333333; line-height: 1.6; margin: 0 0 20px 0;">
-        Thank you for reaching out to Anhart! We've received your ${getFormTypeDescription(form_type)} and will respond within 48 hours. Here are your details:
+        Thank you for reaching out to Anhart! We've received your ${safeFormType} and will respond within 48 hours. Here are your details:
       </p>
 
       <!-- Submission Details -->
       <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e9ecef;">
         <p style="font-size: 18px; font-weight: bold; color: #D32F2F; margin: 0 0 15px 0;">Your Submission Details:</p>
-        <p style="font-size: 15px; color: #555555; margin: 8px 0; line-height: 1.4;"><strong>Name:</strong> ${name}</p>
-        <p style="font-size: 15px; color: #555555; margin: 8px 0; line-height: 1.4;"><strong>Email:</strong> ${email}</p>
-        ${phone ? `<p style="font-size: 15px; color: #555555; margin: 8px 0; line-height: 1.4;"><strong>Phone:</strong> ${phone}</p>` : ''}
-        ${organization ? `<p style="font-size: 15px; color: #555555; margin: 8px 0; line-height: 1.4;"><strong>Organization:</strong> ${organization}</p>` : ''}
-        ${subject ? `<p style="font-size: 15px; color: #555555; margin: 8px 0; line-height: 1.4;"><strong>Subject:</strong> ${subject}</p>` : ''}
-        ${investment_amount ? `<p style="font-size: 15px; color: #555555; margin: 8px 0; line-height: 1.4;"><strong>Investment Amount:</strong> ${investment_amount}</p>` : ''}
-        <p style="font-size: 15px; color: #555555; margin: 8px 0; line-height: 1.4;"><strong>Message:</strong> ${message}</p>
+        <p style="font-size: 15px; color: #555555; margin: 8px 0; line-height: 1.4;"><strong>Name:</strong> ${safeName}</p>
+        <p style="font-size: 15px; color: #555555; margin: 8px 0; line-height: 1.4;"><strong>Email:</strong> ${safeEmail}</p>
+        ${safePhone ? `<p style="font-size: 15px; color: #555555; margin: 8px 0; line-height: 1.4;"><strong>Phone:</strong> ${safePhone}</p>` : ''}
+        ${safeOrganization ? `<p style="font-size: 15px; color: #555555; margin: 8px 0; line-height: 1.4;"><strong>Organization:</strong> ${safeOrganization}</p>` : ''}
+        ${safeSubject ? `<p style="font-size: 15px; color: #555555; margin: 8px 0; line-height: 1.4;"><strong>Subject:</strong> ${safeSubject}</p>` : ''}
+        ${safeInvestmentAmount ? `<p style="font-size: 15px; color: #555555; margin: 8px 0; line-height: 1.4;"><strong>Investment Amount:</strong> ${safeInvestmentAmount}</p>` : ''}
+        <p style="font-size: 15px; color: #555555; margin: 8px 0; line-height: 1.4;"><strong>Message:</strong> ${safeMessage}</p>
       </div>
 
       <p style="font-size: 16px; color: #333333; line-height: 1.6; margin: 0 0 20px 0;">

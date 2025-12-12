@@ -73,9 +73,12 @@ export const useFormSubmission = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  // Google Apps Script URL for form submissions
-  const GOOGLE_SCRIPT_URL =
-    "https://script.google.com/macros/s/AKfycbzfMQYjHKQSR5lOwodWizxUoY4NgB1y03O3tAbHSBCV4ZgpgDbu-4xNbkUTl18lTZzw/exec";
+  // Security: Google Apps Script URL from environment variable
+  const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
+  
+  if (!GOOGLE_SCRIPT_URL) {
+    logger.error("Google Script URL not configured", new Error("NEXT_PUBLIC_GOOGLE_SCRIPT_URL is not set"));
+  }
 
   const submitForm = async (formData: FormData) => {
     setIsSubmitting(true);
@@ -107,6 +110,10 @@ export const useFormSubmission = () => {
       body.append("timestamp", new Date().toISOString());
       body.append("userAgent", navigator.userAgent);
       body.append("referrer", document.referrer);
+
+      if (!GOOGLE_SCRIPT_URL) {
+        throw new Error("Form submission service is not configured");
+      }
 
       const response = await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",

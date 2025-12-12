@@ -38,6 +38,30 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
+// Security: Rate limiting storage (in-memory, resets on function restart)
+// For production, consider using Redis or Supabase database for persistent rate limiting
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const RATE_LIMIT_MAX_REQUESTS = 5; // Max 5 submissions per window per IP/email
+
+function checkRateLimit(identifier: string): { allowed: boolean; remaining: number; resetTime: number } {
+  const now = Date.now();
+  const record = rateLimitStore.get(identifier);
+  
+  if (!record || record.resetTime < now) {
+    // Create new record or reset expired one
+    rateLimitStore.set(identifier, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+    return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - 1, resetTime: now + RATE_LIMIT_WINDOW_MS };
+  }
+  
+  if (record.count >= RATE_LIMIT_MAX_REQUESTS) {
+    return { allowed: false, remaining: 0, resetTime: record.resetTime };
+  }
+  
+  record.count += 1;
+  return { allowed: true, remaining: RATE_LIMIT_MAX_REQUESTS - record.count, resetTime: record.resetTime };
+}
+
 interface FormSubmission {
   name: string;
   email: string;
@@ -59,19 +83,154 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Security: Rate limiting - use IP address and email as identifier
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
+                     req.headers.get("x-real-ip") || 
+                     "unknown";
+    
+    // We'll check rate limit after we get the email from formData
+    // For now, check by IP
+    const ipRateLimit = checkRateLimit(`ip:${clientIp}`);
+    if (!ipRateLimit.allowed) {
+      const resetMinutes = Math.ceil((ipRateLimit.resetTime - Date.now()) / 60000);
+      return new Response(
+        JSON.stringify({ 
+          success: false,
+          error: "Rate limit exceeded",
+          message: `Too many requests. Please try again in ${resetMinutes} minute(s).`
+        }),
+        {
+          status: 429,
+          headers: { 
+            "Content-Type": "application/json",
+            "Retry-After": String(Math.ceil((ipRateLimit.resetTime - Date.now()) / 1000)),
+            ...corsHeaders 
+          },
+        }
+      );
+    }
+    
     const formData: FormSubmission = await req.json();
+    
+    // Security: Additional rate limiting by email (after validation)
+    if (formData.email) {
+      const emailRateLimit = checkRateLimit(`email:${formData.email.toLowerCase().trim()}`);
+      if (!emailRateLimit.allowed) {
+        const resetMinutes = Math.ceil((emailRateLimit.resetTime - Date.now()) / 60000);
+        return new Response(
+          JSON.stringify({ 
+            success: false,
+            error: "Rate limit exceeded",
+            message: `Too many submissions from this email. Please try again in ${resetMinutes} minute(s).`
+          }),
+          {
+            status: 429,
+            headers: { 
+              "Content-Type": "application/json",
+              "Retry-After": String(Math.ceil((emailRateLimit.resetTime - Date.now()) / 1000)),
+              ...corsHeaders 
+            },
+          }
+        );
+      }
+    }
+    
+    // Security: Server-side input validation
+    const validationErrors: string[] = [];
+    
+    // Validate required fields
+    if (!formData.name || formData.name.trim().length < 2) {
+      validationErrors.push("Name must be at least 2 characters");
+    }
+    if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      validationErrors.push("Valid email address is required");
+    }
+    if (!formData.message || formData.message.trim().length < 10) {
+      validationErrors.push("Message must be at least 10 characters");
+    }
+    if (!formData.form_type) {
+      validationErrors.push("Form type is required");
+    }
+    
+    // Validate field lengths to prevent DoS
+    if (formData.name && formData.name.length > 200) {
+      validationErrors.push("Name is too long");
+    }
+    if (formData.email && formData.email.length > 255) {
+      validationErrors.push("Email is too long");
+    }
+    if (formData.message && formData.message.length > 5000) {
+      validationErrors.push("Message is too long");
+    }
+    if (formData.phone && formData.phone.length > 50) {
+      validationErrors.push("Phone is too long");
+    }
+    if (formData.organization && formData.organization.length > 200) {
+      validationErrors.push("Organization name is too long");
+    }
+    if (formData.subject && formData.subject.length > 200) {
+      validationErrors.push("Subject is too long");
+    }
+    
+    // Check for suspicious patterns (XSS attempts)
+    const suspiciousPatterns = [
+      /<script/i,
+      /javascript:/i,
+      /on\w+\s*=/i,
+      /href\s*=\s*["']javascript:/i,
+      /<iframe/i,
+      /<object/i,
+      /<embed/i,
+    ];
+    
+    const allText = `${formData.name} ${formData.email} ${formData.message} ${formData.phone || ''} ${formData.organization || ''} ${formData.subject || ''}`.toLowerCase();
+    for (const pattern of suspiciousPatterns) {
+      if (pattern.test(allText)) {
+        validationErrors.push("Suspicious content detected");
+        break;
+      }
+    }
+    
+    if (validationErrors.length > 0) {
+      return new Response(
+        JSON.stringify({ 
+          success: false,
+          error: "Validation failed",
+          details: validationErrors
+        }),
+        {
+          status: 400,
+          headers: { 
+            "Content-Type": "application/json", 
+            ...corsHeaders 
+          },
+        }
+      );
+    }
+    
+    // Sanitize input: trim whitespace and normalize
+    const sanitizedData: FormSubmission = {
+      name: formData.name.trim(),
+      email: formData.email.trim().toLowerCase(),
+      message: formData.message.trim(),
+      form_type: formData.form_type.trim(),
+      phone: formData.phone?.trim() || undefined,
+      organization: formData.organization?.trim() || undefined,
+      subject: formData.subject?.trim() || undefined,
+      investment_amount: formData.investment_amount?.trim() || undefined,
+    };
     
     // Log form submission (without sensitive data)
     console.log("Received form submission:", { 
-      form_type: formData.form_type,
-      name: formData.name?.substring(0, 3) + '***', // Partially mask name
-      email_domain: formData.email?.split('@')[1] // Only log domain
+      form_type: sanitizedData.form_type,
+      name: sanitizedData.name?.substring(0, 3) + '***', // Partially mask name
+      email_domain: sanitizedData.email?.split('@')[1] // Only log domain
     });
 
-    // Save to database
+    // Save to database (using sanitized data)
     const { data: submission, error: dbError } = await supabase
       .from('submissions')
-      .insert([formData])
+      .insert([sanitizedData])
       .select()
       .single();
 
@@ -87,21 +246,21 @@ const handler = async (req: Request): Promise<Response> => {
     console.log('Generating confirmation email...');
     
     const confirmationEmailHtml = generateAnhartEmailHtml({
-      name: formData.name,
-      email: formData.email,
-      message: formData.message,
-      phone: formData.phone,
-      organization: formData.organization,
-      subject: formData.subject,
-      investment_amount: formData.investment_amount,
-      form_type: formData.form_type,
+      name: sanitizedData.name,
+      email: sanitizedData.email,
+      message: sanitizedData.message,
+      phone: sanitizedData.phone,
+      organization: sanitizedData.organization,
+      subject: sanitizedData.subject,
+      investment_amount: sanitizedData.investment_amount,
+      form_type: sanitizedData.form_type,
     });
 
     console.log('Email HTML generated successfully');
 
     const confirmationResponse = await resend.emails.send({
       from: "Anhart <info@anhart.ca>",
-      to: [formData.email],
+      to: [sanitizedData.email],
       subject: "Thank You for Your Submission",
       html: confirmationEmailHtml,
     });
@@ -111,6 +270,31 @@ const handler = async (req: Request): Promise<Response> => {
     } else {
       console.log("Confirmation email sent successfully");
     }
+
+    // Security: HTML escape function to prevent XSS attacks
+    const escapeHtml = (text: string | null | undefined): string => {
+      if (!text) return '';
+      return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    };
+
+    const escapeHtmlWithLineBreaks = (text: string | null | undefined): string => {
+      if (!text) return '';
+      return escapeHtml(text).replace(/\n/g, '<br>');
+    };
+
+    // Security: Escape all user input to prevent XSS
+    const safeName = escapeHtml(formData.name);
+    const safeEmail = escapeHtml(formData.email);
+    const safePhone = formData.phone ? escapeHtml(formData.phone) : null;
+    const safeOrganization = formData.organization ? escapeHtml(formData.organization) : null;
+    const safeSubject = formData.subject ? escapeHtml(formData.subject) : null;
+    const safeMessage = escapeHtmlWithLineBreaks(formData.message);
+    const safeFormType = escapeHtml(formData.form_type);
 
     // Send notification email to admin (using simple HTML for internal use)
     const notificationEmailHtml = `
@@ -124,26 +308,26 @@ const handler = async (req: Request): Promise<Response> => {
         <body style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f8f9fa;">
           <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
             <div style="background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%); padding: 20px; text-align: center;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">New ${formData.form_type} Submission</h1>
+              <h1 style="color: #ffffff; margin: 0; font-size: 24px;">New ${safeFormType} Submission</h1>
             </div>
             
             <div style="padding: 30px;">
               <div style="background-color: #f8f9fa; padding: 20px; border-radius: 6px; margin-bottom: 20px;">
                 <h3 style="color: #D32F2F; margin: 0 0 15px 0;">Contact Information</h3>
-                <p style="margin: 5px 0;"><strong>Name:</strong> ${formData.name}</p>
-                <p style="margin: 5px 0;"><strong>Email:</strong> ${formData.email}</p>
-                ${formData.phone ? `<p style="margin: 5px 0;"><strong>Phone:</strong> ${formData.phone}</p>` : ''}
-                ${formData.organization ? `<p style="margin: 5px 0;"><strong>Organization:</strong> ${formData.organization}</p>` : ''}
-                ${formData.subject ? `<p style="margin: 5px 0;"><strong>Subject:</strong> ${formData.subject}</p>` : ''}
+                <p style="margin: 5px 0;"><strong>Name:</strong> ${safeName}</p>
+                <p style="margin: 5px 0;"><strong>Email:</strong> ${safeEmail}</p>
+                ${safePhone ? `<p style="margin: 5px 0;"><strong>Phone:</strong> ${safePhone}</p>` : ''}
+                ${safeOrganization ? `<p style="margin: 5px 0;"><strong>Organization:</strong> ${safeOrganization}</p>` : ''}
+                ${safeSubject ? `<p style="margin: 5px 0;"><strong>Subject:</strong> ${safeSubject}</p>` : ''}
               </div>
               
               <div style="background-color: #f8f9fa; padding: 20px; border-radius: 6px;">
                 <h3 style="color: #D32F2F; margin: 0 0 15px 0;">Message</h3>
-                <p style="color: #333333; white-space: pre-wrap; margin: 0;">${formData.message}</p>
+                <p style="color: #333333; white-space: pre-wrap; margin: 0;">${safeMessage}</p>
               </div>
               
               <p style="color: #666666; margin: 20px 0 0 0; font-size: 14px;">
-                Submission received on ${new Date().toLocaleString()}
+                Submission received on ${escapeHtml(new Date().toLocaleString())}
               </p>
             </div>
           </div>
@@ -154,7 +338,7 @@ const handler = async (req: Request): Promise<Response> => {
     const notificationResponse = await resend.emails.send({
       from: "Anhart Website <info@anhart.ca>",
       to: [Deno.env.get("NOTIFICATION_EMAIL") || "info@anhart.ca"],
-      subject: `New Submission: ${formData.form_type}`,
+      subject: `New Submission: ${sanitizedData.form_type}`,
       html: notificationEmailHtml,
     });
 

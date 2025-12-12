@@ -27,8 +27,14 @@ export async function submitToIndexNow(
   key?: string
 ): Promise<IndexNowResponse> {
   try {
-    // Get key from parameter, environment variable, or use default
-    const verificationKey = key || process.env.NEXT_PUBLIC_INDEXNOW_KEY || '4ab9b2d18280488dbd072cff98dc2626';
+    // Security: Get key from parameter or environment variable (no hardcoded default)
+    const verificationKey = key || process.env.NEXT_PUBLIC_INDEXNOW_KEY;
+    if (!verificationKey) {
+      return {
+        success: false,
+        error: 'IndexNow key is not configured. Set NEXT_PUBLIC_INDEXNOW_KEY environment variable.',
+      };
+    }
 
     // Normalize URLs to absolute URLs and ensure non-www
     const absoluteUrls = urls.map((url) => {

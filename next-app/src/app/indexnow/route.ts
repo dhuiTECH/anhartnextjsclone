@@ -43,8 +43,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate key matches environment variable or default key
-    const expectedKey = process.env.INDEXNOW_KEY || '4ab9b2d18280488dbd072cff98dc2626';
+    // Security: Require IndexNow key from environment variable (no default)
+    const expectedKey = process.env.INDEXNOW_KEY;
+    if (!expectedKey) {
+      console.error('INDEXNOW_KEY environment variable is not set');
+      return NextResponse.json(
+        { error: 'IndexNow service is not configured' },
+        { status: 500 }
+      );
+    }
     if (key !== expectedKey) {
       return NextResponse.json(
         { error: 'Invalid key' },
