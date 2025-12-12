@@ -3,16 +3,38 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 import { Resend } from "https://esm.sh/resend@2.0.0";
 import { generateAnhartEmailHtml } from './_templates/anhart-email.tsx';
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+// Get allowed origins from environment variable (comma-separated)
+// Default to allowing all origins in development, but restrict in production
+const getAllowedOrigins = (): string[] => {
+  const allowedOrigins = Deno.env.get("ALLOWED_ORIGINS");
+  if (allowedOrigins) {
+    return allowedOrigins.split(',').map(origin => origin.trim());
+  }
+  // In development, allow all origins (not recommended for production)
+  return ['*'];
 };
 
-const supabase = createClient(
-  Deno.env.get("SUPABASE_URL") || "https://hxqbbyglhubcgfkbqltu.supabase.co",
-  Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-);
+const getCorsHeaders = (origin: string | null) => {
+  const allowedOrigins = getAllowedOrigins();
+  const allowOrigin = allowedOrigins.includes('*') 
+    ? '*' 
+    : (origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0] || '*');
+  
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  };
+};
+
+const supabaseUrl = Deno.env.get("SUPABASE_URL");
+const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  throw new Error("Missing required environment variables: SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY");
+}
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -28,6 +50,9 @@ interface FormSubmission {
 }
 
 const handler = async (req: Request): Promise<Response> => {
+  const origin = req.headers.get("origin");
+  const corsHeaders = getCorsHeaders(origin);
+  
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -36,7 +61,12 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const formData: FormSubmission = await req.json();
     
-    console.log("Received form submission:", formData);
+    // Log form submission (without sensitive data)
+    console.log("Received form submission:", { 
+      form_type: formData.form_type,
+      name: formData.name?.substring(0, 3) + '***', // Partially mask name
+      email_domain: formData.email?.split('@')[1] // Only log domain
+    });
 
     // Save to database
     const { data: submission, error: dbError } = await supabase
@@ -46,14 +76,15 @@ const handler = async (req: Request): Promise<Response> => {
       .single();
 
     if (dbError) {
-      console.error("Database error:", dbError);
+      console.error("Database error:", dbError.message);
       throw new Error(`Database error: ${dbError.message}`);
     }
 
-    console.log("Saved to database:", submission);
+    // Log successful save (without sensitive data)
+    console.log("Saved to database successfully, submission ID:", submission?.id);
 
     // Generate confirmation email HTML
-    console.log('Generating confirmation email for:', formData.name);
+    console.log('Generating confirmation email...');
     
     const confirmationEmailHtml = generateAnhartEmailHtml({
       name: formData.name,
@@ -76,9 +107,9 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     if (confirmationResponse.error) {
-      console.error("Error sending confirmation email:", confirmationResponse.error);
+      console.error("Error sending confirmation email:", confirmationResponse.error.message);
     } else {
-      console.log("Confirmation email sent:", confirmationResponse.data);
+      console.log("Confirmation email sent successfully");
     }
 
     // Send notification email to admin (using simple HTML for internal use)
@@ -122,15 +153,15 @@ const handler = async (req: Request): Promise<Response> => {
 
     const notificationResponse = await resend.emails.send({
       from: "Anhart Website <info@anhart.ca>",
-      to: ["info@anhart.ca"],
+      to: [Deno.env.get("NOTIFICATION_EMAIL") || "info@anhart.ca"],
       subject: `New Submission: ${formData.form_type}`,
       html: notificationEmailHtml,
     });
 
     if (notificationResponse.error) {
-      console.error("Error sending notification email:", notificationResponse.error);
+      console.error("Error sending notification email:", notificationResponse.error.message);
     } else {
-      console.log("Notification email sent:", notificationResponse.data);
+      console.log("Notification email sent successfully");
     }
 
     return new Response(

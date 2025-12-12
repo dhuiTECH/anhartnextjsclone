@@ -2,7 +2,6 @@
 
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import SEO from "@/components/SEO";
 import { FAQSchema } from "@/components/FAQSchema";
 import { InternalLinksSection } from "@/components/InternalLinksSection";
 import { Button } from "@/components/ui/button";
@@ -92,7 +91,6 @@ const Partner = () => {
     }
   };
   return <div className="min-h-screen bg-background">
-      <SEO title="Partner With Us - Affordable Housing Development" description="Join Anhart in building affordable housing solutions. Partner with us to create sustainable communities and make a lasting impact on housing affordability across Canada." keywords="housing partnership, affordable housing collaboration, community development partnership, housing development partner, anhart partnership, housing collaboration" url="/partner" />
       <Header />
       
       <main>

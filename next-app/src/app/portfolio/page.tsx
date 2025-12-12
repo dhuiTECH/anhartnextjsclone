@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Portfolio from '@/components/Portfolio';
 
 export const metadata: Metadata = {
-  title: 'Portfolio',
+  title: 'Real Estate Projects',
   description: 'Explore Anhart\'s portfolio of affordable housing projects across Canada. View our modular homes, SRO conversions, and community development initiatives that are creating sustainable housing solutions.',
   keywords: 'affordable housing portfolio, housing projects Canada, modular housing projects, SRO conversion projects, affordable housing developments, community housing projects, housing portfolio Vancouver, housing portfolio Toronto, housing portfolio Calgary, housing portfolio Edmonton, affordable housing examples, housing development portfolio, non-profit housing projects, supportive housing projects, community development projects, housing solutions portfolio',
   authors: [{ name: 'Anhart' }],
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     canonical: 'https://anhart.ca/portfolio',
   },
   openGraph: {
-    title: 'Portfolio | Anhart',
+    title: 'Our Real Estate Projects | Anhart',
     description: 'Explore Anhart\'s portfolio of affordable housing projects across Canada. View our modular homes, SRO conversions, and community development initiatives that are creating sustainable housing solutions.',
     url: 'https://anhart.ca/portfolio',
     siteName: 'Anhart',
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Portfolio | Anhart',
+    title: 'Our Real Estate Projects | Anhart',
     description: 'Explore Anhart\'s portfolio of affordable housing projects across Canada. View our modular homes, SRO conversions, and community development initiatives that are creating sustainable housing solutions.',
     images: ['/og-image.jpg'],
     site: '@anhart_housing',

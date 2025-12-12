@@ -2,7 +2,6 @@
 
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import SEO from "@/components/SEO";
 import { FAQSchema } from "@/components/FAQSchema";
 import { InternalLinksSection } from "@/components/InternalLinksSection";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -456,7 +455,6 @@ const Media = () => {
     setIsTouchActive(false);
   };
   return <div className="min-h-screen bg-background">
-      <SEO title="News & Media" description="Stay updated with the latest news, media coverage, and press releases about Anhart's affordable housing projects and community impact across Canada." keywords="anhart news, affordable housing media, housing press releases, community development news, housing coverage, anhart press, housing media" url="/media" />
       <Header />
       <main>
         <FAQSchema

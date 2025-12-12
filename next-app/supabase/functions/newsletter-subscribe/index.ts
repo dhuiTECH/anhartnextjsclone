@@ -3,9 +3,28 @@ import { Resend } from "https://esm.sh/resend@2.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+// Get allowed origins from environment variable (comma-separated)
+// Default to allowing all origins in development, but restrict in production
+const getAllowedOrigins = (): string[] => {
+  const allowedOrigins = Deno.env.get("ALLOWED_ORIGINS");
+  if (allowedOrigins) {
+    return allowedOrigins.split(',').map(origin => origin.trim());
+  }
+  // In development, allow all origins (not recommended for production)
+  return ['*'];
+};
+
+const getCorsHeaders = (origin: string | null) => {
+  const allowedOrigins = getAllowedOrigins();
+  const allowOrigin = allowedOrigins.includes('*') 
+    ? '*' 
+    : (origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0] || '*');
+  
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+  };
 };
 
 interface NewsletterRequest {
@@ -13,6 +32,9 @@ interface NewsletterRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
+  const origin = req.headers.get("origin");
+  const corsHeaders = getCorsHeaders(origin);
+  
   console.log("Newsletter subscription request received");
 
   // Handle CORS preflight requests
@@ -29,7 +51,8 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const { email }: NewsletterRequest = await req.json();
-    console.log("Processing subscription for email:", email);
+    // Log subscription (only domain for privacy)
+    console.log("Processing subscription for email domain:", email?.split('@')[1] || 'unknown');
 
     if (!email || !email.includes("@")) {
       return new Response(
@@ -66,12 +89,13 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Subscriber confirmation sent:", subscriberResponse);
+    console.log("Subscriber confirmation email sent successfully");
 
     // Send notification to Anhart team
+    const adminEmail = Deno.env.get("ADMIN_EMAIL") || "info@anhart.ca";
     const teamNotification = await resend.emails.send({
       from: "Anhart Newsletter <info@anhart.ca>",
-      to: ["damon.hui@anhart.ca"],
+      to: [adminEmail],
       subject: "New Newsletter Subscription",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -87,7 +111,7 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Team notification sent:", teamNotification);
+    console.log("Team notification email sent successfully");
 
     return new Response(
       JSON.stringify({ 

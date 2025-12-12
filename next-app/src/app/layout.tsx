@@ -155,12 +155,16 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
         {/* Supabase - used for auth and edge functions; early connect helps LCP */}
-        <link
-          rel="preconnect"
-          href="https://hxqbbyglhubcgfkbqltu.supabase.co"
-          crossOrigin="anonymous"
-        />
-        <link rel="dns-prefetch" href="https://hxqbbyglhubcgfkbqltu.supabase.co" />
+        {process.env.NEXT_PUBLIC_SUPABASE_URL && (
+          <>
+            <link
+              rel="preconnect"
+              href={process.env.NEXT_PUBLIC_SUPABASE_URL}
+              crossOrigin="anonymous"
+            />
+            <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_SUPABASE_URL} />
+          </>
+        )}
 
         {/* Turnstile is not LCP-critical, so we only dns-prefetch (no preconnect) */}
         <link rel="dns-prefetch" href="https://challenges.cloudflare.com" />

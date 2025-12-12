@@ -46,11 +46,10 @@ interface GoogleMapEmbedProps {
   height?: string;
   className?: string;
   showDirections?: boolean;
+  children?: React.ReactNode;
 }
 
-export const GoogleMapEmbed: React.FC<{
-  children?: React.ReactNode;
-}> = ({
+export const GoogleMapEmbed: React.FC<GoogleMapEmbedProps> = ({
   address,
   height = "h-64",
   className = "",
@@ -61,10 +60,20 @@ export const GoogleMapEmbed: React.FC<{
   const [mapError, setMapError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Google Maps API key
-  const GOOGLE_MAPS_API_KEY = "AIzaSyBT_vIEBDc4lid1TLLs_7dTj1shGy-kxZY";
+  // Google Maps API key from environment variable
+  const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+  if (!GOOGLE_MAPS_API_KEY) {
+    logger.error('Google Maps API key is missing', new Error('Missing API key'), { component: 'GoogleMaps' });
+  }
 
   useEffect(() => {
+    // Don't load if API key is missing
+    if (!GOOGLE_MAPS_API_KEY) {
+      setMapError(true);
+      return;
+    }
+
     // Check if Google Maps is already loaded
     if (window.google && window.google.maps) {
       initializeMap();
@@ -95,7 +104,7 @@ export const GoogleMapEmbed: React.FC<{
         script.parentNode.removeChild(script);
       }
     };
-  }, [address]);
+  }, [address, GOOGLE_MAPS_API_KEY]);
 
   const initializeMap = () => {
     if (!mapRef.current || !window.google) return;

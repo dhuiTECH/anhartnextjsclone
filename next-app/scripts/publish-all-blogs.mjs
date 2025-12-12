@@ -1,7 +1,26 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://hxqbbyglhubcgfkbqltu.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh4cWJieWdsaHViY2dma2JxbHR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcyNzYzMDMsImV4cCI6MjA3Mjg1MjMwM30.xP7GYGbjKOUI5OcvUWwOwX0EYlVeqP44rnpbssvbty4';
+// Try to load dotenv if available (optional - environment variables can be set directly)
+try {
+  const dotenv = await import('dotenv');
+  dotenv.config();
+} catch (e) {
+  // dotenv not installed or not needed if env vars are set directly
+  console.log('Note: dotenv not found. Using environment variables directly.');
+}
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('❌ Missing required environment variables:');
+  console.error('   NEXT_PUBLIC_SUPABASE_URL or VITE_SUPABASE_URL');
+  console.error('   NEXT_PUBLIC_SUPABASE_ANON_KEY');
+  console.error('');
+  console.error('Please check your .env file and ensure these variables are set.');
+  console.error('Or set them directly in your environment before running this script.');
+  process.exit(1);
+}
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
