@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import HomeClientWrapper from './HomeClientWrapper';
+import dynamic from 'next/dynamic';
+
+// Use dynamic import to force fresh module loading and bypass HMR cache
+const HomeClient = dynamic(() => import('./HomeClient'), {
+  ssr: true,
+});
 
 export const metadata: Metadata = {
   title: 'Affordable Townhomes in Merritt, BC | Anhart',
@@ -7,5 +12,5 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <HomeClientWrapper />;
+  return <HomeClient />;
 }
