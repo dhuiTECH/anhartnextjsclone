@@ -1,0 +1,184 @@
+'use client'; // Required for animations in Next.js app router
+
+import Image from 'next/image';
+import { Check } from 'lucide-react';
+import { useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+// Register the plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+const featuredUnits = [
+  {
+    id: 1,
+    title: 'Garden Townhome',
+    sqft: '1,200 sq ft',
+    image: 'https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=1000&auto=format&fit=crop',
+    features: [
+      'Private garden patio',
+      'Energy-efficient design',
+      'Modern kitchen appliances',
+      'Walking distance to parks'
+    ]
+  },
+  {
+    id: 2,
+    title: 'Sunlit Villa',
+    sqft: '1,800 sq ft',
+    image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1000&auto=format&fit=crop',
+    features: [
+      'Floor-to-ceiling windows',
+      'Surrounded by mature trees',
+      'Open-concept living',
+      'Solar panel ready'
+    ]
+  },
+  {
+    id: 3,
+    title: 'Forest Retreat',
+    sqft: '2,100 sq ft',
+    image: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=1000&auto=format&fit=crop',
+    features: [
+      'Woodland views',
+      'Large outdoor deck',
+      'Fireplace included',
+      'Quiet neighborhood'
+    ]
+  },
+  {
+    id: 4,
+    title: 'Sunny Bungalow',
+    sqft: '1,500 sq ft',
+    image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000&auto=format&fit=crop',
+    features: [
+      'South-facing orientation',
+      'Garden maintenance included',
+      'Updated bathrooms',
+      'Pet-friendly community'
+    ]
+  }
+];
+
+const FeaturedUnits = () => {
+  const containerRef = useRef(null);
+  const leftTreeRef = useRef(null);
+  const rightTreeRef = useRef(null);
+
+  useGSAP(() => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top bottom', // Start when top of section hits bottom of viewport
+        end: 'bottom top',   // End when bottom of section hits top of viewport
+        scrub: 1,            // Smooth scrubbing effect (1s lag)
+      },
+    });
+
+    // Animate Left Tree (In from left side)
+    tl.fromTo(leftTreeRef.current,
+      { x: -50, y: 30 }, // Starting position (outside left, slightly down)
+      { x: 0, y: 0, ease: 'none' }, // End position (framing the grid)
+      0 // Start at time 0
+    );
+
+    // Animate Right Tree (In from right side)
+    tl.fromTo(rightTreeRef.current,
+      { x: 50, y: 30 }, // Starting position (outside right, slightly down)
+      { x: 0, y: 0, ease: 'none' }, // End position (framing the grid)
+      0
+    );
+
+  }, { scope: containerRef });
+
+  return (
+    <section ref={containerRef} className="relative py-20 bg-gradient-to-br from-emerald-50 to-yellow-50 overflow-hidden">
+      <div className="container mx-auto px-6">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-emerald-900 mb-4">
+            Featured Garden Homes
+          </h2>
+          <p className="text-lg text-emerald-700 max-w-2xl mx-auto">
+            Sun-drenched spaces surrounded by nature
+          </p>
+        </div>
+
+        {/* Grid */}
+        <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          {/* Left Tree */}
+          <div ref={leftTreeRef} className="absolute -left-16 md:-left-24 top-0 w-48 md:w-72 h-full pointer-events-none z-20 flex items-center">
+            <Image
+              src="/merritt-assets/trees1.png"
+              alt="Decorative pine tree"
+              width={400}
+              height={600}
+              className="object-contain w-full h-auto"
+            />
+          </div>
+
+          {/* Right Tree */}
+          <div ref={rightTreeRef} className="absolute -right-16 md:-right-24 top-0 w-48 md:w-72 h-full pointer-events-none z-20 flex items-center">
+            <Image
+              src="/merritt-assets/trees2.png"
+              alt="Decorative pine tree"
+              width={400}
+              height={600}
+              className="object-contain w-full h-auto"
+            />
+          </div>
+
+          {featuredUnits.map((unit) => (
+            <div
+              key={unit.id}
+              className="bg-white rounded-2xl shadow-lg border border-emerald-100 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group"
+            >
+              {/* Image */}
+              <div className="relative h-64 overflow-hidden">
+                <Image
+                  src={unit.image}
+                  alt={unit.title}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                {/* Sq Ft Badge */}
+                <div className="absolute top-4 right-4 bg-yellow-500 text-emerald-900 px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                  {unit.sqft}
+                </div>
+                {/* Overlay gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                <h3 className="text-2xl font-bold text-emerald-900 mb-4">
+                  {unit.title}
+                </h3>
+
+                {/* Features */}
+                <ul className="space-y-3 mb-6">
+                  {unit.features.map((feature, index) => (
+                    <li key={index} className="flex items-center gap-3">
+                      <Check className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                      <span className="text-emerald-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Button */}
+                <button className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300">
+                  View Details
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default FeaturedUnits;

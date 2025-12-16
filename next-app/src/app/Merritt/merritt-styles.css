@@ -1,0 +1,147 @@
+/* 
+ * Merritt-Specific Styles
+ * This file contains styles scoped to the Merritt section only.
+ * All styles are wrapped in .merritt-wrapper to prevent conflicts with main site styles.
+ * 
+ * Note: Tailwind is already imported in the root globals.css, so we don't need to import it here.
+ * This file only contains Merritt-specific custom styles that are scoped to .merritt-wrapper.
+ */
+
+/* Merritt-specific CSS variables */
+.merritt-wrapper {
+  --merritt-foreground-rgb: 0, 0, 0;
+  --merritt-background-start-rgb: 255, 255, 255;
+  --merritt-background-end-rgb: 255, 255, 255;
+  --merritt-accent: #a6906c;
+  --merritt-dark: #1a2621;
+  --merritt-light: #f9f8f6;
+}
+
+/* Base styles scoped to Merritt wrapper */
+.merritt-wrapper {
+  color: rgb(var(--merritt-foreground-rgb));
+  background: white;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Scroll behavior - scoped to Merritt */
+.merritt-wrapper html {
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar utilities - scoped to Merritt */
+.merritt-wrapper .no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Shared reveal animation - scoped to Merritt */
+.merritt-wrapper .reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.merritt-wrapper .reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Input styles - scoped to Merritt */
+.merritt-wrapper .input-underlined {
+  background: transparent;
+  border-bottom: 1px solid rgba(26, 38, 33, 0.3);
+  padding: 1rem 0;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.merritt-wrapper .input-underlined:focus {
+  border-bottom-color: var(--merritt-accent);
+}
+
+/* Glow hover effect - scoped to Merritt */
+.merritt-wrapper .glow-hover {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.merritt-wrapper .glow-hover::after {
+  content: '';
+  position: absolute;
+  inset: -120% -40%;
+  background: linear-gradient(
+    120deg,
+    rgba(166, 144, 108, 0) 0%,
+    rgba(166, 144, 108, 0.55) 40%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(166, 144, 108, 0.55) 60%,
+    rgba(166, 144, 108, 0) 100%
+  );
+  opacity: 0;
+  transform: translateX(-35%);
+  filter: blur(16px);
+  transition: transform 0.7s ease, opacity 0.4s ease;
+  z-index: -1;
+}
+
+.merritt-wrapper .glow-hover:hover::after {
+  transform: translateX(35%);
+  opacity: 0.9;
+}
+
+/* Animation keyframes - scoped to Merritt */
+@keyframes slow-zoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+.merritt-wrapper .animate-slow-zoom {
+  animation: slow-zoom 20s ease-out infinite alternate;
+}
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.merritt-wrapper .animate-fade-up {
+  animation: fade-up 2s ease-out forwards;
+}
+
+/* Text stroke utility - scoped to Merritt */
+.merritt-wrapper .text-stroke-black {
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.2);
+  text-shadow:
+    0 0 5px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Additional Merritt-specific utility classes */
+.merritt-wrapper .text-merritt-accent {
+  color: var(--merritt-accent);
+}
+
+.merritt-wrapper .bg-merritt-dark {
+  background-color: var(--merritt-dark);
+}
+
+.merritt-wrapper .bg-merritt-light {
+  background-color: var(--merritt-light);
+}
+
+.merritt-wrapper .border-merritt-accent {
+  border-color: var(--merritt-accent);
+}
