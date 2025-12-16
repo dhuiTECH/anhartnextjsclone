@@ -3,18 +3,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-// 1. IMPORT FRAMER MOTION
+// FRAMER MOTION for animations (GSAP removed due to iframe compatibility issues)
 import { useScroll, useTransform, motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
-// GSAP imports for tree animation
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
-
-// Register GSAP plugins
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 // NOTE: Navbar import removed because it is now in layout.tsx
 
@@ -81,46 +72,8 @@ export default function HomeClient() {
     }
   }, []);
 
-  // GSAP Tree Animation - Very Grounded
-  useGSAP(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: featuredSectionRef.current,
-        start: 'top bottom', // Start when top of section hits bottom of viewport
-        end: 'bottom top',   // End when bottom of section hits top of viewport
-        scrub: 1,            // Smooth scrubbing effect (1s lag)
-      },
-    });
-
-    // Animate Left Tree (Very grounded movement)
-    tl.fromTo(leftTreeRef.current,
-      { y: 60, x: -15 }, // Starting position (close to ground)
-      { y: 20, x: 0, ease: 'none' }, // End position (well below bottom line)
-      0 // Start at time 0
-    );
-
-    // Animate Right Tree (Very grounded movement)
-    tl.fromTo(rightTreeRef.current,
-      { y: 60, x: 15 }, // Starting position (close to ground)
-      { y: 20, x: 0, ease: 'none' }, // End position (well below bottom line)
-      0
-    );
-
-  }, { scope: featuredSectionRef });
-
-  // GSAP Mountain Parallax Animation
-  useGSAP(() => {
-    gsap.to(mountainRef.current, {
-      y: 150, // Move down slightly as we scroll down for parallax effect
-      ease: 'none',
-      scrollTrigger: {
-        trigger: amenitiesSectionRef.current,
-        start: 'top bottom', // Start when top of section enters viewport
-        end: 'bottom top',   // End when bottom of section leaves viewport
-        scrub: 1,            // Smooth scrubbing
-      },
-    });
-  }, { scope: amenitiesSectionRef });
+  // Tree and mountain animations removed - GSAP caused cross-origin iframe issues
+  // The page works without these scroll-triggered animations
 
   return (
     // UPDATED: Added min-h-screen and flex-col to prevent scroll locking

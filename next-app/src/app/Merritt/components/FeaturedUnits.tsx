@@ -1,16 +1,8 @@
-'use client'; // Required for animations in Next.js app router
+'use client';
 
 import Image from 'next/image';
 import { Check } from 'lucide-react';
 import { useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
-
-// Register the plugin
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 const featuredUnits = [
   {
@@ -65,34 +57,6 @@ const featuredUnits = [
 
 const FeaturedUnits = () => {
   const containerRef = useRef(null);
-  const leftTreeRef = useRef(null);
-  const rightTreeRef = useRef(null);
-
-  useGSAP(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top bottom', // Start when top of section hits bottom of viewport
-        end: 'bottom top',   // End when bottom of section hits top of viewport
-        scrub: 1,            // Smooth scrubbing effect (1s lag)
-      },
-    });
-
-    // Animate Left Tree (In from left side)
-    tl.fromTo(leftTreeRef.current,
-      { x: -50, y: 30 }, // Starting position (outside left, slightly down)
-      { x: 0, y: 0, ease: 'none' }, // End position (framing the grid)
-      0 // Start at time 0
-    );
-
-    // Animate Right Tree (In from right side)
-    tl.fromTo(rightTreeRef.current,
-      { x: 50, y: 30 }, // Starting position (outside right, slightly down)
-      { x: 0, y: 0, ease: 'none' }, // End position (framing the grid)
-      0
-    );
-
-  }, { scope: containerRef });
 
   return (
     <section ref={containerRef} className="relative py-20 bg-gradient-to-br from-emerald-50 to-yellow-50 overflow-hidden">
@@ -109,8 +73,8 @@ const FeaturedUnits = () => {
 
         {/* Grid */}
         <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          {/* Left Tree */}
-          <div ref={leftTreeRef} className="absolute -left-16 md:-left-24 top-0 w-48 md:w-72 h-full pointer-events-none z-20 flex items-center">
+          {/* Left Tree - static positioning */}
+          <div className="absolute -left-16 md:-left-24 top-0 w-48 md:w-72 h-full pointer-events-none z-20 flex items-center">
             <Image
               src="/merritt-assets/trees1.png"
               alt="Decorative pine tree"
@@ -120,8 +84,8 @@ const FeaturedUnits = () => {
             />
           </div>
 
-          {/* Right Tree */}
-          <div ref={rightTreeRef} className="absolute -right-16 md:-right-24 top-0 w-48 md:w-72 h-full pointer-events-none z-20 flex items-center">
+          {/* Right Tree - static positioning */}
+          <div className="absolute -right-16 md:-right-24 top-0 w-48 md:w-72 h-full pointer-events-none z-20 flex items-center">
             <Image
               src="/merritt-assets/trees2.png"
               alt="Decorative pine tree"
