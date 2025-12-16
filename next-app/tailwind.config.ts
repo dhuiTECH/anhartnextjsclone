@@ -58,6 +58,15 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Merritt-specific colors
+        merritt: {
+          accent: "#a6906c",        // Gold/bronze accent color
+          "accent-dark": "#8b7355", // Darker accent for hover states
+          dark: "#1a2621",          // Dark green/charcoal
+          light: "#f9f8f6",         // Off-white background
+          border: "#e6e2da",        // Light border color
+          red: "#A05C4D",           // Red accent (for special highlights)
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -99,12 +108,34 @@ export default {
             opacity: "1",
           },
         },
+        // Merritt-specific animations (moved from merritt-styles.css)
+        "slow-zoom": {
+          "0%": {
+            transform: "scale(1)",
+          },
+          "100%": {
+            transform: "scale(1.1)",
+          },
+        },
+        "fade-up": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(20px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "text-glow": "text-glow 3s ease-in-out infinite",
         "bounce-fade": "bounce-fade 2.5s ease-in-out infinite",
+        // Merritt-specific animations
+        "slow-zoom": "slow-zoom 20s ease-out infinite alternate",
+        "fade-up": "fade-up 2s ease-out forwards",
       },
       fontFamily: {
         'merriweather': ['Merriweather', 'serif'],

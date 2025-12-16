@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 // Import Leaflet CSS at the top level
 import 'leaflet/dist/leaflet.css';
@@ -22,8 +22,18 @@ function MapComponent({
   const [Marker, setMarker] = useState<any>(null);
   const [Popup, setPopup] = useState<any>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [shouldRenderMap, setShouldRenderMap] = useState(false);
+  const mapInstanceRef = useRef<any>(null);
+  const containerIdRef = useRef(`leaflet-map-${Math.random().toString(36).substr(2, 9)}`);
+  const isInitializingRef = useRef(false);
 
   useEffect(() => {
+    // Prevent double initialization
+    if (isInitializingRef.current) {
+      return;
+    }
+    isInitializingRef.current = true;
+
     // Dynamically import leaflet components only on client side
     const loadComponents = async () => {
       try {
@@ -42,15 +52,48 @@ function MapComponent({
         setMarker(() => leaflet.Marker);
         setPopup(() => leaflet.Popup);
         setIsLoaded(true);
+        
+        // Small delay to ensure container is ready and clean
+        setTimeout(() => {
+          setShouldRenderMap(true);
+        }, 100);
       } catch (error) {
         console.error('Failed to load map components:', error);
+        isInitializingRef.current = false;
       }
     };
 
     loadComponents();
+
+    // Cleanup function to remove map instance if component unmounts
+    return () => {
+      if (mapInstanceRef.current) {
+        try {
+          mapInstanceRef.current.remove();
+        } catch (e) {
+          // Ignore errors during cleanup
+        }
+        mapInstanceRef.current = null;
+      }
+      isInitializingRef.current = false;
+      setShouldRenderMap(false);
+    };
   }, []);
 
-  if (!isLoaded) {
+  // Handle map creation to prevent double initialization
+  const handleMapCreated = (map: any) => {
+    if (mapInstanceRef.current && mapInstanceRef.current !== map) {
+      // If there's already a map instance, remove it
+      try {
+        mapInstanceRef.current.remove();
+      } catch (e) {
+        // Ignore errors
+      }
+    }
+    mapInstanceRef.current = map;
+  };
+
+  if (!isLoaded || !shouldRenderMap) {
     return (
       <div className={`${className} bg-[#F9F7F2] rounded-lg flex items-center justify-center`}>
         <div className="text-center">
@@ -63,7 +106,13 @@ function MapComponent({
 
   return (
     <div className={className}>
-      <MapContainer center={center} zoom={zoom} style={{ height: '100%', width: '100%' }}>
+      <MapContainer 
+        center={center} 
+        zoom={zoom} 
+        style={{ height: '100%', width: '100%' }}
+        scrollWheelZoom={false}
+        whenCreated={handleMapCreated}
+      >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
