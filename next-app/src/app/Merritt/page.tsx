@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import HomeClient from './HomeClient';
+import HomeClientWrapper from './HomeClientWrapper';
 
 export const metadata: Metadata = {
   title: 'Affordable Townhomes in Merritt, BC | Anhart',
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <HomeClient />;
+  return <HomeClientWrapper />;
 }

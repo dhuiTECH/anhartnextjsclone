@@ -1,13 +1,10 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-// FRAMER MOTION for animations (GSAP removed due to iframe compatibility issues)
 import { useScroll, useTransform, motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
-
-// NOTE: Navbar import removed because it is now in layout.tsx
 
 const expertise = [
   {
@@ -42,14 +39,9 @@ export default function HomeClient() {
   const [gardenFlatImage, setGardenFlatImage] = useState(0); // 0: exterior, 1: bedroom, 2: kitchen
   const [skyTownhomeImage, setSkyTownhomeImage] = useState(0); // 0: exterior, 1: bedroom, 2: kitchen
 
-  // GSAP refs for tree animation
+  // Section refs for layout (animations removed)
   const featuredSectionRef = useRef(null);
-  const leftTreeRef = useRef(null);
-  const rightTreeRef = useRef(null);
-
-  // GSAP refs for mountain parallax
   const amenitiesSectionRef = useRef(null);
-  const mountainRef = useRef(null);
 
   // --- EXISTING OBSERVERS ---
   useEffect(() => {
@@ -76,10 +68,8 @@ export default function HomeClient() {
   // The page works without these scroll-triggered animations
 
   return (
-    // UPDATED: Added min-h-screen and flex-col to prevent scroll locking
     <div className="min-h-screen flex flex-col bg-[#f9f8f6] text-[#1a2621] font-sans antialiased selection:bg-[#1a2621] selection:text-white overflow-x-hidden">
-
-      {/* Styles are now in merritt-styles.css - scoped to .merritt-wrapper */}
+      {/* All styles are in merritt-styles.css - scoped to .merritt-wrapper */}
 
       {/* EDITORIAL FRAME */}
       <div className="fixed left-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
@@ -426,8 +416,8 @@ export default function HomeClient() {
             </div>
           </div>
 
-          {/* GSAP Animated Trees - Moderately Taller */}
-          <div ref={leftTreeRef} className="absolute bottom-0 left-8 md:left-12 w-96 md:w-[32rem] pointer-events-none z-20">
+          {/* Decorative Trees */}
+          <div className="absolute bottom-0 left-8 md:left-12 w-96 md:w-[32rem] pointer-events-none z-20">
             <Image
               src="/merritt-assets/trees1.png"
               alt="Decorative pine tree"
@@ -437,7 +427,7 @@ export default function HomeClient() {
             />
           </div>
 
-          <div ref={rightTreeRef} className="absolute bottom-0 right-8 md:right-12 w-96 md:w-[32rem] pointer-events-none z-20">
+          <div className="absolute bottom-0 right-8 md:right-12 w-96 md:w-[32rem] pointer-events-none z-20">
             <Image
               src="/merritt-assets/trees2.png"
               alt="Decorative pine tree"
@@ -453,7 +443,7 @@ export default function HomeClient() {
       <section ref={amenitiesSectionRef} id="expertise" className="relative overflow-hidden py-12 md:py-20 border-t border-[#e6e2da]">
 
         {/* Mountain Background Image */}
-        <div ref={mountainRef} className="absolute top-[-100px] left-0 right-0 w-full h-full z-0 pointer-events-none opacity-20">
+        <div className="absolute top-[-100px] left-0 right-0 w-full h-full z-0 pointer-events-none opacity-20">
           <Image
             src="/merritt-assets/mountains.png?v=2"
             alt="Merritt Mountains background"
