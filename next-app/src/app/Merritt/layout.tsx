@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./merritt-styles.css";
-import Navbar from "./components/Navbar";
+import MerrittNavbar from "./components/MerrittNavbar";
 
 export const metadata: Metadata = {
   title: {
@@ -27,7 +27,7 @@ export default function MerrittLayout({
 }) {
   return (
     <div className="merritt-wrapper">
-      <Navbar />
+      <MerrittNavbar />
       {children}
     </div>
   );
