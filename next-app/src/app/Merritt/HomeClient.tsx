@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
+import Footer from './components/Footer';
 
 const expertise = [
   {
@@ -668,6 +669,8 @@ export default function HomeClient() {
         </div>
     </section>
 
+    {/* Footer */}
+    <Footer />
     </div>
   );
 }

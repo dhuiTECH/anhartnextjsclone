@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import React, { useState, useEffect } from 'react';
+import Footer from '../components/Footer';
 // Navbar is now in layout.tsx - no need to import here
 
 export default function AboutClient() {
@@ -252,6 +253,9 @@ export default function AboutClient() {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

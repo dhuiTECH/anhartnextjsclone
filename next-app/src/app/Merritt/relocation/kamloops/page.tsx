@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import Footer from "../../components/Footer";
 // Navbar is now in layout.tsx - no need to import here
 
 export const metadata: Metadata = {
@@ -54,7 +55,7 @@ export default function KamloopsRelocationPage() {
         {/* Why Move Grid */}
         <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-white">
           <div className="container mx-auto max-w-6xl">
-            <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-primary text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621] text-center mb-8">
               Why Make the Move
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -90,13 +91,13 @@ export default function KamloopsRelocationPage() {
                 return (
                   <div
                     key={item.title}
-                    className="rounded-2xl border border-muted/50 bg-muted/20 p-6 shadow-sm"
+                    className="rounded-2xl border border-[#e6e2da] bg-[#f9f8f6] p-6 shadow-sm hover:shadow-md transition-shadow reveal"
                   >
                     <div className="flex items-center justify-center mb-4">
                       {item.icon}
                     </div>
-                    <h3 className="text-xl font-semibold text-primary mb-2 text-center">{item.title}</h3>
-                    <p className="text-muted-foreground text-center">{item.body}</p>
+                    <h3 className="text-xl font-semibold text-[#1a2621] mb-2 text-center">{item.title}</h3>
+                    <p className="text-[#1a2621]/70 text-center">{item.body}</p>
                   </div>
                 );
               })}
@@ -105,19 +106,19 @@ export default function KamloopsRelocationPage() {
         </section>
 
         {/* Comparison */}
-        <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-muted/30">
+        <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-[#f9f8f6]">
           <div className="container mx-auto max-w-6xl">
-            <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-primary text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621] text-center mb-8">
               Kamloops vs. Merritt
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="rounded-2xl border border-muted/60 bg-white p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-primary mb-2">Kamloops Condo</h3>
-                <p className="text-muted-foreground">$700k+ | High property taxes | Urban congestion.</p>
+              <div className="rounded-2xl border border-[#e6e2da] bg-white p-6 shadow-sm reveal">
+                <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Kamloops Condo</h3>
+                <p className="text-[#1a2621]/70">$700k+ | High property taxes | Urban congestion.</p>
               </div>
-              <div className="rounded-2xl border border-secondary/60 bg-secondary/10 p-6 shadow-md">
-                <h3 className="text-lg font-semibold text-primary mb-2">Anhart Townhome</h3>
-                <p className="text-muted-foreground">From $249k | Low property taxes | Mountain lifestyle.</p>
+              <div className="rounded-2xl border border-[#a6906c] bg-[#a6906c]/10 p-6 shadow-md reveal">
+                <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Anhart Townhome</h3>
+                <p className="text-[#1a2621]/70">From $249k | Low property taxes | Mountain lifestyle.</p>
               </div>
             </div>
           </div>
@@ -127,14 +128,14 @@ export default function KamloopsRelocationPage() {
         <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-white">
           <div className="container mx-auto max-w-4xl text-center">
             <div className="space-y-3">
-              <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-primary">Easy Drive from Kamloops</h2>
-              <p className="text-muted-foreground">
+              <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621]">Easy Drive from Kamloops</h2>
+              <p className="text-[#1a2621]/70">
                 The drive from Kamloops to Merritt takes about 1.5-2 hours via Highway 5 and Highway 97.
                 Perfect for daily commutes or hybrid work schedules with easy access back to Kamloops.
               </p>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>• Approx. 2.5-3 hour drive via Hwy 7 E / Hwy 60</li>
-                <li>• Scenic route through rural Ontario</li>
+              <ul className="space-y-2 text-[#1a2621]/70">
+                <li>• Approx. 1.5-2 hour drive via Highway 5</li>
+                <li>• Scenic route through Nicola Valley</li>
                 <li>• Ideal for hybrid work arrangements</li>
               </ul>
             </div>
@@ -145,29 +146,29 @@ export default function KamloopsRelocationPage() {
         <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-white">
           <div className="container mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="space-y-3">
-              <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-primary">Remote-Ready Specs</h2>
-              <p className="text-muted-foreground">
-                We know that for you, Internet isn&apos;t a luxury—it&apos;s a utility. Our homes are situated in a connectivity hub featuring access to [Insert Fibre Provider] and clear views for Starlink. Run your dedicated server, host 4K video calls, and code in peace.
+              <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621]">Remote-Ready Specs</h2>
+              <p className="text-[#1a2621]/70">
+                We know that for you, Internet isn&apos;t a luxury—it&apos;s a utility. Our homes are situated in a connectivity hub featuring access to fibre internet and clear views for Starlink. Run your dedicated server, host 4K video calls, and code in peace.
               </p>
-              <ul className="space-y-2 text-muted-foreground">
+              <ul className="space-y-2 text-[#1a2621]/70">
                 <li>• Fibre/Starlink capable, low-latency connections</li>
                 <li>• Quiet spaces for coding and calls</li>
                 <li>• Room for dual-monitor or server setups</li>
               </ul>
             </div>
-            <div className="rounded-2xl border border-muted/50 bg-muted/10 p-6 shadow-inner">
-              <h3 className="text-lg font-semibold text-primary mb-2">Digital Nomad Perks</h3>
-              <p className="text-muted-foreground">
-                You don&apos;t need to live in Vancouver to work for a Vancouver company. Kamloops offers the perfect digital nomad lifestyle with lower costs and more space.
+            <div className="rounded-2xl border border-[#e6e2da] bg-[#f9f8f6] p-6 shadow-inner reveal">
+              <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Digital Nomad Perks</h3>
+              <p className="text-[#1a2621]/70">
+                You don&apos;t need to live in Vancouver to work for a Vancouver company. Merritt offers the perfect digital nomad lifestyle with lower costs and more space.
               </p>
             </div>
           </div>
         </section>
 
         {/* FAQ */}
-        <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-muted/30">
+        <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-[#f9f8f6]">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-primary text-center mb-6">
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621] text-center mb-6">
               FAQ for Kamloops Movers
             </h2>
             <div className="space-y-4">
@@ -190,11 +191,11 @@ export default function KamloopsRelocationPage() {
         {/* Live Like a Local */}
         <section className="py-14 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-white">
           <div className="container mx-auto max-w-6xl space-y-6">
-            <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-primary text-center">
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621] text-center">
               Live Like a Local
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="rounded-2xl border border-muted/50 bg-muted/20 p-6 shadow-sm">
+              <div className="rounded-2xl border border-[#e6e2da] bg-[#f9f8f6] p-6 shadow-sm hover:shadow-md transition-shadow reveal">
                 <div className="mb-4">
                 <Image
                   src="/merritt-assets/coffee2.jpg"
@@ -205,36 +206,36 @@ export default function KamloopsRelocationPage() {
                   loading="lazy"
                 />
                 </div>
-                <h3 className="text-lg font-semibold text-primary mb-2">Coffee & Eats</h3>
-                <p className="text-muted-foreground">Local cafes and restaurants around Merritt for your daily fuel and great meals.</p>
+                <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Coffee & Eats</h3>
+                <p className="text-[#1a2621]/70">Local cafes and restaurants around Merritt for your daily fuel and great meals.</p>
               </div>
-              <div className="rounded-2xl border border-muted/50 bg-muted/20 p-6 shadow-sm">
+              <div className="rounded-2xl border border-[#e6e2da] bg-[#f9f8f6] p-6 shadow-sm hover:shadow-md transition-shadow reveal">
                 <div className="mb-4">
                   <Image
                     src="/merritt-assets/nicolavalley.jpg"
-                    alt="Nicola Valley - Beautiful lake access and outdoor recreation near Kamloops, BC"
+                    alt="Nicola Valley - Beautiful lake access and outdoor recreation near Merritt, BC"
                     width={400}
                     height={128}
                     className="w-full h-32 rounded-lg object-cover"
                     loading="lazy"
                   />
                 </div>
-                <h3 className="text-lg font-semibold text-primary mb-2">Adventure</h3>
-                <p className="text-muted-foreground">Nicola River and nearby lakes—hike, fish, and explore the Nicola Valley.</p>
+                <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Adventure</h3>
+                <p className="text-[#1a2621]/70">Nicola River and nearby lakes—hike, fish, and explore the Nicola Valley.</p>
               </div>
-              <div className="rounded-2xl border border-muted/50 bg-muted/20 p-6 shadow-sm">
+              <div className="rounded-2xl border border-[#e6e2da] bg-[#f9f8f6] p-6 shadow-sm hover:shadow-md transition-shadow reveal">
                 <div className="mb-4">
                   <Image
                     src="/merritt-assets/nicolavalleyhospital.jpg"
-                    alt="Royal Inland Hospital - Quality healthcare in Kamloops, BC"
+                    alt="Nicola Valley Hospital - Quality healthcare in Merritt, BC"
                     width={400}
                     height={128}
                     className="w-full h-32 rounded-lg object-cover"
                     loading="lazy"
                   />
                 </div>
-                <h3 className="text-lg font-semibold text-primary mb-2">Essentials</h3>
-                <p className="text-muted-foreground">Nicola Valley Hospital, major retailers, schools, and all essential services are conveniently located in Merritt.</p>
+                <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Essentials</h3>
+                <p className="text-[#1a2621]/70">Nicola Valley Hospital, major retailers, schools, and all essential services are conveniently located in Merritt.</p>
               </div>
             </div>
           </div>
@@ -275,6 +276,7 @@ export default function KamloopsRelocationPage() {
       </main>
 
       {/* Footer */}
+      <Footer />
     </div>
   );
 }

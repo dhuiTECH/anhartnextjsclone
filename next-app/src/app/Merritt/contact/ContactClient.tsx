@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Instagram, Linkedin } from 'lucide-react';
+import Footer from '../components/Footer';
 // Navbar is now in layout.tsx - no need to import here
 
 export default function ContactClient() {
@@ -132,6 +133,9 @@ export default function ContactClient() {
         </div>
 
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

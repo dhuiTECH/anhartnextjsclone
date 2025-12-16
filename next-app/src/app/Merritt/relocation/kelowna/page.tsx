@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import Footer from "../../components/Footer";
 // Navbar is now in layout.tsx - no need to import here
 
 export const metadata: Metadata = {
@@ -54,14 +55,14 @@ export default function KelownaRelocationPage() {
         {/* Why Move Grid */}
         <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-white">
           <div className="container mx-auto max-w-6xl">
-            <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-primary text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621] text-center mb-8">
               Why Make the Move
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 {
                   title: "Financial Freedom",
-                  body: "Swap Ottawa prices for affordable homes and keep more for travel, savings, and family.",
+                  body: "Swap Kelowna prices for affordable homes and keep more for travel, savings, and family.",
                   icon: (
                     <svg className="w-12 h-12 text-[#a6906c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -70,7 +71,7 @@ export default function KelownaRelocationPage() {
                 },
                 {
                   title: "Nature",
-                  body: "Lake access, forest trails, and sunsets over the Madawaska Valley—every day.",
+                  body: "Lake access, forest trails, and sunsets over the Nicola Valley—every day.",
                   icon: (
                     <svg className="w-12 h-12 text-[#a6906c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
@@ -89,13 +90,13 @@ export default function KelownaRelocationPage() {
               ].map((item) => (
                 <div
                   key={item.title}
-                  className="rounded-2xl border border-muted/50 bg-muted/20 p-6 shadow-sm"
+                  className="rounded-2xl border border-[#e6e2da] bg-[#f9f8f6] p-6 shadow-sm hover:shadow-md transition-shadow reveal"
                 >
                   <div className="flex items-center justify-center mb-4">
                     {item.icon}
                   </div>
-                  <h3 className="text-xl font-semibold text-primary mb-2 text-center">{item.title}</h3>
-                  <p className="text-muted-foreground text-center">{item.body}</p>
+                  <h3 className="text-xl font-semibold text-[#1a2621] mb-2 text-center">{item.title}</h3>
+                  <p className="text-[#1a2621]/70 text-center">{item.body}</p>
                 </div>
               ))}
             </div>
@@ -103,19 +104,19 @@ export default function KelownaRelocationPage() {
         </section>
 
         {/* Comparison */}
-        <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-muted/30">
+        <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-[#f9f8f6]">
           <div className="container mx-auto max-w-6xl">
-            <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-primary text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621] text-center mb-8">
               Kelowna vs. Merritt
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="rounded-2xl border border-muted/60 bg-white p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-primary mb-2">Kelowna Condo</h3>
-                <p className="text-muted-foreground"> $800k+ | 45-minute commute in traffic | Tiny balcony.</p>
+              <div className="rounded-2xl border border-[#e6e2da] bg-white p-6 shadow-sm reveal">
+                <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Kelowna Condo</h3>
+                <p className="text-[#1a2621]/70"> $800k+ | 45-minute commute in traffic | Tiny balcony.</p>
               </div>
-              <div className="rounded-2xl border border-secondary/60 bg-secondary/10 p-6 shadow-md">
-                <h3 className="text-lg font-semibold text-primary mb-2">Anhart Townhome</h3>
-                <p className="text-muted-foreground"> From $249k | 0-minute commute | Surrounded by mountains.</p>
+              <div className="rounded-2xl border border-[#a6906c] bg-[#a6906c]/10 p-6 shadow-md reveal">
+                <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Anhart Townhome</h3>
+                <p className="text-[#1a2621]/70"> From $249k | 0-minute commute | Surrounded by mountains.</p>
               </div>
             </div>
           </div>
@@ -125,8 +126,8 @@ export default function KelownaRelocationPage() {
         <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-white">
           <div className="container mx-auto max-w-4xl text-center">
             <div className="space-y-3">
-              <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-primary">Easy Drive from Kelowna</h2>
-              <p className="text-muted-foreground">
+              <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621]">Easy Drive from Kelowna</h2>
+              <p className="text-[#1a2621]/70">
                 The drive is straightforward and scenic. A comfortable journey along Highway 97 takes you from Kelowna's bustle to Merritt's tranquility in about 45 minutes. Perfect for hybrid workers, commuters, or those wanting easy weekend access back to the Okanagan.
               </p>
             </div>
@@ -134,30 +135,30 @@ export default function KelownaRelocationPage() {
         </section>
 
         {/* Remote Work */}
-        <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-muted/20">
+        <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-[#f9f8f6]">
           <div className="container mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="space-y-3">
-              <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-primary">Remote-Work Ready</h2>
-              <p className="text-muted-foreground">
+              <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621]">Remote-Work Ready</h2>
+              <p className="text-[#1a2621]/70">
                 Fibre and Starlink options keep Zoom calls crisp. Anhart townhomes include dedicated space for your home office so you can work without compromise.
               </p>
-              <ul className="space-y-2 text-muted-foreground">
+              <ul className="space-y-2 text-[#1a2621]/70">
                 <li>• Fibre/Starlink capable for HD/4K calls</li>
                 <li>• Flexible floorplans with office space</li>
                 <li>• Quiet surroundings to focus</li>
               </ul>
             </div>
-            <div className="rounded-2xl border border-muted/50 bg-white p-6 shadow-sm">
-              <h3 className="text-lg font-semibold text-primary mb-2">Tech Specs</h3>
-              <p className="text-muted-foreground">Low latency, reliable bandwidth, and clear skies for satellite coverage.</p>
+            <div className="rounded-2xl border border-[#e6e2da] bg-white p-6 shadow-sm reveal">
+              <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Tech Specs</h3>
+              <p className="text-[#1a2621]/70">Low latency, reliable bandwidth, and clear skies for satellite coverage.</p>
             </div>
           </div>
         </section>
 
         {/* FAQ */}
-        <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-muted/30">
+        <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-[#f9f8f6]">
           <div className="container mx-auto max-w-4xl">
-            <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-primary text-center mb-6">
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621] text-center mb-6">
             FAQ for Kelowna Movers
             </h2>
             <div className="space-y-4">
@@ -180,11 +181,11 @@ export default function KelownaRelocationPage() {
         {/* Live Like a Local */}
         <section className="py-14 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-white">
           <div className="container mx-auto max-w-6xl space-y-6">
-            <h2 className="text-2xl md:text-3xl font-montserrat font-bold text-primary text-center">
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621] text-center">
               Live Like a Local
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="rounded-2xl border border-muted/50 bg-muted/20 p-6 shadow-sm">
+              <div className="rounded-2xl border border-[#e6e2da] bg-[#f9f8f6] p-6 shadow-sm hover:shadow-md transition-shadow reveal">
                 <div className="mb-4">
                   <Image
                     src="/merritt-assets/coffee2.jpg"
@@ -195,36 +196,36 @@ export default function KelownaRelocationPage() {
                     loading="lazy"
                   />
                 </div>
-                <h3 className="text-lg font-semibold text-primary mb-2">Coffee & Eats</h3>
-                <p className="text-muted-foreground">Local cafes and restaurants around Merritt for your daily fuel and great meals.</p>
+                <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Coffee & Eats</h3>
+                <p className="text-[#1a2621]/70">Local cafes and restaurants around Merritt for your daily fuel and great meals.</p>
               </div>
-              <div className="rounded-2xl border border-muted/50 bg-muted/20 p-6 shadow-sm">
+              <div className="rounded-2xl border border-[#e6e2da] bg-[#f9f8f6] p-6 shadow-sm hover:shadow-md transition-shadow reveal">
                 <div className="mb-4">
                   <Image
                     src="/merritt-assets/nicolavalley.jpg"
-                    alt="Kamaniskeg Lake - Beautiful lake access and outdoor recreation in Barry's Bay, Ontario"
+                    alt="Nicola Valley - Beautiful lake access and outdoor recreation in Merritt, BC"
                     width={400}
                     height={128}
                     className="w-full h-32 rounded-lg object-cover"
                     loading="lazy"
                   />
                 </div>
-                <h3 className="text-lg font-semibold text-primary mb-2">Adventure</h3>
-                <p className="text-muted-foreground">Nicola River and nearby lakes—hike, fish, and explore the Nicola Valley.</p>
+                <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Adventure</h3>
+                <p className="text-[#1a2621]/70">Nicola River and nearby lakes—hike, fish, and explore the Nicola Valley.</p>
               </div>
-              <div className="rounded-2xl border border-muted/50 bg-muted/20 p-6 shadow-sm">
+              <div className="rounded-2xl border border-[#e6e2da] bg-[#f9f8f6] p-6 shadow-sm hover:shadow-md transition-shadow reveal">
                 <div className="mb-4">
                   <Image
                     src="/merritt-assets/nicolavalleyhospital.jpg"
-                    alt="St. Francis Memorial Hospital - Quality healthcare in Barry's Bay, Ontario"
+                    alt="Nicola Valley Hospital - Quality healthcare in Merritt, BC"
                     width={400}
                     height={128}
                     className="w-full h-32 rounded-lg object-cover"
                     loading="lazy"
                   />
                 </div>
-                <h3 className="text-lg font-semibold text-primary mb-2">Essentials</h3>
-                <p className="text-muted-foreground">Nicola Valley Hospital, major retailers, schools, and all essential services are conveniently located in Merritt.</p>
+                <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Essentials</h3>
+                <p className="text-[#1a2621]/70">Nicola Valley Hospital, major retailers, schools, and all essential services are conveniently located in Merritt.</p>
               </div>
             </div>
           </div>
@@ -264,6 +265,8 @@ export default function KelownaRelocationPage() {
         </section>
       </main>
 
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

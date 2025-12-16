@@ -3,8 +3,22 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+import Footer from '../components/Footer';
 // Navbar is now in layout.tsx - no need to import here
-import Map from '@/components/merritt-ui/Map';
+
+// Dynamically import Map with SSR disabled to prevent initialization issues
+const Map = dynamic(() => import('@/components/merritt-ui/Map'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-full w-full bg-[#F9F7F2] rounded-lg flex items-center justify-center">
+      <div className="text-center">
+        <div className="text-4xl mb-4">🗺️</div>
+        <p className="text-[#14312C]/60">Loading map...</p>
+      </div>
+    </div>
+  ),
+});
 
 export default function NeighbourhoodPage() {
   const [activeLayer, setActiveLayer] = useState<'parks' | 'dining' | 'shopping' | 'schools' | 'transit'>('parks');
@@ -563,6 +577,9 @@ export default function NeighbourhoodPage() {
             </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
