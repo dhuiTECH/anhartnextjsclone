@@ -5,7 +5,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, ChevronDown, X } from 'lucide-react';
 
-const navLinks = [
+interface NavLink {
+  href?: string;
+  label: string;
+  dropdown?: Array<{ href: string; label: string }>;
+}
+
+const navLinks: NavLink[] = [
   { href: '/', label: 'Home' },
   { href: '/Merritt/interiors', label: 'Interiors' },
   { href: '/Merritt/floorplans', label: 'Floor Plans' },
