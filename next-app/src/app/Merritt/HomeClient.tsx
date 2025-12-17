@@ -430,9 +430,9 @@ export default function HomeClient() {
             <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl mt-4 text-[#1a2621]">Featured Units & Homes</h2>
           </div>
           {/* Tablet: 2 columns side by side, Mobile: Stack, Desktop: 2 columns */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto relative z-10">
             {/* Garden Flat (2-Bedroom) */}
-            <div className="bg-white rounded-xl shadow-xl border border-[#e6e2da] overflow-hidden group hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
+            <div className="bg-white rounded-xl shadow-xl border border-[#e6e2da] overflow-hidden group hover:shadow-2xl transition-all duration-300 h-full flex flex-col relative z-10">
               <div
                 className="relative h-80 overflow-hidden group cursor-pointer md:cursor-default"
                 onClick={() => setGardenFlatImage((prev) => (prev + 1) % 3)}
@@ -505,7 +505,7 @@ export default function HomeClient() {
             </div>
 
             {/* Sky Townhome (3-Bedroom) */}
-            <div className="bg-white rounded-xl shadow-xl border border-[#e6e2da] overflow-hidden group hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
+            <div className="bg-white rounded-xl shadow-xl border border-[#e6e2da] overflow-hidden group hover:shadow-2xl transition-all duration-300 h-full flex flex-col relative z-10">
               <div
                 className="relative h-80 overflow-hidden group cursor-pointer md:cursor-default"
                 onClick={() => setSkyTownhomeImage((prev) => (prev + 1) % 3)}
@@ -580,23 +580,23 @@ export default function HomeClient() {
 
           {/* Decorative Trees - GSAP Animated */}
           {/* Tablet: Smaller trees, Desktop: Full size */}
-          <div ref={leftTreeRef} className="absolute bottom-0 left-0 md:left-4 lg:left-8 xl:left-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-20 overflow-hidden">
+          <div ref={leftTreeRef} className="absolute bottom-0 left-0 md:left-4 lg:left-8 xl:left-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-0 overflow-hidden">
             <Image
               src="/merritt-assets/trees1.png"
               alt="Decorative pine tree"
               width={500}
               height={1500}
-              className="object-contain w-full h-auto"
+              className="object-contain w-full h-auto opacity-70"
             />
           </div>
 
-          <div ref={rightTreeRef} className="absolute bottom-0 right-0 md:right-4 lg:right-8 xl:right-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-20 overflow-hidden">
+          <div ref={rightTreeRef} className="absolute bottom-0 right-0 md:right-4 lg:right-8 xl:right-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-0 overflow-hidden">
             <Image
               src="/merritt-assets/trees2.png"
               alt="Decorative pine tree"
               width={500}
               height={1500}
-              className="object-contain w-full h-auto"
+              className="object-contain w-full h-auto opacity-70"
             />
           </div>
         </div>
