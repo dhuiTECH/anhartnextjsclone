@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FileText, ArrowRight, Loader2 } from 'lucide-react';
 // Navbar is now in layout.tsx - no need to import here
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function AdminDashboard() {
   const router = useRouter();

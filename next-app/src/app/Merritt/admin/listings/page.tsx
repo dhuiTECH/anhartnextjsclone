@@ -19,7 +19,7 @@ import { useRouter } from 'next/navigation';
 import { Bed, Bath, Move, Save, ArrowLeft, Loader2 } from 'lucide-react';
 // Navbar is now in layout.tsx - no need to import here
 import ImageUpload from './components/ImageUpload';
-import { supabase } from '../../../lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function ListingEditorPage() {
   // Form state for listing data

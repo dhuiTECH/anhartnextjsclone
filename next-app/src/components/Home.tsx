@@ -312,6 +312,123 @@ const Home = () => {
   }, []); // Empty dependency array - only runs once
 
   /**
+   * Merritt Section Scroll Effect State
+   * Controls the height/expansion of the Merritt section based on scroll position
+   * Value ranges from 0 (collapsed) to 1 (fully expanded)
+   */
+  const [merrittHeightProgress, setMerrittHeightProgress] = useState(0);
+  const [merrittFullHeight, setMerrittFullHeight] = useState(0);
+
+  /**
+   * Merritt Section Accordion Scroll Effect
+   *
+   * Creates an accordion-style expand/contract effect based on scroll position.
+   * Section starts at height 0 and grows as it enters viewport, then shrinks as it leaves.
+   */
+  useEffect(() => {
+    const merrittSection = document.getElementById("merritt-section");
+    const merrittContent = document.getElementById("merritt-content");
+    if (!merrittSection || !merrittContent) return;
+
+    // Get the natural height of the content
+    const updateFullHeight = () => {
+      // Temporarily remove height constraints to measure natural height
+      const originalHeight = merrittSection.style.height;
+      const originalMaxHeight = merrittSection.style.maxHeight;
+      merrittSection.style.height = 'auto';
+      merrittSection.style.maxHeight = 'none';
+      merrittSection.style.visibility = 'hidden';
+      
+      // Force reflow to ensure measurement
+      void merrittSection.offsetHeight;
+      
+      const naturalHeight = merrittContent.scrollHeight + 64; // Add padding (py-16 = 64px)
+      setMerrittFullHeight(naturalHeight);
+      
+      // Restore original styles
+      merrittSection.style.height = originalHeight;
+      merrittSection.style.maxHeight = originalMaxHeight;
+      merrittSection.style.visibility = '';
+    };
+
+    // Initial height measurement - use setTimeout to ensure DOM is ready
+    setTimeout(updateFullHeight, 0);
+
+    const handleScroll = () => {
+      const rect = merrittSection.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const sectionTop = rect.top;
+      const sectionBottom = rect.bottom;
+      
+      let progress = 0;
+      
+      // Calculate progress based on scroll position
+      // Section expands as it enters viewport and contracts as it leaves
+      if (sectionTop < windowHeight && sectionBottom > 0) {
+        // Section is in viewport
+        // Start expanding when section top enters viewport
+        // Fully expanded when section is centered
+        const viewportCenter = windowHeight * 0.5;
+        const sectionCenter = sectionTop + (sectionBottom - sectionTop) / 2;
+        
+        // Distance from viewport center
+        const distanceFromCenter = Math.abs(sectionCenter - viewportCenter);
+        const maxDistance = windowHeight * 0.6; // Expand over 60% of viewport
+        
+        // Progress: 1 when centered, decreases as it moves away
+        progress = Math.max(0, 1 - (distanceFromCenter / maxDistance));
+      } else if (sectionBottom < 0) {
+        // Section has scrolled past viewport (above)
+        const distancePast = Math.abs(sectionBottom);
+        const collapseRange = windowHeight * 0.4;
+        progress = Math.max(0, 1 - (distancePast / collapseRange));
+      } else if (sectionTop > windowHeight) {
+        // Section is below viewport
+        const distanceBefore = sectionTop - windowHeight;
+        const expandRange = windowHeight * 0.4;
+        progress = Math.max(0, 1 - (distanceBefore / expandRange));
+      }
+      
+      // Apply smooth easing
+      const easedProgress = progress < 0.5 
+        ? 2 * progress * progress 
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      
+      setMerrittHeightProgress(Math.max(0, Math.min(1, easedProgress)));
+    };
+
+    // Initial calculation
+    setTimeout(() => {
+      handleScroll();
+    }, 100);
+
+    // Throttle scroll events for performance
+    let ticking = false;
+    const throttledHandleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    const handleResize = () => {
+      updateFullHeight();
+      handleScroll();
+    };
+
+    window.addEventListener("scroll", throttledHandleScroll, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", throttledHandleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  /**
    * Fetch Featured Blog Posts
    *
    * Fetches blog posts marked as featured from the database.
@@ -632,6 +749,58 @@ const Home = () => {
             </div>
           </div>
         </section>
+
+        {/* =====================================================================
+              MERRITT PROJECT SECTION
+              =====================================================================
+              Showcases the latest Merritt project with accordion-style scroll reveal effect.
+           */}
+        {/* <section 
+          id="merritt-section" 
+          className="bg-background overflow-hidden"
+          style={{
+            height: `${merrittHeightProgress * merrittFullHeight}px`,
+            maxHeight: `${merrittHeightProgress * merrittFullHeight}px`,
+            transition: 'height 0.1s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.1s cubic-bezier(0.4, 0, 0.2, 1)',
+            willChange: 'height, max-height',
+          }}
+        >
+          <div id="merritt-content" className="mx-auto max-w-4xl px-6 lg:px-8 py-16 text-center">
+            <div className="flex flex-col items-center justify-center space-y-6">
+              <Link 
+                href="/Merritt" 
+                className="group inline-block transition-opacity duration-300 hover:opacity-90"
+              >
+                <img
+                  src="/merritt-assets/anhartmerritt1.png"
+                  alt="Anhart Merritt Logo"
+                  className="h-24 md:h-32 w-auto mx-auto transition-all duration-300 group-hover:scale-105"
+                  style={{
+                    opacity: merrittHeightProgress,
+                    transition: 'opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease-out',
+                  }}
+                />
+              </Link>
+              <div 
+                className="space-y-3"
+                style={{
+                  opacity: merrittHeightProgress,
+                  transition: 'opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}
+              >
+                <p className="text-lg md:text-xl text-muted-foreground">
+                  Visit our latest project at{" "}
+                  <Link 
+                    href="/Merritt" 
+                    className="font-semibold text-primary hover:text-primary/80 transition-colors duration-300 underline decoration-2 underline-offset-4"
+                  >
+                    Merritt
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
+        </section> */}
 
         {/* =====================================================================
               OUR FOCUS SECTION

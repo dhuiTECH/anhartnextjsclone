@@ -20,7 +20,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 // Navbar is now in layout.tsx - no need to import here
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function LoginPage() {
   const router = useRouter();

@@ -13,7 +13,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Upload, X, Loader2 } from 'lucide-react';
-import { uploadImage } from '../../../../lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ImageUploadProps {
   value: string;
@@ -62,18 +62,35 @@ export default function ImageUpload({ value, onChange, onUpload }: ImageUploadPr
       const timestamp = Date.now();
       const fileName = `${timestamp}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
       const path = `listings/${fileName}`;
+      const bucket = 'listings';
 
-      const result = await uploadImage(file, path);
+      // Upload file to Supabase Storage
+      const { data, error: uploadError } = await supabase.storage
+        .from(bucket)
+        .upload(path, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
 
-      if (result.error) {
-        setError(result.error);
+      if (uploadError) {
+        // If bucket doesn't exist, provide helpful error message
+        if (uploadError.message.includes('Bucket not found') || uploadError.message.includes('not found')) {
+          setError('Storage bucket not found. Please create a "listings" bucket in Supabase Storage.');
+        } else {
+          setError(uploadError.message);
+        }
         setPreview(null);
       } else {
-        onChange(result.url!); // Type assertion since we know url is string when error is null
+        // Get public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from(bucket)
+          .getPublicUrl(data.path);
+
+        onChange(publicUrl);
         setError(null);
       }
-    } catch (err) {
-      setError('Failed to upload image');
+    } catch (err: any) {
+      setError(err?.message || 'Failed to upload image');
       setPreview(null);
     } finally {
       setUploading(false);

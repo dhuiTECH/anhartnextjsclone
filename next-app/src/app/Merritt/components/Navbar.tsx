@@ -9,10 +9,11 @@ interface NavLink {
   href?: string;
   label: string;
   dropdown?: Array<{ href: string; label: string }>;
+  isAnhart?: boolean;
 }
 
 const navLinks: NavLink[] = [
-  { href: '/', label: 'Home' },
+  { href: '/', label: 'Anhart', isAnhart: true },
   { href: '/Merritt/interiors', label: 'Interiors' },
   { href: '/Merritt/floorplans', label: 'Floor Plans' },
   { href: '/Merritt/neighbourhood', label: 'Neighbourhood' },
@@ -114,7 +115,7 @@ export default function Navbar() {
       }`}
     >
       <div className="container mx-auto px-12 md:px-20 py-4 flex justify-between items-center">
-        <Link href="/" className="text-center group flex flex-col items-center">
+        <Link href="/Merritt" className="text-center group flex flex-col items-center">
           <img
             src="/merritt-assets/anhartmerritt1.png"
             alt="Merritt Realty Logo"
@@ -152,8 +153,16 @@ export default function Navbar() {
               );
             }
             return (
-              <Link key={link.href} href={link.href} className={linkClass(link.href)} style={{ fontFamily: 'Inter, sans-serif' }}>
-                {link.label}
+              <Link 
+                key={link.href} 
+                href={link.href} 
+                className={`group/anhart ${link.isAnhart ? 'text-[#dc2626] hover:text-[#dc2626] relative' : linkClass(link.href)}`} 
+                style={{ fontFamily: 'Inter, sans-serif' }}
+              >
+                <span className={link.isAnhart ? 'group-hover/anhart:hidden' : ''}>{link.label}</span>
+                {link.isAnhart && (
+                  <span className="hidden group-hover/anhart:inline">Home</span>
+                )}
               </Link>
             );
           })}
@@ -208,11 +217,14 @@ export default function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`block text-sm tracking-wider uppercase font-semibold py-2 px-1 ${linkClass(link.href)}`}
+                  className={`block text-sm tracking-wider uppercase font-semibold py-2 px-1 group/anhart ${link.isAnhart ? 'text-[#dc2626] hover:text-[#dc2626]' : linkClass(link.href)}`}
                   style={{ fontFamily: 'Inter, sans-serif' }}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {link.label}
+                  <span className={link.isAnhart ? 'group-hover/anhart:hidden' : ''}>{link.label}</span>
+                  {link.isAnhart && (
+                    <span className="hidden group-hover/anhart:inline">Home</span>
+                  )}
                 </Link>
               );
             })}

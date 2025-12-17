@@ -6,6 +6,16 @@ import Image from 'next/image';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 import Footer from './components/Footer';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+import { useTurnstile } from '@/hooks/useTurnstile';
+import { Turnstile } from '@/components/Turnstile';
+
+// Register GSAP plugins
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const expertise = [
   {
@@ -40,9 +50,33 @@ export default function HomeClient() {
   const [gardenFlatImage, setGardenFlatImage] = useState(0); // 0: exterior, 1: bedroom, 2: kitchen
   const [skyTownhomeImage, setSkyTownhomeImage] = useState(0); // 0: exterior, 1: bedroom, 2: kitchen
 
-  // Section refs for layout (animations removed)
+  // Form state
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    unitType: '',
+    currentLocation: '',
+    hearAboutUs: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  // Cloudflare Turnstile
+  const { token: turnstileToken, key: turnstileKey, reset: resetTurnstile, handlers: turnstileHandlers } = useTurnstile();
+
+  // Section refs for layout
   const featuredSectionRef = useRef(null);
   const amenitiesSectionRef = useRef(null);
+  
+  // GSAP refs for tree animations
+  const leftTreeRef = useRef(null);
+  const rightTreeRef = useRef(null);
+  
+  // GSAP refs for mountain parallax
+  const mountainRef = useRef(null);
 
   // --- EXISTING OBSERVERS ---
   useEffect(() => {
@@ -65,8 +99,151 @@ export default function HomeClient() {
     }
   }, []);
 
-  // Tree and mountain animations removed - GSAP caused cross-origin iframe issues
-  // The page works without these scroll-triggered animations
+  // GSAP Tree Animation
+  useGSAP(() => {
+    if (!leftTreeRef.current || !rightTreeRef.current || !featuredSectionRef.current) return;
+    
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: featuredSectionRef.current,
+        start: 'top bottom', // Start when top of section hits bottom of viewport
+        end: 'bottom top',   // End when bottom of section hits top of viewport
+        scrub: 1,            // Smooth scrubbing effect (1s lag)
+      },
+    });
+
+    // Animate Left Tree (In from left side)
+    tl.fromTo(leftTreeRef.current,
+      { x: -50, y: 30 }, // Starting position (outside left, slightly down)
+      { x: 0, y: 0, ease: 'none' }, // End position (framing the grid)
+      0 // Start at time 0
+    );
+
+    // Animate Right Tree (In from right side)
+    tl.fromTo(rightTreeRef.current,
+      { x: 50, y: 30 }, // Starting position (outside right, slightly down)
+      { x: 0, y: 0, ease: 'none' }, // End position (framing the grid)
+      0
+    );
+
+  }, { scope: featuredSectionRef });
+
+  // GSAP Mountain Parallax Animation
+  useGSAP(() => {
+    if (!mountainRef.current || !amenitiesSectionRef.current) return;
+    
+    gsap.to(mountainRef.current, {
+      y: 150, // Move down slightly as we scroll down for parallax effect
+      ease: 'none',
+      scrollTrigger: {
+        trigger: amenitiesSectionRef.current,
+        start: 'top bottom', // Start when top of section enters viewport
+        end: 'bottom top',   // End when bottom of section leaves viewport
+        scrub: 1,            // Smooth scrubbing
+      },
+    });
+  }, { scope: amenitiesSectionRef });
+
+  // Form submission handler
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('=== FORM SUBMIT HANDLER CALLED ===');
+    console.log('Form submit triggered', formData);
+    console.log('Event:', e);
+    
+    // Validate required fields before proceeding
+    if (!formData.firstName || !formData.lastName || !formData.email) {
+      console.error('Validation failed - missing required fields');
+      setSubmitStatus('error');
+      alert('Please fill in all required fields (First Name, Last Name, Email)');
+      return;
+    }
+
+    // Validate Turnstile token
+    if (!turnstileToken) {
+      console.error('Turnstile verification required');
+      setSubmitStatus('error');
+      alert('Please complete the verification. The form is verifying your request...');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      // Prepare JSON data matching the Google Apps Script expectations
+      const jsonData = {
+        formSource: 'Home Page',
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone || '',
+        unitType: formData.unitType || '',
+        currentLocation: formData.currentLocation || '',
+        referralSource: formData.hearAboutUs || '',
+        message: formData.message || ''
+      };
+
+      console.log('Submitting form data:', jsonData);
+
+      // Send JSON data to Google Apps Script
+      // Use 'no-cors' mode to avoid CORS issues with Google Apps Script
+      // Note: With no-cors, we can't set custom headers, but JSON body should still work
+      // The script expects JSON in e.postData.contents
+      try {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbxgDQSGyo5GbWuSXs68FUW2S_E6Nio_TI8RFMDuclYpqulveMdHPmzQ6_INc7Lk5hv1jw/exec', {
+          method: 'POST',
+          mode: 'no-cors', // Required for Google Apps Script to avoid CORS errors
+          // Note: Can't set Content-Type header with no-cors, but body will still be sent
+          body: JSON.stringify(jsonData),
+        });
+
+        // With no-cors mode, we can't read the response, but the data was sent
+        // Assume success if no error was thrown
+        console.log('Form data sent successfully (no-cors mode - cannot verify response)');
+        
+        setSubmitStatus('success');
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          unitType: '',
+          currentLocation: '',
+          hearAboutUs: '',
+          message: ''
+        });
+        resetTurnstile(); // Reset Turnstile after successful submission
+        setTimeout(() => setSubmitStatus('idle'), 5000);
+      } catch (fetchError) {
+        // If fetch fails, try alternative method using form submission
+        console.log('Fetch failed, trying alternative method:', fetchError);
+        throw fetchError;
+      }
+    } catch (error: any) {
+      console.error('Form submission error:', error);
+      setSubmitStatus('error');
+      setTimeout(() => setSubmitStatus('idle'), 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Button click handler as backup
+  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('Button clicked directly!', formData);
+    // Don't prevent default - let the form handle it naturally
+    // This is just for debugging
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f9f8f6] text-[#1a2621] font-sans antialiased selection:bg-[#1a2621] selection:text-white overflow-x-hidden">
@@ -79,7 +256,7 @@ export default function HomeClient() {
       {/* REMOVED: <Navbar /> (It is now in layout.tsx) */}
 
       {/* Hero Section */}
-      <header className="relative h-[85vh] md:h-[90vh] w-full overflow-hidden flex items-center justify-center bg-black">
+      <header className="relative h-[85vh] md:h-[88vh] lg:h-[90vh] w-full overflow-hidden flex items-center justify-center bg-black">
         <div className="absolute inset-0 z-0">
             <video
                 src="/merritt-assets/Heroheader.mp4"
@@ -94,17 +271,17 @@ export default function HomeClient() {
             />
             <div className="absolute inset-0 bg-black/30"></div>
         </div>
-        <div className="relative z-10 flex flex-col items-center justify-center text-center text-white px-8 md:px-6 mt-8 md:mt-12 min-h-[60vh]">
+        <div className="relative z-10 flex flex-col items-center justify-center text-center text-white px-6 md:px-8 lg:px-6 mt-8 md:mt-12 min-h-[60vh]">
             <div className="max-w-4xl w-full">
-                <h1 className="font-serif text-2xl md:text-5xl lg:text-6xl mb-4 md:mb-8 leading-tight font-bold opacity-0 animate-fade-up uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center px-2" style={{ animationDelay: '0.4s' }}>
+                <h1 className="font-serif text-2xl md:text-4xl lg:text-5xl xl:text-6xl mb-4 md:mb-6 lg:mb-8 leading-tight font-bold opacity-0 animate-fade-up uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center px-2" style={{ animationDelay: '0.4s' }}>
                     Affordable Homeownership<br/>in Merritt, BC
                 </h1>
-                <p className="text-sm md:text-base lg:text-lg font-bold tracking-[0.15em] leading-relaxed opacity-0 animate-fade-up text-white mb-4 md:mb-12 uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center max-w-3xl mx-auto px-4" style={{ animationDelay: '0.6s' }}>
+                <p className="text-sm md:text-base lg:text-lg font-bold tracking-[0.15em] leading-relaxed opacity-0 animate-fade-up text-white mb-4 md:mb-8 lg:mb-12 uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center max-w-3xl mx-auto px-4" style={{ animationDelay: '0.6s' }}>
                     <span className="md:hidden">Modern townhomes for sale in Merritt, BC.</span>
                     <span className="hidden md:inline">Discover modern townhomes for sale in beautiful Merritt, BC. Your accessible gateway to homeownership in BC's scenic Nicola Valley.</span>
                 </p>
             </div>
-            <Link href="/Merritt/contact" className="inline-block bg-white text-[#1a2621] px-6 md:px-8 py-4 text-sm md:text-xs tracking-[0.2em] uppercase font-black rounded-full shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 hover:bg-[#a6906c] hover:text-white transition-all duration-300 opacity-0 animate-fade-up glow-hover cursor-pointer" style={{ animationDelay: '0.8s' }}>
+            <Link href="/Merritt/contact" className="inline-block bg-white text-[#1a2621] px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm tracking-[0.2em] uppercase font-black rounded-full shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 hover:bg-[#a6906c] hover:text-white transition-all duration-300 opacity-0 animate-fade-up glow-hover cursor-pointer" style={{ animationDelay: '0.8s' }}>
                 Contact Sales Team
             </Link>
         </div>
@@ -139,9 +316,10 @@ export default function HomeClient() {
       </header>
 
       {/* Tropical Living Section */}
-      <section className="w-full py-16 md:py-24 lg:py-32 pb-24 md:pb-24 lg:pb-32 bg-white overflow-visible">
+      <section className="w-full py-16 md:py-20 lg:py-32 pb-24 md:pb-24 lg:pb-32 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center">
+          {/* Tablet: Stack vertically, Desktop: Side by side */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
 
           {/* LEFT COLUMN: Text Content */}
           <div className="flex flex-col items-start space-y-6 md:space-y-8">
@@ -191,7 +369,7 @@ export default function HomeClient() {
 
           {/* RIGHT COLUMN: Image Stack - CORRECTED STRUCTURE */}
           {/* The wrapper must be relative to anchor the absolute surfer image */}
-          <div className="relative mt-6 md:mt-12 lg:mt-0 md:pl-10">
+          <div className="relative mt-6 md:mt-8 lg:mt-0 lg:pl-10">
 
             {/* 1. Main Resort Image (The Anchor) */}
             <div className="relative z-10 rounded-2xl overflow-hidden shadow-xl">
@@ -207,7 +385,8 @@ export default function HomeClient() {
 
             {/* 2. Overlapping Keith Image (The Floater) */}
             {/* Positioned absolute relative to the parent div, NOT inside the image div */}
-            <div className="absolute z-20 -bottom-12 md:-bottom-16 left-12 md:-left-6 w-[35%] md:w-[45%] border-[4px] md:border-[8px] border-white rounded-lg shadow-2xl overflow-hidden">
+            {/* Tablet: Adjust positioning to prevent overflow */}
+            <div className="absolute z-20 -bottom-8 md:-bottom-12 lg:-bottom-16 left-4 md:left-8 lg:left-12 xl:-left-6 w-[35%] md:w-[40%] lg:w-[45%] max-w-[180px] md:max-w-none border-[4px] md:border-[6px] lg:border-[8px] border-white rounded-lg shadow-2xl overflow-hidden">
                {/* Aspect ratio square for Keith */}
               <div className="aspect-square relative">
                   <Image
@@ -220,8 +399,8 @@ export default function HomeClient() {
             </div>
 
             {/* Keith's Title */}
-            <div className="absolute z-30 -bottom-16 md:-bottom-24 left-12 md:-left-6 w-[35%] md:w-[45%] flex justify-center">
-              <p className="text-white font-black text-xs md:text-sm tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.6)] text-center">
+            <div className="absolute z-30 -bottom-12 md:-bottom-16 lg:-bottom-24 left-4 md:left-8 lg:left-12 xl:-left-6 w-[35%] md:w-[40%] lg:w-[45%] max-w-[180px] md:max-w-none flex justify-center">
+              <p className="text-white font-black text-[10px] md:text-xs lg:text-sm tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.6)] text-center px-1">
                 Co-Founder Keith Wiebe Gordon
               </p>
             </div>
@@ -258,12 +437,13 @@ export default function HomeClient() {
 
       {/* Featured Units and Homes */}
       <section ref={featuredSectionRef} className="relative bg-white py-12 md:py-16 lg:py-24 overflow-hidden">
-        <div className="container mx-auto px-6 md:px-8">
+        <div className="container mx-auto px-6 md:px-8 max-w-7xl">
           <div className="text-center mb-8 md:mb-12">
             <span className="text-xs uppercase tracking-widest-xl text-[#1a2621]/50">Available Properties</span>
             <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl mt-4 text-[#1a2621]">Featured Units & Homes</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
+          {/* Tablet: 2 columns side by side, Mobile: Stack, Desktop: 2 columns */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto">
             {/* Garden Flat (2-Bedroom) */}
             <div className="bg-white rounded-xl shadow-xl border border-[#e6e2da] overflow-hidden group hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
               <div
@@ -417,8 +597,9 @@ export default function HomeClient() {
             </div>
           </div>
 
-          {/* Decorative Trees */}
-          <div className="absolute bottom-0 left-8 md:left-12 w-96 md:w-[32rem] pointer-events-none z-20">
+          {/* Decorative Trees - GSAP Animated */}
+          {/* Tablet: Smaller trees, Desktop: Full size */}
+          <div ref={leftTreeRef} className="absolute bottom-0 left-0 md:left-4 lg:left-8 xl:left-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-20 overflow-hidden">
             <Image
               src="/merritt-assets/trees1.png"
               alt="Decorative pine tree"
@@ -428,7 +609,7 @@ export default function HomeClient() {
             />
           </div>
 
-          <div className="absolute bottom-0 right-8 md:right-12 w-96 md:w-[32rem] pointer-events-none z-20">
+          <div ref={rightTreeRef} className="absolute bottom-0 right-0 md:right-4 lg:right-8 xl:right-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-20 overflow-hidden">
             <Image
               src="/merritt-assets/trees2.png"
               alt="Decorative pine tree"
@@ -443,8 +624,8 @@ export default function HomeClient() {
       {/* Expertise Grid */}
       <section ref={amenitiesSectionRef} id="expertise" className="relative overflow-hidden py-12 md:py-20 border-t border-[#e6e2da]">
 
-        {/* Mountain Background Image */}
-        <div className="absolute top-[-100px] left-0 right-0 w-full h-full z-0 pointer-events-none opacity-20">
+        {/* Mountain Background Image - GSAP Parallax */}
+        <div ref={mountainRef} className="absolute top-[-100px] left-0 right-0 w-full h-full z-0 pointer-events-none opacity-20">
           <Image
             src="/merritt-assets/mountains.png?v=2"
             alt="Merritt Mountains background"
@@ -456,12 +637,13 @@ export default function HomeClient() {
         </div>
 
         {/* Existing Content wrapped in relative z-10 */}
-        <div className="container mx-auto px-6 md:px-6 relative z-10">
+        <div className="container mx-auto px-6 md:px-8 relative z-10">
             <div className="text-center mb-8 md:mb-12">
               <span className="text-xs uppercase tracking-widest-xl text-[#1a2621]/50">Location Advantages</span>
               <h2 className="font-serif text-3xl md:text-4xl mt-4 text-[#1a2621]">Three Best Amenities</h2>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Tablet: Stack all cards (1 column), Desktop: 3 columns side by side */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
               {/* 1. Walking Distance Highlights */}
               <div className="bg-white rounded-xl shadow-xl border border-[#e6e2da] overflow-hidden group hover:shadow-2xl transition-all duration-300">
                 <div className="relative h-64 overflow-hidden">
@@ -577,10 +759,10 @@ export default function HomeClient() {
             </div>
 
             {/* CTA Button */}
-            <div className="text-center mt-12">
+            <div className="text-center mt-8 md:mt-12 px-4">
               <Link
                 href="/Merritt/neighbourhood"
-                className="inline-block bg-[#a6906c] text-white px-8 py-4 text-lg font-bold uppercase tracking-wider rounded-full shadow-lg hover:bg-[#8b7355] transition-all duration-300 cursor-pointer glow-hover"
+                className="inline-block bg-[#a6906c] text-white px-6 md:px-8 py-3 md:py-4 text-sm md:text-lg font-bold uppercase tracking-wider rounded-full shadow-lg hover:bg-[#8b7355] transition-all duration-300 cursor-pointer glow-hover"
               >
                 Explore the Complete Neighbourhood Guide
               </Link>
@@ -589,27 +771,38 @@ export default function HomeClient() {
       </section>
 
     {/* MAP / LOCATION SECTION */}
-    <section className="relative z-10 bg-[#1a2621] text-[#f9f8f6] py-24 relative overflow-hidden">
+    <section className="relative z-10 bg-[#1a2621] text-[#f9f8f6] py-16 md:py-20 lg:py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-10"></div>
-        <div className="container mx-auto px-6 md:px-6 relative z-10 flex flex-col lg:flex-row gap-12 md:gap-16 items-center">
-            <div className="w-full lg:w-1/3 px-4 md:px-0">
+        {/* Tablet: Stack vertically, Desktop: Side by side */}
+        <div className="container mx-auto px-6 md:px-8 relative z-10 flex flex-col lg:flex-row gap-8 md:gap-12 lg:gap-16 items-center max-w-7xl">
+            <div className="w-full lg:w-1/3">
                 <span className="text-[#a6906c] text-xs tracking-widest uppercase mb-4 block">Location</span>
-                <h2 className="font-serif text-3xl mb-6">3757 De Wolf Way</h2>
+                <h2 className="font-serif text-2xl md:text-3xl mb-6">3757 De Wolf Way</h2>
                 <p className="text-[#e6e2da] leading-relaxed mb-8 font-light text-sm md:text-base">Located in the heart of Merritt, BC, our 48-unit townhome development at 3757 De Wolf Way offers the perfect balance of urban convenience and natural beauty in the scenic Nicola Valley.</p>
                 <ul className="space-y-4 text-sm tracking-wide">
-                    <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4" /> Prime Merritt Location</li>
-                    <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4" /> Walking Distance to Amenities</li>
-                    <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4" /> Easy Highway Access</li>
+                    <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Prime Merritt Location</li>
+                    <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Walking Distance to Amenities</li>
+                    <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Easy Highway Access</li>
                 </ul>
             </div>
-            <div className="w-full lg:w-2/3 h-[400px] bg-[#23362b] rounded-lg overflow-hidden shadow-2xl border border-white/10 relative group px-4 md:px-0">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3254.789!2d-120.762!3d50.1205!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54813f8b4e6c9b9f%3A0x3757%20De%20Wolf%20Way%2C%20Merritt%2C%20BC!2s3757%20De%20Wolf%20Way%2C%20Merritt%2C%20BC!5e0!3m2!1sen!2sca!4v1715123456789!5m2!1sen!2sca" width="100%" height="100%" style={{border:0}} allowFullScreen loading="lazy" className="opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700"></iframe>
+            <div className="w-full lg:w-2/3 h-[300px] md:h-[400px] bg-[#23362b] rounded-lg overflow-hidden shadow-2xl border border-white/10 relative group">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3254.789!2d-120.762!3d50.1205!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54813f8b4e6c9b9f%3A0x3757%20De%20Wolf%20Way%2C%20Merritt%2C%20BC!2s3757%20De%20Wolf%20Way%2C%20Merritt%2C%20BC!5e0!3m2!1sen!2sca!4v1715123456789!5m2!1sen!2sca" 
+                    width="100%" 
+                    height="100%" 
+                    style={{border:0}} 
+                    allowFullScreen 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="3757 De Wolf Way, Merritt, BC"
+                    className="opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700"
+                />
             </div>
         </div>
     </section>
 
     {/* CONTACT FORM */}
-    <section id="contact" className="relative z-10 py-12 md:py-16 bg-[#f9f8f6] overflow-hidden">
+    <section id="contact" className="relative z-10 py-12 md:py-16 lg:py-20 bg-[#f9f8f6] overflow-hidden">
         {/* Happy Family Background Overlay */}
         <div className="absolute inset-0 opacity-5 pointer-events-none">
             <img
@@ -618,50 +811,134 @@ export default function HomeClient() {
                 className="w-full h-full object-cover"
             />
         </div>
-        <div className="container mx-auto px-6 md:px-8 relative z-10">
+        <div className="container mx-auto px-6 md:px-8 relative z-10 max-w-7xl">
             <div className="max-w-4xl mx-auto bg-white p-6 md:p-8 lg:p-12 shadow-2xl shadow-[#1a2621]/5 relative overflow-hidden reveal">
                 <div className="absolute top-0 left-0 w-full h-2 bg-[#1a2621]"></div>
                 <div className="text-center mb-6 md:mb-8">
                     <h2 className="font-serif text-2xl md:text-3xl text-[#1a2621] mb-3">Register Your Interest</h2>
                     <p className="text-[#1a2621]/60 text-sm md:text-base">Join our interest list for affordable housing in Merritt, BC.</p>
                 </div>
-                <form className="space-y-4 md:space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                        <input type="text" placeholder="First Name" className="bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"/>
-                        <input type="text" placeholder="Last Name" className="bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"/>
+                        <input 
+                            type="text" 
+                            name="firstName"
+                            value={formData.firstName}
+                            onChange={handleInputChange}
+                            placeholder="First Name" 
+                            required
+                            className="bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"/>
+                        <input 
+                            type="text" 
+                            name="lastName"
+                            value={formData.lastName}
+                            onChange={handleInputChange}
+                            placeholder="Last Name" 
+                            required
+                            className="bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"/>
                     </div>
-                    <input type="email" placeholder="Email Address" className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"/>
-                    <input type="tel" placeholder="Phone Number" className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"/>
-                    <select className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors text-[#1a2621]/70 text-base md:text-sm">
-                        <option>Select Unit Type</option>
-                        <option>2-Bedroom Garden Flat</option>
-                        <option>3-Bedroom Sky Townhome</option>
-                        <option>Corner Unit</option>
-                        <option>General Inquiry</option>
+                    <input 
+                        type="email" 
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="Email Address" 
+                        required
+                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"/>
+                    <input 
+                        type="tel" 
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        placeholder="Phone Number" 
+                        required
+                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"/>
+                    <select 
+                        name="unitType"
+                        value={formData.unitType}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors text-[#1a2621]/70 text-base md:text-sm">
+                        <option value="">Select Unit Type</option>
+                        <option value="2-Bedroom Garden Flat">2-Bedroom Garden Flat</option>
+                        <option value="3-Bedroom Sky Townhome">3-Bedroom Sky Townhome</option>
+                        <option value="Corner Unit">Corner Unit</option>
+                        <option value="General Inquiry">General Inquiry</option>
                     </select>
-                    <select className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors text-[#1a2621]/70 text-base md:text-sm">
-                        <option>Current Location</option>
-                        <option>Kamloops Area</option>
-                        <option>Kelowna Area</option>
-                        <option>Vancouver Area</option>
-                        <option>Other BC Location</option>
+                    <select 
+                        name="currentLocation"
+                        value={formData.currentLocation}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors text-[#1a2621]/70 text-base md:text-sm">
+                        <option value="">Current Location</option>
+                        <option value="Kamloops Area">Kamloops Area</option>
+                        <option value="Kelowna Area">Kelowna Area</option>
+                        <option value="Vancouver Area">Vancouver Area</option>
+                        <option value="Other BC Location">Other BC Location</option>
                     </select>
-                    <select className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors text-[#1a2621]/70 text-base md:text-sm">
-                        <option>How did you hear about us?</option>
-                        <option>Online Search</option>
-                        <option>Social Media</option>
-                        <option>Referral from friend/family</option>
-                        <option>Real estate agent</option>
-                        <option>Newspaper/magazine</option>
-                        <option>Billboard/signage</option>
-                        <option>Community event</option>
-                        <option>Other</option>
+                    <select 
+                        name="hearAboutUs"
+                        value={formData.hearAboutUs}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors text-[#1a2621]/70 text-base md:text-sm">
+                        <option value="">How did you hear about us?</option>
+                        <option value="Online Search">Online Search</option>
+                        <option value="Social Media">Social Media</option>
+                        <option value="Referral from friend/family">Referral from friend/family</option>
+                        <option value="Real estate agent">Real estate agent</option>
+                        <option value="Newspaper/magazine">Newspaper/magazine</option>
+                        <option value="Billboard/signage">Billboard/signage</option>
+                        <option value="Community event">Community event</option>
+                        <option value="Other">Other</option>
                     </select>
-                    <textarea rows={3} placeholder="Tell us about your housing needs and timeline..." className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm resize-none"></textarea>
+                    <textarea 
+                        rows={3} 
+                        name="message"
+                        value={formData.message}
+                        onChange={handleInputChange}
+                        placeholder="Tell us about your housing needs and timeline..." 
+                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm resize-none"></textarea>
+
+                    {submitStatus === 'success' && (
+                        <div className="text-center text-green-600 text-sm">
+                            Thank you! Your interest has been registered successfully.
+                        </div>
+                    )}
+                    {submitStatus === 'error' && (
+                        <div className="text-center text-red-600 text-sm">
+                            There was an error submitting your form. Please try again.
+                        </div>
+                    )}
+
+                    {/* Hidden Cloudflare Turnstile */}
+                    <div className="hidden" key={turnstileKey}>
+                        <Turnstile
+                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
+                            onSuccess={turnstileHandlers.onSuccess}
+                            onError={turnstileHandlers.onError}
+                            onExpire={turnstileHandlers.onExpire}
+                            theme="auto"
+                            size="invisible"
+                        />
+                    </div>
 
                     <div className="pt-4 md:pt-6 text-center">
-                        <button type="button" className="inline-block bg-[#a6906c] text-white px-6 py-3 text-base font-bold uppercase tracking-wider hover:bg-[#8b7355] transition-colors rounded-lg glow-hover cursor-pointer">
-                            Register Interest
+                        <button 
+                            type="submit" 
+                            onClick={handleButtonClick}
+                            disabled={isSubmitting || !turnstileToken}
+                            className={`inline-block px-6 py-3 text-base font-bold uppercase tracking-wider transition-colors rounded-lg ${
+                                !turnstileToken 
+                                    ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                                    : 'bg-[#a6906c] text-white hover:bg-[#8b7355] glow-hover cursor-pointer'
+                            } disabled:opacity-50 disabled:cursor-not-allowed`}>
+                            {!turnstileToken 
+                                ? 'Verifying User...' 
+                                : isSubmitting 
+                                    ? 'Submitting...' 
+                                    : 'Register Interest'}
                         </button>
                     </div>
                 </form>
