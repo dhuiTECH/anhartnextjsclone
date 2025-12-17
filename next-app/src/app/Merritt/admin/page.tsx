@@ -22,6 +22,8 @@ export default function AdminDashboard() {
   const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
+    let isRedirecting = false; // Flag to prevent multiple redirects
+    
     // Set up reveal animation observer
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -42,11 +44,20 @@ export default function AdminDashboard() {
       }
     });
 
+    // Helper function to safely redirect (prevents multiple redirects)
+    const safeRedirect = (path: string) => {
+      if (!isRedirecting && !authenticated) {
+        isRedirecting = true;
+        router.push(path);
+      }
+    };
+
     // Listen for auth state changes first (more reliable)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {
         setAuthenticated(true);
         setLoading(false);
+        isRedirecting = false; // Reset flag on successful auth
         // Make reveal elements visible immediately after sign in
         setTimeout(() => {
           document.querySelectorAll('.reveal').forEach(el => {
@@ -56,12 +67,13 @@ export default function AdminDashboard() {
       } else if (event === 'SIGNED_OUT') {
         setAuthenticated(false);
         setLoading(false);
-        router.push('/login');
+        safeRedirect('/login');
       } else if (event === 'INITIAL_SESSION') {
         // Check initial session state
         if (session) {
           setAuthenticated(true);
           setLoading(false);
+          isRedirecting = false; // Reset flag on successful auth
           // Make reveal elements visible immediately after auth
           setTimeout(() => {
             document.querySelectorAll('.reveal').forEach(el => {
@@ -70,7 +82,7 @@ export default function AdminDashboard() {
           }, 100);
         } else {
           setLoading(false);
-          router.push('/login');
+          safeRedirect('/login');
         }
       }
     });
@@ -83,13 +95,14 @@ export default function AdminDashboard() {
         if (error) {
           console.error('Session error:', error);
           setLoading(false);
-          router.push('/login');
+          safeRedirect('/login');
           return;
         }
 
         if (session) {
           setAuthenticated(true);
           setLoading(false);
+          isRedirecting = false; // Reset flag on successful auth
           // Make reveal elements visible immediately after auth
           setTimeout(() => {
             document.querySelectorAll('.reveal').forEach(el => {
@@ -98,12 +111,12 @@ export default function AdminDashboard() {
           }, 100);
         } else {
           setLoading(false);
-          router.push('/login');
+          safeRedirect('/login');
         }
       } catch (err) {
         console.error('Auth check error:', err);
         setLoading(false);
-        router.push('/login');
+        safeRedirect('/login');
       }
     };
 
@@ -112,7 +125,7 @@ export default function AdminDashboard() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [router]);
+  }, [router, authenticated]);
 
   if (loading) {
     return (
