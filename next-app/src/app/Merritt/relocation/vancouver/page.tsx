@@ -112,11 +112,11 @@ export default function VancouverRelocationPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="rounded-2xl border border-[#e6e2da] bg-white p-6 shadow-sm reveal">
                 <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Vancouver Condo</h3>
-                <p className="text-[#1a2621]/70"> $800k+ | 3+ hour commute in traffic | Tiny balcony.</p>
+                <p className="text-[#1a2621]/70"> High cost | 3+ hour commute in traffic | Tiny balcony.</p>
               </div>
               <div className="rounded-2xl border border-[#a6906c] bg-[#a6906c]/10 p-6 shadow-md reveal">
                 <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Anhart Townhome</h3>
-                <p className="text-[#1a2621]/70"> From $249k | 0-minute commute | Surrounded by mountains.</p>
+                <p className="text-[#1a2621]/70"> Affordable pricing | 0-minute commute | Surrounded by mountains.</p>
               </div>
             </div>
           </div>
@@ -138,19 +138,22 @@ export default function VancouverRelocationPage() {
         <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-[#f9f8f6]">
           <div className="container mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="space-y-3">
-              <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621]">Remote-Work Ready</h2>
+              <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621]">Remote-Work Considerations</h2>
               <p className="text-[#1a2621]/70">
-                Fibre and Starlink options keep Zoom calls crisp. Anhart townhomes include dedicated space for your home office so you can work without compromise.
+                We recognize that reliable internet is important for many homeowners. The project is located in an area where internet service providers may offer fibre and satellite-based services. Availability, performance, and suitability for specific uses depend on third-party providers and individual setup. Anhart townhomes include layouts intended to accommodate home-office use.
               </p>
               <ul className="space-y-2 text-[#1a2621]/70">
-                <li>• Fibre/Starlink capable for HD/4K calls</li>
-                <li>• Flexible floorplans with office space</li>
-                <li>• Quiet surroundings to focus</li>
+                <li>• Potential access to fibre and satellite-based internet services, subject to provider availability</li>
+                <li>• Layouts intended to accommodate home-office use</li>
+                <li>• Space that may support multi-monitor or workstation setups</li>
               </ul>
+              <p className="text-xs text-[#1a2621]/50 italic mt-4">
+                Internet services, speeds, latency, and availability are provided by third-party providers and are not guaranteed. Any references to connectivity are illustrative only.
+              </p>
             </div>
             <div className="rounded-2xl border border-[#e6e2da] bg-white p-6 shadow-sm reveal">
-              <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Tech Specs</h3>
-              <p className="text-[#1a2621]/70">Low latency, reliable bandwidth, and clear skies for satellite coverage.</p>
+              <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Digital Nomad Considerations</h3>
+              <p className="text-[#1a2621]/70">Merritt may appeal to those seeking a lower-cost alternative to major urban centres while working remotely, subject to individual employment and connectivity requirements.</p>
             </div>
           </div>
         </section>
@@ -163,7 +166,7 @@ export default function VancouverRelocationPage() {
           </h2>
             <details className="bg-white border border-[#e6e2da] rounded-lg p-4 reveal">
               <summary className="font-semibold text-[#1a2621] cursor-pointer">Is the internet fast enough for Zoom?</summary>
-              <p className="mt-2 text-[#1a2621]/70">Yes. Fibre and Starlink options support HD/4K video calls and remote work from Merritt.</p>
+              <p className="mt-2 text-[#1a2621]/70">Internet service options in the area may include fibre and satellite-based providers. Performance, latency, and reliability depend on third-party services and are not guaranteed.</p>
             </details>
 
             <details className="bg-white border border-[#e6e2da] rounded-lg p-4 reveal">

@@ -1570,7 +1570,7 @@ export const LimitedPartnership = () => {
                   <Input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
                 </div>
                 
-                {/* Cloudflare Turnstile Widget */}
+                {/* Cloudflare Turnstile Widget - Hidden */}
                 <div className="flex justify-center" key={turnstileKey}>
                   <Turnstile
                     siteKey="0x4AAAAAACHSP48uvsbyUZG1"
@@ -1578,7 +1578,7 @@ export const LimitedPartnership = () => {
                     onError={turnstileHandlers.onError}
                     onExpire={turnstileHandlers.onExpire}
                     theme="auto"
-                    size="normal"
+                    size="invisible"
                   />
                 </div>
                 

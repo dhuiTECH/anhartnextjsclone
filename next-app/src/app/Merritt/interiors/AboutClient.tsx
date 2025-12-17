@@ -23,6 +23,11 @@ export default function AboutClient() {
 
       {/* Navbar is now in layout.tsx */}
 
+      {/* Disclaimer Header */}
+      <div className="bg-[#1a2621] text-white py-3 px-6 text-center text-xs md:text-sm">
+        All images are artist's renderings. All features, specifications, dimensions, pricing, and availability are subject to change without notice.
+      </div>
+
       {/* Hero Section with Video Background */}
       <header className="relative h-[70vh] sm:h-[80vh] md:h-[90vh] w-full overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 z-0">
@@ -159,12 +164,12 @@ export default function AboutClient() {
                 Quality Without Compromise
               </h2>
               <p className="text-[#1a2621]/70 leading-relaxed mb-3 sm:mb-4 md:mb-6 text-sm sm:text-base">
-                At Anhart, we believe that affordable housing shouldn't mean compromising on quality. Our Vancouver-based design team brings city standards to Merritt, ensuring every home features modern amenities, durable materials, and thoughtful layouts.
+                At Anhart, we believe that affordable housing shouldn't mean compromising on quality. Our Vancouver-based design team brings city standards to Merritt, with the intention of delivering modern amenities, durable materials, and thoughtful layouts.
               </p>
               <div className="space-y-3">
                 <div className="border-l-4 border-[#a6906c] pl-4">
                   <h4 className="font-semibold text-[#1a2621] text-sm">Premium Materials</h4>
-                  <p className="text-[#1a2621]/60 text-xs">Quartz countertops, hardwood floors, and energy-efficient windows standard in every unit.</p>
+                  <p className="text-[#1a2621]/60 text-xs">Planned features may include quartz countertops, hardwood flooring, and energy-efficient windows.</p>
                 </div>
                 <div className="border-l-4 border-[#a6906c] pl-4">
                   <h4 className="font-semibold text-[#1a2621] text-sm">Smart Layouts</h4>
@@ -172,7 +177,7 @@ export default function AboutClient() {
                 </div>
                 <div className="border-l-4 border-[#a6906c] pl-4">
                   <h4 className="font-semibold text-[#1a2621] text-sm">Vancouver Standards</h4>
-                  <p className="text-[#1a2621]/60 text-xs">Construction quality and finish details that rival urban developments.</p>
+                  <p className="text-[#1a2621]/60 text-xs">Design and quality standards informed by Vancouver-based development experience.</p>
                 </div>
               </div>
             </div>
@@ -181,7 +186,7 @@ export default function AboutClient() {
                 <div className="space-y-2 sm:space-y-3 md:space-y-4">
                   <div className="bg-white p-3 sm:p-4 md:p-6 rounded-lg sm:rounded-xl shadow-lg border border-[#e6e2da]">
                     <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
-                      <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#a6906c]">48</div>
+                      <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#a6906c]">Up to 48</div>
                       <img
                         src="/merritt-assets/home.png"
                         alt="Home icon"
@@ -192,13 +197,13 @@ export default function AboutClient() {
                   </div>
                   <div className="bg-white p-3 sm:p-4 md:p-6 rounded-lg sm:rounded-xl shadow-lg border border-[#e6e2da]">
                     <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
-                      <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#a6906c]">$249k</div>
+                      <div className="text-xs sm:text-sm md:text-base font-bold text-[#a6906c]">Pricing to be determined</div>
                       <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-[#a6906c]" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd"/>
                       </svg>
                     </div>
-                    <div className="text-xs sm:text-sm text-[#1a2621]/60 uppercase tracking-wide">Starting Price</div>
+                    <div className="text-xs sm:text-sm text-[#1a2621]/60 uppercase tracking-wide"></div>
                   </div>
                 </div>
                 <div className="space-y-2 sm:space-y-3 md:space-y-4">

@@ -304,7 +304,7 @@ export default function ContactClient() {
                         </div>
                     )}
 
-                    {/* Cloudflare Turnstile - Visible for debugging */}
+                    {/* Cloudflare Turnstile - Hidden */}
                     <div className="flex justify-center py-4" key={turnstileKey}>
                         <Turnstile
                             siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACHSP48uvsbyUZG1"}
@@ -312,7 +312,7 @@ export default function ContactClient() {
                             onError={turnstileHandlers.onError}
                             onExpire={turnstileHandlers.onExpire}
                             theme="auto"
-                            size="normal"
+                            size="invisible"
                         />
                     </div>
 

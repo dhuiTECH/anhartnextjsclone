@@ -6,7 +6,7 @@ import Footer from "../../components/Footer";
 
 export const metadata: Metadata = {
   title: "Kamloops to Merritt Relocation | Affordable Townhomes",
-  description: "Escape Kamloops housing costs. Discover affordable townhomes in Merritt, BC starting at $249k - perfect for commuters and families.",
+  description: "Escape Kamloops housing costs. Discover affordable townhomes in Merritt, BC - perfect for commuters and families.",
 };
 
 export default function KamloopsRelocationPage() {
@@ -114,11 +114,11 @@ export default function KamloopsRelocationPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="rounded-2xl border border-[#e6e2da] bg-white p-6 shadow-sm reveal">
                 <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Kamloops Condo</h3>
-                <p className="text-[#1a2621]/70">$700k+ | High property taxes | Urban congestion.</p>
+                <p className="text-[#1a2621]/70">High cost | High property taxes | Urban congestion.</p>
               </div>
               <div className="rounded-2xl border border-[#a6906c] bg-[#a6906c]/10 p-6 shadow-md reveal">
                 <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Anhart Townhome</h3>
-                <p className="text-[#1a2621]/70">From $249k | Low property taxes | Mountain lifestyle.</p>
+                <p className="text-[#1a2621]/70">Affordable pricing | Low property taxes | Mountain lifestyle.</p>
               </div>
             </div>
           </div>
@@ -146,20 +146,23 @@ export default function KamloopsRelocationPage() {
         <section className="py-12 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-white">
           <div className="container mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="space-y-3">
-              <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621]">Remote-Ready Specs</h2>
+              <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#1a2621]">Remote-Work Considerations</h2>
               <p className="text-[#1a2621]/70">
-                We know that for you, Internet isn&apos;t a luxury—it&apos;s a utility. Our homes are situated in a connectivity hub featuring access to fibre internet and clear views for Starlink. Run your dedicated server, host 4K video calls, and code in peace.
+                We recognize that reliable internet is important for many homeowners. The project is located in an area where internet service providers may offer fibre and satellite-based services. Availability, performance, and suitability for specific uses depend on third-party providers and individual setup.
               </p>
               <ul className="space-y-2 text-[#1a2621]/70">
-                <li>• Fibre/Starlink capable, low-latency connections</li>
-                <li>• Quiet spaces for coding and calls</li>
-                <li>• Room for dual-monitor or server setups</li>
+                <li>• Potential access to fibre and satellite-based internet services, subject to provider availability</li>
+                <li>• Layouts intended to accommodate home-office use</li>
+                <li>• Space that may support multi-monitor or workstation setups</li>
               </ul>
+              <p className="text-xs text-[#1a2621]/50 italic mt-4">
+                Internet services, speeds, latency, and availability are provided by third-party providers and are not guaranteed. Any references to connectivity are illustrative only.
+              </p>
             </div>
             <div className="rounded-2xl border border-[#e6e2da] bg-[#f9f8f6] p-6 shadow-inner reveal">
-              <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Digital Nomad Perks</h3>
+              <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Digital Nomad Considerations</h3>
               <p className="text-[#1a2621]/70">
-                You don&apos;t need to live in Vancouver to work for a Vancouver company. Merritt offers the perfect digital nomad lifestyle with lower costs and more space.
+                Merritt may appeal to those seeking a lower-cost alternative to major urban centres while working remotely, subject to individual employment and connectivity requirements.
               </p>
             </div>
           </div>
@@ -174,7 +177,7 @@ export default function KamloopsRelocationPage() {
             <div className="space-y-4">
               <details className="bg-white border border-gray-200 rounded-lg p-4">
                 <summary className="font-semibold text-[#1a2621] cursor-pointer">Will I have reliable internet for work?</summary>
-                <p className="text-[#1a2621]/70 mt-2">Yes. Fibre and Starlink options support low-latency, high-bandwidth work setups in Merritt.</p>
+                <p className="text-[#1a2621]/70 mt-2">Internet service options in the area may include fibre and satellite-based providers. Performance, latency, and reliability depend on third-party services and are not guaranteed.</p>
               </details>
               <details className="bg-white border border-gray-200 rounded-lg p-4">
                 <summary className="font-semibold text-[#1a2621] cursor-pointer">Do I need to commute daily?</summary>

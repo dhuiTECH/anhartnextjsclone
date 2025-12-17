@@ -337,20 +337,7 @@ export default function HomeClient() {
                 We believe housing should be within reach. As a dedicated affordable housing developer, we are proud to introduce our newest community at 3757 De Wolf Way, Merritt, BC.
               </p>
               <p className="text-sm md:text-base">
-                We are developing 48 entry-level 2 and 3-bedroom townhomes designed for real families. Accessible homeownership is finally here, with prices starting at{' '}
-                <motion.span
-                  className="inline-block"
-                  initial={{ color: '#6b7280' }}
-                  whileInView={{
-                    color: '#dc2626',
-                    textShadow: '0 0 8px rgba(220, 38, 38, 0.5)'
-                  }}
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                  viewport={{ once: true, margin: '-50px' }}
-                >
-                  $249k
-                </motion.span>
-                .
+                The project contemplates the potential development of up to forty-eight (48) entry-level townhome units, which may include two- and three-bedroom configurations. All details, including design, unit count, and pricing, are preliminary and subject to change.
               </p>
             </div>
 
@@ -486,9 +473,9 @@ export default function HomeClient() {
                     Tap to explore
                   </div>
                 </div>
-                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="absolute bottom-4 left-4 right-4">
                   <h3 className="font-serif text-2xl text-white drop-shadow-lg" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8), 0 4px 8px rgba(0,0,0,0.6)' }}>Garden Flat</h3>
-                  <p className="text-white/90 text-sm" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.6)' }}>2-Bedroom • 807 sq ft • From $249,000</p>
+                  <p className="text-white/90 text-sm" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.6)' }}>1-2 Bedrooms • ~800* sq ft</p>
                 </div>
               </div>
               <div className="p-8 flex flex-col flex-grow">
@@ -510,12 +497,9 @@ export default function HomeClient() {
                   </div>
                 </div>
                 <div className="mt-6">
-                  <Link
-                    href="/Merritt/floorplans"
-                    className="w-full bg-[#a6906c] text-white py-3 px-4 rounded-lg hover:bg-[#8b7355] transition-colors text-sm font-semibold inline-block text-center glow-hover"
-                  >
-                    View Floor Plan
-                  </Link>
+                  <div className="w-full bg-[#a6906c] text-white py-3 px-4 rounded-lg text-sm font-semibold inline-block text-center">
+                    Final product specifications to be determined
+                  </div>
                 </div>
               </div>
             </div>
@@ -564,7 +548,7 @@ export default function HomeClient() {
                 </div>
                   <div className="absolute bottom-4 left-4 right-4">
                     <h3 className="font-serif text-2xl text-white drop-shadow-lg" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8), 0 4px 8px rgba(0,0,0,0.6)' }}>Sky Townhome</h3>
-                    <p className="text-white/90 text-sm" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.6)' }}>3-Bedroom • 1,614 sq ft • From $279,000</p>
+                    <p className="text-white/90 text-sm" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8), 0 2px 4px rgba(0,0,0,0.6)' }}>2-3 Bedrooms • ~1,500* sq ft</p>
                   </div>
               </div>
               <div className="p-8 flex flex-col flex-grow">
@@ -586,12 +570,9 @@ export default function HomeClient() {
                   </div>
                 </div>
                 <div className="mt-6">
-                  <Link
-                    href="/Merritt/floorplans"
-                    className="w-full bg-[#a6906c] text-white py-3 px-4 rounded-lg hover:bg-[#8b7355] transition-colors text-sm font-semibold inline-block text-center glow-hover"
-                  >
-                    View Floor Plan
-                  </Link>
+                  <div className="w-full bg-[#a6906c] text-white py-3 px-4 rounded-lg text-sm font-semibold inline-block text-center">
+                    Final product specifications to be determined
+                  </div>
                 </div>
               </div>
             </div>
@@ -912,7 +893,7 @@ export default function HomeClient() {
                         </div>
                     )}
 
-                    {/* Cloudflare Turnstile - Visible for debugging */}
+                    {/* Cloudflare Turnstile - Hidden */}
                     <div className="flex justify-center py-4" key={turnstileKey}>
                         <Turnstile
                             siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACHSP48uvsbyUZG1"}
@@ -920,7 +901,7 @@ export default function HomeClient() {
                             onError={turnstileHandlers.onError}
                             onExpire={turnstileHandlers.onExpire}
                             theme="auto"
-                            size="normal"
+                            size="invisible"
                         />
                     </div>
 
