@@ -290,7 +290,7 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
             </div>
             {!isSuccess && (
               <div
-                className="flex justify-center py-1"
+                className="flex justify-center py-4"
                 key={turnstileKey}
               >
                 <Turnstile
@@ -299,7 +299,7 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
                   onError={turnstileHandlers.onError}
                   onExpire={turnstileHandlers.onExpire}
                   theme="auto"
-                  size="invisible"
+                  size="normal"
                 />
               </div>
             )}
