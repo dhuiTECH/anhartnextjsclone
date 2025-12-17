@@ -73,10 +73,32 @@ export const Turnstile = ({
       return;
     }
 
-    // Otherwise, wait for script to load
+    // Try to load the script if it's not already in the DOM
+    if (!document.querySelector('script[src*="turnstile"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+      script.async = true;
+      script.onload = () => {
+        if (window.turnstile) {
+          setIsLoaded(true);
+        }
+      };
+      script.onerror = () => {
+        logger.error("Failed to load Turnstile script", new Error("Script load failed"), { component: "Turnstile" });
+      };
+      document.body.appendChild(script);
+    }
+
+    // Otherwise, wait for script to load (with timeout)
+    let attempts = 0;
+    const maxAttempts = 100; // 10 seconds max wait
     const interval = setInterval(() => {
+      attempts++;
       if (checkTurnstile()) {
         clearInterval(interval);
+      } else if (attempts >= maxAttempts) {
+        clearInterval(interval);
+        logger.error("Turnstile script failed to load within timeout", new Error("Timeout"), { component: "Turnstile" });
       }
     }, 100);
 
@@ -150,6 +172,15 @@ export const Turnstile = ({
 
   // For invisible mode, hide the container completely
   const isInvisible = size === "invisible";
+  
+  // Show loading state if script hasn't loaded yet
+  if (!isLoaded && !isInvisible) {
+    return (
+      <div className={`flex items-center justify-center min-h-[65px] ${className}`}>
+        <div className="text-sm text-gray-500">Loading verification...</div>
+      </div>
+    );
+  }
   
   return (
     <div

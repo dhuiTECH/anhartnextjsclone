@@ -307,7 +307,7 @@ export default function ContactClient() {
                     {/* Cloudflare Turnstile - Visible for debugging */}
                     <div className="flex justify-center py-4" key={turnstileKey}>
                         <Turnstile
-                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
+                            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACHSP48uvsbyUZG1"}
                             onSuccess={turnstileHandlers.onSuccess}
                             onError={turnstileHandlers.onError}
                             onExpire={turnstileHandlers.onExpire}

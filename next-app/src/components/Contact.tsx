@@ -233,7 +233,7 @@ export const Contact = () => {
                     </div>
                     <div className="flex justify-center" key={newsletterTurnstileKey}>
                       <Turnstile
-                        siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
+                        siteKey="0x4AAAAAACHSP48uvsbyUZG1"
                         onSuccess={newsletterTurnstileHandlers.onSuccess}
                         onError={newsletterTurnstileHandlers.onError}
                         onExpire={newsletterTurnstileHandlers.onExpire}

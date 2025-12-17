@@ -226,10 +226,10 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Providers>{children}</Providers>
-        {/* Defer Turnstile script - only needed when forms are visible */}
+        {/* Load Turnstile script - needed for forms */}
         <Script
           src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-          strategy="lazyOnload"
+          strategy="afterInteractive"
           async
         />
       </body>
