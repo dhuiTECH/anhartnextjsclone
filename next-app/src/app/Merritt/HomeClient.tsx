@@ -102,28 +102,37 @@ export default function HomeClient() {
   // GSAP Tree Animation
   useGSAP(() => {
     if (!leftTreeRef.current || !rightTreeRef.current || !featuredSectionRef.current) return;
-    
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: featuredSectionRef.current,
-        start: 'top bottom', // Start when top of section hits bottom of viewport
-        end: 'bottom top',   // End when bottom of section hits top of viewport
-        scrub: 1,            // Smooth scrubbing effect (1s lag)
-      },
-    });
 
-    // Animate Left Tree (In from left side)
-    tl.fromTo(leftTreeRef.current,
-      { x: -50, y: 30 }, // Starting position (outside left, slightly down)
-      { x: 0, y: 0, ease: 'none' }, // End position (framing the grid)
-      0 // Start at time 0
+    // Animate Left Tree (In from left side, staying grounded)
+    gsap.fromTo(leftTreeRef.current,
+      { x: -50, y: 0 }, // Starting position (outside left, grounded)
+      {
+        x: 0,
+        y: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: featuredSectionRef.current,
+          start: 'top bottom', // Start when top of section hits bottom of viewport
+          end: 'bottom top',   // End when bottom of section hits top of viewport
+          scrub: 1,            // Smooth scrubbing effect (1s lag)
+        }
+      }
     );
 
-    // Animate Right Tree (In from right side)
-    tl.fromTo(rightTreeRef.current,
-      { x: 50, y: 30 }, // Starting position (outside right, slightly down)
-      { x: 0, y: 0, ease: 'none' }, // End position (framing the grid)
-      0
+    // Animate Right Tree (In from right side, staying grounded)
+    gsap.fromTo(rightTreeRef.current,
+      { x: 50, y: 0 }, // Starting position (outside right, grounded)
+      {
+        x: 0,
+        y: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: featuredSectionRef.current,
+          start: 'top bottom', // Start when top of section hits bottom of viewport
+          end: 'bottom top',   // End when bottom of section hits top of viewport
+          scrub: 1,            // Smooth scrubbing effect (1s lag)
+        }
+      }
     );
 
   }, { scope: featuredSectionRef });
@@ -274,15 +283,15 @@ export default function HomeClient() {
         <div className="relative z-10 flex flex-col items-center justify-center text-center text-white px-6 md:px-8 lg:px-6 mt-8 md:mt-12 min-h-[60vh]">
             <div className="max-w-4xl w-full">
                 <h1 className="font-serif text-2xl md:text-4xl lg:text-5xl xl:text-6xl mb-4 md:mb-6 lg:mb-8 leading-tight font-bold opacity-0 animate-fade-up uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center px-2" style={{ animationDelay: '0.4s' }}>
-                    Affordable Homeownership<br/>in Merritt, BC
+                    Affordable Townhomes<br/>in Merritt, BC
                 </h1>
                 <p className="text-sm md:text-base lg:text-lg font-bold tracking-[0.15em] leading-relaxed opacity-0 animate-fade-up text-white mb-4 md:mb-8 lg:mb-12 uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center max-w-3xl mx-auto px-4" style={{ animationDelay: '0.6s' }}>
                     <span className="md:hidden">Modern townhomes for sale in Merritt, BC.</span>
-                    <span className="hidden md:inline">Discover modern townhomes for sale in beautiful Merritt, BC. Your accessible gateway to homeownership in BC's scenic Nicola Valley.</span>
+                    <span className="hidden md:inline">New Townhomes in beautiful Merritt, BC. Your accessible gateway to homeownership in BC's scenic Nicola Valley.</span>
                 </p>
             </div>
             <Link href="/Merritt/contact" className="inline-block bg-white text-[#1a2621] px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm tracking-[0.2em] uppercase font-black rounded-full shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 hover:bg-[#a6906c] hover:text-white transition-all duration-300 opacity-0 animate-fade-up glow-hover cursor-pointer" style={{ animationDelay: '0.8s' }}>
-                Contact Sales Team
+                Register Your Interest
             </Link>
         </div>
         <div className="absolute bottom-0 left-0 w-full leading-none z-20">
@@ -334,10 +343,10 @@ export default function HomeClient() {
 
             <div className="space-y-4 md:space-y-6 text-gray-500 leading-relaxed">
               <p className="text-sm md:text-base">
-                We believe housing should be within reach. As a dedicated affordable housing developer, we are proud to introduce our newest community at 3757 De Wolf Way, Merritt, BC.
+                We believe housing should be within reach. As a dedicated affordable housing developer, we are proud to introduce our newest community in Merritt, BC.
               </p>
               <p className="text-sm md:text-base">
-                The project contemplates the potential development of up to forty-eight (48) entry-level townhome units, which may include two- and three-bedroom configurations. All details, including design, unit count, and pricing, are preliminary and subject to change.
+                The project contemplates the potential development of entry-level townhome units, which may include two- and three-bedroom configurations. All details, including design, unit count, and pricing, are preliminary and subject to change.
               </p>
             </div>
 
@@ -758,8 +767,8 @@ export default function HomeClient() {
         <div className="container mx-auto px-6 md:px-8 relative z-10 flex flex-col lg:flex-row gap-8 md:gap-12 lg:gap-16 items-center max-w-7xl">
             <div className="w-full lg:w-1/3">
                 <span className="text-[#a6906c] text-xs tracking-widest uppercase mb-4 block">Location</span>
-                <h2 className="font-serif text-2xl md:text-3xl mb-6">3757 De Wolf Way</h2>
-                <p className="text-[#e6e2da] leading-relaxed mb-8 font-light text-sm md:text-base">Located in the heart of Merritt, BC, our 48-unit townhome development at 3757 De Wolf Way offers the perfect balance of urban convenience and natural beauty in the scenic Nicola Valley.</p>
+                <h2 className="font-serif text-2xl md:text-3xl mb-6">Merritt Townhome Community</h2>
+                <p className="text-[#e6e2da] leading-relaxed mb-8 font-light text-sm md:text-base">Located in the heart of Merritt, BC, our townhome community offers the perfect balance of urban convenience and natural beauty in the scenic Nicola Valley.</p>
                 <ul className="space-y-4 text-sm tracking-wide">
                     <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Prime Merritt Location</li>
                     <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Walking Distance to Amenities</li>
@@ -775,7 +784,7 @@ export default function HomeClient() {
                     allowFullScreen 
                     loading="lazy" 
                     referrerPolicy="no-referrer-when-downgrade"
-                    title="3757 De Wolf Way, Merritt, BC"
+                    title="Merritt Townhome Community, Merritt, BC"
                     className="opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700"
                 />
             </div>
@@ -856,7 +865,7 @@ export default function HomeClient() {
                         <option value="Kamloops Area">Kamloops Area</option>
                         <option value="Kelowna Area">Kelowna Area</option>
                         <option value="Vancouver Area">Vancouver Area</option>
-                        <option value="Other BC Location">Other BC Location</option>
+                        <option value="Other Location">Other Location</option>
                     </select>
                     <select 
                         name="hearAboutUs"

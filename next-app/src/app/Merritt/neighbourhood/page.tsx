@@ -8,7 +8,7 @@ import Footer from '../components/Footer';
 // Navbar is now in layout.tsx - no need to import here
 
 // Dynamically import Map with SSR disabled to prevent initialization issues
-const Map = dynamic(() => import('@/components/merritt-ui/Map'), {
+const Map = dynamic(() => import('../components/Map'), {
   ssr: false,
   loading: () => (
     <div className="h-full w-full bg-[#F9F7F2] rounded-lg flex items-center justify-center">
@@ -23,7 +23,7 @@ const Map = dynamic(() => import('@/components/merritt-ui/Map'), {
 export default function NeighbourhoodPage() {
   const [activeLayer, setActiveLayer] = useState<'parks' | 'dining' | 'shopping' | 'schools' | 'transit'>('parks');
 
-  // Landmarks data for 3757 De Wolf Way, Merritt, BC
+  // Landmarks data for Merritt townhome community
   const LANDMARKS = [
     // DINING (De Wolf Way has many options right next door)
     {
@@ -559,7 +559,7 @@ export default function NeighbourhoodPage() {
             Experience Anhart Quality
           </h2>
           <p className="text-[#f9f8f6]/80 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 md:mb-8 max-w-3xl mx-auto px-2">
-            Join our waitlist to be among the first to experience modern living at affordable prices. Our 48-unit development combines Vancouver design standards with Merritt's scenic beauty.
+            Join our waitlist to be among the first to experience modern living at affordable prices. Our development combines Vancouver design standards with Merritt's scenic beauty.
           </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link

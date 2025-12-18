@@ -6,7 +6,7 @@ import Footer from "../../components/Footer";
 
 export const metadata: Metadata = {
   title: "Vancouver to Merritt Relocation | Affordable Townhomes",
-  description: "Escape Vancouver's high costs. Discover affordable homeownership in Merritt, BC with Anhart's 48-unit townhome development.",
+  description: "Escape Vancouver's high costs. Discover affordable homeownership in Merritt, BC with Anhart's townhome community.",
 };
 
 export default function VancouverRelocationPage() {
@@ -64,27 +64,39 @@ export default function VancouverRelocationPage() {
                   title: "Financial Freedom",
                   body: "Swap Vancouver prices for affordable homes and keep more for travel, savings, and family.",
                   icon: (
-                    <svg className="w-12 h-12 text-[#a6906c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <Image
+                      src="/merritt-assets/financefreedomicon.png"
+                      alt="Financial Freedom"
+                      width={48}
+                      height={48}
+                      className="w-12 h-12"
+                    />
                   ),
                 },
                 {
                   title: "Nature",
                   body: "Lake access, mountain trails, and sunsets over the Nicola Valley—every day.",
                   icon: (
-                    <svg className="w-12 h-12 text-[#a6906c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                    </svg>
+                    <Image
+                      src="/merritt-assets/natureicon.png"
+                      alt="Nature"
+                      width={48}
+                      height={48}
+                      className="w-12 h-12"
+                    />
                   ),
                 },
                 {
                   title: "Community",
                   body: "Tight-knit, welcoming town with everything you need close by.",
                   icon: (
-                    <svg className="w-12 h-12 text-[#a6906c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
+                    <Image
+                      src="/merritt-assets/communityicon.png"
+                      alt="Community"
+                      width={58}
+                      height={58}
+                      className="w-12 h-12"
+                    />
                   ),
                 },
               ].map((item) => (
@@ -116,7 +128,7 @@ export default function VancouverRelocationPage() {
               </div>
               <div className="rounded-2xl border border-[#a6906c] bg-[#a6906c]/10 p-6 shadow-md reveal">
                 <h3 className="text-lg font-semibold text-[#1a2621] mb-2">Anhart Townhome</h3>
-                <p className="text-[#1a2621]/70"> Affordable pricing | 0-minute commute | Surrounded by mountains.</p>
+                <p className="text-[#1a2621]/70"> Quality homes | 0-minute commute | Surrounded by mountains.</p>
               </div>
             </div>
           </div>
@@ -242,7 +254,7 @@ export default function VancouverRelocationPage() {
               Experience Anhart Quality
             </h2>
             <p className="text-[#f9f8f6]/80 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 md:mb-8 max-w-3xl mx-auto px-2">
-              Join our waitlist to be among the first to experience modern living at affordable prices. Our 48-unit development combines Vancouver design standards with Merritt's scenic beauty.
+              Join our waitlist to be among the first to experience modern living at affordable prices. Our development combines Vancouver design standards with Merritt's scenic beauty.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link

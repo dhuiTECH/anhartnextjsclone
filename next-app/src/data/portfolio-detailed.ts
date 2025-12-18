@@ -253,7 +253,7 @@ export const portfolioDetailedProjects: ProjectData[] = [
   {
     id: 9,
     title: "Merritt Village",
-    location: "3757 De Wolf Way, Merritt, BC",
+    location: "Merritt, BC",
     year: "2026",
     units: 46,
     description:
@@ -261,7 +261,7 @@ export const portfolioDetailedProjects: ProjectData[] = [
     briefDescription:
       "A townhouse development in Merritt, BC, designed to provide affordable housing while supporting local non-profits and fostering inclusive community living.",
     comprehensiveDetails:
-      "The Merritt Village Housing Initiative delivers 46 units of entry-level two- and three-bedroom townhomes across a five-acre site at 3757 De Wolf Way in Merritt, British Columbia. Emerging as a response to the city's housing loss from the 2021 flood, the development represents a forward-looking model of resilience and affordability. Organized into 12 four-plexes, the homes are complemented by family-friendly amenities such as a children's playground and community green spaces with mountain views. To enhance accessibility, provisions have been made for local non-profits to purchase units, enabling them to house their constituents and strengthen social cohesion. By combining sustainable design with a community-centered ownership model, Merritt Village addresses rural housing shortages while fostering inclusivity, affordability, and long-term stability.",
+      "The Merritt Village Housing Initiative delivers 46 units of entry-level two- and three-bedroom townhomes across a five-acre site in Merritt, British Columbia. Emerging as a response to the city's housing loss from the 2021 flood, the development represents a forward-looking model of resilience and affordability. Organized into 12 four-plexes, the homes are complemented by family-friendly amenities such as a children's playground and community green spaces with mountain views. To enhance accessibility, provisions have been made for local non-profits to purchase units, enabling them to house their constituents and strengthen social cohesion. By combining sustainable design with a community-centered ownership model, Merritt Village addresses rural housing shortages while fostering inclusivity, affordability, and long-term stability.",
     image: "Merritt",
     status: "in-progress",
     type: "Sustainable Development",

@@ -283,7 +283,7 @@ export default function ContactClient() {
                         <option value="Kamloops Area">Kamloops Area</option>
                         <option value="Kelowna Area">Kelowna Area</option>
                         <option value="Vancouver Area">Vancouver Area</option>
-                        <option value="Other BC Location">Other BC Location</option>
+                        <option value="Other Location">Other Location</option>
                     </select>
                     <textarea 
                         rows={4} 

@@ -3,7 +3,7 @@ import ContactClient from './ContactClient';
 
 export const metadata: Metadata = {
   title: 'Register for Affordable Townhomes in Merritt | Anhart',
-  description: 'Join the waitlist for Anhart\'s 48-unit affordable housing development in Merritt, BC. Vancouver developer - entry-level homes starting at $249k.',
+  description: 'Join the waitlist for Anhart\'s affordable housing community in Merritt, BC. Vancouver developer - entry-level homes starting at $249k.',
 };
 
 export default function ContactPage() {

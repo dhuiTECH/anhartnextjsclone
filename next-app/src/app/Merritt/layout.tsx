@@ -6,7 +6,6 @@ import RevealObserver from "./components/RevealObserver";
 export const metadata: Metadata = {
   title: {
     default: "Affordable Townhomes in Merritt, BC | Anhart",
-    template: "%s | Anhart",
   },
   description:
     "Vancouver-based developer Anhart offers 48 affordable townhomes in Merritt, BC starting at $249k. Entry-level homeownership in the scenic Nicola Valley.",

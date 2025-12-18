@@ -203,7 +203,7 @@ export const portfolioProjectsData: ProjectData[] = [
   {
     id: 14,
     title: "Merritt Village",
-    location: "3757 De Wolf Way, Merritt, BC",
+    location: "Merritt, BC",
     year: "2027",
     units: 45,
     description: "Located in the heart of the Nicola Valley, this development delivers 45 family-oriented townhomes to the Merritt, BC market. This project focuses on attainable home ownership, addressing the critical gap for working families seeking entry into the real estate market.\n\nThe development utilizes a Shared Infrastructure Model, where communal amenities and efficient site planning significantly reduce the purchase price and ongoing maintenance costs for owners. Designed with community resilience in mind, the site creates a secure, connected neighbourhood suited for the unique climate and geography of the region.\n\n## Ownership Opportunities\n\nThese units are designed to provide a pathway to equity for first-time buyers and local families.\n\nRegister Your Interest: For floor plans, pricing, and sales release dates, please contact our development team or visit the [Anhart Construction Residential page](https://anhartconstruction.ca/).",

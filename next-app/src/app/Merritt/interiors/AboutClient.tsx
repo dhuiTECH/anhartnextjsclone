@@ -60,7 +60,7 @@ export default function AboutClient() {
         </div>
         <div className="relative z-10 flex flex-col items-center justify-center text-center text-white pl-8 pr-8 sm:pl-6 sm:pr-6 mt-4 sm:mt-8 md:mt-12 min-h-[40vh] sm:min-h-[50vh] md:min-h-[60vh]">
           <div className="max-w-4xl w-full">
-            <span className="text-[#a6906c] font-bold text-xs sm:text-sm tracking-[0.2em] uppercase mb-2 sm:mb-3 md:mb-4 block">Premium Interiors</span>
+            <span className="text-[#a6906c] font-bold text-xs sm:text-sm tracking-[0.2em] uppercase mb-2 sm:mb-3 md:mb-4 block">Modern Interiors</span>
             <h1 className="font-serif text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl mb-4 sm:mb-6 md:mb-8 leading-tight font-bold uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] px-1 sm:px-2">
               Modern Living,<br className="hidden sm:block"/>Vancouver Quality
             </h1>
@@ -78,7 +78,7 @@ export default function AboutClient() {
             <span className="text-[#a6906c] font-bold text-xs sm:text-sm tracking-[0.2em] uppercase mb-2 sm:mb-3 md:mb-4 block">Design Gallery</span>
             <h2 className="font-serif text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-[#1a2621] mb-3 sm:mb-4 md:mb-6 px-2">Inside Your Future Home</h2>
             <p className="text-[#1a2621]/70 text-sm sm:text-base md:text-lg max-w-3xl mx-auto px-2">
-              Discover the thoughtful design and premium finishes that make Anhart townhomes stand apart. Every detail is crafted with both beauty and functionality in mind.
+              Discover the thoughtful design and quality finishes that make Anhart townhomes stand apart. Every detail is crafted with both beauty and functionality in mind.
             </p>
           </div>
 
@@ -88,7 +88,7 @@ export default function AboutClient() {
               {
                 image: '/merritt-assets/livingroom.jpg',
                 title: 'Modern Living Spaces',
-                description: 'Open-concept designs with premium finishes and abundant natural light.',
+                description: 'Open-concept designs with quality finishes and abundant natural light.',
                 features: ['Hardwood floors', 'Large windows', 'Contemporary lighting']
               },
               {
@@ -100,7 +100,7 @@ export default function AboutClient() {
               {
                 image: '/merritt-assets/gkitchen.jpg',
                 title: 'Gourmet Kitchens',
-                description: 'Stainless steel appliances and granite countertops in every home.',
+                description: 'Stainless steel appliances and granite countertops.',
                 features: ['SS appliances', 'Granite counters', 'Ample cabinetry']
               },
               {
@@ -168,16 +168,16 @@ export default function AboutClient() {
               </p>
               <div className="space-y-3">
                 <div className="border-l-4 border-[#a6906c] pl-4">
-                  <h4 className="font-semibold text-[#1a2621] text-sm">Premium Materials</h4>
-                  <p className="text-[#1a2621]/60 text-xs">Planned features may include quartz countertops, hardwood flooring, and energy-efficient windows.</p>
+                  <h4 className="font-semibold text-[#1a2621] text-sm">Quality Materials</h4>
+                  <p className="text-[#1a2621]/60 text-xs">Modern finishes and durable materials designed for long-term value and comfort.</p>
                 </div>
                 <div className="border-l-4 border-[#a6906c] pl-4">
                   <h4 className="font-semibold text-[#1a2621] text-sm">Smart Layouts</h4>
                   <p className="text-[#1a2621]/60 text-xs">Open-concept designs maximize space and natural light for modern living.</p>
                 </div>
                 <div className="border-l-4 border-[#a6906c] pl-4">
-                  <h4 className="font-semibold text-[#1a2621] text-sm">Vancouver Standards</h4>
-                  <p className="text-[#1a2621]/60 text-xs">Design and quality standards informed by Vancouver-based development experience.</p>
+                  <h4 className="font-semibold text-[#1a2621] text-sm">Quality Construction</h4>
+                  <p className="text-[#1a2621]/60 text-xs">Building standards and design practices inspired by established development experience.</p>
                 </div>
               </div>
             </div>
@@ -197,8 +197,8 @@ export default function AboutClient() {
                   </div>
                   <div className="bg-white p-3 sm:p-4 md:p-6 rounded-lg sm:rounded-xl shadow-lg border border-[#e6e2da]">
                     <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
-                      <div className="text-xs sm:text-sm md:text-base font-bold text-[#a6906c]">Pricing to be determined</div>
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-[#a6906c]" fill="currentColor" viewBox="0 0 20 20">
+                      <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#a6906c]">Pricing to be determined</div>
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-[#a6906c]" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd"/>
                       </svg>
@@ -240,7 +240,7 @@ export default function AboutClient() {
             Experience Anhart Quality
           </h2>
           <p className="text-[#f9f8f6]/80 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 md:mb-8 max-w-3xl mx-auto px-2">
-            Join our waitlist to be among the first to experience modern living at affordable prices. Our 48-unit development combines Vancouver design standards with Merritt's scenic beauty.
+            Join our waitlist to be among the first to experience modern living at affordable prices. Our development combines Vancouver design standards with Merritt's scenic beauty.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
             <Link
@@ -272,14 +272,14 @@ function FeatureSection() {
   // Hotspots data
   const hotspots = {
     kitchen: [
-      { id: 1, x: 15, y: 25, label: 'Premium Appliances' },
-      { id: 2, x: 45, y: 35, label: 'Granite Countertops' },
-      { id: 3, x: 75, y: 45, label: 'Custom Cabinetry' },
+      { id: 1, x: 15, y: 25, label: 'Quality Appliances' },
+      { id: 2, x: 45, y: 35, label: 'Durable Countertops' },
+      { id: 3, x: 75, y: 45, label: 'Functional Cabinetry' },
     ],
     bathroom: [
-      { id: 1, x: 20, y: 30, label: 'Rainfall Shower' },
-      { id: 2, x: 50, y: 40, label: 'Marble Vanity' },
-      { id: 3, x: 80, y: 50, label: 'Heated Floors' },
+      { id: 1, x: 20, y: 30, label: 'Modern Shower' },
+      { id: 2, x: 50, y: 40, label: 'Quality Vanity' },
+      { id: 3, x: 80, y: 50, label: 'Comfort Features' },
     ]
   };
 
@@ -367,7 +367,7 @@ function FeatureSection() {
                 </h2>
                 <p className="text-[#A1B5B1] leading-relaxed text-base md:text-lg">
                   {activeView === 'kitchen'
-                    ? 'Experience modern kitchen design with premium appliances, custom cabinetry, and thoughtful layouts. Every detail is crafted for both functionality and aesthetic appeal, creating spaces that are as beautiful as they are practical.'
+                    ? 'Experience modern kitchen design with quality appliances, functional cabinetry, and thoughtful layouts. Every detail is crafted for both functionality and aesthetic appeal, creating spaces that are as beautiful as they are practical.'
                     : 'Experience thoughtfully designed bathrooms featuring modern fixtures, quality finishes, and functional layouts. Every detail is crafted for both comfort and practicality, creating spaces that serve your daily needs beautifully.'
                   }
                 </p>

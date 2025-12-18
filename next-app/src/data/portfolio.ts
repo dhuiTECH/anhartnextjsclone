@@ -117,7 +117,7 @@ export const portfolioProjects: ProjectData[] = [
   {
     id: 5,
     title: "Merritt Village",
-    location: "3757 De Wolf Way, Merritt, BC",
+    location: "Merritt, BC",
     year: "2026",
     units: 46,
     description:
