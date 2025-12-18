@@ -152,6 +152,11 @@ const nextConfig = {
       // Note: www to non-www redirect is handled in middleware.ts
       // to avoid conflicts and redirect loops
       {
+        source: '/merritt',
+        destination: '/Merritt',
+        permanent: true, // 301 redirect
+      },
+      {
         source: '/partners',
         destination: '/partner',
         permanent: true, // 301 redirect
