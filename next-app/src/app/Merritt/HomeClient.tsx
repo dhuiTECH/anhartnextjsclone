@@ -419,9 +419,9 @@ export default function HomeClient() {
               </div>
             </div>
 
-            {/* Keith's Title */}
+            {/* Keith's Title - Positioned below the image frame */}
             <div
-              className="absolute z-30 bottom-0 md:-bottom-16 lg:-bottom-24 left-4 md:left-8 lg:left-12 xl:-left-6 w-[40%] md:w-[40%] lg:w-[45%] max-w-[200px] md:max-w-none flex justify-center"
+              className="absolute z-30 -bottom-8 md:-bottom-16 lg:-bottom-24 left-4 md:left-8 lg:left-12 xl:-left-6 w-[40%] md:w-[40%] lg:w-[45%] max-w-[200px] md:max-w-none flex justify-center"
             >
               <p className="text-white font-black text-[9px] md:text-xs lg:text-sm tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.6)] text-center px-1 leading-tight">
                 Co-Founder Keith Wiebe Gordon<br/>(20 years of development experience)
@@ -469,14 +469,26 @@ export default function HomeClient() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto relative z-10">
             {/* Garden Flat (2-Bedroom) */}
             <div className="bg-white rounded-xl shadow-xl border border-[#e6e2da] overflow-hidden group hover:shadow-2xl transition-all duration-300 h-full flex flex-col relative z-10">
-              <div
-                className="relative h-80 overflow-hidden group cursor-pointer md:cursor-default"
-                onClick={() => setGardenFlatImage((prev) => (prev + 1) % 3)}
-                onTouchEnd={(e) => {
-                  e.preventDefault();
-                  setGardenFlatImage((prev) => (prev + 1) % 3);
-                }}
-              >
+              <div className="relative h-80 overflow-hidden group">
+                {/* Navigation Arrows */}
+                <button
+                  onClick={() => setGardenFlatImage((prev) => (prev - 1 + 3) % 3)}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-black/50  text-white p-2 rounded-full opacity-100 md:transition-opacity md:duration-300"
+                  aria-label="Previous image"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => setGardenFlatImage((prev) => (prev + 1) % 3)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/50  text-white p-2 rounded-full opacity-100 md:transition-opacity md:duration-300"
+                  aria-label="Next image"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
                 {/* Exterior Garden View - Default */}
                 <img
                   src="/merritt-assets/seniorgarden.jpg"
@@ -506,12 +518,6 @@ export default function HomeClient() {
                 />
                 <div className="absolute top-4 left-4">
                   <div className="w-16 h-8 bg-[#a6906c] rounded-full flex items-center justify-center text-white font-bold text-xs shadow-lg">GROUND</div>
-                </div>
-                {/* Mobile tap indicator */}
-                <div className="absolute bottom-16 right-4 md:hidden">
-                  <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
-Click to view next image
-                  </div>
                 </div>
                   <div className="absolute bottom-4 left-4 right-4">
                   <h3 className="font-serif text-2xl text-white drop-shadow-lg" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8), 0 4px 8px rgba(0,0,0,0.6)' }}>Garden Flat</h3>
@@ -546,14 +552,26 @@ Click to view next image
 
             {/* Sky Townhome (3-Bedroom) */}
             <div className="bg-white rounded-xl shadow-xl border border-[#e6e2da] overflow-hidden group hover:shadow-2xl transition-all duration-300 h-full flex flex-col relative z-10">
-              <div
-                className="relative h-80 overflow-hidden group cursor-pointer md:cursor-default"
-                onClick={() => setSkyTownhomeImage((prev) => (prev + 1) % 3)}
-                onTouchEnd={(e) => {
-                  e.preventDefault();
-                  setSkyTownhomeImage((prev) => (prev + 1) % 3);
-                }}
-              >
+              <div className="relative h-80 overflow-hidden group">
+                {/* Navigation Arrows */}
+                <button
+                  onClick={() => setSkyTownhomeImage((prev) => (prev - 1 + 3) % 3)}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-black/50  text-white p-2 rounded-full opacity-100 md:transition-opacity md:duration-300"
+                  aria-label="Previous image"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => setSkyTownhomeImage((prev) => (prev + 1) % 3)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/50  text-white p-2 rounded-full opacity-100 md:transition-opacity md:duration-300"
+                  aria-label="Next image"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
                 {/* Exterior View - Default */}
                 <img
                   src="/merritt-assets/family.jpg"
@@ -583,12 +601,6 @@ Click to view next image
                 />
                 <div className="absolute top-4 left-4">
                   <div className="w-20 md:w-16 h-8 bg-[#a6906c] rounded-full flex items-center justify-center text-white font-bold text-[9px] md:text-[10px] shadow-lg px-2">2-STORY</div>
-                </div>
-                {/* Mobile tap indicator */}
-                <div className="absolute bottom-16 right-4 md:hidden">
-                  <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
-Click to view next image
-                  </div>
                 </div>
                   <div className="absolute bottom-4 left-4 right-4">
                     <h3 className="font-serif text-2xl text-white drop-shadow-lg" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.8), 0 4px 8px rgba(0,0,0,0.6)' }}>Sky Townhome</h3>
