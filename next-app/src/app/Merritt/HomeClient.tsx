@@ -50,6 +50,10 @@ export default function HomeClient() {
   const [gardenFlatImage, setGardenFlatImage] = useState(0); // 0: exterior, 1: bedroom, 2: kitchen
   const [skyTownhomeImage, setSkyTownhomeImage] = useState(0); // 0: exterior, 1: bedroom, 2: kitchen
 
+  // Touch timing for double-tap detection
+  const gardenFlatLastTap = useRef(0);
+  const skyTownhomeLastTap = useRef(0);
+
   // Form state
   const [formData, setFormData] = useState({
     firstName: '',
@@ -421,7 +425,7 @@ export default function HomeClient() {
 
             {/* Keith's Title */}
             <div
-              className="absolute z-30 -bottom-8 md:-bottom-16 lg:-bottom-24 left-4 md:left-8 lg:left-12 xl:-left-6 w-[40%] md:w-[40%] lg:w-[45%] max-w-[200px] md:max-w-none flex justify-center"
+              className="absolute z-30 -bottom-4 md:-bottom-16 lg:-bottom-24 left-4 md:left-8 lg:left-12 xl:-left-6 w-[40%] md:w-[40%] lg:w-[45%] max-w-[200px] md:max-w-none flex justify-center"
             >
               <p className="text-white font-black text-[9px] md:text-xs lg:text-sm tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.6)] text-center px-1 leading-tight">
                 Co-Founder Keith Wiebe Gordon<br/>(20 years of development experience)
@@ -472,6 +476,21 @@ export default function HomeClient() {
               <div
                 className="relative h-80 overflow-hidden group cursor-pointer md:cursor-default"
                 onClick={() => setGardenFlatImage((prev) => (prev + 1) % 3)}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  const currentTime = Date.now();
+                  const timeDiff = currentTime - gardenFlatLastTap.current;
+
+                  if (timeDiff < 300 && timeDiff > 0) {
+                    // Double tap detected - reset to first image
+                    setGardenFlatImage(0);
+                  } else {
+                    // Single tap - cycle to next image
+                    setGardenFlatImage((prev) => (prev + 1) % 3);
+                  }
+
+                  gardenFlatLastTap.current = currentTime;
+                }}
               >
                 {/* Exterior Garden View - Default */}
                 <img
@@ -506,7 +525,7 @@ export default function HomeClient() {
                 {/* Mobile tap indicator */}
                 <div className="absolute bottom-16 right-4 md:hidden">
                   <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
-                    Tap to explore
+Tap to cycle • Double-tap to reset
                   </div>
                 </div>
                   <div className="absolute bottom-4 left-4 right-4">
@@ -545,6 +564,21 @@ export default function HomeClient() {
               <div
                 className="relative h-80 overflow-hidden group cursor-pointer md:cursor-default"
                 onClick={() => setSkyTownhomeImage((prev) => (prev + 1) % 3)}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  const currentTime = Date.now();
+                  const timeDiff = currentTime - skyTownhomeLastTap.current;
+
+                  if (timeDiff < 300 && timeDiff > 0) {
+                    // Double tap detected - reset to first image
+                    setSkyTownhomeImage(0);
+                  } else {
+                    // Single tap - cycle to next image
+                    setSkyTownhomeImage((prev) => (prev + 1) % 3);
+                  }
+
+                  skyTownhomeLastTap.current = currentTime;
+                }}
               >
                 {/* Exterior View - Default */}
                 <img
@@ -579,7 +613,7 @@ export default function HomeClient() {
                 {/* Mobile tap indicator */}
                 <div className="absolute bottom-16 right-4 md:hidden">
                   <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
-                    Tap to explore
+Tap to cycle • Double-tap to reset
                   </div>
                 </div>
                   <div className="absolute bottom-4 left-4 right-4">
