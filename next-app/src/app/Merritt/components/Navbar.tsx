@@ -114,6 +114,7 @@ export default function Navbar() {
         isScrolled ? '-translate-y-full' : 'translate-y-0'
       }`}
     >
+
       <div className="container mx-auto px-12 md:px-20 py-4 flex justify-between items-center">
         <Link href="/Merritt" className="text-center group flex flex-col items-center">
           <img
