@@ -3,12 +3,12 @@ import FloorplansClient from './FloorplansClient';
 
 export const metadata: Metadata = {
   title: 'Merritt Townhome Floor Plans | Anhart',
-  description: 'View our affordable townhome floor plans in Merritt, BC. 2-3 bedroom options with modern designs and practical layouts starting at $249k.',
+  description: 'View our affordable townhome floor plans in Merritt, BC. 2-3 bedroom options with modern designs and practical layouts with pricing TBD.',
   keywords: 'floor plans, townhome layouts, 2 bedroom, 3 bedroom, Merritt BC housing',
   alternates: { canonical: 'https://anhart.ca/Merritt/floorplans' },
   openGraph: {
     title: 'Merritt Townhome Floor Plans',
-    description: 'Discover modern townhome floor plans in Merritt, BC. Quality construction with practical layouts starting at $249k.',
+    description: 'Discover modern townhome floor plans in Merritt, BC. Quality construction with practical layouts with pricing TBD.',
     images: ['/merritt-assets/fullvillage.webp'],
     url: 'https://anhart.ca/Merritt/floorplans',
   },
@@ -20,7 +20,7 @@ export default function FloorplansPage() {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "Merritt Townhome Floor Plans",
-    "description": "View affordable townhome floor plans in Merritt, BC starting at $249,000",
+    "description": "View affordable townhome floor plans in Merritt, BC with pricing TBD",
     "url": "https://anhart.ca/Merritt/floorplans",
     "isPartOf": {
       "@type": "WebSite",
@@ -30,10 +30,9 @@ export default function FloorplansPage() {
     "about": {
       "@type": "Product",
       "name": "Merritt Townhomes",
-      "description": "Affordable townhome community with 2-3 bedroom units",
+      "description": "Contemplated affordable townhome community potentially with 2-3 bedroom configurations",
       "offers": {
         "@type": "Offer",
-        "priceRange": "249000-",
         "availability": "https://schema.org/ComingSoon",
         "priceCurrency": "CAD"
       },

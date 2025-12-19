@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     default: "Affordable Townhomes in Merritt, BC | Anhart",
   },
   description:
-    "Vancouver-based developer Anhart offers 48 affordable townhomes in Merritt, BC starting at $249k. Entry-level homeownership in the scenic Nicola Valley.",
+    "Introducing a contemplated townhome community in Merritt, BC. Your accessible path to homeownership within BC's beautiful Nicola Valley landscape.",
 };
 
 /**

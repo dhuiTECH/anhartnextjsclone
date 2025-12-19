@@ -198,7 +198,7 @@ export default function KamloopsRelocationPage() {
               </details>
               <details className="bg-white border border-gray-200 rounded-lg p-4">
                 <summary className="font-semibold text-[#1a2621] cursor-pointer">What about healthcare and amenities?</summary>
-                <p className="text-[#1a2621]/70 mt-2">Nicola Valley Hospital provides excellent healthcare, and all major amenities are within easy reach.</p>
+                <p className="text-[#1a2621]/70 mt-2">Nicola Valley Hospital may provide healthcare services, and major amenities may be within reach (subject to location and availability).</p>
               </details>
             </div>
           </div>
@@ -265,7 +265,7 @@ export default function KamloopsRelocationPage() {
               Experience Anhart Quality
             </h2>
             <p className="text-[#f9f8f6]/80 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 md:mb-8 max-w-3xl mx-auto px-2">
-              Join our waitlist to be among the first to experience modern living at affordable prices. Our development combines Vancouver design standards with Merritt's scenic beauty.
+              Join our waitlist to express interest in the contemplated development. The potential development may combine Vancouver design standards with Merritt's scenic beauty.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link

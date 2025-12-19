@@ -539,7 +539,7 @@ export default function NeighbourhoodClient() {
                 />
               </div>
               <h3 className="font-semibold text-[#14312C] mb-2">Café on grounds</h3>
-              <p className="text-[#14312C]/70 text-sm">Community gathering place coming soon</p>
+              <p className="text-[#14312C]/70 text-sm">Potential community gathering place (subject to development)</p>
             </div>
             <div className="text-center">
               <div className="w-28 h-28 mx-auto mb-4 rounded-full border-2 border-gray-300 overflow-hidden">

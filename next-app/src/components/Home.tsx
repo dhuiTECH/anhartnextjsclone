@@ -845,7 +845,7 @@ const Home = () => {
                           onError={turnstileHandlers.onError}
                           onExpire={turnstileHandlers.onExpire}
                           theme="auto"
-                          size="normal"
+                          size="invisible"
                         />
                       </div>
 

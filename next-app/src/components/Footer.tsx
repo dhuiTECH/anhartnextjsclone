@@ -178,7 +178,7 @@ export const Footer = () => {
                           onError={turnstileHandlers.onError}
                           onExpire={turnstileHandlers.onExpire}
                           theme="auto"
-                          size="normal"
+                          size="invisible"
                         />
                       </div>
                     </form>
@@ -314,7 +314,7 @@ export const Footer = () => {
                       onError={turnstileHandlers.onError}
                       onExpire={turnstileHandlers.onExpire}
                       theme="auto"
-                      size="normal"
+                      size="invisible"
                     />
                   </div>
                 </form>

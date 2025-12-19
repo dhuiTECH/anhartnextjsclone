@@ -88,38 +88,38 @@ export default function AboutClient() {
               {
                 image: '/merritt-assets/livingroom.jpg',
                 title: 'Modern Living Spaces',
-                description: 'Open-concept designs with quality finishes and abundant natural light.',
-                features: ['Hardwood floors', 'Large windows', 'Contemporary lighting']
+                description: 'Contemplated open-concept designs with potential quality finishes and natural light.',
+                features: ['Potential hardwood floors', 'Potential large windows', 'Potential contemporary lighting']
               },
               {
                 image: '/merritt-assets/gbedroom.jpg',
                 title: 'Serene Bedrooms',
-                description: 'Peaceful retreats with walk-in closets and ensuite bathrooms.',
-                features: ['Queen beds', 'Ample storage', 'Private bathrooms']
+                description: 'Contemplated peaceful retreats with potential walk-in closets and ensuite bathrooms.',
+                features: ['Potential queen beds', 'Potential ample storage', 'Potential private bathrooms']
               },
               {
                 image: '/merritt-assets/gkitchen.jpg',
                 title: 'Gourmet Kitchens',
-                description: 'Stainless steel appliances and granite countertops.',
-                features: ['SS appliances', 'Granite counters', 'Ample cabinetry']
+                description: 'Potential stainless steel appliances and granite countertops.',
+                features: ['Potential SS appliances', 'Potential granite counters', 'Potential ample cabinetry']
               },
               {
                 image: '/merritt-assets/sbedroom.jpg',
                 title: 'Master Suites',
-                description: 'Spacious master bedrooms with modern ensuite bathrooms.',
-                features: ['King beds', 'Walk-in closets', 'Spa bathrooms']
+                description: 'Contemplated spacious master bedrooms with potential modern ensuite bathrooms.',
+                features: ['Potential king beds', 'Potential walk-in closets', 'Potential spa bathrooms']
               },
               {
                 image: '/merritt-assets/skitchen.jpg',
                 title: 'Entertainer\'s Kitchen',
-                description: 'Large, functional kitchens perfect for family gatherings.',
-                features: ['Island workspaces', 'Dining areas', 'Premium appliances']
+                description: 'Contemplated large, functional kitchens potentially suitable for family gatherings.',
+                features: ['Potential island workspaces', 'Potential dining areas', 'Potential premium appliances']
               },
               {
                 image: '/merritt-assets/fullvillage.jpg',
                 title: 'Community Views',
-                description: 'Beautiful mountain and valley views from select units.',
-                features: ['Scenic outlook', 'Natural light', 'Peaceful ambiance']
+                description: 'Potential beautiful mountain and valley views from select units (subject to final design and location).',
+                features: ['Potential scenic outlook', 'Potential natural light', 'Potential peaceful ambiance']
               }
             ].map((interior, index) => (
               <div key={interior.title} className="group relative overflow-hidden rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl hover:shadow-2xl transition-all duration-500 bg-white border border-[#e6e2da]">
@@ -240,7 +240,7 @@ export default function AboutClient() {
             Experience Anhart Quality
           </h2>
           <p className="text-[#f9f8f6]/80 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 md:mb-8 max-w-3xl mx-auto px-2">
-            Join our waitlist to be among the first to experience modern living at affordable prices. Our development combines Vancouver design standards with Merritt's scenic beauty.
+              Join our waitlist to express interest in the contemplated development. The potential development may combine Vancouver design standards with Merritt's scenic beauty.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
             <Link

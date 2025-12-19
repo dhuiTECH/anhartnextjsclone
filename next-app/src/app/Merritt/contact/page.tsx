@@ -3,7 +3,7 @@ import ContactClient from './ContactClient';
 
 export const metadata: Metadata = {
   title: 'Register for Affordable Townhomes in Merritt | Anhart',
-  description: 'Join the waitlist for Anhart\'s affordable housing community in Merritt, BC. Vancouver developer - entry-level homes starting at $249k.',
+  description: 'Join the waitlist for Anhart\'s affordable housing community in Merritt, BC. Vancouver developer - entry-level homes with pricing TBD.',
   alternates: { canonical: 'https://anhart.ca/Merritt/contact' },
 };
 
@@ -12,7 +12,7 @@ export default function ContactPage() {
     "@context": "https://schema.org",
     "@type": "RealEstateAgent",
     "name": "Anhart - Merritt Townhomes",
-    "description": "Vancouver-based affordable housing developer offering townhomes in Merritt, BC",
+    "description": "Vancouver-based affordable housing developer contemplating townhome development in Merritt, BC",
     "url": "https://anhart.ca/Merritt/contact",
     "logo": "https://anhart.ca/merritt-assets/anhartmerritt1.png",
     "parentOrganization": {
@@ -37,11 +37,9 @@ export default function ContactPage() {
     },
     "makesOffer": {
       "@type": "Offer",
-      "description": "Affordable townhome registration",
-      "priceRange": "249000-",
-      "availability": "https://schema.org/InStock",
-      "priceCurrency": "CAD",
-      "priceValidUntil": "2025-12-31"
+      "description": "Waitlist registration for contemplated affordable townhome development",
+      "availability": "https://schema.org/PreOrder",
+      "priceCurrency": "CAD"
     },
     "areaServed": [
       {
@@ -55,22 +53,22 @@ export default function ContactPage() {
     ],
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
-      "name": "Merritt Townhome Collection",
+      "name": "Contemplated Merritt Townhome Configurations",
       "itemListElement": [
         {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Product",
-            "name": "Garden Flat (2-Bedroom)",
-            "description": "Ground-level townhome with direct patio access"
+            "name": "Potential Garden Flat (2-Bedroom)",
+            "description": "Contemplated ground-level configuration with potential direct patio access"
           }
         },
         {
           "@type": "Offer",
           "itemOffered": {
             "@type": "Product",
-            "name": "Sky Townhome (3-Bedroom)",
-            "description": "Two-story townhome with private balcony"
+            "name": "Potential Sky Townhome (3-Bedroom)",
+            "description": "Contemplated two-story configuration with potential private balcony"
           }
         }
       ]

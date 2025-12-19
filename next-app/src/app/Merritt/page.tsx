@@ -8,12 +8,12 @@ const HomeClient = dynamic(() => import('./HomeClient'), {
 
 export const metadata: Metadata = {
   title: 'Affordable Townhomes in Merritt, BC',
-  description: 'Vancouver-based developer Anhart offers 48 affordable townhomes in Merritt, BC starting at $249k. Modern entry-level homeownership in the scenic Nicola Valley with exceptional value.',
+  description: 'Introducing a contemplated townhome community in Merritt, BC. Your accessible path to homeownership within BC\'s beautiful Nicola Valley landscape.',
   keywords: 'affordable housing, townhomes, Merritt BC, Nicola Valley, first-time homebuyer, Anhart',
   alternates: { canonical: 'https://anhart.ca/Merritt' },
   openGraph: {
     title: 'Affordable Townhomes in Merritt, BC',
-    description: 'Modern townhomes starting at $249k in scenic Merritt, BC. Vancouver developer Anhart brings affordable housing to the Nicola Valley.',
+    description: 'Modern townhomes with pricing TBD in scenic Merritt, BC. Vancouver developer Anhart brings affordable housing to the Nicola Valley.',
     images: ['/merritt-assets/fullvillage.webp'],
     url: 'https://anhart.ca/Merritt',
   },
@@ -44,9 +44,8 @@ export default function Home() {
     },
     "offers": {
       "@type": "Offer",
-      "description": "Affordable townhomes starting at $249,000",
-      "priceRange": "249000-",
-      "availability": "https://schema.org/InStock",
+      "description": "Contemplated affordable townhomes with pricing TBD",
+      "availability": "https://schema.org/PreOrder",
       "validFrom": "2025-01-01"
     },
     "areaServed": {

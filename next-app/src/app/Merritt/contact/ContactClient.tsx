@@ -144,7 +144,7 @@ export default function ContactClient() {
 
             <div className="relative z-10">
                 <span className="text-[#a6906c] text-xs font-bold tracking-widest uppercase mb-4 md:mb-6 block">Get in Touch</span>
-                <h1 className="font-serif text-3xl md:text-4xl lg:text-6xl mb-8 md:mb-12 leading-tight">Start Your<br/>Journey to<br/>Homeownership.</h1>
+                <h1 className="font-serif text-3xl md:text-4xl lg:text-6xl mb-8 md:mb-12 leading-tight">Express Interest in<br/>Potential<br/>Homeownership.</h1>
 
                 <div className="space-y-6 md:space-y-8 text-sm tracking-wide font-light">
                     <div className="flex items-start gap-4 md:gap-6">
@@ -312,7 +312,7 @@ export default function ContactClient() {
                             onError={turnstileHandlers.onError}
                             onExpire={turnstileHandlers.onExpire}
                             theme="auto"
-                            size="normal"
+                            size="invisible"
                         />
                     </div>
 

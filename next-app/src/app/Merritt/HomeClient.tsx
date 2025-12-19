@@ -481,8 +481,8 @@ export default function HomeClient() {
       <section ref={featuredSectionRef} className="relative bg-white py-12 md:py-16 lg:py-24 overflow-hidden">
         <div className="container mx-auto px-8 md:px-10 lg:px-8 max-w-7xl">
           <div className="text-center mb-8 md:mb-12">
-            <span className="text-xs uppercase tracking-widest-xl text-[#1a2621]/50">Available Properties</span>
-            <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl mt-4 text-[#1a2621]">Featured Units & Homes</h2>
+            <span className="text-xs uppercase tracking-widest-xl text-[#1a2621]/50">Contemplated Properties</span>
+            <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl mt-4 text-[#1a2621]">Potential Unit Configurations</h2>
           </div>
           {/* Tablet: 2 columns side by side, Mobile: Stack, Desktop: 2 columns */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto relative z-10">
@@ -540,18 +540,18 @@ export default function HomeClient() {
               <div className="p-8 flex flex-col flex-grow">
                 <div className="mb-auto">
                   <p className="text-[#1a2621]/70 leading-relaxed mb-4 text-sm md:text-base">
-                    <strong>Best For:</strong> First-time buyers, seniors/downsizers, or those with mobility needs.<br/>
-                    <strong>Selling Point:</strong> Single-level living with zero stairs and direct patio access.
+                    <strong>Potential For:</strong> First-time buyers, seniors/downsizers, or those with mobility needs.<br/>
+                    <strong>Contemplated Features:</strong> Single-level living with zero stairs and direct patio access (subject to final design).
                   </p>
                   <div className="hidden md:block space-y-3">
                     <div className="border-l-4 border-[#a6906c] pl-4">
-                      <span className="text-[#1a2621]/70 text-sm"><strong>2 Bedrooms:</strong> Primary with ensuite + guest/office</span>
+                      <span className="text-[#1a2621]/70 text-sm"><strong>Potential 2 Bedrooms:</strong> May include primary with ensuite + guest/office</span>
                     </div>
                     <div className="border-l-4 border-[#a6906c] pl-4">
-                      <span className="text-[#1a2621]/70 text-sm"><strong>Open Concept:</strong> Kitchen, dining & living flow together</span>
+                      <span className="text-[#1a2621]/70 text-sm"><strong>Contemplated Open Concept:</strong> Kitchen, dining & living may flow together</span>
                     </div>
                     <div className="border-l-4 border-[#a6906c] pl-4">
-                      <span className="text-[#1a2621]/70 text-sm"><strong>Direct Access:</strong> Grade-level patio for easy outdoor living</span>
+                      <span className="text-[#1a2621]/70 text-sm"><strong>Potential Direct Access:</strong> Grade-level patio may be available for outdoor living</span>
                     </div>
                   </div>
                 </div>
@@ -617,18 +617,18 @@ export default function HomeClient() {
               <div className="p-8 flex flex-col flex-grow">
                 <div className="mb-auto">
                   <p className="text-[#1a2621]/70 leading-relaxed mb-4 text-sm md:text-base">
-                    <strong>Best For:</strong> Growing families, young professionals, or buyers wanting a "house-like" feel.<br/>
-                    <strong>Selling Point:</strong> Massive two-story home with separate living and sleeping floors.
+                    <strong>Potential For:</strong> Growing families, young professionals, or buyers interested in a "house-like" feel.<br/>
+                    <strong>Contemplated Features:</strong> Potential two-story configuration with separate living and sleeping floors (subject to final design).
                   </p>
                   <div className="hidden md:block space-y-3">
                     <div className="border-l-4 border-[#a6906c] pl-4">
-                      <span className="text-[#1a2621]/70 text-sm"><strong>Master Suite:</strong> Spacious with walk-in closet & ensuite</span>
+                      <span className="text-[#1a2621]/70 text-sm"><strong>Potential Master Suite:</strong> May include spacious layout with walk-in closet & ensuite</span>
                     </div>
                     <div className="border-l-4 border-[#a6906c] pl-4">
-                      <span className="text-[#1a2621]/70 text-sm"><strong>Entertainer's Kitchen:</strong> Large U-shaped with window</span>
+                      <span className="text-[#1a2621]/70 text-sm"><strong>Contemplated Kitchen:</strong> May include large U-shaped layout with window</span>
                     </div>
                     <div className="border-l-4 border-[#a6906c] pl-4">
-                      <span className="text-[#1a2621]/70 text-sm"><strong>Private Deck:</strong> Balcony off the living area</span>
+                      <span className="text-[#1a2621]/70 text-sm"><strong>Potential Private Deck:</strong> Balcony may be available off the living area</span>
                     </div>
                   </div>
                 </div>
@@ -826,7 +826,7 @@ export default function HomeClient() {
             <div className="w-full lg:w-1/3">
                 <span className="text-[#a6906c] text-xs tracking-widest uppercase mb-4 block">Location</span>
                 <h2 className="font-serif text-2xl md:text-3xl mb-6">Merritt Townhome Community</h2>
-                <p className="text-[#e6e2da] leading-relaxed mb-8 font-light text-sm md:text-base px-2 md:px-0">Located in the heart of Merritt, BC, our townhome community offers the perfect balance of urban convenience and natural beauty in the scenic Nicola Valley.</p>
+                <p className="text-[#e6e2da] leading-relaxed mb-8 font-light text-sm md:text-base px-2 md:px-0">Located in the heart of Merritt, BC, the contemplated townhome community may offer a balance of urban convenience and natural beauty in the scenic Nicola Valley.</p>
                 <ul className="space-y-4 text-sm tracking-wide px-2 md:px-0">
                     <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Prime Merritt Location</li>
                     <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Walking Distance to Amenities & Hikes/Trails</li>
@@ -860,7 +860,7 @@ export default function HomeClient() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div className="absolute bottom-4 left-4 text-white">
                         <h3 className="font-serif text-lg font-bold mb-1">Mountain Views</h3>
-                        <p className="text-sm text-white/90">Breathtaking scenery surrounds our community</p>
+                        <p className="text-sm text-white/90">Breathtaking scenery may surround the contemplated community</p>
                     </div>
                 </div>
 
@@ -987,7 +987,7 @@ export default function HomeClient() {
                             onError={turnstileHandlers.onError}
                             onExpire={turnstileHandlers.onExpire}
                             theme="auto"
-                            size="normal"
+                            size="invisible"
                         />
                     </div>
 
