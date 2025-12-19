@@ -6,16 +6,8 @@ import Image from 'next/image';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 import Footer from './components/Footer';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
 import { useTurnstile } from '@/hooks/useTurnstile';
 import { Turnstile } from '@/components/Turnstile';
-
-// Register GSAP plugins
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 const expertise = [
   {
@@ -70,13 +62,6 @@ export default function HomeClient() {
   // Section refs for layout
   const featuredSectionRef = useRef(null);
   const amenitiesSectionRef = useRef(null);
-  
-  // GSAP refs for tree animations
-  const leftTreeRef = useRef(null);
-  const rightTreeRef = useRef(null);
-  
-  // GSAP refs for mountain parallax
-  const mountainRef = useRef(null);
 
   // --- EXISTING OBSERVERS ---
   useEffect(() => {
@@ -99,69 +84,6 @@ export default function HomeClient() {
     }
   }, []);
 
-  // GSAP Tree Animation - Fixed with proper timing
-  useEffect(() => {
-    // Add a small delay to ensure DOM is fully mounted
-    const timer = setTimeout(() => {
-      if (!leftTreeRef.current || !rightTreeRef.current || !featuredSectionRef.current) {
-        return;
-      }
-
-      // Animate Left Tree (In from left side, staying grounded)
-      gsap.fromTo(leftTreeRef.current,
-        { x: -50, y: 0 }, // Starting position (outside left, grounded)
-        {
-          x: 0,
-          y: 0,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: featuredSectionRef.current,
-            start: 'top bottom', // Start when top of section hits bottom of viewport
-            end: 'bottom top',   // End when bottom of section hits top of viewport
-            scrub: 1,            // Smooth scrubbing effect (1s lag)
-          }
-        }
-      );
-
-      // Animate Right Tree (In from right side, staying grounded)
-      gsap.fromTo(rightTreeRef.current,
-        { x: 50, y: 0 }, // Starting position (outside right, grounded)
-        {
-          x: 0,
-          y: 0,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: featuredSectionRef.current,
-            start: 'top bottom', // Start when top of section hits bottom of viewport
-            end: 'bottom top',   // End when bottom of section hits top of viewport
-            scrub: 1,            // Smooth scrubbing effect (1s lag)
-          }
-        }
-      );
-    }, 100); // Small delay to ensure DOM is ready
-
-    return () => {
-      clearTimeout(timer);
-      // Clean up ScrollTrigger instances
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-    };
-  }, []);
-
-  // GSAP Mountain Parallax Animation
-  useGSAP(() => {
-    if (!mountainRef.current || !amenitiesSectionRef.current) return;
-    
-    gsap.to(mountainRef.current, {
-      y: 150, // Move down slightly as we scroll down for parallax effect
-      ease: 'none',
-      scrollTrigger: {
-        trigger: amenitiesSectionRef.current,
-        start: 'top bottom', // Start when top of section enters viewport
-        end: 'bottom top',   // End when bottom of section leaves viewport
-        scrub: 1,            // Smooth scrubbing
-      },
-    });
-  }, { scope: amenitiesSectionRef });
 
   // Form submission handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -494,27 +416,27 @@ export default function HomeClient() {
                   src="/merritt-assets/seniorgarden.jpg"
                   alt="Garden Flat - Ground level 2-bedroom townhome with garden access"
                   loading="lazy"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                     gardenFlatImage === 0 ? 'opacity-100' : 'opacity-0'
-                  } group-hover:opacity-0`}
+                  }`}
                 />
-                {/* Bedroom Interior - Shows immediately on hover */}
+                {/* Bedroom Interior */}
                 <img
                   src="/merritt-assets/gbedroom.jpg"
                   alt="Garden Flat - Cozy bedroom interior"
                   loading="lazy"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                     gardenFlatImage === 1 ? 'opacity-100' : 'opacity-0'
-                  } group-hover:opacity-100`}
+                  }`}
                 />
-                {/* Kitchen Interior - Shows after bedroom */}
+                {/* Kitchen Interior */}
                 <img
                   src="/merritt-assets/gkitchen.jpg"
                   alt="Garden Flat - Functional kitchen interior"
                   loading="lazy"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                     gardenFlatImage === 2 ? 'opacity-100' : 'opacity-0'
-                  } group-hover:opacity-100 group-hover:delay-1000`}
+                  }`}
                 />
                 <div className="absolute top-4 left-4">
                   <div className="w-16 h-8 bg-[#a6906c] rounded-full flex items-center justify-center text-white font-bold text-xs shadow-lg">GROUND</div>
@@ -577,27 +499,27 @@ export default function HomeClient() {
                   src="/merritt-assets/family.jpg"
                   alt="Sky Townhome - Two-story 3-bedroom townhome exterior"
                   loading="lazy"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                     skyTownhomeImage === 0 ? 'opacity-100' : 'opacity-0'
-                  } group-hover:opacity-0`}
+                  }`}
                 />
-                {/* Bedroom Interior - Shows immediately on hover */}
+                {/* Bedroom Interior */}
                 <img
                   src="/merritt-assets/sbedroom.jpg"
                   alt="Sky Townhome - Master bedroom interior"
                   loading="lazy"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                     skyTownhomeImage === 1 ? 'opacity-100' : 'opacity-0'
-                  } group-hover:opacity-100`}
+                  }`}
                 />
-                {/* Kitchen Interior - Shows after bedroom */}
+                {/* Kitchen Interior */}
                 <img
                   src="/merritt-assets/skitchen.jpg"
                   alt="Sky Townhome - Modern kitchen interior"
                   loading="lazy"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                     skyTownhomeImage === 2 ? 'opacity-100' : 'opacity-0'
-                  } group-hover:opacity-100 group-hover:delay-1000`}
+                  }`}
                 />
                 <div className="absolute top-4 left-4">
                   <div className="w-20 md:w-16 h-8 bg-[#a6906c] rounded-full flex items-center justify-center text-white font-bold text-[9px] md:text-[10px] shadow-lg px-2">2-STORY</div>
@@ -636,7 +558,7 @@ export default function HomeClient() {
 
           {/* Decorative Trees - GSAP Animated */}
           {/* Tablet: Smaller trees, Desktop: Full size */}
-          <div ref={leftTreeRef} className="absolute bottom-0 left-0 md:left-4 lg:left-8 xl:left-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-0 overflow-hidden">
+          <div  className="absolute bottom-0 left-0 md:left-4 lg:left-8 xl:left-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-0 overflow-hidden">
             <Image
               src="/merritt-assets/trees1.png"
               alt="Decorative pine tree"
@@ -646,7 +568,7 @@ export default function HomeClient() {
             />
           </div>
 
-          <div ref={rightTreeRef} className="absolute bottom-0 right-0 md:right-4 lg:right-8 xl:right-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-0 overflow-hidden">
+          <div  className="absolute bottom-0 right-0 md:right-4 lg:right-8 xl:right-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-0 overflow-hidden">
             <Image
               src="/merritt-assets/trees2.png"
               alt="Decorative pine tree"
@@ -662,7 +584,7 @@ export default function HomeClient() {
       <section ref={amenitiesSectionRef} id="expertise" className="relative overflow-hidden py-12 md:py-20 border-t border-[#e6e2da]">
 
         {/* Mountain Background Image - GSAP Parallax */}
-        <div ref={mountainRef} className="absolute top-[-100px] left-0 right-0 w-full h-full z-0 pointer-events-none opacity-20">
+        <div  className="absolute top-[-100px] left-0 right-0 w-full h-full z-0 pointer-events-none opacity-20">
           <Image
             src="/merritt-assets/mountains.png?v=2"
             alt="Merritt Mountains background"
