@@ -296,6 +296,7 @@ export default function HomeClient() {
                     Affordable Townhomes<br/>in Merritt, BC
                 </h1>
                 <p className="text-sm md:text-base lg:text-lg font-bold tracking-[0.15em] leading-relaxed opacity-0 animate-fade-up text-white mb-4 md:mb-8 lg:mb-12 uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center max-w-3xl mx-auto px-4" style={{ animationDelay: '0.6s' }}>
+                    <span className="md:hidden">Affordable homes in scenic Merritt, BC.</span>
                     <span className="hidden md:inline">New Townhomes in beautiful Merritt, BC. Your accessible gateway to homeownership in BC's scenic Nicola Valley.</span>
                 </p>
             </div>
@@ -459,7 +460,7 @@ export default function HomeClient() {
 
       {/* Featured Units and Homes */}
       <section ref={featuredSectionRef} className="relative bg-white py-12 md:py-16 lg:py-24 overflow-hidden">
-        <div className="container mx-auto px-6 md:px-8 max-w-7xl">
+        <div className="container mx-auto px-8 md:px-10 lg:px-8 max-w-7xl">
           <div className="text-center mb-8 md:mb-12">
             <span className="text-xs uppercase tracking-widest-xl text-[#1a2621]/50">Available Properties</span>
             <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl mt-4 text-[#1a2621]">Featured Units & Homes</h2>
@@ -653,7 +654,7 @@ export default function HomeClient() {
         </div>
 
         {/* Existing Content wrapped in relative z-10 */}
-        <div className="container mx-auto px-6 md:px-8 relative z-10">
+        <div className="container mx-auto px-8 md:px-10 lg:px-8 relative z-10">
             <div className="text-center mb-8 md:mb-12">
               <span className="text-xs uppercase tracking-widest-xl text-[#1a2621]/50">Location Advantages</span>
               <h2 className="font-serif text-3xl md:text-4xl mt-4 text-[#1a2621]">Three Best Amenities</h2>
@@ -679,10 +680,10 @@ export default function HomeClient() {
                   </div>
                 </div>
                 <div className="p-8 md:p-8">
-                  <p className="text-[#1a2621]/70 leading-relaxed mb-4 text-sm md:text-base">
+                  <p className="text-[#1a2621]/70 leading-relaxed mb-4 text-sm md:text-base px-2 md:px-0">
                     These quality amenities provide exceptional convenience, allowing residents to walk to education, dining, and entertainment - perfect for busy professionals and growing families.
                   </p>
-                  <div className="space-y-3">
+                  <div className="space-y-3 px-2 md:px-0">
                     <div className="border-l-4 border-[#a6906c] pl-4">
                         <h4 className="font-semibold text-[#1a2621] text-sm">NVIT Campus</h4>
                         <p className="text-[#1a2621]/60 text-xs">850m walk • 12 minutes</p>
@@ -835,6 +836,7 @@ export default function HomeClient() {
                         <p className="text-sm text-white/90">Breathtaking scenery surrounds our community</p>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>

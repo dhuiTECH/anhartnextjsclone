@@ -220,10 +220,11 @@ export default function NeighbourhoodPage() {
             The neighbourhood.
           </h1>
           <p className="text-white/90 text-base sm:text-lg md:text-xl font-light tracking-[0.05em] leading-relaxed max-w-3xl mx-auto drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] px-2">
-            Merritt has been designed to fit seamlessly into the vibrant community of the Nicola Valley.
+            <span className="md:hidden">Discover Merritt's perfect blend of community, nature, and convenience in the scenic Nicola Valley.</span>
+            <span className="hidden md:inline">Merritt has been designed to fit seamlessly into the vibrant community of the Nicola Valley.
             Known as Canada's Country Music Capital, the area celebrates its rich musical heritage with festivals and events throughout the year.
             The city is close enough to major centers to be convenient, yet removed enough to provide a break from the city.
-            Life in Merritt brings a sense of connectivity, but not at the expense of the calm we require from our home.
+            Life in Merritt brings a sense of connectivity, but not at the expense of the calm we require from our home.</span>
           </p>
         </div>
       </header>
@@ -235,8 +236,9 @@ export default function NeighbourhoodPage() {
             <h2 className="text-4xl md:text-5xl font-serif text-[#14312C] mb-6">
               Everything you need to grow.
             </h2>
-            <p className="text-xl text-[#14312C]/70 max-w-3xl mx-auto">
-              Surrounded by spectacular nature, excellent schools, and convenient amenities, the Nicola Valley is ideal for any stage of life.
+            <p className="text-lg sm:text-xl text-[#14312C]/70 max-w-3xl mx-auto px-2">
+              <span className="md:hidden">Everything you need in the scenic Nicola Valley.</span>
+              <span className="hidden md:inline">Surrounded by spectacular nature, excellent schools, and convenient amenities, the Nicola Valley is ideal for any stage of life.</span>
             </p>
           </div>
 
@@ -410,11 +412,13 @@ export default function NeighbourhoodPage() {
                   </div>
                   <h3 className="text-2xl font-serif text-[#14312C]">Country Music Capital</h3>
                 </div>
-              <p className="text-[#14312C]/70 mb-4">
-                Known as Canada's Country Music Capital, Merritt celebrates its rich musical heritage with festivals, events, and community gatherings throughout the year.
+              <p className="text-[#14312C]/70 mb-4 text-sm sm:text-base">
+                <span className="md:hidden">Canada's Country Music Capital with festivals and events year-round.</span>
+                <span className="hidden md:inline">Known as Canada's Country Music Capital, Merritt celebrates its rich musical heritage with festivals, events, and community gatherings throughout the year.</span>
               </p>
-              <div className="text-sm text-[#14312C]/60">
-                Year-round celebrations and events
+              <div className="text-xs sm:text-sm text-[#14312C]/60">
+                <span className="md:hidden">Year-round celebrations</span>
+                <span className="hidden md:inline">Year-round celebrations and events</span>
               </div>
             </div>
 
@@ -423,12 +427,21 @@ export default function NeighbourhoodPage() {
       </section>
 
       {/* Interactive Map Section */}
-      <section className="py-20 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-[#14312C] text-white">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-20 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-[#14312C] text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+          <Image
+            src="/merritt-assets/nicolavalley.jpg"
+            alt="Nicola Valley landscape background"
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-serif mb-6">Neighbourhood map.</h2>
-            <p className="text-white/80 text-xl max-w-3xl mx-auto">
-              Explore the amenities and features that make Merritt the perfect place to call home.
+            <p className="text-lg sm:text-xl text-white/80 max-w-3xl mx-auto px-2">
+              <span className="md:hidden">Explore Merritt's amenities and features.</span>
+              <span className="hidden md:inline">Explore the amenities and features that make Merritt the perfect place to call home.</span>
             </p>
           </div>
 
@@ -450,15 +463,7 @@ export default function NeighbourhoodPage() {
           </div>
 
           {/* Interactive Map */}
-          <div className="bg-white rounded-2xl p-8 shadow-2xl relative overflow-hidden">
-            <div className="absolute inset-0">
-              <Image
-                src="/merritt-assets/nicolavalley.jpg"
-                alt="Nicola Valley landscape background"
-                fill
-                className="object-cover opacity-40"
-              />
-            </div>
+          <div className="bg-white rounded-2xl p-8 shadow-2xl overflow-hidden">
             <div className="relative z-10 h-96 rounded-lg overflow-hidden mb-6">
               <Map
                 center={[50.1205, -120.7620]}
@@ -559,7 +564,8 @@ export default function NeighbourhoodPage() {
             Experience Anhart Quality
           </h2>
           <p className="text-[#f9f8f6]/80 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 md:mb-8 max-w-3xl mx-auto px-2">
-            Join our waitlist to be among the first to experience modern living at affordable prices. Our 48-unit development combines Vancouver design standards with Merritt's scenic beauty.
+            <span className="md:hidden">Join our waitlist for modern living at affordable prices in scenic Merritt.</span>
+            <span className="hidden md:inline">Join our waitlist to be among the first to experience modern living at affordable prices. Our 48-unit development combines Vancouver design standards with Merritt's scenic beauty.</span>
           </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link

@@ -129,29 +129,29 @@ export default function ContactClient() {
   return (
     <div className="bg-[#f9f8f6] text-[#1a2621] font-sans antialiased min-h-screen">
 
-      {/* EDITORIAL FRAME */}
-      <div className="fixed left-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
-      <div className="fixed right-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
+      {/* EDITORIAL FRAME - Hidden on mobile for better usability */}
+      <div className="hidden md:block fixed left-0 top-0 w-16 h-full bg-white z-[60]"></div>
+      <div className="hidden md:block fixed right-0 top-0 w-16 h-full bg-white z-[60]"></div>
 
       {/* Navbar is now in layout.tsx */}
 
       <div className="flex flex-col md:flex-row min-h-screen pt-24">
 
         {/* LEFT COLUMN: Contact Info */}
-        <div className="w-full md:w-1/2 bg-[#1a2621] text-[#f9f8f6] flex flex-col justify-center p-12 md:p-24 relative overflow-hidden">
+        <div className="w-full md:w-1/2 bg-[#1a2621] text-[#f9f8f6] flex flex-col justify-center p-6 md:p-12 lg:p-24 relative overflow-hidden">
             {/* Texture Overlay */}
             <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]"></div>
 
             <div className="relative z-10">
-                <span className="text-[#a6906c] text-xs font-bold tracking-widest uppercase mb-6 block">Get in Touch</span>
-                <h1 className="font-serif text-4xl md:text-6xl mb-12">Start Your<br/>Journey to<br/>Homeownership.</h1>
+                <span className="text-[#a6906c] text-xs font-bold tracking-widest uppercase mb-4 md:mb-6 block">Get in Touch</span>
+                <h1 className="font-serif text-3xl md:text-4xl lg:text-6xl mb-8 md:mb-12 leading-tight">Start Your<br/>Journey to<br/>Homeownership.</h1>
 
-                <div className="space-y-8 text-sm tracking-wide font-light">
-                    <div className="flex items-start gap-6">
-                        <MapPin className="w-5 h-5 text-[#a6906c] mt-1" />
+                <div className="space-y-6 md:space-y-8 text-sm tracking-wide font-light">
+                    <div className="flex items-start gap-4 md:gap-6">
+                        <MapPin className="w-4 h-4 md:w-5 md:h-5 text-[#a6906c] mt-1 flex-shrink-0" />
                         <div>
-                            <p className="font-bold uppercase tracking-widest mb-1">Vancouver Office</p>
-                            <p className="opacity-70">
+                            <p className="font-bold uppercase tracking-widest mb-1 text-xs md:text-sm">Vancouver Office</p>
+                            <p className="opacity-70 text-xs md:text-sm leading-relaxed">
                                 {AddressUtils.getAddressLines().map((line, index) => (
                                     <React.Fragment key={index}>
                                         {line}
@@ -170,21 +170,21 @@ export default function ContactClient() {
                         </div>
                     </div>
 
-                    <div className="flex items-start gap-6">
-                        <Phone className="w-5 h-5 text-[#a6906c] mt-1" />
+                    <div className="flex items-start gap-4 md:gap-6">
+                        <Phone className="w-4 h-4 md:w-5 md:h-5 text-[#a6906c] mt-1 flex-shrink-0" />
                         <div>
-                            <p className="font-bold uppercase tracking-widest mb-1">Phone</p>
-                            <a href="tel:6045296259" className="opacity-70 hover:opacity-100 transition-opacity">
+                            <p className="font-bold uppercase tracking-widest mb-1 text-xs md:text-sm">Phone</p>
+                            <a href="tel:6045296259" className="opacity-70 hover:opacity-100 transition-opacity text-xs md:text-sm">
                                 604 529 6259
                             </a>
                         </div>
                     </div>
 
-                    <div className="flex items-start gap-6">
-                        <Mail className="w-5 h-5 text-[#a6906c] mt-1" />
+                    <div className="flex items-start gap-4 md:gap-6">
+                        <Mail className="w-4 h-4 md:w-5 md:h-5 text-[#a6906c] mt-1 flex-shrink-0" />
                         <div>
-                            <p className="font-bold uppercase tracking-widest mb-1">Email</p>
-                            <a href="mailto:info@anhart.ca" className="opacity-70 hover:opacity-100 transition-opacity">
+                            <p className="font-bold uppercase tracking-widest mb-1 text-xs md:text-sm">Email</p>
+                            <a href="mailto:info@anhart.ca" className="opacity-70 hover:opacity-100 transition-opacity text-xs md:text-sm">
                                 info@anhart.ca
                             </a>
                         </div>
@@ -221,13 +221,13 @@ export default function ContactClient() {
         </div>
 
         {/* RIGHT COLUMN: Form */}
-        <div className="w-full md:w-1/2 bg-white flex flex-col justify-center p-12 md:p-24">
+        <div className="w-full md:w-1/2 bg-white flex flex-col justify-center p-6 md:p-12 lg:p-24">
              <div className="max-w-md w-full">
-                <h2 className="font-serif text-3xl text-[#1a2621] mb-2">Register for Priority Updates</h2>
-                <p className="text-[#1a2621]/50 text-sm mb-12">Join our interest list for affordable housing in Merritt, BC.</p>
+                <h2 className="font-serif text-2xl md:text-3xl text-[#1a2621] mb-3 md:mb-2">Register for Priority Updates</h2>
+                <p className="text-[#1a2621]/50 text-sm mb-8 md:mb-12">Join our interest list for affordable housing in Merritt, BC.</p>
 
-                <form onSubmit={handleSubmit} className="space-y-8">
-                    <div className="grid grid-cols-2 gap-8">
+                <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
                         <input 
                             type="text" 
                             name="firstName"
