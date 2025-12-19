@@ -195,7 +195,7 @@ export default function Navbar() {
               if (link.dropdown) {
                 return (
                   <div key={link.label} className="space-y-2">
-                    <div className={`text-sm tracking-wider uppercase font-semibold ${isRelocationActive ? 'text-[#a6906c]' : 'text-[#1a2621]'}`}>
+                    <div className={`text-sm tracking-wider uppercase font-semibold py-2 px-1 ${isRelocationActive ? 'text-[#a6906c]' : 'text-[#1a2621]'}`}>
                       {link.label}
                     </div>
                     <div className="ml-4 space-y-2">
@@ -229,7 +229,7 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            <div className="pt-4 border-t border-[#e6e2da]">
+            <div className="pt-4 border-t border-[#e6e2da] mt-6">
               <Link
                 href="/Merritt/contact"
                 className={`block text-center px-6 py-3 border border-[#1a2621] transition-all duration-300 ${contactActive}`}
