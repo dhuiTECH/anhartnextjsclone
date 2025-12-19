@@ -7,6 +7,7 @@ import Footer from "../../components/Footer";
 export const metadata: Metadata = {
   title: "Relocating from Kelowna to Merritt | Affordable Housing Solutions",
   description: "Escape Kelowna's high costs. Discover affordable, beautiful homes in scenic Merritt, BC.",
+  alternates: { canonical: 'https://anhart.ca/Merritt/relocation/kelowna' },
 };
 
 export default function KelownaRelocationPage() {

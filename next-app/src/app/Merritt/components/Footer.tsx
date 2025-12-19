@@ -38,7 +38,7 @@ export default function Footer() {
                         >
                             <img
                                 src="/merritt-assets/anhartmerritt1.png"
-                                alt="Anhart Logo"
+                                alt="Anhart - Vancouver-based affordable housing developer"
                                 className="h-10 md:h-12 w-auto mx-auto md:mx-0"
                             />
                         </a>

@@ -296,7 +296,7 @@ export default function HomeClient() {
                     Affordable Townhomes<br/>in Merritt, BC
                 </h1>
                 <p className="text-sm md:text-base lg:text-lg font-bold tracking-[0.15em] leading-relaxed opacity-0 animate-fade-up text-white mb-4 md:mb-8 lg:mb-12 uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center max-w-3xl mx-auto px-4" style={{ animationDelay: '0.6s' }}>
-                    <span className="md:hidden">Affordable homes in scenic Merritt, BC.</span>
+                    <span className="md:hidden">Affordable homeownership and modern living in scenic merritt, bc</span>
                     <span className="hidden md:inline">New Townhomes in beautiful Merritt, BC. Your accessible gateway to homeownership in BC's scenic Nicola Valley.</span>
                 </p>
             </div>
@@ -392,7 +392,7 @@ export default function HomeClient() {
             <div className="relative z-10 rounded-2xl overflow-hidden shadow-xl">
               <Image
                 src="/merritt-assets/livingroom.jpg"
-                alt="Modern living room"
+                alt="Modern living room in Anhart Merritt townhome - spacious and well-lit interior design"
                 width={800}
                 height={600}
                 priority
@@ -412,7 +412,7 @@ export default function HomeClient() {
               <div className="aspect-square relative">
                   <Image
                   src="/merritt-assets/keithpicture.jpg"
-                  alt="Keith"
+                  alt="Keith Wiebe Gordon - Co-Founder of Anhart with 20 years of development experience"
                   fill
                   className="object-cover"
                   />
@@ -451,7 +451,7 @@ export default function HomeClient() {
             <source srcSet="/merritt-assets/fullvillage.webp" type="image/webp" />
             <img
               src="/merritt-assets/fullvillage.jpg"
-              alt="Full village landscape"
+              alt="Merritt townhome community site in the scenic Nicola Valley landscape"
               className="w-full h-full object-cover scale-110"
             />
           </picture>
@@ -486,7 +486,7 @@ export default function HomeClient() {
                 {/* Exterior Garden View - Default */}
                 <img
                   src="/merritt-assets/seniorgarden.jpg"
-                  alt="Garden Flat - Ground level 2-bedroom townhome with garden access"
+                  alt="Garden Flat exterior - Ground level 2-bedroom Anhart townhome in Merritt with private garden access"
                   loading="lazy"
                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
                      gardenFlatImage === 0 ? 'opacity-100' : 'opacity-0'
@@ -495,7 +495,7 @@ export default function HomeClient() {
                 {/* Bedroom Interior */}
                 <img
                   src="/merritt-assets/gbedroom.jpg"
-                  alt="Garden Flat - Cozy bedroom interior"
+                  alt="Garden Flat bedroom - Comfortable and well-designed bedroom in Merritt townhome"
                   loading="lazy"
                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
                      gardenFlatImage === 1 ? 'opacity-100' : 'opacity-0'
@@ -504,7 +504,7 @@ export default function HomeClient() {
                 {/* Kitchen Interior */}
                 <img
                   src="/merritt-assets/gkitchen.jpg"
-                  alt="Garden Flat - Functional kitchen interior"
+                  alt="Garden Flat kitchen - Modern, functional kitchen design in Anhart Merritt townhome"
                   loading="lazy"
                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
                      gardenFlatImage === 2 ? 'opacity-100' : 'opacity-0'
@@ -563,7 +563,7 @@ export default function HomeClient() {
                 {/* Exterior View - Default */}
                 <img
                   src="/merritt-assets/family.jpg"
-                  alt="Sky Townhome - Two-story 3-bedroom townhome exterior"
+                  alt="Sky Townhome exterior - Two-story 3-bedroom Anhart townhome in Merritt"
                   loading="lazy"
                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
                      skyTownhomeImage === 0 ? 'opacity-100' : 'opacity-0'
@@ -572,7 +572,7 @@ export default function HomeClient() {
                 {/* Bedroom Interior */}
                 <img
                   src="/merritt-assets/sbedroom.jpg"
-                  alt="Sky Townhome - Master bedroom interior"
+                  alt="Sky Townhome master bedroom - Spacious bedroom with walk-in closet in Merritt townhome"
                   loading="lazy"
                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
                      skyTownhomeImage === 1 ? 'opacity-100' : 'opacity-0'
@@ -581,7 +581,7 @@ export default function HomeClient() {
                 {/* Kitchen Interior */}
                 <img
                   src="/merritt-assets/skitchen.jpg"
-                  alt="Sky Townhome - Modern kitchen interior"
+                  alt="Sky Townhome kitchen - Entertainer's kitchen with large U-shaped design in Merritt townhome"
                   loading="lazy"
                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
                      skyTownhomeImage === 2 ? 'opacity-100' : 'opacity-0'
@@ -834,7 +834,7 @@ export default function HomeClient() {
                 <div className="h-[200px] md:h-[300px] rounded-lg overflow-hidden shadow-2xl border border-white/10 relative group">
                     <Image
                         src="/merritt-assets/mountainviews.jpg"
-                        alt="Spectacular mountain views surrounding the Merritt community"
+                        alt="Breathtaking Nicola Valley mountain views from Merritt townhome location"
                         fill
                         className="object-cover hover:scale-105 transition-transform duration-700"
                     />

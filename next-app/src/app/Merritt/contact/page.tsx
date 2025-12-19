@@ -4,16 +4,22 @@ import ContactClient from './ContactClient';
 export const metadata: Metadata = {
   title: 'Register for Affordable Townhomes in Merritt | Anhart',
   description: 'Join the waitlist for Anhart\'s affordable housing community in Merritt, BC. Vancouver developer - entry-level homes starting at $249k.',
+  alternates: { canonical: 'https://anhart.ca/Merritt/contact' },
 };
 
 export default function ContactPage() {
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Anhart",
-    "url": "https://anhart.ca",
+    "@type": "RealEstateAgent",
+    "name": "Anhart - Merritt Townhomes",
+    "description": "Vancouver-based affordable housing developer offering townhomes in Merritt, BC",
+    "url": "https://anhart.ca/Merritt/contact",
     "logo": "https://anhart.ca/merritt-assets/anhartmerritt1.png",
-    "description": "Vancouver-based developer of affordable townhomes in Merritt, BC",
+    "parentOrganization": {
+      "@type": "Organization",
+      "name": "Anhart",
+      "url": "https://anhart.ca"
+    },
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "885 W Georgia St Suite 1480",
@@ -26,11 +32,59 @@ export default function ContactPage() {
       "@type": "ContactPoint",
       "telephone": "+1-604-529-6259",
       "contactType": "customer service",
-      "availableLanguage": "English"
+      "availableLanguage": "English",
+      "contactOption": "TollFree"
+    },
+    "makesOffer": {
+      "@type": "Offer",
+      "description": "Affordable townhome registration",
+      "priceRange": "249000-",
+      "availability": "https://schema.org/InStock",
+      "priceCurrency": "CAD",
+      "priceValidUntil": "2025-12-31"
+    },
+    "areaServed": [
+      {
+        "@type": "Place",
+        "name": "Merritt, British Columbia"
+      },
+      {
+        "@type": "Place",
+        "name": "Nicola Valley"
+      }
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Merritt Townhome Collection",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "Garden Flat (2-Bedroom)",
+            "description": "Ground-level townhome with direct patio access"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "Sky Townhome (3-Bedroom)",
+            "description": "Two-story townhome with private balcony"
+          }
+        }
+      ]
     },
     "sameAs": [
       "https://www.instagram.com/anhart.ca",
       "https://www.linkedin.com/company/anhart"
+    ],
+    "knowsAbout": [
+      "Affordable Housing",
+      "Townhome Development",
+      "Real Estate Development",
+      "Sustainable Construction",
+      "Community Development"
     ]
   };
 

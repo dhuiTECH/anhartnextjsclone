@@ -7,6 +7,7 @@ import Footer from "../../components/Footer";
 export const metadata: Metadata = {
   title: "Kamloops to Merritt Relocation | Affordable Townhomes",
   description: "Escape Kamloops housing costs. Discover affordable townhomes in Merritt, BC - perfect for commuters and families.",
+  alternates: { canonical: 'https://anhart.ca/Merritt/relocation/kamloops' },
 };
 
 export default function KamloopsRelocationPage() {

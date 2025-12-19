@@ -99,9 +99,73 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  
+
+  <!-- Merritt Townhome Project - High Priority Pages -->
+  <url>
+    <loc>https://anhart.ca/Merritt</loc>
+    <lastmod>2025-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://anhart.ca/merritt-assets/fullvillage.webp</image:loc>
+      <image:title>Merritt Townhomes - Affordable Housing in BC</image:title>
+      <image:caption>Affordable townhome community in scenic Merritt, BC developed by Anhart</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://anhart.ca/Merritt/contact</loc>
+    <lastmod>2025-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://anhart.ca/Merritt/neighbourhood</loc>
+    <lastmod>2025-12-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Merritt Product Information Pages -->
+  <url>
+    <loc>https://anhart.ca/Merritt/floorplans</loc>
+    <lastmod>2025-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://anhart.ca/Merritt/interiors</loc>
+    <lastmod>2025-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Merritt Relocation Guides -->
+  <url>
+    <loc>https://anhart.ca/Merritt/relocation/kamloops</loc>
+    <lastmod>2025-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://anhart.ca/Merritt/relocation/kelowna</loc>
+    <lastmod>2025-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://anhart.ca/Merritt/relocation/vancouver</loc>
+    <lastmod>2025-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
   <!-- Additional Information Pages -->
-  
-  
+
+
 </urlset>
 

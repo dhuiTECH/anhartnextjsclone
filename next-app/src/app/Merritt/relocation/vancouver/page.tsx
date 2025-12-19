@@ -7,6 +7,7 @@ import Footer from "../../components/Footer";
 export const metadata: Metadata = {
   title: "Vancouver to Merritt Relocation | Affordable Townhomes",
   description: "Escape Vancouver's high costs. Discover affordable homeownership in Merritt, BC with Anhart's townhome community.",
+  alternates: { canonical: 'https://anhart.ca/Merritt/relocation/vancouver' },
 };
 
 export default function VancouverRelocationPage() {

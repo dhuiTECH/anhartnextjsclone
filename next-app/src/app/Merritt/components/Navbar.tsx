@@ -119,7 +119,7 @@ export default function Navbar() {
         <Link href="/Merritt" className="text-center group flex flex-col items-center">
           <img
             src="/merritt-assets/anhartmerritt1.png"
-            alt="Merritt Realty Logo"
+            alt="Anhart Merritt Townhomes - Affordable housing development in Merritt, BC"
             className="h-14 w-auto group-hover:opacity-80 hover:scale-105 hover:drop-shadow-xl transition-all duration-300 drop-shadow-lg"
           />
         </Link>
