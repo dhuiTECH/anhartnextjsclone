@@ -324,7 +324,11 @@ export default function HomeClient() {
       </header>
 
       {/* Tropical Living Section */}
-      <section className="w-full py-16 md:py-20 lg:py-32 pb-24 md:pb-24 lg:pb-32 bg-white overflow-hidden">
+      {/* GPU acceleration added to prevent scroll jitter with absolute positioned elements */}
+      <section 
+        className="w-full py-16 md:py-20 lg:py-32 pb-24 md:pb-24 lg:pb-32 bg-white overflow-hidden"
+        style={{ transform: 'translateZ(0)' }}
+      >
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           {/* Tablet: Stack vertically, Desktop: Side by side */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
@@ -364,7 +368,14 @@ export default function HomeClient() {
 
           {/* RIGHT COLUMN: Image Stack - CORRECTED STRUCTURE */}
           {/* The wrapper must be relative to anchor the absolute surfer image */}
-          <div className="relative mt-6 md:mt-8 lg:mt-0 lg:pl-10">
+          {/* GPU acceleration on parent container to prevent scroll jitter */}
+          <div 
+            className="relative mt-6 md:mt-8 lg:mt-0 lg:pl-10"
+            style={{ 
+              transform: 'translateZ(0)', 
+              backfaceVisibility: 'hidden' 
+            }}
+          >
 
             {/* 1. Main Resort Image (The Anchor) */}
             <div className="relative z-10 rounded-2xl overflow-hidden shadow-xl">
@@ -375,13 +386,22 @@ export default function HomeClient() {
                 height={600}
                 priority
                 className="w-full h-auto object-cover"
+                style={{ transform: 'translateZ(0)' }}
               />
             </div>
 
             {/* 2. Overlapping Keith Image (The Floater) */}
             {/* Positioned absolute relative to the parent div, NOT inside the image div */}
             {/* Tablet: Adjust positioning to prevent overflow */}
-            <div className="absolute z-20 -bottom-8 md:-bottom-12 lg:-bottom-16 left-4 md:left-8 lg:left-12 xl:-left-6 w-[35%] md:w-[40%] lg:w-[45%] max-w-[180px] md:max-w-none border-[4px] md:border-[6px] lg:border-[8px] border-white rounded-lg shadow-2xl overflow-hidden">
+            {/* GPU acceleration added via transform to prevent scroll jitter */}
+            <div 
+              className="absolute z-20 -bottom-8 md:-bottom-12 lg:-bottom-16 left-4 md:left-8 lg:left-12 xl:-left-6 w-[35%] md:w-[40%] lg:w-[45%] max-w-[180px] md:max-w-none border-[4px] md:border-[6px] lg:border-[8px] border-white rounded-lg shadow-2xl overflow-hidden"
+              style={{ 
+                transform: 'translateZ(0)', 
+                backfaceVisibility: 'hidden',
+                willChange: 'transform'
+              }}
+            >
                {/* Aspect ratio square for Keith */}
               <div className="aspect-square relative">
                   <Image
@@ -389,12 +409,19 @@ export default function HomeClient() {
                   alt="Keith"
                   fill
                   className="object-cover"
+                  style={{ transform: 'translateZ(0)' }}
                   />
               </div>
             </div>
 
             {/* Keith's Title */}
-            <div className="absolute z-30 -bottom-12 md:-bottom-16 lg:-bottom-24 left-4 md:left-8 lg:left-12 xl:-left-6 w-[35%] md:w-[40%] lg:w-[45%] max-w-[180px] md:max-w-none flex justify-center">
+            <div 
+              className="absolute z-30 -bottom-12 md:-bottom-16 lg:-bottom-24 left-4 md:left-8 lg:left-12 xl:-left-6 w-[35%] md:w-[40%] lg:w-[45%] max-w-[180px] md:max-w-none flex justify-center"
+              style={{ 
+                transform: 'translateZ(0)', 
+                backfaceVisibility: 'hidden' 
+              }}
+            >
               <p className="text-white font-black text-[10px] md:text-xs lg:text-sm tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.6)] text-center px-1">
                 Co-Founder Keith Wiebe Gordon
               </p>

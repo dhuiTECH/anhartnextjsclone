@@ -183,7 +183,7 @@ const CarouselCard: React.FC<CarouselCardProps> = ({
 
   const content = (
     <div
-      className="relative rounded-2xl overflow-hidden shadow-2xl bg-background"
+      className="relative rounded-2xl overflow-hidden bg-background"
       style={{
         width: isMobile ? "280px" : "400px",
         height: isMobile ? "200px" : "280px",
@@ -236,7 +236,14 @@ const CarouselCard: React.FC<CarouselCardProps> = ({
   if (item.link && position === "CENTER") {
     return (
       <div style={cardStyle}>
-        <Link href={item.link} className="block">
+        <Link 
+          href={item.link} 
+          className="block"
+          onClick={(e) => {
+            // Stop propagation to prevent drag handlers from interfering
+            e.stopPropagation();
+          }}
+        >
           {content}
         </Link>
       </div>
@@ -336,8 +343,24 @@ export const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
   // DRAG/SWIPE HANDLING
   // =============================================================================
 
+  /**
+   * Check if the event target is a link or inside a link element
+   */
+  const isLinkElement = (target: EventTarget | null): boolean => {
+    if (!target || !(target instanceof HTMLElement)) return false;
+    
+    // Check if target is an anchor tag or inside one
+    const element = target.closest('a');
+    return element !== null;
+  };
+
   const handleDragStart = useCallback(
     (e: React.MouseEvent | React.TouchEvent) => {
+      // Don't start drag if clicking on a link
+      if (isLinkElement(e.target as EventTarget)) {
+        return;
+      }
+      
       setIsDragging(true);
       const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
       setDragStartX(clientX);
@@ -348,6 +371,12 @@ export const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
 
   const handleDragEnd = useCallback(
     (e: React.MouseEvent | React.TouchEvent) => {
+      // Don't handle drag end if clicking on a link
+      if (isLinkElement(e.target as EventTarget)) {
+        setIsDragging(false);
+        return;
+      }
+
       if (!isDragging) return;
 
       const clientX =
@@ -355,10 +384,13 @@ export const ProjectCarousel: React.FC<ProjectCarouselProps> = ({
       const diff = clientX - dragStartX;
       const threshold = 50;
 
-      if (diff > threshold) {
-        goPrevious();
-      } else if (diff < -threshold) {
-        goNext();
+      // Only trigger navigation if there was actual drag movement
+      if (Math.abs(diff) > threshold) {
+        if (diff > threshold) {
+          goPrevious();
+        } else if (diff < -threshold) {
+          goNext();
+        }
       }
 
       setIsDragging(false);

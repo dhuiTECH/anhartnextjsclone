@@ -37,6 +37,19 @@ export function middleware(request: NextRequest) {
     }
   }
 
+  // Redirect /merritt (lowercase) to /Merritt (uppercase)
+  // Case-sensitive check to prevent redirect loops
+  // Only redirect if pathname is exactly '/merritt' (lowercase)
+  if (url.pathname === '/merritt' && !url.pathname.startsWith('/_next')) {
+    const merrittUrl = url.clone();
+    merrittUrl.pathname = '/Merritt';
+    
+    // Only redirect if the URL actually changed
+    if (merrittUrl.toString() !== url.toString()) {
+      return NextResponse.redirect(merrittUrl, 301);
+    }
+  }
+
   return NextResponse.next();
 }
 

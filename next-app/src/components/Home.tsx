@@ -658,10 +658,10 @@ const Home = () => {
               3D carousel showcasing Anhart's featured projects with smooth
               animations and circular navigation.
            */}
-        <section id="project-carousel-section" className="py-16 bg-background">
+        <section id="project-carousel-section" className="py-8 bg-background">
           <div className="mx-auto max-w-6xl px-6 lg:px-8">
             <ScrollAnimationWrapper direction="top">
-              <div className="text-center mb-8">
+              <div className="text-center mb-4">
                 <h2 className="text-3xl font-bold tracking-tight text-foreground mb-4">
                   Our Projects
                 </h2>
@@ -679,16 +679,6 @@ const Home = () => {
                 className="mt-8"
               />
             </ScrollAnimationWrapper>
-
-            <div className="text-center mt-8">
-              <Link
-                href="/portfolio"
-                className="inline-flex items-center text-primary font-semibold hover:text-primary/80 transition-colors group"
-              >
-                View All Projects
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
           </div>
         </section>
 
