@@ -286,7 +286,6 @@ export default function HomeClient() {
                     Affordable Townhomes<br/>in Merritt, BC
                 </h1>
                 <p className="text-sm md:text-base lg:text-lg font-bold tracking-[0.15em] leading-relaxed opacity-0 animate-fade-up text-white mb-4 md:mb-8 lg:mb-12 uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center max-w-3xl mx-auto px-4" style={{ animationDelay: '0.6s' }}>
-                    <span className="md:hidden">Modern townhomes for sale in Merritt, BC.</span>
                     <span className="hidden md:inline">New Townhomes in beautiful Merritt, BC. Your accessible gateway to homeownership in BC's scenic Nicola Valley.</span>
                 </p>
             </div>
