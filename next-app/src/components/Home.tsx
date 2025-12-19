@@ -837,7 +837,7 @@ const Home = () => {
                         </div>
                       </div>
 
-                      {/* Cloudflare Turnstile Widget - Hidden */}
+                      {/* Cloudflare Turnstile Widget */}
                       <div className="flex justify-center" key={turnstileKey}>
                         <Turnstile
                           siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACHSP48uvsbyUZG1"}
@@ -845,7 +845,7 @@ const Home = () => {
                           onError={turnstileHandlers.onError}
                           onExpire={turnstileHandlers.onExpire}
                           theme="auto"
-                          size="invisible"
+                          size="normal"
                         />
                       </div>
 

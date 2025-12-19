@@ -238,7 +238,7 @@ export const Contact = () => {
                         onError={newsletterTurnstileHandlers.onError}
                         onExpire={newsletterTurnstileHandlers.onExpire}
                         theme="auto"
-                        size="invisible"
+                        size="normal"
                       />
                     </div>
                     <Button type="submit" size="sm" className="w-full" disabled={isSubscribing || !newsletterTurnstileToken}>
@@ -337,7 +337,7 @@ export const Contact = () => {
                     <Input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
                   </div>
 
-                  {/* Cloudflare Turnstile Widget - Hidden */}
+                  {/* Cloudflare Turnstile Widget */}
                   <div className="flex justify-center" key={turnstileKey}>
                     <Turnstile
                       siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
@@ -345,7 +345,7 @@ export const Contact = () => {
                       onError={turnstileHandlers.onError}
                       onExpire={turnstileHandlers.onExpire}
                       theme="auto"
-                      size="invisible"
+                      size="normal"
                     />
                   </div>
 

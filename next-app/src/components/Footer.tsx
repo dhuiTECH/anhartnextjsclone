@@ -170,7 +170,7 @@ export const Footer = () => {
                         />
                       </div>
 
-                      {/* Cloudflare Turnstile Widget - Invisible mode */}
+                      {/* Cloudflare Turnstile Widget */}
                       <div key={turnstileKey}>
                         <Turnstile
                           siteKey="0x4AAAAAACHSP48uvsbyUZG1"
@@ -178,7 +178,7 @@ export const Footer = () => {
                           onError={turnstileHandlers.onError}
                           onExpire={turnstileHandlers.onExpire}
                           theme="auto"
-                          size="invisible"
+                          size="normal"
                         />
                       </div>
                     </form>
@@ -306,7 +306,7 @@ export const Footer = () => {
                     />
                   </div>
 
-                  {/* Cloudflare Turnstile Widget - Invisible mode */}
+                  {/* Cloudflare Turnstile Widget */}
                   <div key={turnstileKey}>
                     <Turnstile
                       siteKey="0x4AAAAAACBhtHfX5mcNUA4m"
@@ -314,7 +314,7 @@ export const Footer = () => {
                       onError={turnstileHandlers.onError}
                       onExpire={turnstileHandlers.onExpire}
                       theme="auto"
-                      size="invisible"
+                      size="normal"
                     />
                   </div>
                 </form>

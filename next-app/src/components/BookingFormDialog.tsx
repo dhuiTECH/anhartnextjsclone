@@ -299,7 +299,7 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
                   onError={turnstileHandlers.onError}
                   onExpire={turnstileHandlers.onExpire}
                   theme="auto"
-                  size="invisible"
+                  size="normal"
                 />
               </div>
             )}
