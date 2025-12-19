@@ -44,7 +44,8 @@ export default function HomeClient() {
   })
 
   // This makes the image move slightly slower than the scroll (Parallax effect)
-  const villageY = useTransform(villageScrollProgress, [0, 1], ["0%", "20%"]);
+  // Using pixels instead of percentages to prevent sub-pixel rendering jitter
+  const villageY = useTransform(villageScrollProgress, [0, 1], [0, 200]);
 
   // Mobile image switching state
   const [gardenFlatImage, setGardenFlatImage] = useState(0); // 0: exterior, 1: bedroom, 2: kitchen
@@ -114,11 +115,13 @@ export default function HomeClient() {
           x: 0,
           y: 0,
           ease: 'none',
+          force3D: true, // Forces GPU usage to prevent sub-pixel jitter
           scrollTrigger: {
             trigger: featuredSectionRef.current,
             start: 'top bottom', // Start when top of section hits bottom of viewport
             end: 'bottom top',   // End when bottom of section hits top of viewport
             scrub: 0.3,          // Reduced lag for better scroll responsiveness
+            fastScrollEnd: true, // Stop calculation when idle to prevent micro-drifting
           }
         }
       );
@@ -130,11 +133,13 @@ export default function HomeClient() {
           x: 0,
           y: 0,
           ease: 'none',
+          force3D: true, // Forces GPU usage to prevent sub-pixel jitter
           scrollTrigger: {
             trigger: featuredSectionRef.current,
             start: 'top bottom', // Start when top of section hits bottom of viewport
             end: 'bottom top',   // End when bottom of section hits top of viewport
             scrub: 0.3,          // Reduced lag for better scroll responsiveness
+            fastScrollEnd: true, // Stop calculation when idle to prevent micro-drifting
           }
         }
       );
@@ -154,11 +159,13 @@ export default function HomeClient() {
     gsap.to(mountainRef.current, {
       y: 150, // Move down slightly as we scroll down for parallax effect
       ease: 'none',
+      force3D: true, // Forces GPU usage to prevent sub-pixel jitter
       scrollTrigger: {
         trigger: amenitiesSectionRef.current,
         start: 'top bottom', // Start when top of section enters viewport
         end: 'bottom top',   // End when bottom of section leaves viewport
         scrub: 0.3,          // Reduced lag for better scroll responsiveness
+        fastScrollEnd: true, // Stop calculation when idle to prevent micro-drifting
       },
     });
   }, { scope: amenitiesSectionRef });
@@ -407,6 +414,12 @@ export default function HomeClient() {
             {/* GPU acceleration added via transform to prevent scroll jitter */}
             <div
               className="absolute z-20 -bottom-8 md:-bottom-12 lg:-bottom-16 left-4 md:left-8 lg:left-12 xl:-left-6 w-[35%] md:w-[40%] lg:w-[45%] max-w-[180px] md:max-w-none border-[4px] md:border-[6px] lg:border-[8px] border-white rounded-lg shadow-2xl overflow-hidden"
+              style={{ 
+                willChange: 'transform',
+                backfaceVisibility: 'hidden',
+                WebkitFontSmoothing: 'antialiased',
+                transform: 'translateZ(0)'
+              }}
             >
                {/* Aspect ratio square for Keith */}
               <div className="aspect-square relative">
@@ -422,6 +435,12 @@ export default function HomeClient() {
             {/* Keith's Title - Positioned below the image frame */}
             <div
               className="absolute z-30 -bottom-8 md:-bottom-16 lg:-bottom-24 left-4 md:left-8 lg:left-12 xl:-left-6 w-[40%] md:w-[40%] lg:w-[45%] max-w-[200px] md:max-w-none flex justify-center"
+              style={{ 
+                willChange: 'transform',
+                backfaceVisibility: 'hidden',
+                WebkitFontSmoothing: 'antialiased',
+                transform: 'translateZ(0)'
+              }}
             >
               <p className="text-white font-black text-[9px] md:text-xs lg:text-sm tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.6)] text-center px-1 leading-tight">
                 Co-Founder Keith Wiebe Gordon<br/>(20 years of development experience)
@@ -445,7 +464,7 @@ export default function HomeClient() {
       <section ref={villageRef} className="relative w-full h-[80vh] md:h-[90vh] lg:h-screen sticky top-0 z-0 overflow-hidden bg-white">
         <motion.div
           className="w-full h-full absolute inset-0 rounded-2xl md:rounded-3xl overflow-hidden"
-          style={{ y: villageY }}
+          style={{ y: villageY, rotateZ: 0.01 }}
         >
           <picture className="w-full h-full">
             <source srcSet="/merritt-assets/fullvillage.webp" type="image/webp" />

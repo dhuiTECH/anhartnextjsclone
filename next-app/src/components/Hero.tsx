@@ -10,6 +10,7 @@ import { BookingFormDialog } from "@/components/BookingFormDialog";
 import { useParallax } from "@/hooks/useParallax";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { logger } from "@/utils/logger";
+import { useScroll, useTransform, motion } from "framer-motion";
 
 const anhartLogoWebpSrc =
   typeof anhartLogoWebp === "string"
@@ -47,6 +48,11 @@ export const Hero = () => {
     heroHeightMultiplier: 0.85,
   });
 
+  // Scroll-based opacity fade for promotional banner - fades out as user scrolls down
+  const { scrollYProgress } = useScroll();
+  // Banner fades from full opacity at top to 0 opacity as user scrolls through first 5% of page (very aggressive fade)
+  const bannerOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0], { clamp: true });
+
   return (
     <section
       className="relative h-[85vh] sm:h-[95vh] w-full overflow-hidden" // ADJUST THIS: Original heights—change percentages for size (e.g., 90vh for medium)
@@ -54,7 +60,10 @@ export const Hero = () => {
     >
       {/* Moving Banner Carousel - Performance Optimized */}
       <style dangerouslySetInnerHTML={{ __html: marqueeStyle }} />
-      <div className="absolute top-0 left-0 right-0 z-50 bg-primary text-white py-2 overflow-hidden">
+      <motion.div 
+        className="absolute top-0 left-0 right-0 z-40 bg-primary text-white py-2 overflow-hidden"
+        style={{ opacity: bannerOpacity }}
+      >
         <div className="animate-marquee whitespace-nowrap">
           <Link
             href="/Merritt"
@@ -70,7 +79,7 @@ export const Hero = () => {
             <span className="font-semibold hover:underline">Check out our featured project, Anhart Merritt</span>
           </Link>
         </div>
-      </div>
+      </motion.div>
       {/* Anhart logo as backdrop with WebP/PNG fallback */}
       <picture className="absolute inset-0 z-0 flex items-center justify-center opacity-30 pointer-events-none">
         <source srcSet={anhartLogoWebpSrc} type="image/webp" />
