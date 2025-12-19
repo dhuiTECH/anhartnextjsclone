@@ -794,12 +794,12 @@ export default function HomeClient() {
     <section className="relative z-10 bg-[#1a2621] text-[#f9f8f6] py-16 md:py-20 lg:py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-10"></div>
         {/* Tablet: Stack vertically, Desktop: Side by side */}
-        <div className="container mx-auto px-6 md:px-8 relative z-10 flex flex-col lg:flex-row gap-8 md:gap-12 lg:gap-16 items-center max-w-7xl">
+        <div className="container mx-auto px-8 md:px-10 lg:px-8 relative z-10 flex flex-col lg:flex-row gap-8 md:gap-12 lg:gap-16 items-center max-w-7xl">
             <div className="w-full lg:w-1/3">
                 <span className="text-[#a6906c] text-xs tracking-widest uppercase mb-4 block">Location</span>
                 <h2 className="font-serif text-2xl md:text-3xl mb-6">Merritt Townhome Community</h2>
-                <p className="text-[#e6e2da] leading-relaxed mb-8 font-light text-sm md:text-base">Located in the heart of Merritt, BC, our townhome community offers the perfect balance of urban convenience and natural beauty in the scenic Nicola Valley.</p>
-                <ul className="space-y-4 text-sm tracking-wide">
+                <p className="text-[#e6e2da] leading-relaxed mb-8 font-light text-sm md:text-base px-2 md:px-0">Located in the heart of Merritt, BC, our townhome community offers the perfect balance of urban convenience and natural beauty in the scenic Nicola Valley.</p>
+                <ul className="space-y-4 text-sm tracking-wide px-2 md:px-0">
                     <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Prime Merritt Location</li>
                     <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Walking Distance to Amenities & Hikes/Trails</li>
                     <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Easy Highway Access</li>
