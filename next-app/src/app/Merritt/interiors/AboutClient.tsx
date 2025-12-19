@@ -11,6 +11,10 @@ export default function AboutClient() {
   // #region agent log
   useEffect(() => {
     fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:9',message:'Component mounted on CLIENT - INTERIOR PAGE',data:{timestamp:new Date().toISOString(),userAgent:window.navigator.userAgent,windowWidth:window.innerWidth,windowHeight:window.innerHeight,isMobile:window.innerWidth < 768},sessionId:'debug-session',runId:'client-side',hypothesisId:'H'})}).catch(()=>{});
+    
+    // Move video-related logging to useEffect to avoid render-phase side effects
+    const isMobile = window.innerWidth < 768;
+    fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:32',message:'About to render video - INTERIOR PAGE',data:{isMobile,windowWidth:window.innerWidth,userAgent:window.navigator.userAgent},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{});
   }, []);
   // #endregion
 
@@ -31,27 +35,15 @@ export default function AboutClient() {
       {/* Hero Section with Video Background */}
       <header className="relative h-[70vh] sm:h-[80vh] md:h-[90vh] w-full overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 z-0">
-          {/* #region agent log */}
-          {(() => {
-            const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-            fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:32',message:'About to render video - INTERIOR PAGE',data:{isMobile,windowWidth:typeof window !== 'undefined' ? window.innerWidth : 'SSR',userAgent:typeof window !== 'undefined' ? window.navigator.userAgent : 'SSR'},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{});
-            return null;
-          })()}
-          {/* #endregion */}
           <video
             src="/merritt-assets/Merrittlivingroom.mp4"
             autoPlay
             loop
             muted
             playsInline
-            preload="metadata"
+            preload="auto"
             poster="/merritt-assets/fullvillage.webp"
             className="w-full h-full object-cover opacity-40 md:opacity-30"
-            onLoadStart={() => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:41',message:'Video load started - INTERIOR PAGE',data:{},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
-            onLoadedData={() => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:42',message:'Video data loaded - INTERIOR PAGE',data:{},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
-            onPlay={() => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:43',message:'Video started playing - INTERIOR PAGE',data:{},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
-            onError={(e) => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:44',message:'Video error - INTERIOR PAGE',data:{error: e?.message || 'Unknown error', code: e?.target?.error?.code},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
-            onCanPlay={() => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:45',message:'Video can play - INTERIOR PAGE',data:{},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
           />
 
           {/* Background gradients */}
@@ -276,16 +268,16 @@ function FeatureSection() {
 
           {/* Left Side - Image with Hotspots */}
           <div className="relative order-2 lg:order-1">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/3]">
               <Image
                 src={activeView === 'kitchen'
                   ? "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=1000&auto=format&fit=crop"
                   : "/merritt-assets/swashroom.jpg"
                 }
                 alt={`${activeView} interior design`}
-                width={activeView === 'kitchen' ? 600 : 800}
-                height={activeView === 'kitchen' ? 450 : 600}
-                className="w-full h-auto object-cover"
+                width={800}
+                height={600}
+                className="w-full h-full object-cover"
               />
             </div>
           </div>
@@ -322,8 +314,8 @@ function FeatureSection() {
                 </div>
               </div>
 
-              {/* Content */}
-              <div className="text-center">
+              {/* Content area with fixed min-height to prevent jumping */}
+              <div className="text-center min-h-[280px] flex flex-col justify-center">
                 <h2 className="text-3xl md:text-4xl font-serif font-bold text-[#F9F7F2] mb-6">
                   {activeView === 'kitchen' ? 'Kitchen Features.' : 'Bathroom Features.'}
                 </h2>
