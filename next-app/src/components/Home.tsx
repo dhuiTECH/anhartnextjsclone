@@ -114,9 +114,6 @@ import {
 } from "lucide-react";
 
 // =============================================================================
-// CAROUSEL COMPONENT IMPORT
-// =============================================================================
-import { ProjectCarousel, CarouselItem } from "@/components/ProjectCarousel";
 
 // =============================================================================
 // TYPE IMPORTS
@@ -478,19 +475,6 @@ const Home = () => {
 
   // portfolioProjects data extracted to @/data/portfolio.ts
 
-  // =============================================================================
-  // CAROUSEL DATA
-  // =============================================================================
-  // Project showcase carousel featuring current Anhart projects
-  const carouselItems: CarouselItem[] = [
-    {
-      id: "anhart-merritt",
-      imageUrl: "/merritt-assets/anhartmerritt_caro.png",
-      altText: "Anhart Merritt - Multigenerational townhomes community",
-      title: "Anhart Merritt",
-      link: "/Merritt",
-    },
-  ];
 
   // =============================================================================
   // RENDER
@@ -652,35 +636,6 @@ const Home = () => {
           </div>
         </section>
 
-        {/* =====================================================================
-              PROJECT SHOWCASE CAROUSEL
-              =====================================================================
-              3D carousel showcasing Anhart's featured projects with smooth
-              animations and circular navigation.
-           */}
-        <section id="project-carousel-section" className="py-8 bg-background">
-          <div className="mx-auto max-w-6xl px-6 lg:px-8">
-            <ScrollAnimationWrapper direction="top">
-              <div className="text-center mb-4">
-                <h2 className="text-3xl font-bold tracking-tight text-foreground mb-4">
-                  Our Projects
-                </h2>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Explore our portfolio of affordable housing developments across Canada
-                </p>
-              </div>
-            </ScrollAnimationWrapper>
-            
-            <ScrollAnimationWrapper direction="bottom" delay={200}>
-              <ProjectCarousel
-                items={carouselItems}
-                autoPlay={true}
-                autoPlayInterval={6000}
-                className="mt-8"
-              />
-            </ScrollAnimationWrapper>
-          </div>
-        </section>
 
         {/* =====================================================================
               OUR FOCUS SECTION

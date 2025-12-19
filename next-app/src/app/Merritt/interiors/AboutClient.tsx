@@ -197,13 +197,13 @@ export default function AboutClient() {
                   </div>
                   <div className="bg-white p-3 sm:p-4 md:p-6 rounded-lg sm:rounded-xl shadow-lg border border-[#e6e2da]">
                     <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
-                      <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#a6906c]">Pricing to be determined</div>
+                      <div className="text-base sm:text-lg md:text-xl font-bold text-[#a6906c]">Pricing TBD</div>
                       <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-[#a6906c]" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd"/>
                       </svg>
                     </div>
-                    <div className="text-xs sm:text-sm text-[#1a2621]/60 uppercase tracking-wide"></div>
+                    <div className="text-xs sm:text-sm text-[#1a2621]/60 uppercase tracking-wide">Coming Soon</div>
                   </div>
                 </div>
                 <div className="space-y-2 sm:space-y-3 md:space-y-4">
@@ -269,20 +269,6 @@ export default function AboutClient() {
 function FeatureSection() {
   const [activeView, setActiveView] = useState<'kitchen' | 'bathroom'>('kitchen');
 
-  // Hotspots data
-  const hotspots = {
-    kitchen: [
-      { id: 1, x: 15, y: 25, label: 'Quality Appliances' },
-      { id: 2, x: 45, y: 35, label: 'Durable Countertops' },
-      { id: 3, x: 75, y: 45, label: 'Functional Cabinetry' },
-    ],
-    bathroom: [
-      { id: 1, x: 20, y: 30, label: 'Modern Shower' },
-      { id: 2, x: 50, y: 40, label: 'Quality Vanity' },
-      { id: 3, x: 80, y: 50, label: 'Comfort Features' },
-    ]
-  };
-
   return (
     <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -301,30 +287,6 @@ function FeatureSection() {
                 height={activeView === 'kitchen' ? 450 : 600}
                 className="w-full h-auto object-cover"
               />
-
-              {/* Hotspots */}
-              {hotspots[activeView].map((hotspot) => (
-                <motion.div
-                  key={`${activeView}-${hotspot.id}`}
-                  className="absolute w-4 h-4 bg-[#F08E70] border-2 border-white rounded-full cursor-pointer shadow-lg"
-                  style={{
-                    left: `${hotspot.x}%`,
-                    top: `${hotspot.y}%`,
-                    transform: 'translate(-50%, -50%)'
-                  }}
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.7, 1, 0.7]
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                  whileHover={{ scale: 1.5 }}
-                  title={hotspot.label}
-                />
-              ))}
             </div>
           </div>
 

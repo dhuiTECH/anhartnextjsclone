@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 import anhartLogoWebp from "@/assets/anhart-logo.webp";
 import anhartLogoPng from "@/assets/anhart-logo.png";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
@@ -16,6 +17,18 @@ const anhartLogoWebpSrc =
     : anhartLogoWebp?.src || "";
 const anhartLogoPngSrc =
   typeof anhartLogoPng === "string" ? anhartLogoPng : anhartLogoPng?.src || "";
+
+// Marquee animation styles - optimized for performance
+const marqueeStyle = `
+  @keyframes marquee {
+    0% { transform: translate3d(100%, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+  }
+  .animate-marquee {
+    animation: marquee 18s linear infinite;
+    will-change: transform;
+  }
+`;
 
 export const Hero = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -39,6 +52,25 @@ export const Hero = () => {
       className="relative h-[85vh] sm:h-[95vh] w-full overflow-hidden" // ADJUST THIS: Original heights—change percentages for size (e.g., 90vh for medium)
       aria-label="Hero section with affordable housing information"
     >
+      {/* Moving Banner Carousel - Performance Optimized */}
+      <style dangerouslySetInnerHTML={{ __html: marqueeStyle }} />
+      <div className="absolute top-0 left-0 right-0 z-50 bg-primary text-white py-2 overflow-hidden">
+        <div className="animate-marquee whitespace-nowrap">
+          <Link
+            href="/Merritt"
+            className="inline-flex items-center hover:bg-primary/80 transition-colors duration-300 px-4 py-1 rounded"
+          >
+            <span className="font-semibold hover:underline">Check out our featured project, Anhart Merritt</span>
+          </Link>
+          <span className="mx-32">•</span>
+          <Link
+            href="/Merritt"
+            className="inline-flex items-center hover:bg-primary/80 transition-colors duration-300 px-4 py-1 rounded"
+          >
+            <span className="font-semibold hover:underline">Check out our featured project, Anhart Merritt</span>
+          </Link>
+        </div>
+      </div>
       {/* Anhart logo as backdrop with WebP/PNG fallback */}
       <picture className="absolute inset-0 z-0 flex items-center justify-center opacity-30 pointer-events-none">
         <source srcSet={anhartLogoWebpSrc} type="image/webp" />
@@ -202,6 +234,7 @@ export const Hero = () => {
             </div>
           </div>
         </div>
+
       </div>
       {/* Scroll Down Arrow */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40">

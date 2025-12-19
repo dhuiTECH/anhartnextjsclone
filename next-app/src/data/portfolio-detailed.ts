@@ -177,6 +177,46 @@ export const portfolioDetailedProjects: ProjectData[] = [
     ],
   },
   {
+    id: 7,
+    title: "The Oppenheimer Park Initiative",
+    location: "1335 Howe, Vancouver, BC",
+    year: "2016",
+    units: 160,
+    description:
+      "Relocation of 150 persons experiencing homelessness at an encampment in Oppenheimer Park that also housed another 150 persons over a 30 month period.",
+    briefDescription:
+      "160-room leased hotel provided emergency housing for 300 individuals displaced from Oppenheimer Park encampments over 30 months.",
+    comprehensiveDetails:
+      "The Oppenheimer Park Initiative addressed the critical housing crisis by relocating 150 persons experiencing homelessness from the Oppenheimer Park encampment. The initiative also provided housing for an additional 150 persons over a 30-month period. In 2015, Anhart partnered with the City of Vancouver to lease the Quality Inn at 1335 Howe Street, providing safe and secure temporary housing, wrap-around services, and transition supports to help residents move into permanent homes. The initiative demonstrated how hotel leases can serve as a rapid, scalable response to homelessness while bridging toward long-term solutions.",
+    image: "TheOppenhiemer",
+    status: "Completed",
+    type: "Temporary Housing",
+  },
+  {
+    id: 10,
+    title: "179 Main & 626 Alexander",
+    location: "Vancouver, BC",
+    year: "2018, 2020",
+    units: "14",
+    description:
+      "Two mixed-income projects providing affordable rental apartments through private investment at 626 Alexander and 179 Main.",
+    briefDescription:
+      "14 affordable rental units below market at 626 Alexander and 179 Main, blending market and non-market models geared towards low-income households.",
+    comprehensiveDetails:
+      "Anhart developed two key mixed-income affordable rental projects: 626 Alexander (2018) and 179 Main (2020). Both developments leveraged private investment to create deeply affordable units alongside market rentals. 626 Alexander focused on mixed-income housing with community engagement opportunities, while 179 Main delivered deeply affordable units within a market rental development. Together, they demonstrated how non-profits and market developers can collaborate to integrate affordable housing into urban neighbourhoods without reliance on public funds.",
+    image: "affordapartment",
+    status: "completed",
+    type: "Multi-Phase Development",
+    highlights: [
+      "14 affordable apartment units (9 + 5)",
+      "Inner-city location advantages",
+      "Modern design integration",
+      "Two-phase development approach",
+      "Transit-accessible location",
+      "Community-focused amenities",
+    ],
+  },
+  {
     id: 15,
     title: "Modular Villages",
     location: "1051 Nelson Avenue, Hope, BC",
@@ -200,6 +240,22 @@ export const portfolioDetailedProjects: ProjectData[] = [
       "Visit https://anhartconstruction.ca/modular/ for details",
       "Learn more at https://anhartconstruction.ca/",
     ],
+  },
+  {
+    id: 9,
+    title: "Merritt Village",
+    location: "Merritt, BC",
+    year: "2026",
+    units: "TBD",
+    description:
+      "Planned affordable housing development in Merritt, BC, responding to community housing needs following the 2021 flood.",
+    briefDescription:
+      "A planned affordable housing development in Merritt, BC, designed to address community housing needs and support local recovery efforts.",
+    comprehensiveDetails:
+      "Merritt Village is a planned affordable housing development in Merritt, British Columbia, developed in response to the community's housing needs following the 2021 flood. This project represents Anhart's commitment to supporting rural communities through thoughtful, sustainable housing solutions. The development aims to provide much-needed housing options while contributing to the community's long-term recovery and resilience. Specific project details, including unit count and design features, will be finalized as the project progresses through the planning and development phases.",
+    image: "Merritt",
+    status: "in-planning",
+    type: "Affordable Housing Development",
   },
   {
     id: 16,
@@ -232,62 +288,6 @@ export const portfolioDetailedProjects: ProjectData[] = [
       "Supports Anhart's 20,000 homes by 2045 mission",
       "Strategic rural location in Hope, BC for distribution access",
       "Low-income housing solutions and first-time homebuyer options",
-    ],
-  },
-  {
-    id: 7,
-    title: "The Oppenheimer Park Initiative",
-    location: "1335 Howe, Vancouver, BC",
-    year: "2016",
-    units: 160,
-    description:
-      "Relocation of 150 persons experiencing homelessness at an encampment in Oppenheimer Park that also housed another 150 persons over a 30 month period.",
-    briefDescription:
-      "160-room leased hotel provided emergency housing for 300 individuals displaced from Oppenheimer Park encampments over 30 months.",
-    comprehensiveDetails:
-      "The Oppenheimer Park Initiative addressed the critical housing crisis by relocating 150 persons experiencing homelessness from the Oppenheimer Park encampment. The initiative also provided housing for an additional 150 persons over a 30-month period. In 2015, Anhart partnered with the City of Vancouver to lease the Quality Inn at 1335 Howe Street, providing safe and secure temporary housing, wrap-around services, and transition supports to help residents move into permanent homes. The initiative demonstrated how hotel leases can serve as a rapid, scalable response to homelessness while bridging toward long-term solutions.",
-    image: "TheOppenhiemer",
-    status: "Completed",
-    type: "Temporary Housing",
-  },
-  {
-    id: 9,
-    title: "Merritt Village",
-    location: "Merritt, BC",
-    year: "2026",
-    units: 46,
-    description:
-      "Strategic development addressing housing needs in rural BC communities with sustainable design.",
-    briefDescription:
-      "A townhouse development in Merritt, BC, designed to provide affordable housing while supporting local non-profits and fostering inclusive community living.",
-    comprehensiveDetails:
-      "The Merritt Village Housing Initiative delivers 46 units of entry-level two- and three-bedroom townhomes across a five-acre site in Merritt, British Columbia. Emerging as a response to the city's housing loss from the 2021 flood, the development represents a forward-looking model of resilience and affordability. Organized into 12 four-plexes, the homes are complemented by family-friendly amenities such as a children's playground and community green spaces with mountain views. To enhance accessibility, provisions have been made for local non-profits to purchase units, enabling them to house their constituents and strengthen social cohesion. By combining sustainable design with a community-centered ownership model, Merritt Village addresses rural housing shortages while fostering inclusivity, affordability, and long-term stability.",
-    image: "Merritt",
-    status: "in-progress",
-    type: "Sustainable Development",
-  },
-  {
-    id: 10,
-    title: "179 Main & 626 Alexander",
-    location: "Vancouver, BC",
-    year: "2018, 2020",
-    units: "14",
-    description:
-      "Two mixed-income projects providing affordable rental apartments through private investment at 626 Alexander and 179 Main.",
-    briefDescription:
-      "14 affordable rental units below market at 626 Alexander and 179 Main, blending market and non-market models geared towards low-income households.",
-    comprehensiveDetails:
-      "Anhart developed two key mixed-income affordable rental projects: 626 Alexander (2018) and 179 Main (2020). Both developments leveraged private investment to create deeply affordable units alongside market rentals. 626 Alexander focused on mixed-income housing with community engagement opportunities, while 179 Main delivered deeply affordable units within a market rental development. Together, they demonstrated how non-profits and market developers can collaborate to integrate affordable housing into urban neighbourhoods without reliance on public funds.",
-    image: "affordapartment",
-    status: "completed",
-    type: "Multi-Phase Development",
-    highlights: [
-      "14 affordable apartment units (9 + 5)",
-      "Inner-city location advantages",
-      "Modern design integration",
-      "Two-phase development approach",
-      "Transit-accessible location",
-      "Community-focused amenities",
     ],
   },
   {

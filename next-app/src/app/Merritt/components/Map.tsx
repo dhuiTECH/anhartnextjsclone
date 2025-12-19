@@ -1,7 +1,5 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
 interface MarkerData {
   id: string;
   lat: number;
@@ -17,21 +15,8 @@ interface MapProps {
   propertyLocation?: [number, number]; // Red pinpoint for property location
 }
 
-// Inner map component that uses react-leaflet
-const MapInner = dynamic(
-  () => import('./MapInner'),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-full w-full bg-[#F9F7F2] rounded-lg flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-4xl mb-4 animate-pulse">🗺️</div>
-          <p className="text-[#14312C]/60">Loading map...</p>
-        </div>
-      </div>
-    ),
-  }
-);
+// Direct import - no SSR issues with direct Leaflet usage
+import MapInner from './MapInner';
 
 export default function Map({
   center = [50.1128, -120.7860], // Merritt, BC default
@@ -40,9 +25,8 @@ export default function Map({
   className = 'h-96 w-full',
   propertyLocation, // Red pinpoint for 3757 De Wolf Way
 }: MapProps) {
-  // Use a string version of the center as a key.
-  // If the center changes, React kills the old MapContainer entirely.
-  // This prevents Turbopack Fast Refresh from causing "already initialized" errors.
+  // Use a stable key since we handle marker updates manually in MapInner
+  // This prevents unnecessary remounting while still handling React strict mode
   const mapKey = `map-${center[0]}-${center[1]}-${zoom}`;
 
   return (

@@ -223,7 +223,7 @@ export default function ContactClient() {
         {/* RIGHT COLUMN: Form */}
         <div className="w-full md:w-1/2 bg-white flex flex-col justify-center p-12 md:p-24">
              <div className="max-w-md w-full">
-                <h2 className="font-serif text-3xl text-[#1a2621] mb-2">Register Your Interest</h2>
+                <h2 className="font-serif text-3xl text-[#1a2621] mb-2">Register for Priority Updates</h2>
                 <p className="text-[#1a2621]/50 text-sm mb-12">Join our interest list for affordable housing in Merritt, BC.</p>
 
                 <form onSubmit={handleSubmit} className="space-y-8">

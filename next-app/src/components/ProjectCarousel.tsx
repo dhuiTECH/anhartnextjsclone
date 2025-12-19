@@ -183,7 +183,7 @@ const CarouselCard: React.FC<CarouselCardProps> = ({
 
   const content = (
     <div
-      className="relative rounded-2xl overflow-hidden bg-background"
+      className="relative rounded-2xl overflow-hidden bg-white"
       style={{
         width: isMobile ? "280px" : "400px",
         height: isMobile ? "200px" : "280px",
@@ -197,13 +197,11 @@ const CarouselCard: React.FC<CarouselCardProps> = ({
         loading="lazy"
         draggable={false}
       />
-      {/* Gradient overlay for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
       
       {/* Title overlay */}
       {item.title && position === "CENTER" && (
-        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-          <h3 className="text-lg md:text-xl font-bold drop-shadow-lg">
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <h3 className="text-lg md:text-xl font-bold text-white drop-shadow-lg">
             {item.title}
           </h3>
         </div>
@@ -237,7 +235,7 @@ const CarouselCard: React.FC<CarouselCardProps> = ({
     return (
       <div style={cardStyle}>
         <Link 
-          href={item.link} 
+          href={item.link as any}
           className="block"
           onClick={(e) => {
             // Stop propagation to prevent drag handlers from interfering

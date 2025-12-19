@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Fix default marker icons for Next.js/Webpack
+// Fix default marker icons
 if (typeof window !== 'undefined') {
   delete (L.Icon.Default.prototype as any)._getIconUrl;
   L.Icon.Default.mergeOptions({
@@ -13,21 +12,12 @@ if (typeof window !== 'undefined') {
     iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
   });
-
-  // Inject styles for property icon
-  const STYLE_ID = 'merritt-property-icon-styles';
-  if (!document.getElementById(STYLE_ID)) {
-    const style = document.createElement('style');
-    style.id = STYLE_ID;
-    style.textContent = `
-      .merritt-property-icon {
-        background: transparent !important;
-        border: none !important;
-      }
-    `;
-    document.head.appendChild(style);
-  }
 }
+
+// Global map instance - single instance for entire app
+let globalMap: L.Map | null = null;
+let currentMarkers: L.Marker[] = [];
+let isInitializing = false;
 
 interface MarkerData {
   id: string;
@@ -40,10 +30,10 @@ interface MapInnerProps {
   center: [number, number];
   zoom: number;
   markers: MarkerData[];
-  propertyLocation?: [number, number]; // Red pinpoint for property location
+  propertyLocation?: [number, number];
 }
 
-// Create red pinpoint icon for property location
+// Create property icon
 const createPropertyIcon = (): L.DivIcon => {
   return L.divIcon({
     html: `
@@ -53,78 +43,146 @@ const createPropertyIcon = (): L.DivIcon => {
         <circle cx="12" cy="12" r="3" fill="#DC2626"/>
       </svg>
     `,
-    className: 'merritt-property-icon',
+    className: 'property-marker',
     iconSize: [24, 36],
     iconAnchor: [12, 36],
     popupAnchor: [0, -36],
   });
 };
 
-// Component to handle map size invalidation (fixes rendering issues)
-// Made defensive for Turbopack Fast Refresh compatibility
-function MapSizeHandler() {
-  const map = useMap();
+export default function MapInner({ center, zoom, markers, propertyLocation }: MapInnerProps) {
+  const mapRef = useRef<HTMLDivElement>(null);
+
+  console.log('DEBUG: MapInner render', {
+    markersCount: markers.length,
+    markerIds: markers.map(m => m.id),
+    center,
+    zoom,
+    hasGlobalMap: !!globalMap,
+    activeLayer: markers.length > 0 ? markers[0]?.category || 'unknown' : 'none'
+  });
 
   useEffect(() => {
-    if (!map) return;
+    if (!mapRef.current || typeof window === 'undefined' || isInitializing) return;
 
-    const timer = setTimeout(() => {
-      // Double-check map is still valid before invalidating
-      if (map && typeof map.invalidateSize === 'function') {
-        map.invalidateSize();
+    console.log('DEBUG: Map container setup', {
+      hasGlobalMap: !!globalMap,
+      containerElement: mapRef.current,
+      currentMapContainer: globalMap?._container
+    });
+
+    // If we already have a map, check if it's attached to the right container
+    if (globalMap) {
+      // If the map is attached to a different container, we need to reattach it
+      if (globalMap._container !== mapRef.current) {
+        console.log('DEBUG: Reattaching map to new container');
+        try {
+          // Remove the map from its current container
+          const oldContainer = globalMap._container;
+          if (oldContainer && oldContainer.parentNode) {
+            oldContainer.parentNode.removeChild(oldContainer);
+          }
+          // Move the map to the new container
+          mapRef.current.appendChild(globalMap._container);
+          globalMap.invalidateSize(); // Important: recalculate map size
+        } catch (error) {
+          console.log('DEBUG: Reattachment error:', error);
+          // If reattachment fails, create a new map
+          globalMap = null;
+        }
       }
-    }, 100);
 
-    return () => {
-      clearTimeout(timer);
-      // We don't call map.remove() here because MapContainer handles it.
-      // This prevents "leaking" map instances during Turbopack hot reloads.
-    };
-  }, [map]);
+      if (globalMap) {
+        updateMapMarkers(markers, propertyLocation);
+        globalMap.setView(center, zoom);
+        return;
+      }
+    }
 
-  return null;
-}
+    // Create new map instance
+    console.log('DEBUG: Creating new map instance');
+    isInitializing = true;
+    try {
+      globalMap = L.map(mapRef.current, {
+        center,
+        zoom,
+        scrollWheelZoom: true
+      });
 
-export default function MapInner({ center, zoom, markers, propertyLocation }: MapInnerProps) {
-  // Generate a stable unique key for MapContainer based on center and zoom
-  // This prevents Turbopack Fast Refresh from reusing a DOM node with an existing map
-  const containerKey = `leaflet-${center[0]}-${center[1]}-${zoom}`;
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(globalMap);
+
+      updateMapMarkers(markers, propertyLocation);
+    } catch (error) {
+      console.error('DEBUG: Map creation failed:', error);
+    } finally {
+      isInitializing = false;
+    }
+
+  }, []); // Only run once on mount
+
+  useEffect(() => {
+    console.log('DEBUG: useEffect triggered for marker updates', {
+      markersCount: markers.length,
+      markerIds: markers.map(m => m.id),
+      hasGlobalMap: !!globalMap
+    });
+
+    if (globalMap) {
+      updateMapMarkers(markers, propertyLocation);
+      globalMap.setView(center, zoom);
+    }
+  }, [markers, center, zoom, propertyLocation]);
+
+  // Helper function to update markers
+  function updateMapMarkers(newMarkers: MarkerData[], propertyLoc?: [number, number]) {
+    if (!globalMap) {
+      console.log('DEBUG: No globalMap available for marker updates');
+      return;
+    }
+
+    console.log('DEBUG: Updating markers', {
+      oldCount: currentMarkers.length,
+      newCount: newMarkers.length,
+      hasPropertyMarker: !!propertyLoc
+    });
+
+    // Remove existing markers
+    currentMarkers.forEach(marker => {
+      globalMap!.removeLayer(marker);
+    });
+    currentMarkers = [];
+
+    // Add property marker
+    if (propertyLoc) {
+      const propertyMarker = L.marker(propertyLoc, { icon: createPropertyIcon() })
+        .addTo(globalMap)
+        .bindPopup('<div><strong style="color: #DC2626">3757 De Wolf Way</strong><p style="font-size: 12px; margin-top: 4px; opacity: 0.8">Property Location</p></div>');
+      currentMarkers.push(propertyMarker);
+      console.log('DEBUG: Added property marker');
+    }
+
+    // Add amenity markers
+    newMarkers.forEach(marker => {
+      const mapMarker = L.marker([marker.lat, marker.lng])
+        .addTo(globalMap!)
+        .bindPopup(`<div><strong>${marker.title}</strong></div>`);
+      currentMarkers.push(mapMarker);
+    });
+
+    console.log('DEBUG: Marker update complete', {
+      totalMarkers: currentMarkers.length,
+      amenityMarkers: newMarkers.length,
+      hasPropertyMarker: !!propertyLoc
+    });
+  }
 
   return (
-    <MapContainer
-      key={containerKey}
-      center={center}
-      zoom={zoom}
-      scrollWheelZoom={true}
+    <div
+      ref={mapRef}
       style={{ height: '100%', width: '100%', borderRadius: '8px' }}
-      className="leaflet-container"
-    >
-      <MapSizeHandler />
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      {/* Red property location marker */}
-      {propertyLocation && (
-        <Marker position={propertyLocation} icon={createPropertyIcon()}>
-          <Popup>
-            <div>
-              <strong style={{ color: '#DC2626' }}>3757 De Wolf Way</strong>
-              <p style={{ fontSize: '12px', marginTop: '4px', opacity: 0.8 }}>Property Location</p>
-            </div>
-          </Popup>
-        </Marker>
-      )}
-      {markers.map((marker) => (
-        <Marker key={marker.id} position={[marker.lat, marker.lng]}>
-          <Popup>
-            <div>
-              <strong>{marker.title}</strong>
-            </div>
-          </Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+    />
   );
 }
 

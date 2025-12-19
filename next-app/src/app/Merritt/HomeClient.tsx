@@ -99,43 +99,53 @@ export default function HomeClient() {
     }
   }, []);
 
-  // GSAP Tree Animation
-  useGSAP(() => {
-    if (!leftTreeRef.current || !rightTreeRef.current || !featuredSectionRef.current) return;
-
-    // Animate Left Tree (In from left side, staying grounded)
-    gsap.fromTo(leftTreeRef.current,
-      { x: -50, y: 0 }, // Starting position (outside left, grounded)
-      {
-        x: 0,
-        y: 0,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: featuredSectionRef.current,
-          start: 'top bottom', // Start when top of section hits bottom of viewport
-          end: 'bottom top',   // End when bottom of section hits top of viewport
-          scrub: 1,            // Smooth scrubbing effect (1s lag)
-        }
+  // GSAP Tree Animation - Fixed with proper timing
+  useEffect(() => {
+    // Add a small delay to ensure DOM is fully mounted
+    const timer = setTimeout(() => {
+      if (!leftTreeRef.current || !rightTreeRef.current || !featuredSectionRef.current) {
+        return;
       }
-    );
 
-    // Animate Right Tree (In from right side, staying grounded)
-    gsap.fromTo(rightTreeRef.current,
-      { x: 50, y: 0 }, // Starting position (outside right, grounded)
-      {
-        x: 0,
-        y: 0,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: featuredSectionRef.current,
-          start: 'top bottom', // Start when top of section hits bottom of viewport
-          end: 'bottom top',   // End when bottom of section hits top of viewport
-          scrub: 1,            // Smooth scrubbing effect (1s lag)
+      // Animate Left Tree (In from left side, staying grounded)
+      gsap.fromTo(leftTreeRef.current,
+        { x: -50, y: 0 }, // Starting position (outside left, grounded)
+        {
+          x: 0,
+          y: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: featuredSectionRef.current,
+            start: 'top bottom', // Start when top of section hits bottom of viewport
+            end: 'bottom top',   // End when bottom of section hits top of viewport
+            scrub: 1,            // Smooth scrubbing effect (1s lag)
+          }
         }
-      }
-    );
+      );
 
-  }, { scope: featuredSectionRef });
+      // Animate Right Tree (In from right side, staying grounded)
+      gsap.fromTo(rightTreeRef.current,
+        { x: 50, y: 0 }, // Starting position (outside right, grounded)
+        {
+          x: 0,
+          y: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: featuredSectionRef.current,
+            start: 'top bottom', // Start when top of section hits bottom of viewport
+            end: 'bottom top',   // End when bottom of section hits top of viewport
+            scrub: 1,            // Smooth scrubbing effect (1s lag)
+          }
+        }
+      );
+    }, 100); // Small delay to ensure DOM is ready
+
+    return () => {
+      clearTimeout(timer);
+      // Clean up ScrollTrigger instances
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
 
   // GSAP Mountain Parallax Animation
   useGSAP(() => {
@@ -290,7 +300,7 @@ export default function HomeClient() {
                 </p>
             </div>
             <Link href="/Merritt/contact" className="inline-block bg-white text-[#1a2621] px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm tracking-[0.2em] uppercase font-black rounded-full shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 hover:bg-[#a6906c] hover:text-white transition-all duration-300 opacity-0 animate-fade-up glow-hover cursor-pointer" style={{ animationDelay: '0.8s' }}>
-                Register Your Interest
+                Register for Priority Updates
             </Link>
         </div>
         <div className="absolute bottom-0 left-0 w-full leading-none z-20">
@@ -394,13 +404,8 @@ export default function HomeClient() {
             {/* Positioned absolute relative to the parent div, NOT inside the image div */}
             {/* Tablet: Adjust positioning to prevent overflow */}
             {/* GPU acceleration added via transform to prevent scroll jitter */}
-            <div 
+            <div
               className="absolute z-20 -bottom-8 md:-bottom-12 lg:-bottom-16 left-4 md:left-8 lg:left-12 xl:-left-6 w-[35%] md:w-[40%] lg:w-[45%] max-w-[180px] md:max-w-none border-[4px] md:border-[6px] lg:border-[8px] border-white rounded-lg shadow-2xl overflow-hidden"
-              style={{ 
-                transform: 'translateZ(0)', 
-                backfaceVisibility: 'hidden',
-                willChange: 'transform'
-              }}
             >
                {/* Aspect ratio square for Keith */}
               <div className="aspect-square relative">
@@ -409,21 +414,16 @@ export default function HomeClient() {
                   alt="Keith"
                   fill
                   className="object-cover"
-                  style={{ transform: 'translateZ(0)' }}
                   />
               </div>
             </div>
 
             {/* Keith's Title */}
-            <div 
+            <div
               className="absolute z-30 -bottom-12 md:-bottom-16 lg:-bottom-24 left-4 md:left-8 lg:left-12 xl:-left-6 w-[35%] md:w-[40%] lg:w-[45%] max-w-[180px] md:max-w-none flex justify-center"
-              style={{ 
-                transform: 'translateZ(0)', 
-                backfaceVisibility: 'hidden' 
-              }}
             >
               <p className="text-white font-black text-[10px] md:text-xs lg:text-sm tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.6)] text-center px-1">
-                Co-Founder Keith Wiebe Gordon
+                Co-Founder Keith Wiebe Gordon<br/>(20 years of development experience)
               </p>
             </div>
 
@@ -691,6 +691,10 @@ export default function HomeClient() {
                         <h4 className="font-semibold text-[#1a2621] text-sm">Game On Sports Bar</h4>
                         <p className="text-[#1a2621]/60 text-xs">Next door • 3701 De Wolf Way</p>
                     </div>
+                    <div className="border-l-4 border-[#a6906c] pl-4">
+                        <h4 className="font-semibold text-[#1a2621] text-sm">Trails & Hikes</h4>
+                        <p className="text-[#1a2621]/60 text-xs">Immediate access • Scenic walking paths</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -797,22 +801,40 @@ export default function HomeClient() {
                 <p className="text-[#e6e2da] leading-relaxed mb-8 font-light text-sm md:text-base">Located in the heart of Merritt, BC, our townhome community offers the perfect balance of urban convenience and natural beauty in the scenic Nicola Valley.</p>
                 <ul className="space-y-4 text-sm tracking-wide">
                     <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Prime Merritt Location</li>
-                    <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Walking Distance to Amenities</li>
+                    <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Walking Distance to Amenities & Hikes/Trails</li>
                     <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Easy Highway Access</li>
                 </ul>
             </div>
-            <div className="w-full lg:w-2/3 h-[300px] md:h-[400px] bg-[#23362b] rounded-lg overflow-hidden shadow-2xl border border-white/10 relative group">
-                <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3254.789!2d-120.762!3d50.1205!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54813f8b4e6c9b9f%3A0x3757%20De%20Wolf%20Way%2C%20Merritt%2C%20BC!2s3757%20De%20Wolf%20Way%2C%20Merritt%2C%20BC!5e0!3m2!1sen!2sca!4v1715123456789!5m2!1sen!2sca" 
-                    width="100%" 
-                    height="100%" 
-                    style={{border:0}} 
-                    allowFullScreen 
-                    loading="lazy" 
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="Merritt Townhome Community, Merritt, BC"
-                    className="opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700"
-                />
+            <div className="w-full lg:w-2/3 space-y-6">
+                {/* Google Maps - Top */}
+                <div className="h-[300px] md:h-[400px] bg-[#23362b] rounded-lg overflow-hidden shadow-2xl border border-white/10 relative group">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3254.789!2d-120.762!3d50.1205!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54813f8b4e6c9b9f%3A0x3757%20De%20Wolf%20Way%2C%20Merritt%2C%20BC!2s3757%20De%20Wolf%20Way%2C%20Merritt%2C%20BC!5e0!3m2!1sen!2sca!4v1715123456789!5m2!1sen!2sca"
+                        width="100%"
+                        height="100%"
+                        style={{border:0}}
+                        allowFullScreen
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title="Merritt Townhome Community, Merritt, BC"
+                        className="opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700"
+                    />
+                </div>
+
+                {/* Mountain Views Image - Bottom */}
+                <div className="h-[200px] md:h-[300px] rounded-lg overflow-hidden shadow-2xl border border-white/10 relative group">
+                    <Image
+                        src="/merritt-assets/mountainviews.jpg"
+                        alt="Spectacular mountain views surrounding the Merritt community"
+                        fill
+                        className="object-cover hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="absolute bottom-4 left-4 text-white">
+                        <h3 className="font-serif text-lg font-bold mb-1">Mountain Views</h3>
+                        <p className="text-sm text-white/90">Breathtaking scenery surrounds our community</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -831,7 +853,7 @@ export default function HomeClient() {
             <div className="max-w-4xl mx-auto bg-white p-6 md:p-8 lg:p-12 shadow-2xl shadow-[#1a2621]/5 relative overflow-hidden reveal">
                 <div className="absolute top-0 left-0 w-full h-2 bg-[#1a2621]"></div>
                 <div className="text-center mb-6 md:mb-8">
-                    <h2 className="font-serif text-2xl md:text-3xl text-[#1a2621] mb-3">Register Your Interest</h2>
+                    <h2 className="font-serif text-2xl md:text-3xl text-[#1a2621] mb-3">Register for Priority Updates</h2>
                     <p className="text-[#1a2621]/60 text-sm md:text-base">Join our interest list for affordable housing in Merritt, BC.</p>
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
