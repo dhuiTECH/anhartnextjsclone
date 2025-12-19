@@ -40,7 +40,7 @@ export default function KamloopsRelocationPage() {
               </h1>
           <p className="text-white/90 text-base sm:text-lg md:text-xl font-light tracking-[0.05em] leading-relaxed max-w-3xl mx-auto drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] px-2">
             Kamloops is expensive. Discover affordable homeownership in beautiful Merritt, BC.
-            Your gateway to modern townhomes for sale in the scenic Nicola Valley.
+            <span className="hidden md:inline"> Your gateway to modern townhomes for sale in the scenic Nicola Valley.</span>
               </p>
           </div>
 

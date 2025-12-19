@@ -14,6 +14,7 @@ interface MapProps {
   zoom?: number;
   markers?: MarkerData[];
   className?: string;
+  propertyLocation?: [number, number]; // Red pinpoint for property location
 }
 
 // Inner map component that uses react-leaflet
@@ -37,6 +38,7 @@ export default function Map({
   zoom = 13,
   markers = [],
   className = 'h-96 w-full',
+  propertyLocation, // Red pinpoint for 3757 De Wolf Way
 }: MapProps) {
   // Use a string version of the center as a key.
   // If the center changes, React kills the old MapContainer entirely.
@@ -45,7 +47,13 @@ export default function Map({
 
   return (
     <div className={className}>
-      <MapInner key={mapKey} center={center} zoom={zoom} markers={markers} />
+      <MapInner 
+        key={mapKey} 
+        center={center} 
+        zoom={zoom} 
+        markers={markers}
+        propertyLocation={propertyLocation}
+      />
     </div>
   );
 }

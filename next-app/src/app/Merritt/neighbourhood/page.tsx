@@ -465,6 +465,7 @@ export default function NeighbourhoodPage() {
                 zoom={14}
                 markers={markers}
                 className="h-full w-full"
+                propertyLocation={[50.1205, -120.7620]} // 3757 De Wolf Way - Red pinpoint
               />
             </div>
 
