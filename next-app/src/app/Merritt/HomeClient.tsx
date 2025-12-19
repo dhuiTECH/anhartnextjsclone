@@ -6,8 +6,16 @@ import Image from 'next/image';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 import Footer from './components/Footer';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import { useTurnstile } from '@/hooks/useTurnstile';
 import { Turnstile } from '@/components/Turnstile';
+
+// Register GSAP plugins
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const expertise = [
   {
@@ -63,6 +71,13 @@ export default function HomeClient() {
   const featuredSectionRef = useRef(null);
   const amenitiesSectionRef = useRef(null);
 
+  // GSAP refs for tree animations
+  const leftTreeRef = useRef(null);
+  const rightTreeRef = useRef(null);
+
+  // GSAP refs for mountain parallax
+  const mountainRef = useRef(null);
+
   // --- EXISTING OBSERVERS ---
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -84,6 +99,69 @@ export default function HomeClient() {
     }
   }, []);
 
+  // GSAP Tree Animation - Fixed with proper timing
+  useEffect(() => {
+    // Add a small delay to ensure DOM is fully mounted
+    const timer = setTimeout(() => {
+      if (!leftTreeRef.current || !rightTreeRef.current || !featuredSectionRef.current) {
+        return;
+      }
+
+      // Animate Left Tree (In from left side, staying grounded)
+      gsap.fromTo(leftTreeRef.current,
+        { x: -50, y: 0 }, // Starting position (outside left, grounded)
+        {
+          x: 0,
+          y: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: featuredSectionRef.current,
+            start: 'top bottom', // Start when top of section hits bottom of viewport
+            end: 'bottom top',   // End when bottom of section hits top of viewport
+            scrub: 0.3,          // Reduced lag for better scroll responsiveness
+          }
+        }
+      );
+
+      // Animate Right Tree (In from right side, staying grounded)
+      gsap.fromTo(rightTreeRef.current,
+        { x: 50, y: 0 }, // Starting position (outside right, grounded)
+        {
+          x: 0,
+          y: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: featuredSectionRef.current,
+            start: 'top bottom', // Start when top of section hits bottom of viewport
+            end: 'bottom top',   // End when bottom of section hits top of viewport
+            scrub: 0.3,          // Reduced lag for better scroll responsiveness
+          }
+        }
+      );
+    }, 100); // Small delay to ensure DOM is ready
+
+    return () => {
+      clearTimeout(timer);
+      // Clean up ScrollTrigger instances
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+
+  // GSAP Mountain Parallax Animation
+  useGSAP(() => {
+    if (!mountainRef.current || !amenitiesSectionRef.current) return;
+
+    gsap.to(mountainRef.current, {
+      y: 150, // Move down slightly as we scroll down for parallax effect
+      ease: 'none',
+      scrollTrigger: {
+        trigger: amenitiesSectionRef.current,
+        start: 'top bottom', // Start when top of section enters viewport
+        end: 'bottom top',   // End when bottom of section leaves viewport
+        scrub: 0.3,          // Reduced lag for better scroll responsiveness
+      },
+    });
+  }, { scope: amenitiesSectionRef });
 
   // Form submission handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -391,52 +469,46 @@ export default function HomeClient() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-5xl mx-auto relative z-10">
             {/* Garden Flat (2-Bedroom) */}
             <div className="bg-white rounded-xl shadow-xl border border-[#e6e2da] overflow-hidden group hover:shadow-2xl transition-all duration-300 h-full flex flex-col relative z-10">
-              <div className="relative h-80 overflow-hidden group">
-                {/* Navigation Arrows */}
-                <button
-                  onClick={() => setGardenFlatImage((prev) => (prev - 1 + 3) % 3)}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-black/50  text-white p-2 rounded-full opacity-100 md:transition-opacity md:duration-300"
-                  aria-label="Previous image"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <button
-                  onClick={() => setGardenFlatImage((prev) => (prev + 1) % 3)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/50  text-white p-2 rounded-full opacity-100 md:transition-opacity md:duration-300"
-                  aria-label="Next image"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
+              <div
+                className="relative h-80 overflow-hidden group cursor-pointer md:cursor-default"
+                onClick={() => setGardenFlatImage((prev) => (prev + 1) % 3)}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  setGardenFlatImage((prev) => (prev + 1) % 3);
+                }}
+              >
+                {/* Mobile tap indicator */}
+                <div className="absolute bottom-8 right-4 md:hidden">
+                  <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
+                    Tap to cycle
+                  </div>
+                </div>
                 {/* Exterior Garden View - Default */}
                 <img
                   src="/merritt-assets/seniorgarden.jpg"
                   alt="Garden Flat - Ground level 2-bedroom townhome with garden access"
                   loading="lazy"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                    gardenFlatImage === 0 ? 'opacity-100' : 'opacity-0'
-                  }`}
+                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                     gardenFlatImage === 0 ? 'opacity-100' : 'opacity-0'
+                   } md:group-hover:opacity-0`}
                 />
                 {/* Bedroom Interior */}
                 <img
                   src="/merritt-assets/gbedroom.jpg"
                   alt="Garden Flat - Cozy bedroom interior"
                   loading="lazy"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                    gardenFlatImage === 1 ? 'opacity-100' : 'opacity-0'
-                  }`}
+                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                     gardenFlatImage === 1 ? 'opacity-100' : 'opacity-0'
+                   } md:group-hover:opacity-100`}
                 />
                 {/* Kitchen Interior */}
                 <img
                   src="/merritt-assets/gkitchen.jpg"
                   alt="Garden Flat - Functional kitchen interior"
                   loading="lazy"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                    gardenFlatImage === 2 ? 'opacity-100' : 'opacity-0'
-                  }`}
+                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                     gardenFlatImage === 2 ? 'opacity-100' : 'opacity-0'
+                   } md:group-hover:opacity-100 md:group-hover:delay-1000`}
                 />
                 <div className="absolute top-4 left-4">
                   <div className="w-16 h-8 bg-[#a6906c] rounded-full flex items-center justify-center text-white font-bold text-xs shadow-lg">GROUND</div>
@@ -474,52 +546,46 @@ export default function HomeClient() {
 
             {/* Sky Townhome (3-Bedroom) */}
             <div className="bg-white rounded-xl shadow-xl border border-[#e6e2da] overflow-hidden group hover:shadow-2xl transition-all duration-300 h-full flex flex-col relative z-10">
-              <div className="relative h-80 overflow-hidden group">
-                {/* Navigation Arrows */}
-                <button
-                  onClick={() => setSkyTownhomeImage((prev) => (prev - 1 + 3) % 3)}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-black/50  text-white p-2 rounded-full opacity-100 md:transition-opacity md:duration-300"
-                  aria-label="Previous image"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-                <button
-                  onClick={() => setSkyTownhomeImage((prev) => (prev + 1) % 3)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/50  text-white p-2 rounded-full opacity-100 md:transition-opacity md:duration-300"
-                  aria-label="Next image"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
+              <div
+                className="relative h-80 overflow-hidden group cursor-pointer md:cursor-default"
+                onClick={() => setSkyTownhomeImage((prev) => (prev + 1) % 3)}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  setSkyTownhomeImage((prev) => (prev + 1) % 3);
+                }}
+              >
+                {/* Mobile tap indicator */}
+                <div className="absolute bottom-8 right-4 md:hidden">
+                  <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
+                    Tap to cycle
+                  </div>
+                </div>
                 {/* Exterior View - Default */}
                 <img
                   src="/merritt-assets/family.jpg"
                   alt="Sky Townhome - Two-story 3-bedroom townhome exterior"
                   loading="lazy"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                    skyTownhomeImage === 0 ? 'opacity-100' : 'opacity-0'
-                  }`}
+                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                     skyTownhomeImage === 0 ? 'opacity-100' : 'opacity-0'
+                   } md:group-hover:opacity-0`}
                 />
                 {/* Bedroom Interior */}
                 <img
                   src="/merritt-assets/sbedroom.jpg"
                   alt="Sky Townhome - Master bedroom interior"
                   loading="lazy"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                    skyTownhomeImage === 1 ? 'opacity-100' : 'opacity-0'
-                  }`}
+                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                     skyTownhomeImage === 1 ? 'opacity-100' : 'opacity-0'
+                   } md:group-hover:opacity-100`}
                 />
                 {/* Kitchen Interior */}
                 <img
                   src="/merritt-assets/skitchen.jpg"
                   alt="Sky Townhome - Modern kitchen interior"
                   loading="lazy"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                    skyTownhomeImage === 2 ? 'opacity-100' : 'opacity-0'
-                  }`}
+                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                     skyTownhomeImage === 2 ? 'opacity-100' : 'opacity-0'
+                   } md:group-hover:opacity-100 md:group-hover:delay-1000`}
                 />
                 <div className="absolute top-4 left-4">
                   <div className="w-20 md:w-16 h-8 bg-[#a6906c] rounded-full flex items-center justify-center text-white font-bold text-[9px] md:text-[10px] shadow-lg px-2">2-STORY</div>
@@ -556,9 +622,9 @@ export default function HomeClient() {
             </div>
           </div>
 
-          {/* Decorative Trees - GSAP Animated */}
-          {/* Tablet: Smaller trees, Desktop: Full size */}
-          <div  className="absolute bottom-0 left-0 md:left-4 lg:left-8 xl:left-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-0 overflow-hidden">
+            {/* Decorative Trees - GSAP Animated */}
+            {/* Tablet: Smaller trees, Desktop: Full size */}
+            <div ref={leftTreeRef} className="absolute bottom-0 left-0 md:left-4 lg:left-8 xl:left-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-0 overflow-hidden">
             <Image
               src="/merritt-assets/trees1.png"
               alt="Decorative pine tree"
@@ -568,7 +634,7 @@ export default function HomeClient() {
             />
           </div>
 
-          <div  className="absolute bottom-0 right-0 md:right-4 lg:right-8 xl:right-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-0 overflow-hidden">
+            <div ref={rightTreeRef} className="absolute bottom-0 right-0 md:right-4 lg:right-8 xl:right-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-0 overflow-hidden">
             <Image
               src="/merritt-assets/trees2.png"
               alt="Decorative pine tree"
@@ -583,8 +649,8 @@ export default function HomeClient() {
       {/* Expertise Grid */}
       <section ref={amenitiesSectionRef} id="expertise" className="relative overflow-hidden py-12 md:py-20 border-t border-[#e6e2da]">
 
-        {/* Mountain Background Image - GSAP Parallax */}
-        <div  className="absolute top-[-100px] left-0 right-0 w-full h-full z-0 pointer-events-none opacity-20">
+          {/* Mountain Background Image - GSAP Parallax */}
+          <div ref={mountainRef} className="absolute top-[-100px] left-0 right-0 w-full h-full z-0 pointer-events-none opacity-20">
           <Image
             src="/merritt-assets/mountains.png?v=2"
             alt="Merritt Mountains background"
