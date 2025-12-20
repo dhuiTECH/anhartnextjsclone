@@ -48,7 +48,7 @@ export default function HomeClient() {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
     };
 
     checkMobile();
@@ -56,8 +56,8 @@ export default function HomeClient() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Reduce parallax distance on mobile to prevent jumpy scrolling
-  const villageY = useTransform(villageScrollProgress, [0, 1], [0, isMobile ? 50 : 200]);
+  // Disable parallax on mobile to prevent jumpy scrolling - rely purely on CSS sticky
+  const villageY = useTransform(villageScrollProgress, [0, 1], [0, isMobile ? 0 : 200]);
 
   // Mobile image switching state
   const [gardenFlatImage, setGardenFlatImage] = useState(0); // 0: exterior, 1: bedroom, 2: kitchen
@@ -91,6 +91,9 @@ export default function HomeClient() {
   // GSAP refs for mountain parallax
   const mountainRef = useRef(null);
 
+  // GSAP ref for mountain views image
+  const mountainViewsRef = useRef(null);
+
   // --- EXISTING OBSERVERS ---
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -116,16 +119,15 @@ export default function HomeClient() {
   useEffect(() => {
     // Add a small delay to ensure DOM is fully mounted
     const timer = setTimeout(() => {
-      if (!leftTreeRef.current || !rightTreeRef.current || !featuredSectionRef.current) {
+      if (!leftTreeRef.current || !rightTreeRef.current || !featuredSectionRef.current || !mountainViewsRef.current) {
         return;
       }
 
-      // Animate Left Tree (In from left side, staying grounded)
+      // Animate Left Tree (Vertical parallax effect)
       gsap.fromTo(leftTreeRef.current,
-        { x: -50, y: 0 }, // Starting position (outside left, grounded)
+        { y: 100 }, // Starting position (below)
         {
-          x: 0,
-          y: 0,
+          y: 0, // Ending position (settle on bottom line)
           ease: 'none',
           force3D: true, // Forces GPU usage to prevent sub-pixel jitter
           scrollTrigger: {
@@ -138,12 +140,11 @@ export default function HomeClient() {
         }
       );
 
-      // Animate Right Tree (In from right side, staying grounded)
+      // Animate Right Tree (Vertical parallax effect with different depth)
       gsap.fromTo(rightTreeRef.current,
-        { x: 50, y: 0 }, // Starting position (outside right, grounded)
+        { y: 120 }, // Starting position (below, slightly more than left tree)
         {
-          x: 0,
-          y: 0,
+          y: 0, // Ending position (settle on bottom line)
           ease: 'none',
           force3D: true, // Forces GPU usage to prevent sub-pixel jitter
           scrollTrigger: {
@@ -152,6 +153,26 @@ export default function HomeClient() {
             end: 'bottom top',   // End when bottom of section hits top of viewport
             scrub: 0.3,          // Reduced lag for better scroll responsiveness
             fastScrollEnd: true, // Stop calculation when idle to prevent micro-drifting
+          }
+        }
+      );
+
+      // Animate Mountain Views Image (Fade in and slide up on scroll)
+      gsap.fromTo(mountainViewsRef.current,
+        {
+          opacity: 0,
+          y: 50 // Start slightly below and transparent
+        },
+        {
+          opacity: 1,
+          y: 0, // Fade in and slide up to normal position
+          duration: 1.2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: mountainViewsRef.current,
+            start: 'top 80%', // Start when top of element is 80% from top of viewport
+            end: 'bottom 20%', // End when bottom of element is 20% from top of viewport
+            toggleActions: 'play none none reverse' // Play on enter, reverse on leave
           }
         }
       );
@@ -315,12 +336,12 @@ export default function HomeClient() {
                     Affordable Townhomes<br/>in Merritt, BC
                 </h1>
                 <p className="text-sm md:text-base lg:text-lg font-bold tracking-[0.15em] leading-relaxed opacity-0 animate-fade-up text-white mb-4 md:mb-8 lg:mb-12 uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center max-w-3xl mx-auto px-4" style={{ animationDelay: '0.6s' }}>
-                    <span className="md:hidden">Affordable homeownership and modern living in scenic merritt, bc</span>
-                    <span className="hidden md:inline">New Townhomes in beautiful Merritt, BC. Your accessible gateway to homeownership in BC's scenic Nicola Valley.</span>
+                    <span className="md:hidden">Discover Family-Sized Townhomes and Single-Level Living in Merritt's Newest Affordable Community</span>
+                    <span className="hidden md:inline">Discover Family-Sized Townhomes and Single-Level Living in Merritt's Newest Affordable Community</span>
                 </p>
             </div>
-            <Link href="/Merritt/contact" className="inline-block bg-white text-[#1a2621] px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm tracking-[0.2em] uppercase font-black rounded-full shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 hover:bg-[#a6906c] hover:text-white transition-all duration-300 opacity-0 animate-fade-up glow-hover cursor-pointer" style={{ animationDelay: '0.8s' }}>
-                Register for Priority Updates
+            <Link href="/Merritt/interiors" className="inline-block bg-white text-[#1a2621] px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm tracking-[0.2em] uppercase font-black rounded-full shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 hover:bg-[#a6906c] hover:text-white transition-all duration-300 opacity-0 animate-fade-up glow-hover cursor-pointer" style={{ animationDelay: '0.8s', fontFamily: 'Inter, sans-serif' }}>
+                View Interiors
             </Link>
         </div>
         <div className="absolute bottom-0 left-0 w-full leading-none z-20">
@@ -355,8 +376,8 @@ export default function HomeClient() {
 
       {/* Tropical Living Section */}
       {/* GPU acceleration added to prevent scroll jitter with absolute positioned elements */}
-      <section 
-        className="w-full py-16 md:py-20 lg:py-32 pb-24 md:pb-24 lg:pb-32 bg-white overflow-hidden"
+      <section
+        className="w-full py-16 md:py-20 lg:py-32 pb-24 md:pb-24 lg:pb-32 bg-white relative z-20"
         style={{ transform: 'translateZ(0)' }}
       >
         <div className="max-w-7xl mx-auto px-6 md:px-8">
@@ -454,7 +475,7 @@ export default function HomeClient() {
                 transform: 'translateZ(0)'
               }}
             >
-              <p className="text-white font-black text-[9px] md:text-xs lg:text-sm tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.6)] text-center px-1 leading-tight">
+              <p className="text-white font-black text-[9px] md:text-xs lg:text-sm tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.6)] text-center px-1 leading-tight text-nowrap md:text-wrap">
                 Co-Founder Keith Wiebe Gordon<br/>(20 years of development experience)
               </p>
             </div>
@@ -469,17 +490,19 @@ export default function HomeClient() {
       </section>
 
       {/* --- SECTION 2: STICKY PARALLAX IMAGE --- */}
-      {/* 1. h-screen: Ensures it takes up full view
-          2. sticky top-0: Makes it stick to viewport top
-          3. z-0: Puts it BEHIND the next section
-      */}
-      <section ref={villageRef} className="relative w-full h-[80vh] md:h-[90vh] lg:h-screen sticky top-0 z-0 overflow-hidden bg-white">
+      {/* WRAPPER: Holds the Ref and Dimensions. z-0 keeps it behind Section 1 */}
+      <div
+        ref={villageRef}
+        className="relative w-full h-[80vh] md:h-[90vh] h-[100dvh] min-h-[500px] z-0"
+      >
+        {/* INNER: Purely for sticking. Fills the parent. */}
+        <section className="sticky top-0 w-full h-full overflow-hidden bg-white">
         <motion.div
           className="w-full h-full absolute inset-0 rounded-2xl md:rounded-3xl overflow-hidden"
           style={{
             y: villageY,
-            // Remove rotateZ hack that can cause mobile issues
-            willChange: 'transform' // Better mobile performance hint
+            willChange: 'transform', // Hardware acceleration hint
+            transformStyle: 'preserve-3d' // Better 3D transform performance
           }}
         >
           <picture className="w-full h-full">
@@ -487,11 +510,12 @@ export default function HomeClient() {
             <img
               src="/merritt-assets/fullvillage.jpg"
               alt="Merritt townhome community site in the scenic Nicola Valley landscape"
-              className="w-full h-full object-cover scale-110"
+              className="w-full h-full object-cover scale-[1.15]"
             />
           </picture>
         </motion.div>
-      </section>
+        </section>
+      </div>
 
       {/* Featured Units and Homes */}
       <section ref={featuredSectionRef} className="relative bg-white py-12 md:py-16 lg:py-24 overflow-hidden">
@@ -572,9 +596,11 @@ export default function HomeClient() {
                   </div>
                 </div>
                 <div className="mt-6">
-                  <div className="w-full bg-[#a6906c] text-white py-3 px-4 rounded-lg text-sm font-semibold inline-block text-center">
-                    Final product specifications to be determined
-                  </div>
+                  <Link href="/Merritt/interiors">
+                    <div className="w-full bg-[#a6906c] text-white py-3 px-4 rounded-lg text-sm font-semibold inline-block text-center cursor-pointer hover:bg-[#8b7355] transition-colors">
+                      View Interior Concepts
+                    </div>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -649,9 +675,11 @@ export default function HomeClient() {
                   </div>
                 </div>
                 <div className="mt-6">
-                  <div className="w-full bg-[#a6906c] text-white py-3 px-4 rounded-lg text-sm font-semibold inline-block text-center">
-                    Final product specifications to be determined
-                  </div>
+                  <Link href="/Merritt/interiors">
+                    <div className="w-full bg-[#a6906c] text-white py-3 px-4 rounded-lg text-sm font-semibold inline-block text-center cursor-pointer hover:bg-[#8b7355] transition-colors">
+                      View Interior Concepts
+                    </div>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -665,7 +693,7 @@ export default function HomeClient() {
               alt="Decorative pine tree"
               width={500}
               height={1500}
-              className="object-contain w-full h-auto opacity-70"
+              className="object-contain object-bottom w-full h-auto opacity-70"
             />
           </div>
 
@@ -675,7 +703,7 @@ export default function HomeClient() {
               alt="Decorative pine tree"
               width={500}
               height={1500}
-              className="object-contain w-full h-auto opacity-70"
+              className="object-contain object-bottom w-full h-auto opacity-70"
             />
           </div>
         </div>
@@ -732,12 +760,12 @@ export default function HomeClient() {
                         <p className="text-[#1a2621]/60 text-xs">850m walk • 12 minutes</p>
                     </div>
                     <div className="border-l-4 border-[#a6906c] pl-4">
-                        <h4 className="font-semibold text-[#1a2621] text-sm">Game On Sports Bar</h4>
-                        <p className="text-[#1a2621]/60 text-xs">Next door • 3701 De Wolf Way</p>
+                        <h4 className="font-semibold text-[#1a2621] text-sm">Nicola Valley Hospital</h4>
+                        <p className="text-[#1a2621]/60 text-xs">3km • 5 min drive</p>
                     </div>
                     <div className="border-l-4 border-[#a6906c] pl-4">
-                        <h4 className="font-semibold text-[#1a2621] text-sm">Trails & Hikes</h4>
-                        <p className="text-[#1a2621]/60 text-xs">Immediate access • Scenic walking paths</p>
+                        <h4 className="font-semibold text-[#1a2621] text-sm">Game On Sports Bar</h4>
+                        <p className="text-[#1a2621]/60 text-xs">Next door • 3701 De Wolf Way</p>
                     </div>
                   </div>
                 </div>
@@ -845,7 +873,7 @@ export default function HomeClient() {
                 <p className="text-[#e6e2da] leading-relaxed mb-8 font-light text-sm md:text-base px-2 md:px-0">Located in the heart of Merritt, BC, the contemplated townhome community may offer a balance of urban convenience and natural beauty in the scenic Nicola Valley.</p>
                 <ul className="space-y-4 text-sm tracking-wide px-2 md:px-0">
                     <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Prime Merritt Location</li>
-                    <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Walking Distance to Amenities & Hikes/Trails</li>
+                    <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Trails & Hikes</li>
                     <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Easy Highway Access</li>
                 </ul>
             </div>
@@ -866,7 +894,7 @@ export default function HomeClient() {
                 </div>
 
                 {/* Mountain Views Image - Bottom */}
-                <div className="h-[200px] md:h-[300px] rounded-lg overflow-hidden shadow-2xl border border-white/10 relative group">
+                <div ref={mountainViewsRef} className="h-[200px] md:h-[300px] rounded-lg overflow-hidden shadow-2xl border border-white/10 relative group opacity-0 translate-y-8">
                     <Image
                         src="/merritt-assets/mountainviews.jpg"
                         alt="Breathtaking Nicola Valley mountain views from Merritt townhome location"

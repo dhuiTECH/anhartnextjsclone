@@ -8,12 +8,12 @@ const HomeClient = dynamic(() => import('./HomeClient'), {
 
 export const metadata: Metadata = {
   title: 'Affordable Townhomes in Merritt, BC',
-  description: 'Introducing a contemplated townhome community in Merritt, BC. Your accessible path to homeownership within BC\'s beautiful Nicola Valley landscape.',
+  description: 'Affordable 3-bedroom townhomes for families and zero-stair flats for downsizers in the Nicola Valley.',
   keywords: 'affordable housing, townhomes, Merritt BC, Nicola Valley, first-time homebuyer, Anhart',
   alternates: { canonical: 'https://anhart.ca/Merritt' },
   openGraph: {
     title: 'Affordable Townhomes in Merritt, BC',
-    description: 'Modern townhomes with pricing TBD in scenic Merritt, BC. Vancouver developer Anhart brings affordable housing to the Nicola Valley.',
+    description: 'Affordable 3-bedroom townhomes for families and zero-stair flats for downsizers in the Nicola Valley.',
     images: ['/merritt-assets/fullvillage.webp'],
     url: 'https://anhart.ca/Merritt',
   },

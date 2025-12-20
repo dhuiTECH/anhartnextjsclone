@@ -21,7 +21,7 @@ const Map = dynamic(() => import('../components/Map'), {
 });
 
 export default function NeighbourhoodClient() {
-  const [activeLayer, setActiveLayer] = useState<'parks' | 'dining' | 'shopping' | 'schools' | 'transit'>('parks');
+  const [activeLayer, setActiveLayer] = useState<'parks' | 'dining' | 'shopping' | 'schools' | 'transit' | 'healthcare'>('parks');
 
   // Landmarks data for 3757 De Wolf Way, Merritt, BC
   const LANDMARKS = [
@@ -117,6 +117,15 @@ export default function NeighbourhoodClient() {
       lng: -120.7615,
       title: 'Bus Stop: De Wolf Way',
       category: 'Transit'
+    },
+
+    // HEALTHCARE
+    {
+      id: 'h1',
+      lat: 50.1117,
+      lng: -120.7892,
+      title: 'Nicola Valley Hospital & Health Centre',
+      category: 'Healthcare'
     }
   ];
 
@@ -133,6 +142,8 @@ export default function NeighbourhoodClient() {
         return landmark.category === 'Schools';
       case 'transit':
         return landmark.category === 'Transit';
+      case 'healthcare':
+        return landmark.category === 'Healthcare';
       default:
         return true;
     }
@@ -187,6 +198,12 @@ export default function NeighbourhoodClient() {
         { name: 'Kelowna transit access', distance: '1.5 hr drive' },
         { name: 'Regional airport', distance: '20 min drive' },
         { name: 'Major highway access', distance: 'On site' }
+      ]
+    },
+    healthcare: {
+      title: 'Healthcare',
+      items: [
+        { name: 'Nicola Valley Hospital & Health Centre', distance: '3 km • 5 min drive' }
       ]
     }
   };
