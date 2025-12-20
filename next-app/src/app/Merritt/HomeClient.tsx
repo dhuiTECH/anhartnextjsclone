@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useScroll, useTransform, motion } from 'framer-motion';
+import { useScroll, useTransform, useSpring, motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 import Footer from './components/Footer';
 import gsap from 'gsap';
@@ -48,10 +48,22 @@ export default function HomeClient() {
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
+    // #region agent log
+    fetch('http://localhost:7245/ingest/54531fa6-4131-4504-9dac-b25b7e15bf78',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'HomeClient.tsx:49',message:'useEffect triggered - about to set hydrated',data:{isHydrated:false,isMobile},sessionId:'debug-session',runId:'initial',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
+
     // Mark as hydrated and set initial mobile state
     setIsHydrated(true);
+
+    // #region agent log
+    fetch('http://localhost:7245/ingest/54531fa6-4131-4504-9dac-b25b7e15bf78',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'HomeClient.tsx:53',message:'setIsHydrated(true) called',data:{isHydrated:true,isMobile},sessionId:'debug-session',runId:'initial',hypothesisId:'A'})}).catch(()=>{});
+    // #endregion
+
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
+      const newIsMobile = window.innerWidth < 768 || 'ontouchstart' in window;
+
+
+      setIsMobile(newIsMobile);
     };
 
     checkMobile();
@@ -59,8 +71,32 @@ export default function HomeClient() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+
+  // Physics smoothing to bridge iOS native scroll thread with React
+  const smoothY = useSpring(villageScrollProgress, {
+    damping: 20,
+    stiffness: 100,
+    mass: 0.5
+  });
+
   // Only apply parallax transform after hydration to prevent SSR mismatch
-  const villageY = useTransform(villageScrollProgress, [0, 1], [0, (isHydrated && isMobile) ? 0 : 200]);
+  const villageY = useTransform(smoothY, [0, 1], [0, (isHydrated && isMobile) ? 0 : 200]);
+
+
+  // Monitor scroll progress changes
+  useEffect(() => {
+    const unsubscribe = villageScrollProgress.onChange((value) => {
+      // #region agent log
+      fetch('http://localhost:7245/ingest/54531fa6-4131-4504-9dac-b25b7e15bf78',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'HomeClient.tsx:79',message:'Scroll progress changed',data:{newValue:value,isMobile,isHydrated},sessionId:'debug-session',runId:'initial',hypothesisId:'E'})}).catch(()=>{});
+      // #endregion
+    });
+
+    return unsubscribe;
+  }, [villageScrollProgress, isMobile, isHydrated]);
+
+  // #region agent log
+  fetch('http://localhost:7245/ingest/54531fa6-4131-4504-9dac-b25b7e15bf78',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'HomeClient.tsx:69',message:'villageY transform calculated',data:{isHydrated,isMobile,scrollProgressType:typeof villageScrollProgress,villageYType:typeof villageY},sessionId:'debug-session',runId:'initial',hypothesisId:'B'})}).catch(()=>{});
+  // #endregion
 
   // Mobile image switching state
   const [gardenFlatImage, setGardenFlatImage] = useState(0); // 0: exterior, 1: bedroom, 2: kitchen
@@ -440,7 +476,6 @@ export default function HomeClient() {
                 height={600}
                 priority
                 className="w-full h-auto object-cover"
-                style={{ transform: 'translateZ(0)' }}
               />
             </div>
 
@@ -450,11 +485,12 @@ export default function HomeClient() {
             {/* GPU acceleration added via transform to prevent scroll jitter */}
             <div
               className="absolute z-20 -bottom-8 md:-bottom-12 lg:-bottom-16 left-4 md:left-8 lg:left-12 xl:-left-6 w-[35%] md:w-[40%] lg:w-[45%] max-w-[180px] md:max-w-none border-[4px] md:border-[6px] lg:border-[8px] border-white rounded-lg shadow-2xl overflow-hidden"
-              style={{ 
-                willChange: 'transform',
+              style={{
+                // GPU acceleration only on desktop to prevent mobile conflicts
+                willChange: isMobile ? 'auto' : 'transform',
+                transform: isMobile ? 'none' : 'translateZ(0)',
                 backfaceVisibility: 'hidden',
-                WebkitFontSmoothing: 'antialiased',
-                transform: 'translateZ(0)'
+                WebkitFontSmoothing: 'antialiased'
               }}
             >
                {/* Aspect ratio square for Keith */}
@@ -471,15 +507,16 @@ export default function HomeClient() {
             {/* Keith's Title - Positioned below the image frame */}
             <div
               className="absolute z-30 -bottom-8 md:-bottom-16 lg:-bottom-24 left-[17px] md:left-8 lg:left-12 xl:-left-6 w-[40%] md:w-[40%] lg:w-[45%] max-w-[200px] md:max-w-none flex justify-center"
-              style={{ 
-                willChange: 'transform',
+              style={{
+                // GPU acceleration only on desktop to prevent mobile conflicts
+                willChange: isMobile ? 'auto' : 'transform',
+                transform: isMobile ? 'none' : 'translateZ(0)',
                 backfaceVisibility: 'hidden',
-                WebkitFontSmoothing: 'antialiased',
-                transform: 'translateZ(0)'
+                WebkitFontSmoothing: 'antialiased'
               }}
             >
               <p className="text-white font-black text-[9px] md:text-xs lg:text-sm tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.6)] text-center px-1 leading-tight text-nowrap md:text-wrap">
-                Co-Founder Keith Wiebe Gordon<br/>(20 years of development experience
+                Co-Founder Keith Wiebe Gordon<br/>(20 years of development experience)
               </p>
             </div>
 
@@ -494,17 +531,19 @@ export default function HomeClient() {
 
       {/* --- SECTION 2: STICKY PARALLAX IMAGE --- */}
       {/* WRAPPER: Holds the Dimensions. z-0 keeps it behind Section 1 */}
-      <div className="relative w-full h-[80vh] md:h-[90vh] h-[100dvh] min-h-[500px] z-0">
+      <div className="relative w-full h-[80svh] md:h-[90svh] min-h-[500px] z-0">
         {/* INNER: Purely for sticking. Fills the parent. */}
         <section className="sticky top-0 w-full h-full overflow-hidden bg-white">
           {/* STATIC PARENT: Scroll tracking element - NEVER moves */}
           <div ref={villageRef} className="w-full h-full absolute inset-0">
+
             {/* MOTION CHILD: Visual animation element - gets transformed */}
             <motion.div
               className="w-full h-full rounded-2xl md:rounded-3xl overflow-hidden"
               style={{
                 y: villageY,
                 willChange: 'transform', // Hardware acceleration hint
+                transform: 'translate3d(0, 0, 0)', // Force GPU layer promotion
                 transformStyle: 'preserve-3d' // Better 3D transform performance
               }}
             >
