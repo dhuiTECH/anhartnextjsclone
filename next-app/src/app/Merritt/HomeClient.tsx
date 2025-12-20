@@ -369,7 +369,7 @@ export default function HomeClient() {
             />
             <div className="absolute inset-0 bg-black/30"></div>
         </div>
-        <div className="relative z-10 flex flex-col items-center justify-center text-center text-white px-6 md:px-8 lg:px-6 mt-8 md:mt-12 min-h-[60vh]">
+        <div className="relative z-10 flex flex-col items-center justify-center text-center text-white px-6 md:px-8 lg:px-6 mt-16 md:mt-12 min-h-[60vh]">
             <div className="max-w-4xl w-full">
                 <h1 className="font-serif text-xl md:text-4xl lg:text-5xl xl:text-6xl mb-4 md:mb-6 lg:mb-8 leading-tight font-bold opacity-0 animate-fade-up uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center px-2" style={{ animationDelay: '0.4s' }}>
                     Affordable Townhomes<br/>in Merritt, BC
