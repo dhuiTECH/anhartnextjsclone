@@ -375,7 +375,7 @@ export default function HomeClient() {
                     Affordable Townhomes<br/>in Merritt, BC
                 </h1>
                 <p className="text-sm md:text-base lg:text-lg font-bold tracking-[0.15em] leading-relaxed opacity-0 animate-fade-up text-white mb-4 md:mb-8 lg:mb-12 uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center max-w-3xl mx-auto px-4" style={{ animationDelay: '0.6s' }}>
-                    <span className="md:hidden">Discover Family-Sized Townhomes and Single-Level Living in Merritt's Newest Affordable Community</span>
+                    <span className="md:hidden">Spacious 3-bedroom and single-level homes in Merritt's newest community</span>
                     <span className="hidden md:inline">Discover Family-Sized Townhomes and Single-Level Living in Merritt's Newest Affordable Community</span>
                 </p>
             </div>
@@ -506,7 +506,7 @@ export default function HomeClient() {
 
             {/* Keith's Title - Positioned below the image frame */}
             <div
-              className="absolute z-30 -bottom-8 md:-bottom-16 lg:-bottom-24 left-[17px] md:left-8 lg:left-12 xl:-left-6 w-[40%] md:w-[40%] lg:w-[45%] max-w-[200px] md:max-w-none flex justify-center"
+              className="absolute z-30 -bottom-8 md:-bottom-16 lg:-bottom-24 left-[19px] md:left-8 lg:left-12 xl:-left-6 w-[40%] md:w-[40%] lg:w-[45%] max-w-[200px] md:max-w-none flex justify-center"
               style={{
                 // GPU acceleration only on desktop to prevent mobile conflicts
                 willChange: isMobile ? 'auto' : 'transform',
