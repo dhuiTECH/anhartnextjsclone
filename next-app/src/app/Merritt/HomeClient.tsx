@@ -340,8 +340,8 @@ export default function HomeClient() {
                     <span className="hidden md:inline">Discover Family-Sized Townhomes and Single-Level Living in Merritt's Newest Affordable Community</span>
                 </p>
             </div>
-            <Link href="/Merritt/interiors" className="inline-block bg-white text-[#1a2621] px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm tracking-[0.2em] uppercase font-black rounded-full shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 hover:bg-[#a6906c] hover:text-white transition-all duration-300 opacity-0 animate-fade-up glow-hover cursor-pointer" style={{ animationDelay: '0.8s', fontFamily: 'Inter, sans-serif' }}>
-                View Interiors
+            <Link href="/Merritt/contact" className="inline-block bg-white text-[#1a2621] px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm tracking-[0.2em] uppercase font-black rounded-full shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 hover:bg-[#a6906c] hover:text-white transition-all duration-300 opacity-0 animate-fade-up glow-hover cursor-pointer" style={{ animationDelay: '0.8s', fontFamily: 'Inter, sans-serif' }}>
+                Register for Priority Updates
             </Link>
         </div>
         <div className="absolute bottom-0 left-0 w-full leading-none z-20">
@@ -499,7 +499,7 @@ export default function HomeClient() {
         <section className="sticky top-0 w-full h-full overflow-hidden bg-white">
         <motion.div
           className="w-full h-full absolute inset-0 rounded-2xl md:rounded-3xl overflow-hidden"
-          style={{
+          style={isMobile ? {} : {
             y: villageY,
             willChange: 'transform', // Hardware acceleration hint
             transformStyle: 'preserve-3d' // Better 3D transform performance
