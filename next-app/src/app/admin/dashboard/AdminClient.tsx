@@ -555,8 +555,10 @@ export default function AdminClient({ user }: { user: any }) {
     // Get HTML content from the rich text editor
     const content = editor.getHTML();
     
-    // Check character limit (8000 characters)
-    const CONTENT_LIMIT = 8000;
+    // Check character limit (50000 characters - raised from 8000 due to CSS content-visibility optimizations)
+    // The blog renderer now uses content-visibility: auto to progressively render content,
+    // making it safe to have much longer articles without mobile performance issues.
+    const CONTENT_LIMIT = 50000;
     if (content.length > CONTENT_LIMIT) {
       setLoading(false);
       alert(`Content exceeds the character limit of ${CONTENT_LIMIT} characters. Current length: ${content.length}. Please reduce the content before publishing.`);
@@ -1022,37 +1024,37 @@ export default function AdminClient({ user }: { user: any }) {
           {/* ==================================================================== */}
           <div>
             {/* Content Character Counter */}
-            {/* Purpose: Display character count and warn when approaching 8000 character limit */}
+            {/* Purpose: Display character count - limit raised to 50000 with CSS content-visibility optimizations */}
             <div className="mb-2">
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
                   className={`h-2 rounded-full transition-all ${
-                    contentLength > 8000
+                    contentLength > 50000
                       ? "bg-red-500" // Over limit
-                      : contentLength >= 7500
+                      : contentLength >= 45000
                         ? "bg-yellow-500" // Warning: approaching limit
-                        : contentLength >= 6000
-                          ? "bg-blue-500" // Good length
-                          : "bg-green-500" // Below recommended
+                        : contentLength >= 20000
+                          ? "bg-blue-500" // Good length for long-form
+                          : "bg-green-500" // Standard length
                   }`}
                   style={{
                     width: `${Math.min(
-                      (contentLength / 8000) * 100,
+                      (contentLength / 50000) * 100,
                       100,
                     )}%`,
                   }}
                 />
               </div>
               <p className={`text-xs mt-1 ${
-                contentLength > 8000
+                contentLength > 50000
                   ? "text-red-600 font-semibold"
-                  : contentLength >= 7500
+                  : contentLength >= 45000
                     ? "text-yellow-600"
                     : "text-gray-500"
               }`}>
-                {contentLength}/8000 characters
-                {contentLength > 8000 && " - Content exceeds limit! Please reduce before publishing."}
-                {contentLength >= 7500 && contentLength <= 8000 && " - Approaching character limit"}
+                {contentLength.toLocaleString()}/50,000 characters
+                {contentLength > 50000 && " - Content exceeds limit! Please reduce before publishing."}
+                {contentLength >= 45000 && contentLength <= 50000 && " - Approaching character limit"}
               </p>
             </div>
           </div>

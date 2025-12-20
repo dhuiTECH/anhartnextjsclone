@@ -49,3 +49,4 @@ export default async function PortfolioManagerPage() {
   return <PortfolioManagerClient user={user} />;
 }
 
+

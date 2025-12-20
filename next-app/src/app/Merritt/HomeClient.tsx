@@ -43,9 +43,21 @@ export default function HomeClient() {
     offset: ['start start', 'end start'] // Tracks when top of section hits top of screen
   })
 
-  // This makes the image move slightly slower than the scroll (Parallax effect)
-  // Using pixels instead of percentages to prevent sub-pixel rendering jitter
-  const villageY = useTransform(villageScrollProgress, [0, 1], [0, 200]);
+  // Mobile-optimized parallax effect - reduce movement on mobile to prevent jumpy behavior
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Reduce parallax distance on mobile to prevent jumpy scrolling
+  const villageY = useTransform(villageScrollProgress, [0, 1], [0, isMobile ? 50 : 200]);
 
   // Mobile image switching state
   const [gardenFlatImage, setGardenFlatImage] = useState(0); // 0: exterior, 1: bedroom, 2: kitchen
@@ -464,7 +476,11 @@ export default function HomeClient() {
       <section ref={villageRef} className="relative w-full h-[80vh] md:h-[90vh] lg:h-screen sticky top-0 z-0 overflow-hidden bg-white">
         <motion.div
           className="w-full h-full absolute inset-0 rounded-2xl md:rounded-3xl overflow-hidden"
-          style={{ y: villageY, rotateZ: 0.01 }}
+          style={{
+            y: villageY,
+            // Remove rotateZ hack that can cause mobile issues
+            willChange: 'transform' // Better mobile performance hint
+          }}
         >
           <picture className="w-full h-full">
             <source srcSet="/merritt-assets/fullvillage.webp" type="image/webp" />

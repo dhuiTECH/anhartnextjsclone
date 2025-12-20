@@ -237,6 +237,55 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 w-full">
             <ScrollAnimationWrapper direction="bottom">
               <style jsx global>{`
+                /* ===========================================
+                   MOBILE-OPTIMIZED BLOG CONTENT RENDERING
+                   =========================================== */
+                
+                /* Use content-visibility to skip rendering off-screen content
+                   This dramatically improves performance for long blog posts */
+                .blog-content-wrapper {
+                  content-visibility: auto;
+                  contain-intrinsic-size: auto 500px;
+                }
+                
+                /* Ensure paragraphs and sections are rendered progressively */
+                .blog-content-wrapper > * {
+                  content-visibility: auto;
+                  contain-intrinsic-size: auto 100px;
+                }
+                
+                /* Contain paint and layout within the content area */
+                .blog-content-container {
+                  contain: content;
+                  will-change: auto;
+                }
+                
+                /* Optimize text rendering for readability */
+                .prose {
+                  width: 100% !important;
+                  overflow-x: auto !important;
+                  text-rendering: optimizeSpeed;
+                  -webkit-font-smoothing: antialiased;
+                }
+                
+                /* Mobile-specific optimizations */
+                @media (max-width: 768px) {
+                  .blog-content-wrapper {
+                    /* Lower intrinsic size estimate for mobile */
+                    contain-intrinsic-size: auto 300px;
+                  }
+                  
+                  .blog-content-wrapper > * {
+                    contain-intrinsic-size: auto 50px;
+                  }
+                  
+                  /* Force GPU acceleration on mobile for smoother scrolling */
+                  .blog-content-container {
+                    transform: translateZ(0);
+                    backface-visibility: hidden;
+                  }
+                }
+                
                 .prose pre {
                   background: #282c34 !important;
                   color: #abb2bf !important;
@@ -248,6 +297,8 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                   margin: 1.5em 0 !important;
                   max-width: 100% !important;
                   word-break: break-word !important;
+                  /* Prevent code blocks from causing layout shifts */
+                  contain: content;
                 }
                 .prose pre code {
                   background: none !important;
@@ -270,10 +321,6 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                 .prose pre code.hljs {
                   padding: 0 !important;
                 }
-                .prose {
-                  width: 100% !important;
-                  overflow-x: auto !important;
-                }
                 .prose p, .prose li, .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
                   word-break: break-word !important;
                   overflow-wrap: break-word !important;
@@ -281,11 +328,23 @@ const BlogPost = ({ initialPost }: { initialPost: BlogPostType }) => {
                 .prose img {
                   max-width: 100% !important;
                   height: auto !important;
+                  /* Lazy load images for better mobile performance */
+                  content-visibility: auto;
+                }
+                
+                /* Optimize blockquotes and large text elements */
+                .prose blockquote {
+                  contain: content;
+                }
+                
+                /* Prevent layout thrashing from lists */
+                .prose ul, .prose ol {
+                  contain: content;
                 }
               `}</style>
-              <article className="prose sm:prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary hover:prose-a:text-primary-dark prose-strong:text-foreground prose-img:rounded-lg prose-img:shadow-lg w-full">
+              <article className="prose sm:prose-lg max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary hover:prose-a:text-primary-dark prose-strong:text-foreground prose-img:rounded-lg prose-img:shadow-lg w-full blog-content-container">
                 <div 
-                  className="w-full overflow-x-hidden"
+                  className="w-full overflow-x-hidden blog-content-wrapper"
                   dangerouslySetInnerHTML={{ 
                     __html: post.content
                   }} 
