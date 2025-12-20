@@ -371,7 +371,7 @@ export default function HomeClient() {
         </div>
         <div className="relative z-10 flex flex-col items-center justify-center text-center text-white px-6 md:px-8 lg:px-6 mt-8 md:mt-12 min-h-[60vh]">
             <div className="max-w-4xl w-full">
-                <h1 className="font-serif text-2xl md:text-4xl lg:text-5xl xl:text-6xl mb-4 md:mb-6 lg:mb-8 leading-tight font-bold opacity-0 animate-fade-up uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center px-2" style={{ animationDelay: '0.4s' }}>
+                <h1 className="font-serif text-xl md:text-4xl lg:text-5xl xl:text-6xl mb-4 md:mb-6 lg:mb-8 leading-tight font-bold opacity-0 animate-fade-up uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center px-2" style={{ animationDelay: '0.4s' }}>
                     Affordable Townhomes<br/>in Merritt, BC
                 </h1>
                 <p className="text-sm md:text-base lg:text-lg font-bold tracking-[0.15em] leading-relaxed opacity-0 animate-fade-up text-white mb-4 md:mb-8 lg:mb-12 uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.5)] text-stroke-black text-center max-w-3xl mx-auto px-4" style={{ animationDelay: '0.6s' }}>
@@ -380,7 +380,7 @@ export default function HomeClient() {
                 </p>
             </div>
             <Link href="/Merritt/contact" className="inline-block bg-white text-[#1a2621] px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm tracking-[0.2em] uppercase font-black rounded-full shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 hover:bg-[#a6906c] hover:text-white transition-all duration-300 opacity-0 animate-fade-up glow-hover cursor-pointer" style={{ animationDelay: '0.8s', fontFamily: 'Inter, sans-serif' }}>
-                Register for Priority Updates
+                Register for Updates
             </Link>
         </div>
         <div className="absolute bottom-0 left-0 w-full leading-none z-20">
