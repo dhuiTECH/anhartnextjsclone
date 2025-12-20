@@ -43,10 +43,13 @@ export default function HomeClient() {
     offset: ['start start', 'end start'] // Tracks when top of section hits top of screen
   })
 
-  // Mobile-optimized parallax effect - reduce movement on mobile to prevent jumpy behavior
+  // Hydration-safe mobile detection
   const [isMobile, setIsMobile] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
+    // Mark as hydrated and set initial mobile state
+    setIsHydrated(true);
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
     };
@@ -56,8 +59,8 @@ export default function HomeClient() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Disable parallax on mobile to prevent jumpy scrolling - rely purely on CSS sticky
-  const villageY = useTransform(villageScrollProgress, [0, 1], [0, isMobile ? 0 : 200]);
+  // Only apply parallax transform after hydration to prevent SSR mismatch
+  const villageY = useTransform(villageScrollProgress, [0, 1], [0, (isHydrated && isMobile) ? 0 : 200]);
 
   // Mobile image switching state
   const [gardenFlatImage, setGardenFlatImage] = useState(0); // 0: exterior, 1: bedroom, 2: kitchen
@@ -476,7 +479,7 @@ export default function HomeClient() {
               }}
             >
               <p className="text-white font-black text-[9px] md:text-xs lg:text-sm tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] drop-shadow-[0_0px_8px_rgba(0,0,0,0.6)] text-center px-1 leading-tight text-nowrap md:text-wrap">
-                Co-Founder Keith Wiebe Gordon<br/>(20 years of development experience)
+                Co-Founder Keith Wiebe Gordon<br/>(20 years of development experience
               </p>
             </div>
 
@@ -490,43 +493,31 @@ export default function HomeClient() {
       </section>
 
       {/* --- SECTION 2: STICKY PARALLAX IMAGE --- */}
-      {/* WRAPPER: Holds the Ref and Dimensions. z-0 keeps it behind Section 1 */}
-      <div
-        ref={villageRef}
-        className="relative w-full h-[80vh] md:h-[90vh] h-[100dvh] min-h-[500px] z-0"
-      >
+      {/* WRAPPER: Holds the Dimensions. z-0 keeps it behind Section 1 */}
+      <div className="relative w-full h-[80vh] md:h-[90vh] h-[100dvh] min-h-[500px] z-0">
         {/* INNER: Purely for sticking. Fills the parent. */}
         <section className="sticky top-0 w-full h-full overflow-hidden bg-white">
-        {isMobile ? (
-          <div className="w-full h-full absolute inset-0 rounded-2xl md:rounded-3xl overflow-hidden">
-            <picture className="w-full h-full">
-              <source srcSet="/merritt-assets/fullvillage.webp" type="image/webp" />
-              <img
-                src="/merritt-assets/fullvillage.jpg"
-                alt="Merritt townhome community site in the scenic Nicola Valley landscape"
-                className="w-full h-full object-cover scale-[1.15]"
-              />
-            </picture>
+          {/* STATIC PARENT: Scroll tracking element - NEVER moves */}
+          <div ref={villageRef} className="w-full h-full absolute inset-0">
+            {/* MOTION CHILD: Visual animation element - gets transformed */}
+            <motion.div
+              className="w-full h-full rounded-2xl md:rounded-3xl overflow-hidden"
+              style={{
+                y: villageY,
+                willChange: 'transform', // Hardware acceleration hint
+                transformStyle: 'preserve-3d' // Better 3D transform performance
+              }}
+            >
+              <picture className="w-full h-full">
+                <source srcSet="/merritt-assets/fullvillage.webp" type="image/webp" />
+                <img
+                  src="/merritt-assets/fullvillage.jpg"
+                  alt="Merritt townhome community site in the scenic Nicola Valley landscape"
+                  className="w-full h-full object-cover scale-[1.15]"
+                />
+              </picture>
+            </motion.div>
           </div>
-        ) : (
-          <motion.div
-            className="w-full h-full absolute inset-0 rounded-2xl md:rounded-3xl overflow-hidden"
-            style={{
-              y: villageY,
-              willChange: 'transform', // Hardware acceleration hint
-              transformStyle: 'preserve-3d' // Better 3D transform performance
-            }}
-          >
-            <picture className="w-full h-full">
-              <source srcSet="/merritt-assets/fullvillage.webp" type="image/webp" />
-              <img
-                src="/merritt-assets/fullvillage.jpg"
-                alt="Merritt townhome community site in the scenic Nicola Valley landscape"
-                className="w-full h-full object-cover scale-[1.15]"
-              />
-            </picture>
-          </motion.div>
-        )}
         </section>
       </div>
 
