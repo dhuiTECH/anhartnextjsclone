@@ -467,7 +467,7 @@ export default function HomeClient() {
 
             {/* Keith's Title - Positioned below the image frame */}
             <div
-              className="absolute z-30 -bottom-8 md:-bottom-16 lg:-bottom-24 left-4 md:left-8 lg:left-12 xl:-left-6 w-[40%] md:w-[40%] lg:w-[45%] max-w-[200px] md:max-w-none flex justify-center"
+              className="absolute z-30 -bottom-8 md:-bottom-16 lg:-bottom-24 left-[17px] md:left-8 lg:left-12 xl:-left-6 w-[40%] md:w-[40%] lg:w-[45%] max-w-[200px] md:max-w-none flex justify-center"
               style={{ 
                 willChange: 'transform',
                 backfaceVisibility: 'hidden',
@@ -497,23 +497,36 @@ export default function HomeClient() {
       >
         {/* INNER: Purely for sticking. Fills the parent. */}
         <section className="sticky top-0 w-full h-full overflow-hidden bg-white">
-        <motion.div
-          className="w-full h-full absolute inset-0 rounded-2xl md:rounded-3xl overflow-hidden"
-          style={isMobile ? {} : {
-            y: villageY,
-            willChange: 'transform', // Hardware acceleration hint
-            transformStyle: 'preserve-3d' // Better 3D transform performance
-          }}
-        >
-          <picture className="w-full h-full">
-            <source srcSet="/merritt-assets/fullvillage.webp" type="image/webp" />
-            <img
-              src="/merritt-assets/fullvillage.jpg"
-              alt="Merritt townhome community site in the scenic Nicola Valley landscape"
-              className="w-full h-full object-cover scale-[1.15]"
-            />
-          </picture>
-        </motion.div>
+        {isMobile ? (
+          <div className="w-full h-full absolute inset-0 rounded-2xl md:rounded-3xl overflow-hidden">
+            <picture className="w-full h-full">
+              <source srcSet="/merritt-assets/fullvillage.webp" type="image/webp" />
+              <img
+                src="/merritt-assets/fullvillage.jpg"
+                alt="Merritt townhome community site in the scenic Nicola Valley landscape"
+                className="w-full h-full object-cover scale-[1.15]"
+              />
+            </picture>
+          </div>
+        ) : (
+          <motion.div
+            className="w-full h-full absolute inset-0 rounded-2xl md:rounded-3xl overflow-hidden"
+            style={{
+              y: villageY,
+              willChange: 'transform', // Hardware acceleration hint
+              transformStyle: 'preserve-3d' // Better 3D transform performance
+            }}
+          >
+            <picture className="w-full h-full">
+              <source srcSet="/merritt-assets/fullvillage.webp" type="image/webp" />
+              <img
+                src="/merritt-assets/fullvillage.jpg"
+                alt="Merritt townhome community site in the scenic Nicola Valley landscape"
+                className="w-full h-full object-cover scale-[1.15]"
+              />
+            </picture>
+          </motion.div>
+        )}
         </section>
       </div>
 
