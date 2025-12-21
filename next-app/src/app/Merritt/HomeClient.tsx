@@ -558,9 +558,9 @@ export default function HomeClient() {
               }}
             >
               <picture className="w-full h-full">
-                <source srcSet="/merritt-assets/fullvillage.webp" type="image/webp" />
+                <source srcSet="/merritt-assets/fullvillage.webp?v=20241221" type="image/webp" />
                 <img
-                  src="/merritt-assets/fullvillage.jpg"
+                  src="/merritt-assets/fullvillage.jpg?v=20241221"
                   alt="Merritt townhome community site in the scenic Nicola Valley landscape"
                   className="w-full h-full object-cover scale-[1.15]"
                 />
@@ -985,22 +985,7 @@ export default function HomeClient() {
                 </div>
             </div>
             <div className="w-full lg:w-2/3 space-y-6">
-                {/* Google Maps - Top */}
-                <div className="h-[300px] md:h-[400px] bg-[#23362b] rounded-lg overflow-hidden shadow-2xl border border-white/10 relative group">
-                    <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3254.789!2d-120.762!3d50.1205!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54813f8b4e6c9b9f%3A0x3757%20De%20Wolf%20Way%2C%20Merritt%2C%20BC!2s3757%20De%20Wolf%20Way%2C%20Merritt%2C%20BC!5e0!3m2!1sen!2sca!4v1715123456789!5m2!1sen!2sca"
-                        width="100%"
-                        height="100%"
-                        style={{border:0}}
-                        allowFullScreen
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                        title="Merritt Townhome Community, Merritt, BC"
-                        className="opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700"
-                    />
-                </div>
-
-                {/* Mountain Views Image - Bottom */}
+                {/* Mountain Views Image - Top */}
                 <div ref={mountainViewsRef} className="h-[200px] md:h-[300px] rounded-lg overflow-hidden shadow-2xl border border-white/10 relative group opacity-0 translate-y-8">
                     <Image
                         src="/merritt-assets/mountainviews.jpg"
@@ -1013,6 +998,21 @@ export default function HomeClient() {
                         <h3 className="font-serif text-lg font-bold mb-1">Mountain Views</h3>
                         <p className="text-sm text-white/90">Breathtaking scenery may surround the contemplated community</p>
                     </div>
+                </div>
+
+                {/* Google Maps - Bottom */}
+                <div className="h-[300px] md:h-[400px] bg-[#23362b] rounded-lg overflow-hidden shadow-2xl border border-white/10 relative group">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3254.789!2d-120.762!3d50.1205!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54813f8b4e6c9b9f%3A0x3757%20De%20Wolf%20Way%2C%20Merritt%2C%20BC!2s3757%20De%20Wolf%20Way%2C%20Merritt%2C%20BC!5e0!3m2!1sen!2sca!4v1715123456789!5m2!1sen!2sca"
+                        width="100%"
+                        height="100%"
+                        style={{border:0}}
+                        allowFullScreen
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title="Merritt Townhome Community, Merritt, BC"
+                        className="opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700"
+                    />
                 </div>
 
             </div>

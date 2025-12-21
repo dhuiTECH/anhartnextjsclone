@@ -108,7 +108,7 @@ export default function AboutClient() {
                 features: ['Potential island workspaces', 'Potential dining areas', 'Potential premium appliances']
               },
               {
-                image: '/merritt-assets/fullvillage.jpg',
+                image: '/merritt-assets/Merritt%20rendering.jpg',
                 title: 'Community Views',
                 description: 'Potential beautiful mountain and valley views from select units (subject to final design and location).',
                 features: ['Potential scenic outlook', 'Potential natural light', 'Potential peaceful ambiance']
