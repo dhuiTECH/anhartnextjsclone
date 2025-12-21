@@ -104,8 +104,7 @@ export default function HomeClient() {
 
   // Form state
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
     phone: '',
     unitType: '',
@@ -252,10 +251,10 @@ export default function HomeClient() {
     console.log('Event:', e);
     
     // Validate required fields before proceeding
-    if (!formData.firstName || !formData.lastName || !formData.email) {
+    if (!formData.name || !formData.email) {
       console.error('Validation failed - missing required fields');
       setSubmitStatus('error');
-      alert('Please fill in all required fields (First Name, Last Name, Email)');
+      alert('Please fill in all required fields (Name, Email)');
       return;
     }
 
@@ -282,8 +281,7 @@ export default function HomeClient() {
       // Prepare JSON data matching the Google Apps Script expectations
       const jsonData = {
         formSource: 'Home Page',
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+        name: formData.name,
         email: formData.email,
         phone: formData.phone || '',
         unitType: formData.unitType || '',
@@ -312,8 +310,7 @@ export default function HomeClient() {
         
         setSubmitStatus('success');
         setFormData({
-          firstName: '',
-          lastName: '',
+          name: '',
           email: '',
           phone: '',
           unitType: '',
@@ -1061,40 +1058,32 @@ export default function HomeClient() {
                         <p className="text-[#1a2621]/60 text-xs md:text-sm">Join our interest list for affordable housing in Merritt, BC.</p>
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-2 md:space-y-3">
+                    <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        placeholder="Full Name"
+                        required
+                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
-                        <input 
-                            type="text" 
-                            name="firstName"
-                            value={formData.firstName}
+                        <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
                             onChange={handleInputChange}
-                            placeholder="First Name" 
+                            placeholder="Email Address"
                             required
-                            className="bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
-                        <input 
-                            type="text" 
-                            name="lastName"
-                            value={formData.lastName}
+                            className="w-full bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
+                        <input
+                            type="tel"
+                            name="phone"
+                            value={formData.phone}
                             onChange={handleInputChange}
-                            placeholder="Last Name" 
+                            placeholder="Phone Number"
                             required
-                            className="bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
+                            className="w-full bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
                     </div>
-                    <input 
-                        type="email" 
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        placeholder="Email Address" 
-                        required
-                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
-                    <input 
-                        type="tel" 
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        placeholder="Phone Number" 
-                        required
-                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
                     <select 
                         name="unitType"
                         value={formData.unitType}
@@ -1116,6 +1105,7 @@ export default function HomeClient() {
                         <option value="">Current Location</option>
                         <option value="Kamloops Area">Kamloops Area</option>
                         <option value="Kelowna Area">Kelowna Area</option>
+                        <option value="Merritt Area">Merritt Area</option>
                         <option value="Vancouver Area">Vancouver Area</option>
                         <option value="Other Location">Other Location</option>
                     </select>

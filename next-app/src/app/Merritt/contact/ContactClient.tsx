@@ -13,8 +13,7 @@ import { Turnstile } from '@/components/Turnstile';
 export default function ContactClient() {
   // Form state
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
     phone: '',
     unitType: '',
@@ -38,10 +37,10 @@ export default function ContactClient() {
     console.log('Event:', e);
     
     // Validate required fields before proceeding
-    if (!formData.firstName || !formData.lastName || !formData.email) {
+    if (!formData.name || !formData.email) {
       console.error('Validation failed - missing required fields');
       setSubmitStatus('error');
-      alert('Please fill in all required fields (First Name, Last Name, Email)');
+      alert('Please fill in all required fields (Name, Email)');
       return;
     }
 
@@ -68,8 +67,7 @@ export default function ContactClient() {
       // Prepare JSON data matching the Google Apps Script expectations
       const jsonData = {
         formSource: 'Contact Page',
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+        name: formData.name,
         email: formData.email,
         phone: formData.phone || '',
         unitType: formData.unitType || '',
@@ -98,8 +96,7 @@ export default function ContactClient() {
         
         setSubmitStatus('success');
         setFormData({
-          firstName: '',
-          lastName: '',
+          name: '',
           email: '',
           phone: '',
           unitType: '',
@@ -239,24 +236,14 @@ export default function ContactClient() {
                 <p className="text-[#1a2621]/50 text-sm mb-6 md:mb-8">Join our interest list for affordable housing in Merritt, BC.</p>
 
                 <form onSubmit={handleSubmit} className="space-y-4 md:space-y-5">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                        <input 
-                            type="text" 
-                            name="firstName"
-                            value={formData.firstName}
+                        <input
+                            type="text"
+                            name="name"
+                            value={formData.name}
                             onChange={handleInputChange}
-                            placeholder="First Name" 
+                            placeholder="Full Name"
                             required
-                            className="bg-transparent border-b border-[#1a2621]/20 py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
-                        <input 
-                            type="text" 
-                            name="lastName"
-                            value={formData.lastName}
-                            onChange={handleInputChange}
-                            placeholder="Last Name" 
-                            required
-                            className="bg-transparent border-b border-[#1a2621]/20 py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
-                    </div>
+                            className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
                     <input 
                         type="email" 
                         name="email"
@@ -294,6 +281,7 @@ export default function ContactClient() {
                         <option value="">Current Location</option>
                         <option value="Kamloops Area">Kamloops Area</option>
                         <option value="Kelowna Area">Kelowna Area</option>
+                        <option value="Merritt Area">Merritt Area</option>
                         <option value="Vancouver Area">Vancouver Area</option>
                         <option value="Other Location">Other Location</option>
                     </select>
