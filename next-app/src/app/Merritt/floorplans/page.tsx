@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import FloorplansClient from './FloorplansClient';
 
 export const metadata: Metadata = {
-  title: 'Merritt Townhome Floor Plans | Anhart',
-  description: 'View our affordable townhome floor plans in Merritt, BC. 2-3 bedroom options with modern designs and practical layouts with pricing TBD.',
+  title: '2 or 3 Bedroom Floor Plans - Merritt Townhomes | Anhart',
+  description: 'View our affordable 2 or 3 bedroom townhome floor plans in Merritt, BC. Modern designs and practical layouts with pricing TBD.',
   keywords: 'floor plans, townhome layouts, 2 bedroom, 3 bedroom, Merritt BC housing',
   alternates: { canonical: 'https://anhart.ca/Merritt/floorplans' },
   openGraph: {
-    title: 'Merritt Townhome Floor Plans',
-    description: 'Discover modern townhome floor plans in Merritt, BC. Quality construction with practical layouts with pricing TBD.',
+    title: '2 or 3 Bedroom Floor Plans - Merritt Townhomes',
+    description: 'Discover modern 2 or 3 bedroom townhome floor plans in Merritt, BC. Quality construction with practical layouts with pricing TBD.',
     images: ['/merritt-assets/fullvillage.webp'],
     url: 'https://anhart.ca/Merritt/floorplans',
   },
@@ -19,8 +19,8 @@ export default function FloorplansPage() {
   const floorplansSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Merritt Townhome Floor Plans",
-    "description": "View affordable townhome floor plans in Merritt, BC with pricing TBD",
+    "name": "2 or 3 Bedroom Floor Plans - Merritt Townhomes",
+    "description": "View affordable 2 or 3 bedroom townhome floor plans in Merritt, BC with pricing TBD",
     "url": "https://anhart.ca/Merritt/floorplans",
     "isPartOf": {
       "@type": "WebSite",
