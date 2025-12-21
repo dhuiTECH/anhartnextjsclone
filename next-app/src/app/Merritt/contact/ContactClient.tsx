@@ -19,7 +19,9 @@ export default function ContactClient() {
     phone: '',
     unitType: '',
     currentLocation: '',
-    message: ''
+    hearAboutUs: '',
+    message: '',
+    consent: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -40,6 +42,14 @@ export default function ContactClient() {
       console.error('Validation failed - missing required fields');
       setSubmitStatus('error');
       alert('Please fill in all required fields (First Name, Last Name, Email)');
+      return;
+    }
+
+    // Validate consent checkbox
+    if (!formData.consent) {
+      console.error('Validation failed - consent not given');
+      setSubmitStatus('error');
+      alert('Please consent to receiving communications before submitting.');
       return;
     }
 
@@ -64,7 +74,7 @@ export default function ContactClient() {
         phone: formData.phone || '',
         unitType: formData.unitType || '',
         currentLocation: formData.currentLocation || '',
-        referralSource: '', // Contact page doesn't have this field
+        referralSource: formData.hearAboutUs || '',
         message: formData.message || ''
       };
 
@@ -94,7 +104,9 @@ export default function ContactClient() {
           phone: '',
           unitType: '',
           currentLocation: '',
-          message: ''
+          hearAboutUs: '',
+          message: '',
+          consent: false
         });
         resetTurnstile(); // Reset Turnstile after successful submission
         setTimeout(() => setSubmitStatus('idle'), 5000);
@@ -138,15 +150,15 @@ export default function ContactClient() {
       <div className="flex flex-col md:flex-row min-h-screen pt-24">
 
         {/* LEFT COLUMN: Contact Info */}
-        <div className="w-full md:w-1/2 bg-[#1a2621] text-[#f9f8f6] flex flex-col justify-center p-6 md:p-12 lg:p-24 relative overflow-hidden">
+        <div className="w-full md:w-1/2 bg-[#1a2621] text-[#f9f8f6] flex flex-col justify-center p-6 md:p-10 lg:p-16 relative overflow-hidden">
             {/* Texture Overlay */}
             <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]"></div>
 
-            <div className="relative z-10">
+            <div className="relative z-10 ml-2 md:ml-4">
                 <span className="text-[#a6906c] text-xs font-bold tracking-widest uppercase mb-4 md:mb-6 block">Get in Touch</span>
-                <h1 className="font-serif text-3xl md:text-4xl lg:text-6xl mb-8 md:mb-12 leading-tight">Express Interest in<br/>Potential<br/>Homeownership.</h1>
+                <h1 className="font-serif text-3xl md:text-4xl lg:text-6xl mb-8 md:mb-12 leading-tight">Express Interest in<br/>Homeownership.</h1>
 
-                <div className="space-y-6 md:space-y-8 text-sm tracking-wide font-light">
+                <div className="space-y-6 md:space-y-8 text-sm tracking-wide font-light ml-2 md:ml-4">
                     <div className="flex items-start gap-4 md:gap-6">
                         <MapPin className="w-4 h-4 md:w-5 md:h-5 text-[#a6906c] mt-1 flex-shrink-0" />
                         <div>
@@ -210,7 +222,7 @@ export default function ContactClient() {
                         <div className="opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700">
                             <GoogleMapEmbed 
                                 address={AddressUtils.getGoogleMapsAddress()} 
-                                height="h-[300px]" 
+                                height="h-[250px]" 
                                 showDirections={true}
                                 className="rounded-lg border-0 shadow-none bg-transparent [&>div]:bg-transparent"
                             />
@@ -221,13 +233,13 @@ export default function ContactClient() {
         </div>
 
         {/* RIGHT COLUMN: Form */}
-        <div className="w-full md:w-1/2 bg-white flex flex-col justify-center p-6 md:p-12 lg:p-24">
+        <div className="w-full md:w-1/2 bg-white flex flex-col justify-center p-6 md:p-10 lg:p-16">
              <div className="max-w-md w-full">
-                <h2 className="font-serif text-2xl md:text-3xl text-[#1a2621] mb-3 md:mb-2">Register for Priority Updates</h2>
-                <p className="text-[#1a2621]/50 text-sm mb-8 md:mb-12">Join our interest list for affordable housing in Merritt, BC.</p>
+                <h2 className="font-serif text-xl md:text-2xl text-[#1a2621] mb-2">Register for Priority Updates</h2>
+                <p className="text-[#1a2621]/50 text-sm mb-6 md:mb-8">Join our interest list for affordable housing in Merritt, BC.</p>
 
-                <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                         <input 
                             type="text" 
                             name="firstName"
@@ -235,7 +247,7 @@ export default function ContactClient() {
                             onChange={handleInputChange}
                             placeholder="First Name" 
                             required
-                            className="bg-transparent border-b border-[#1a2621]/20 py-4 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
+                            className="bg-transparent border-b border-[#1a2621]/20 py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
                         <input 
                             type="text" 
                             name="lastName"
@@ -243,7 +255,7 @@ export default function ContactClient() {
                             onChange={handleInputChange}
                             placeholder="Last Name" 
                             required
-                            className="bg-transparent border-b border-[#1a2621]/20 py-4 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
+                            className="bg-transparent border-b border-[#1a2621]/20 py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
                     </div>
                     <input 
                         type="email" 
@@ -273,7 +285,7 @@ export default function ContactClient() {
                         <option value="Premium Corner Unit">Premium Corner Unit</option>
                         <option value="General Inquiry">General Inquiry</option>
                     </select>
-                    <select 
+                    <select
                         name="currentLocation"
                         value={formData.currentLocation}
                         onChange={handleInputChange}
@@ -285,13 +297,52 @@ export default function ContactClient() {
                         <option value="Vancouver Area">Vancouver Area</option>
                         <option value="Other Location">Other Location</option>
                     </select>
-                    <textarea 
-                        rows={4} 
+                    <select
+                        name="hearAboutUs"
+                        value={formData.hearAboutUs}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-4 outline-none focus:border-[#a6906c] transition-colors text-[#1a2621]/70 text-sm">
+                        <option value="">How did you hear about us?</option>
+                        <option value="Online Search">Online Search</option>
+                        <option value="Social Media">Social Media</option>
+                        <option value="Referral from friend/family">Referral from friend/family</option>
+                        <option value="Real estate agent">Real estate agent</option>
+                        <option value="Newspaper/magazine">Newspaper/magazine</option>
+                        <option value="Billboard/signage">Billboard/signage</option>
+                        <option value="Community event">Community event</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <textarea
+                        rows={4}
                         name="message"
                         value={formData.message}
                         onChange={handleInputChange}
-                        placeholder="Tell us about your housing needs and timeline..." 
+                        placeholder="Tell us about your housing needs and timeline..."
                         className="w-full bg-transparent border-b border-[#1a2621]/20 py-4 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm resize-none"></textarea>
+
+                    {/* Consent Checkbox */}
+                    <div className="flex items-start space-x-3 py-4">
+                        <input
+                            type="checkbox"
+                            name="consent"
+                            checked={formData.consent || false}
+                            onChange={handleInputChange}
+                            required
+                            className="mt-1 w-4 h-4 text-[#a6906c] bg-transparent border-[#1a2621]/20 rounded focus:ring-[#a6906c] focus:ring-2"
+                        />
+                        <label htmlFor="consent" className="text-sm text-[#1a2621]/70 leading-relaxed">
+                            Yes, I consent to receiving emails and communications from Anhart.
+                        </label>
+                    </div>
+
+                    {/* Privacy Policy Text */}
+                    <div className="text-xs text-[#1a2621]/60 leading-relaxed py-2 border-t border-[#1a2621]/10 pt-4">
+                        <p>
+                            Information is kept confidential and used solely by Anhart for market research and communications. No data is sold or shared with third parties. You may unsubscribe at any time. See our{' '}
+                            <a href="/privacy-policy" className="text-[#a6906c] hover:underline" target="_blank">privacy policy</a> for details.
+                        </p>
+                    </div>
 
                     {submitStatus === 'success' && (
                         <div className="text-center text-green-600 text-sm">

@@ -86,9 +86,17 @@ export default function Footer() {
                             </a>
                         ))}
                     </div>
-                    <p className="text-xs opacity-60 text-center md:text-left">
-                        Stay updated with our latest projects and community impact stories.
-                    </p>
+                    <div className="space-y-2">
+                        <a
+                            href="/privacy-policy"
+                            className="block text-xs opacity-60 hover:text-[#a6906c] hover:opacity-100 transition-colors text-center md:text-left"
+                        >
+                            Privacy Policy
+                        </a>
+                        <p className="text-xs opacity-60 text-center md:text-left">
+                            Stay updated with our latest projects and community impact stories.
+                        </p>
+                    </div>
                 </div>
             </div>
 

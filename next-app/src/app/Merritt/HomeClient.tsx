@@ -111,7 +111,8 @@ export default function HomeClient() {
     unitType: '',
     currentLocation: '',
     hearAboutUs: '',
-    message: ''
+    message: '',
+    consent: false
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -258,6 +259,14 @@ export default function HomeClient() {
       return;
     }
 
+    // Validate consent checkbox
+    if (!formData.consent) {
+      console.error('Validation failed - consent not given');
+      setSubmitStatus('error');
+      alert('Please consent to receiving communications before submitting.');
+      return;
+    }
+
     // Validate Turnstile token
     if (!turnstileToken) {
       console.error('Turnstile verification required');
@@ -310,7 +319,8 @@ export default function HomeClient() {
           unitType: '',
           currentLocation: '',
           hearAboutUs: '',
-          message: ''
+          message: '',
+          consent: false
         });
         resetTurnstile(); // Reset Turnstile after successful submission
         setTimeout(() => setSubmitStatus('idle'), 5000);
@@ -919,6 +929,60 @@ export default function HomeClient() {
                     <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Trails & Hikes</li>
                     <li className="flex items-center gap-3 border-b border-white/10 pb-2"><MapPin className="text-[#a6906c] w-4 h-4 flex-shrink-0" /> Easy Highway Access</li>
                 </ul>
+
+                {/* FAQ Section */}
+                <div className="mt-8 px-2 md:px-0">
+                    <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+                        <h3 className="text-[#a6906c] text-base uppercase tracking-wider mb-4 font-semibold">Frequently Asked Questions</h3>
+                        <div className="space-y-3">
+                        <details className="group">
+                            <summary className="text-[#e6e2da] text-sm font-medium cursor-pointer hover:text-[#a6906c] transition-colors flex items-center">
+                                <span className="mr-2 text-[#a6906c]">+</span>
+                                How far is Merritt from major cities?
+                            </summary>
+                            <p className="text-[#e6e2da]/80 text-xs mt-2 leading-relaxed pl-6">
+                                Approximately 4 hours from Vancouver, 45 minutes from Kelowna, and 1.5 hours from Kamloops via Highway 97.
+                            </p>
+                        </details>
+                        <details className="group">
+                            <summary className="text-[#e6e2da] text-sm font-medium cursor-pointer hover:text-[#a6906c] transition-colors flex items-center">
+                                <span className="mr-2 text-[#a6906c]">+</span>
+                                What outdoor activities are available?
+                            </summary>
+                            <p className="text-[#e6e2da]/80 text-xs mt-2 leading-relaxed pl-6">
+                                Hiking trails, fishing, boating, golfing, and access to provincial parks with scenic mountain views.
+                            </p>
+                        </details>
+                        <details className="group">
+                            <summary className="text-[#e6e2da] text-sm font-medium cursor-pointer hover:text-[#a6906c] transition-colors flex items-center">
+                                <span className="mr-2 text-[#a6906c]">+</span>
+                                What amenities are in Merritt?
+                            </summary>
+                            <p className="text-[#e6e2da]/80 text-xs mt-2 leading-relaxed pl-6">
+                                Grocery stores, restaurants, healthcare facilities, schools, and easy access to Highway 97.
+                            </p>
+                        </details>
+                        <details className="group">
+                            <summary className="text-[#e6e2da] text-sm font-medium cursor-pointer hover:text-[#a6906c] transition-colors flex items-center">
+                                <span className="mr-2 text-[#a6906c]">+</span>
+                                Is Merritt family-friendly?
+                            </summary>
+                            <p className="text-[#e6e2da]/80 text-xs mt-2 leading-relaxed pl-6">
+                                Yes, with excellent schools, parks, recreational facilities, and a safe community environment.
+                            </p>
+                        </details>
+                        <details className="group">
+                            <summary className="text-[#e6e2da] text-sm font-medium cursor-pointer hover:text-[#a6906c] transition-colors flex items-center">
+                                <span className="mr-2 text-[#a6906c]">+</span>
+                                What's the climate like in Merritt?
+                            </summary>
+                            <p className="text-[#e6e2da]/80 text-xs mt-2 leading-relaxed pl-6">
+                                Four distinct seasons with warm summers and cold winters, ideal for outdoor enthusiasts year-round.
+                            </p>
+                        </details>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div className="w-full lg:w-2/3 space-y-6">
                 {/* Google Maps - Top */}
@@ -966,14 +1030,38 @@ export default function HomeClient() {
             />
         </div>
         <div className="container mx-auto px-6 md:px-8 relative z-10 max-w-7xl">
-            <div className="max-w-4xl mx-auto bg-white p-6 md:p-8 lg:p-12 shadow-2xl shadow-[#1a2621]/5 relative overflow-hidden reveal">
-                <div className="absolute top-0 left-0 w-full h-2 bg-[#1a2621]"></div>
-                <div className="text-center mb-6 md:mb-8">
-                    <h2 className="font-serif text-2xl md:text-3xl text-[#1a2621] mb-3">Register for Priority Updates</h2>
-                    <p className="text-[#1a2621]/60 text-sm md:text-base">Join our interest list for affordable housing in Merritt, BC.</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+                {/* Picture Frame - Left Side */}
+                <div className="flex justify-center lg:justify-end order-2 lg:order-1">
+                    <div className="relative w-full max-w-lg">
+                        {/* Elegant Transparent Frame */}
+                        <div className="relative p-6 bg-white/10 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20">
+                            {/* Inner matte */}
+                            <div className="bg-white/95 p-4 rounded-xl shadow-lg">
+                                {/* Happy Family Image */}
+                                <div className="rounded-lg overflow-hidden aspect-[4/5] shadow-inner">
+                                    <img
+                                        src="/merritt-assets/happyfamily.jpg"
+                                        alt="Happy family enjoying their new home"
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            </div>
+                            {/* Subtle frame highlights */}
+                            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent pointer-events-none"></div>
+                        </div>
+                    </div>
                 </div>
-                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+
+                {/* Contact Form - Right Side */}
+                <div className="bg-white/95 backdrop-blur-sm p-4 md:p-6 shadow-2xl shadow-[#1a2621]/10 border border-white/20 rounded-2xl relative overflow-hidden reveal order-1 lg:order-2">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#a6906c] to-[#8b7355]"></div>
+                    <div className="text-center mb-3 md:mb-4">
+                        <h2 className="font-serif text-lg md:text-xl text-[#1a2621] mb-1">Register for Priority Updates</h2>
+                        <p className="text-[#1a2621]/60 text-xs md:text-sm">Join our interest list for affordable housing in Merritt, BC.</p>
+                    </div>
+                    <form onSubmit={handleSubmit} className="space-y-2 md:space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
                         <input 
                             type="text" 
                             name="firstName"
@@ -981,7 +1069,7 @@ export default function HomeClient() {
                             onChange={handleInputChange}
                             placeholder="First Name" 
                             required
-                            className="bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"/>
+                            className="bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
                         <input 
                             type="text" 
                             name="lastName"
@@ -989,7 +1077,7 @@ export default function HomeClient() {
                             onChange={handleInputChange}
                             placeholder="Last Name" 
                             required
-                            className="bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"/>
+                            className="bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
                     </div>
                     <input 
                         type="email" 
@@ -998,7 +1086,7 @@ export default function HomeClient() {
                         onChange={handleInputChange}
                         placeholder="Email Address" 
                         required
-                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"/>
+                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
                     <input 
                         type="tel" 
                         name="phone"
@@ -1006,7 +1094,7 @@ export default function HomeClient() {
                         onChange={handleInputChange}
                         placeholder="Phone Number" 
                         required
-                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"/>
+                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
                     <select 
                         name="unitType"
                         value={formData.unitType}
@@ -1067,7 +1155,7 @@ export default function HomeClient() {
                     )}
 
                     {/* Cloudflare Turnstile */}
-                    <div className="flex justify-center py-4" key={turnstileKey}>
+                    <div className="flex justify-center py-3" key={turnstileKey}>
                         <Turnstile
                             siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAACHSP48uvsbyUZG1"}
                             onSuccess={turnstileHandlers.onSuccess}
@@ -1078,7 +1166,30 @@ export default function HomeClient() {
                         />
                     </div>
 
-                    <div className="pt-4 md:pt-6 text-center">
+                    {/* Consent Checkbox */}
+                    <div className="flex items-start space-x-3 py-4">
+                        <input
+                            type="checkbox"
+                            name="consent"
+                            checked={formData.consent || false}
+                            onChange={handleInputChange}
+                            required
+                            className="mt-1 w-4 h-4 text-[#a6906c] bg-transparent border-[#1a2621]/20 rounded focus:ring-[#a6906c] focus:ring-2"
+                        />
+                        <label htmlFor="consent" className="text-sm text-[#1a2621]/70 leading-relaxed">
+                            Yes, I consent to receiving emails and communications from Anhart.
+                        </label>
+                    </div>
+
+                    {/* Privacy Policy Text */}
+                    <div className="text-xs text-[#1a2621]/60 leading-relaxed py-2 border-t border-[#1a2621]/10 pt-4">
+                        <p>
+                            Information is kept confidential and used solely by Anhart for market research and communications. No data is sold or shared with third parties. You may unsubscribe at any time. See our{' '}
+                            <a href="/privacy-policy" className="text-[#a6906c] hover:underline" target="_blank">privacy policy</a> for details.
+                        </p>
+                    </div>
+
+                    <div className="pt-2 md:pt-3 text-center">
                         <button 
                             type="submit" 
                             onClick={handleButtonClick}
@@ -1096,6 +1207,7 @@ export default function HomeClient() {
                         </button>
                     </div>
                 </form>
+                </div>
             </div>
         </div>
     </section>
