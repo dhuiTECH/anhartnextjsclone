@@ -14,8 +14,8 @@ export default function KamloopsRelocationPage() {
   return (
     <div className="bg-[#f9f8f6] text-[#1a2621] font-sans antialiased min-h-screen">
       {/* Editorial frame */}
-      <div className="fixed left-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
-      <div className="fixed right-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
+      <div className="hidden md:block fixed left-0 top-0 w-16 h-full bg-white z-[60]"></div>
+      <div className="hidden md:block fixed right-0 top-0 w-16 h-full bg-white z-[60]"></div>
 
       {/* Navbar is now in layout.tsx */}
       <main>

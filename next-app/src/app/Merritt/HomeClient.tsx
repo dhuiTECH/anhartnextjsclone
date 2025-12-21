@@ -104,7 +104,7 @@ export default function HomeClient() {
 
   // Form state
   const [formData, setFormData] = useState({
-    name: '',
+    fullName: '',
     email: '',
     phone: '',
     unitType: '',
@@ -251,10 +251,10 @@ export default function HomeClient() {
     console.log('Event:', e);
     
     // Validate required fields before proceeding
-    if (!formData.name || !formData.email) {
+    if (!formData.fullName || !formData.email) {
       console.error('Validation failed - missing required fields');
       setSubmitStatus('error');
-      alert('Please fill in all required fields (Name, Email)');
+      alert('Please fill in all required fields (Full Name, Email)');
       return;
     }
 
@@ -281,7 +281,7 @@ export default function HomeClient() {
       // Prepare JSON data matching the Google Apps Script expectations
       const jsonData = {
         formSource: 'Home Page',
-        name: formData.name,
+        fullName: formData.fullName,
         email: formData.email,
         phone: formData.phone || '',
         unitType: formData.unitType || '',
@@ -310,7 +310,7 @@ export default function HomeClient() {
         
         setSubmitStatus('success');
         setFormData({
-          name: '',
+          fullName: '',
           email: '',
           phone: '',
           unitType: '',
@@ -355,8 +355,8 @@ export default function HomeClient() {
       {/* All styles are in merritt-styles.css - scoped to .merritt-wrapper */}
 
       {/* EDITORIAL FRAME */}
-      <div className="fixed left-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
-      <div className="fixed right-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
+      <div className="hidden md:block fixed left-0 top-0 w-16 h-full bg-white z-[60]"></div>
+      <div className="hidden md:block fixed right-0 top-0 w-16 h-full bg-white z-[60]"></div>
 
       {/* REMOVED: <Navbar /> (It is now in layout.tsx) */}
 
@@ -386,7 +386,7 @@ export default function HomeClient() {
                     <span className="hidden md:inline">Discover Family-Sized Townhomes and Single-Level Living in Merritt's Newest Affordable Community</span>
                 </p>
             </div>
-            <Link href="/Merritt/contact" className="inline-block bg-white text-[#1a2621] px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm tracking-[0.2em] uppercase font-black rounded-full shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 hover:bg-[#a6906c] hover:text-white transition-all duration-300 opacity-0 animate-fade-up glow-hover cursor-pointer" style={{ animationDelay: '0.8s', fontFamily: 'Inter, sans-serif' }}>
+            <Link href="/Merritt/contact" className="inline-block bg-transparent border-2 border-white text-white px-6 md:px-8 py-3 md:py-4 text-xs md:text-sm tracking-[0.2em] uppercase font-black rounded-full shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 hover:bg-white hover:text-[#1a2621] transition-all duration-300 opacity-0 animate-fade-up cursor-pointer" style={{ animationDelay: '0.8s', fontFamily: 'Inter, sans-serif' }}>
                 Register for Updates
             </Link>
         </div>
@@ -559,7 +559,7 @@ export default function HomeClient() {
                 <img
                   src="/merritt-assets/fullvillage.jpg?v=20241221"
                   alt="Merritt townhome community site in the scenic Nicola Valley landscape"
-                  className="w-full h-full object-cover scale-[1.15]"
+                  className="w-full h-full object-cover object-[25.7%_center] scale-[1.15]"
                 />
               </picture>
             </motion.div>
@@ -1060,30 +1060,28 @@ export default function HomeClient() {
                     <form onSubmit={handleSubmit} className="space-y-2 md:space-y-3">
                     <input
                         type="text"
-                        name="name"
-                        value={formData.name}
+                        name="fullName"
+                        value={formData.fullName}
                         onChange={handleInputChange}
                         placeholder="Full Name"
                         required
                         className="w-full bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3">
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            placeholder="Email Address"
-                            required
-                            className="w-full bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
-                        <input
-                            type="tel"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleInputChange}
-                            placeholder="Phone Number"
-                            required
-                            className="w-full bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
-                    </div>
+                    <input 
+                        type="email" 
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="Email Address" 
+                        required
+                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
+                    <input 
+                        type="tel" 
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        placeholder="Phone Number" 
+                        required
+                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-2 md:py-2 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
                     <select 
                         name="unitType"
                         value={formData.unitType}
@@ -1096,16 +1094,16 @@ export default function HomeClient() {
                         <option value="Corner Unit">Corner Unit</option>
                         <option value="General Inquiry">General Inquiry</option>
                     </select>
-                    <select 
+                    <select
                         name="currentLocation"
                         value={formData.currentLocation}
                         onChange={handleInputChange}
                         required
                         className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors text-[#1a2621]/70 text-base md:text-sm">
                         <option value="">Current Location</option>
+                        <option value="Merritt">Merritt Area</option>
                         <option value="Kamloops Area">Kamloops Area</option>
                         <option value="Kelowna Area">Kelowna Area</option>
-                        <option value="Merritt Area">Merritt Area</option>
                         <option value="Vancouver Area">Vancouver Area</option>
                         <option value="Other Location">Other Location</option>
                     </select>

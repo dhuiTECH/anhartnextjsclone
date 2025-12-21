@@ -8,10 +8,13 @@ import Footer from '../components/Footer';
 // Navbar is now in layout.tsx - no need to import here
 
 export default function AboutClient() {
+  // State for image cycling
+  const [communityViewImage, setCommunityViewImage] = useState(0);
+
   // #region agent log
   useEffect(() => {
     fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:9',message:'Component mounted on CLIENT - INTERIOR PAGE',data:{timestamp:new Date().toISOString(),userAgent:window.navigator.userAgent,windowWidth:window.innerWidth,windowHeight:window.innerHeight,isMobile:window.innerWidth < 768},sessionId:'debug-session',runId:'client-side',hypothesisId:'H'})}).catch(()=>{});
-    
+
     // Move video-related logging to useEffect to avoid render-phase side effects
     const isMobile = window.innerWidth < 768;
     fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:32',message:'About to render video - INTERIOR PAGE',data:{isMobile,windowWidth:window.innerWidth,userAgent:window.navigator.userAgent},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{});
@@ -22,8 +25,8 @@ export default function AboutClient() {
     <div className="bg-[#f9f8f6] text-[#1a2621] font-sans antialiased min-h-screen">
 
       {/* Editorial frame */}
-      <div className="fixed left-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
-      <div className="fixed right-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
+      <div className="hidden md:block fixed left-0 top-0 w-16 h-full bg-white z-[60]"></div>
+      <div className="hidden md:block fixed right-0 top-0 w-16 h-full bg-white z-[60]"></div>
 
       {/* Navbar is now in layout.tsx */}
 
@@ -108,19 +111,39 @@ export default function AboutClient() {
                 features: ['Potential island workspaces', 'Potential dining areas', 'Potential premium appliances']
               },
               {
-                image: '/merritt-assets/Merritt%20rendering.jpg',
+                images: ['/merritt-assets/Merritt%20rendering.jpg', '/merritt-assets/mountainviews.jpg'],
                 title: 'Community Views',
                 description: 'Potential beautiful mountain and valley views from select units (subject to final design and location).',
-                features: ['Potential scenic outlook', 'Potential natural light', 'Potential peaceful ambiance']
+                features: ['Potential scenic outlook', 'Potential natural light', 'Potential peaceful ambiance'],
+                isCommunityViews: true
               }
             ].map((interior, index) => (
-              <div key={interior.title} className="group relative overflow-hidden rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl hover:shadow-2xl transition-all duration-500 bg-white border border-[#e6e2da]">
+              <div key={interior.title} className={`group relative overflow-hidden rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl hover:shadow-2xl transition-all duration-500 bg-white border border-[#e6e2da] ${interior.isCommunityViews ? 'cursor-pointer' : ''}`}
+                   onClick={interior.isCommunityViews ? () => setCommunityViewImage((prev) => (prev + 1) % interior.images.length) : undefined}
+                   onTouchEnd={interior.isCommunityViews ? (e) => {
+                     e.preventDefault();
+                     setCommunityViewImage((prev) => (prev + 1) % interior.images.length);
+                   } : undefined}>
                 <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden">
                   <img
-                    src={interior.image}
+                    src={interior.isCommunityViews ? interior.images[communityViewImage] : interior.image}
                     alt={interior.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
+                  {interior.isCommunityViews && (
+                    <>
+                      <div className="absolute top-4 left-4">
+                        <div className="w-20 h-8 bg-[#a6906c] rounded-full flex items-center justify-center text-white font-bold text-xs shadow-lg">
+                          {communityViewImage === 0 ? 'RENDERING' : 'MOUNTAIN'}
+                        </div>
+                      </div>
+                      <div className="absolute top-4 right-4 md:hidden">
+                        <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
+                          Tap to cycle
+                        </div>
+                      </div>
+                    </>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                     <h3 className="font-serif text-lg sm:text-xl font-bold mb-1 sm:mb-2">{interior.title}</h3>

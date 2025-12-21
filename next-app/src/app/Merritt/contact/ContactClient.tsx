@@ -13,7 +13,7 @@ import { Turnstile } from '@/components/Turnstile';
 export default function ContactClient() {
   // Form state
   const [formData, setFormData] = useState({
-    name: '',
+    fullName: '',
     email: '',
     phone: '',
     unitType: '',
@@ -37,10 +37,10 @@ export default function ContactClient() {
     console.log('Event:', e);
     
     // Validate required fields before proceeding
-    if (!formData.name || !formData.email) {
+    if (!formData.fullName || !formData.email) {
       console.error('Validation failed - missing required fields');
       setSubmitStatus('error');
-      alert('Please fill in all required fields (Name, Email)');
+      alert('Please fill in all required fields (Full Name, Email)');
       return;
     }
 
@@ -67,7 +67,7 @@ export default function ContactClient() {
       // Prepare JSON data matching the Google Apps Script expectations
       const jsonData = {
         formSource: 'Contact Page',
-        name: formData.name,
+        fullName: formData.fullName,
         email: formData.email,
         phone: formData.phone || '',
         unitType: formData.unitType || '',
@@ -96,7 +96,7 @@ export default function ContactClient() {
         
         setSubmitStatus('success');
         setFormData({
-          name: '',
+          fullName: '',
           email: '',
           phone: '',
           unitType: '',
@@ -236,14 +236,14 @@ export default function ContactClient() {
                 <p className="text-[#1a2621]/50 text-sm mb-6 md:mb-8">Join our interest list for affordable housing in Merritt, BC.</p>
 
                 <form onSubmit={handleSubmit} className="space-y-4 md:space-y-5">
-                        <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleInputChange}
-                            placeholder="Full Name"
-                            required
-                            className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
+                    <input
+                        type="text"
+                        name="fullName"
+                        value={formData.fullName}
+                        onChange={handleInputChange}
+                        placeholder="Full Name"
+                        required
+                        className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm"/>
                     <input 
                         type="email" 
                         name="email"
@@ -279,9 +279,9 @@ export default function ContactClient() {
                         required
                         className="w-full bg-transparent border-b border-[#1a2621]/20 py-4 outline-none focus:border-[#a6906c] transition-colors text-[#1a2621]/70 text-sm">
                         <option value="">Current Location</option>
+                        <option value="Merritt">Merritt Area</option>
                         <option value="Kamloops Area">Kamloops Area</option>
                         <option value="Kelowna Area">Kelowna Area</option>
-                        <option value="Merritt Area">Merritt Area</option>
                         <option value="Vancouver Area">Vancouver Area</option>
                         <option value="Other Location">Other Location</option>
                     </select>
