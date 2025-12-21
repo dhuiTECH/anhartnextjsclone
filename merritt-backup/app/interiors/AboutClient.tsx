@@ -7,11 +7,6 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 
 export default function AboutClient() {
-  // #region agent log
-  useEffect(() => {
-    fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:9',message:'Component mounted on CLIENT - INTERIOR PAGE',data:{timestamp:new Date().toISOString(),userAgent:window.navigator.userAgent,windowWidth:window.innerWidth,windowHeight:window.innerHeight,isMobile:window.innerWidth < 768},sessionId:'debug-session',runId:'client-side',hypothesisId:'H'})}).catch(()=>{});
-  }, []);
-  // #endregion
 
   return (
     <div className="bg-[#f9f8f6] text-[#1a2621] font-sans antialiased min-h-screen">
@@ -25,13 +20,6 @@ export default function AboutClient() {
       {/* Hero Section with Video Background */}
       <header className="relative h-[70vh] sm:h-[80vh] md:h-[90vh] w-full overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 z-0">
-          {/* #region agent log */}
-          {(() => {
-            const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-            fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:32',message:'About to render video - INTERIOR PAGE',data:{isMobile,windowWidth:typeof window !== 'undefined' ? window.innerWidth : 'SSR',userAgent:typeof window !== 'undefined' ? window.navigator.userAgent : 'SSR'},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{});
-            return null;
-          })()}
-          {/* #endregion */}
           <video
             src="/Merrittlivingroom.mp4"
             autoPlay
