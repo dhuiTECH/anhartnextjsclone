@@ -188,13 +188,6 @@ export default function NeighbourhoodPage() {
       {/* Hero Section */}
       <header className="relative pt-24 pb-16 pl-8 pr-8 sm:pl-6 sm:pr-6 min-h-[80vh] md:min-h-[90vh] overflow-hidden flex items-center justify-center">
         <div className="absolute inset-0 z-0">
-          {/* #region agent log */}
-          {(() => {
-            const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-            fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'neighbourhood-page.tsx:190',message:'About to render video - NEIGHBOURHOOD PAGE',data:{isMobile,windowWidth:typeof window !== 'undefined' ? window.innerWidth : 'SSR',userAgent:typeof window !== 'undefined' ? window.navigator.userAgent : 'SSR'},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{});
-            return null;
-          })()}
-          {/* #endregion */}
           <video
             src="/eaglemeritt.mp4"
             autoPlay
@@ -204,11 +197,6 @@ export default function NeighbourhoodPage() {
             preload="metadata"
             poster="/fullvillage.webp"
             className="w-full h-full object-cover opacity-40"
-            onLoadStart={() => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'neighbourhood-page.tsx:199',message:'Video load started - NEIGHBOURHOOD PAGE',data:{},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
-            onLoadedData={() => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'neighbourhood-page.tsx:200',message:'Video data loaded - NEIGHBOURHOOD PAGE',data:{},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
-            onPlay={() => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'neighbourhood-page.tsx:201',message:'Video started playing - NEIGHBOURHOOD PAGE',data:{},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
-            onError={(e) => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'neighbourhood-page.tsx:202',message:'Video error - NEIGHBOURHOOD PAGE',data:{error: e?.message || 'Unknown error', code: e?.target?.error?.code},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
-            onCanPlay={() => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'neighbourhood-page.tsx:203',message:'Video can play - NEIGHBOURHOOD PAGE',data:{},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
           />
           <div className="absolute inset-0 bg-gradient-to-br from-[#14312C]/80 via-[#14312C]/60 to-[#2a3731]/80"></div>
         </div>

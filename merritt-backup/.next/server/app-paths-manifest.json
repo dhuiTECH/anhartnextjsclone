@@ -1,0 +1,16 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin/listings/page": "app/admin/listings/page.js",
+  "/admin/page": "app/admin/page.js",
+  "/contact/page": "app/contact/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/floorplans/page": "app/floorplans/page.js",
+  "/interiors/page": "app/interiors/page.js",
+  "/login/page": "app/login/page.js",
+  "/neighbourhood/page": "app/neighbourhood/page.js",
+  "/page": "app/page.js",
+  "/relocation/kamloops/page": "app/relocation/kamloops/page.js",
+  "/relocation/kelowna/page": "app/relocation/kelowna/page.js",
+  "/relocation/vancouver/page": "app/relocation/vancouver/page.js"
+}

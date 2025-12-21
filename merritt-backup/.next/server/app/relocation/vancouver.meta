@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/relocation/layout,_N_T_/relocation/vancouver/layout,_N_T_/relocation/vancouver/page,_N_T_/relocation/vancouver"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/relocation/vancouver/__PAGE__",
+    "/relocation/vancouver",
+    "/relocation",
+    "/_index",
+    "/_head"
+  ]
+}

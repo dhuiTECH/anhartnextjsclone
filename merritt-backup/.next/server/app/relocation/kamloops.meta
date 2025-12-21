@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/relocation/layout,_N_T_/relocation/kamloops/layout,_N_T_/relocation/kamloops/page,_N_T_/relocation/kamloops"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/relocation/kamloops/__PAGE__",
+    "/relocation/kamloops",
+    "/relocation",
+    "/_index",
+    "/_head"
+  ]
+}

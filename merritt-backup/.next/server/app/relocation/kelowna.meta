@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/relocation/layout,_N_T_/relocation/kelowna/layout,_N_T_/relocation/kelowna/page,_N_T_/relocation/kelowna"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/relocation/kelowna/__PAGE__",
+    "/relocation/kelowna",
+    "/relocation",
+    "/_index",
+    "/_head"
+  ]
+}

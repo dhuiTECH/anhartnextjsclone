@@ -1,0 +1,16 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/admin/listings/page": "/admin/listings",
+  "/admin/page": "/admin",
+  "/contact/page": "/contact",
+  "/favicon.ico/route": "/favicon.ico",
+  "/floorplans/page": "/floorplans",
+  "/interiors/page": "/interiors",
+  "/login/page": "/login",
+  "/neighbourhood/page": "/neighbourhood",
+  "/page": "/",
+  "/relocation/kamloops/page": "/relocation/kamloops",
+  "/relocation/kelowna/page": "/relocation/kelowna",
+  "/relocation/vancouver/page": "/relocation/vancouver"
+}

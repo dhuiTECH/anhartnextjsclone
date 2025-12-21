@@ -41,11 +41,6 @@ export default function AboutClient() {
             preload="metadata"
             poster="/fullvillage.webp"
             className="w-full h-full object-cover opacity-40 md:opacity-30"
-            onLoadStart={() => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:41',message:'Video load started - INTERIOR PAGE',data:{},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
-            onLoadedData={() => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:42',message:'Video data loaded - INTERIOR PAGE',data:{},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
-            onPlay={() => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:43',message:'Video started playing - INTERIOR PAGE',data:{},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
-            onError={(e) => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:44',message:'Video error - INTERIOR PAGE',data:{error: e?.message || 'Unknown error', code: e?.target?.error?.code},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
-            onCanPlay={() => fetch('http://localhost:7244/ingest/91d1403b-2f36-44d5-9133-0422d099ea7f',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'AboutClient.tsx:45',message:'Video can play - INTERIOR PAGE',data:{},sessionId:'debug-session',runId:'final-debug',hypothesisId:'G'})}).catch(()=>{})}
           />
 
           {/* Background gradients */}
