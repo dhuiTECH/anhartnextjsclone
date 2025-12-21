@@ -231,7 +231,7 @@ export default function FloorplansPage() {
               </Link>
               <Link
                 href="/Merritt/contact"
-                className="inline-block border-2 border-[#a6906c] text-[#a6906c] px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-bold uppercase tracking-wider hover:bg-[#a6906c] hover:text-white transition-colors rounded-lg glow-hover cursor-pointer text-center"
+                className="inline-block bg-white/20 backdrop-blur-md border border-white/30 text-white px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-bold uppercase tracking-wider hover:bg-white/30 hover:border-white/50 transition-all duration-300 rounded-lg shadow-lg cursor-pointer text-center"
               >
                 Register Interest
               </Link>

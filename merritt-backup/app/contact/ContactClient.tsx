@@ -10,8 +10,8 @@ export default function ContactClient() {
     <div className="bg-[#f9f8f6] text-[#1a2621] font-sans antialiased min-h-screen">
 
       {/* EDITORIAL FRAME */}
-      <div className="fixed left-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
-      <div className="fixed right-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
+      <div className="hidden md:block fixed left-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
+      <div className="hidden md:block fixed right-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
 
       <Navbar />
 
@@ -124,7 +124,7 @@ export default function ContactClient() {
                     </select>
                     <textarea rows={4} placeholder="Tell us about your housing needs and timeline..." className="w-full bg-transparent border-b border-[#1a2621]/20 py-4 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-sm resize-none"></textarea>
 
-                    <button type="button" className="inline-block bg-[#a6906c] text-white px-8 py-4 text-lg font-bold uppercase tracking-wider hover:bg-[#8b7355] transition-colors rounded-lg glow-hover cursor-pointer">
+                    <button type="button" className="inline-block bg-white/20 backdrop-blur-md border border-white/30 text-white px-8 py-4 text-lg font-bold uppercase tracking-wider hover:bg-white/30 hover:border-white/50 transition-all duration-300 rounded-lg shadow-lg cursor-pointer">
                         Register Interest
                     </button>
                 </form>

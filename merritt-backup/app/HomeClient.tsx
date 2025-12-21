@@ -204,8 +204,8 @@ export default function HomeClient() {
       `}</style>
 
       {/* EDITORIAL FRAME */}
-      <div className="fixed left-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
-      <div className="fixed right-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
+      <div className="hidden md:block fixed left-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
+      <div className="hidden md:block fixed right-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
 
       {/* REMOVED: <Navbar /> (It is now in layout.tsx) */}
 
@@ -791,7 +791,7 @@ export default function HomeClient() {
                     <textarea rows={3} placeholder="Tell us about your housing needs and timeline..." className="w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm resize-none"></textarea>
 
                     <div className="pt-4 md:pt-6 text-center">
-                        <button type="button" className="inline-block bg-[#a6906c] text-white px-6 py-3 text-base font-bold uppercase tracking-wider hover:bg-[#8b7355] transition-colors rounded-lg glow-hover cursor-pointer">
+                        <button type="button" className="inline-block bg-white/20 backdrop-blur-md border border-white/30 text-white px-6 py-3 text-base font-bold uppercase tracking-wider hover:bg-white/30 hover:border-white/50 transition-all duration-300 rounded-lg shadow-lg cursor-pointer">
                             Register Interest
                         </button>
                     </div>

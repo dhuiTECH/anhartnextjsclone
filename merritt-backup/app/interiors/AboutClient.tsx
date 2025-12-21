@@ -17,8 +17,8 @@ export default function AboutClient() {
     <div className="bg-[#f9f8f6] text-[#1a2621] font-sans antialiased min-h-screen">
 
       {/* Editorial frame */}
-      <div className="fixed left-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
-      <div className="fixed right-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
+      <div className="hidden md:block fixed left-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
+      <div className="hidden md:block fixed right-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"></div>
 
       <Navbar />
 
@@ -245,7 +245,7 @@ export default function AboutClient() {
             </Link>
             <Link
               href="/Merritt/contact"
-              className="inline-block border-2 border-[#a6906c] text-[#a6906c] px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-bold uppercase tracking-wider hover:bg-[#a6906c] hover:text-white transition-colors rounded-lg glow-hover cursor-pointer text-center"
+              className="inline-block bg-white/20 backdrop-blur-md border border-white/30 text-white px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base md:text-lg font-bold uppercase tracking-wider hover:bg-white/30 hover:border-white/50 transition-all duration-300 rounded-lg shadow-lg cursor-pointer text-center"
             >
               Register Interest
             </Link>

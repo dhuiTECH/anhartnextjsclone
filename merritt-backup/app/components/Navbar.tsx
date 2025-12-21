@@ -153,7 +153,7 @@ export default function Navbar() {
           })}
           <Link
             href="/Merritt/contact"
-            className={`px-6 py-2.5 border border-[#1a2621] transition-all duration-300 glow-hover ${contactActive}`}
+            className={`px-6 py-2.5 bg-white/20 backdrop-blur-md border border-white/30 transition-all duration-300 hover:bg-white/30 hover:border-white/50 shadow-lg ${contactActive}`}
             style={{ fontFamily: 'Inter, sans-serif' }}
           >
             Register Today
@@ -213,7 +213,7 @@ export default function Navbar() {
             <div className="pt-4 border-t border-[#e6e2da]">
               <Link
                 href="/Merritt/contact"
-                className={`block text-center px-6 py-3 border border-[#1a2621] transition-all duration-300 ${contactActive}`}
+                className={`block text-center px-6 py-3 bg-white/20 backdrop-blur-md border border-white/30 transition-all duration-300 hover:bg-white/30 hover:border-white/50 shadow-lg ${contactActive}`}
                 style={{ fontFamily: 'Inter, sans-serif' }}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
