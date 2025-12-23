@@ -6,8 +6,16 @@ import Image from 'next/image';
 import { useScroll, useTransform, useSpring, motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 import Footer from './components/Footer';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
 import { useTurnstile } from '@/hooks/useTurnstile';
 import { Turnstile } from '@/components/Turnstile';
+
+// Register GSAP plugins
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const expertise = [
   {
@@ -92,6 +100,16 @@ export default function HomeClient() {
   const featuredSectionRef = useRef(null);
   const amenitiesSectionRef = useRef(null);
 
+  // GSAP refs for tree animations
+  const leftTreeRef = useRef(null);
+  const rightTreeRef = useRef(null);
+
+  // GSAP refs for mountain parallax
+  const mountainRef = useRef(null);
+
+  // GSAP ref for mountain views image
+  const mountainViewsRef = useRef(null);
+
   // --- EXISTING OBSERVERS ---
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -113,6 +131,93 @@ export default function HomeClient() {
     }
   }, []);
 
+  // GSAP Tree Animation - Fixed with proper timing
+  useEffect(() => {
+    // Add a small delay to ensure DOM is fully mounted
+    const timer = setTimeout(() => {
+      if (!leftTreeRef.current || !rightTreeRef.current || !featuredSectionRef.current || !mountainViewsRef.current) {
+        return;
+      }
+
+      // Animate Left Tree (Vertical parallax effect)
+      gsap.fromTo(leftTreeRef.current,
+        { y: 100 }, // Starting position (below)
+        {
+          y: 0, // Ending position (settle on bottom line)
+          ease: 'none',
+          force3D: true, // Forces GPU usage to prevent sub-pixel jitter
+          scrollTrigger: {
+            trigger: featuredSectionRef.current,
+            start: 'top bottom', // Start when top of section hits bottom of viewport
+            end: 'bottom top',   // End when bottom of section hits top of viewport
+            scrub: 0.3,          // Reduced lag for better scroll responsiveness
+            fastScrollEnd: true, // Stop calculation when idle to prevent micro-drifting
+          }
+        }
+      );
+
+      // Animate Right Tree (Vertical parallax effect with different depth)
+      gsap.fromTo(rightTreeRef.current,
+        { y: 120 }, // Starting position (below, slightly more than left tree)
+        {
+          y: 0, // Ending position (settle on bottom line)
+          ease: 'none',
+          force3D: true, // Forces GPU usage to prevent sub-pixel jitter
+          scrollTrigger: {
+            trigger: featuredSectionRef.current,
+            start: 'top bottom', // Start when top of section hits bottom of viewport
+            end: 'bottom top',   // End when bottom of section hits top of viewport
+            scrub: 0.3,          // Reduced lag for better scroll responsiveness
+            fastScrollEnd: true, // Stop calculation when idle to prevent micro-drifting
+          }
+        }
+      );
+
+      // Animate Mountain Views Image (Fade in and slide up on scroll)
+      gsap.fromTo(mountainViewsRef.current,
+        {
+          opacity: 0,
+          y: 50 // Start slightly below and transparent
+        },
+        {
+          opacity: 1,
+          y: 0, // Fade in and slide up to normal position
+          duration: 1.2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: mountainViewsRef.current,
+            start: 'top 80%', // Start when top of element is 80% from top of viewport
+            end: 'bottom 20%', // End when bottom of element is 20% from top of viewport
+            toggleActions: 'play none none reverse' // Play on enter, reverse on leave
+          }
+        }
+      );
+    }, 100); // Small delay to ensure DOM is ready
+
+    return () => {
+      clearTimeout(timer);
+      // Clean up ScrollTrigger instances
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+
+  // GSAP Mountain Parallax Animation
+  useGSAP(() => {
+    if (!mountainRef.current || !amenitiesSectionRef.current) return;
+
+    gsap.to(mountainRef.current, {
+      y: 150, // Move down slightly as we scroll down for parallax effect
+      ease: 'none',
+      force3D: true, // Forces GPU usage to prevent sub-pixel jitter
+      scrollTrigger: {
+        trigger: amenitiesSectionRef.current,
+        start: 'top bottom', // Start when top of section enters viewport
+        end: 'bottom top',   // End when bottom of section leaves viewport
+        scrub: 0.3,          // Reduced lag for better scroll responsiveness
+        fastScrollEnd: true, // Stop calculation when idle to prevent micro-drifting
+      },
+    });
+  }, { scope: amenitiesSectionRef });
 
   // Form submission handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -208,11 +313,10 @@ export default function HomeClient() {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target;
-    const checked = (e.target as HTMLInputElement).checked;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     }));
   };
 
@@ -608,9 +712,9 @@ export default function HomeClient() {
             </div>
           </div>
 
-            {/* Decorative Trees */}
+            {/* Decorative Trees - GSAP Animated */}
             {/* Tablet: Smaller trees, Desktop: Full size */}
-            <div className="absolute bottom-0 left-0 md:left-4 lg:left-8 xl:left-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-0 overflow-hidden">
+            <div ref={leftTreeRef} className="absolute bottom-0 left-0 md:left-4 lg:left-8 xl:left-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-0 overflow-hidden">
             <Image
               src="/merritt-assets/trees1.png"
               alt="Decorative pine tree"
@@ -620,7 +724,7 @@ export default function HomeClient() {
             />
           </div>
 
-            <div className="absolute bottom-0 right-0 md:right-4 lg:right-8 xl:right-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-0 overflow-hidden">
+            <div ref={rightTreeRef} className="absolute bottom-0 right-0 md:right-4 lg:right-8 xl:right-12 w-64 md:w-80 lg:w-96 xl:w-[32rem] pointer-events-none z-0 overflow-hidden">
             <Image
               src="/merritt-assets/trees2.png"
               alt="Decorative pine tree"
@@ -635,8 +739,8 @@ export default function HomeClient() {
       {/* Expertise Grid */}
       <section ref={amenitiesSectionRef} id="expertise" className="relative overflow-hidden py-12 md:py-20 border-t border-[#e6e2da]">
 
-          {/* Mountain Background Image */}
-          <div className="absolute top-[-100px] left-0 right-0 w-full h-full z-0 pointer-events-none opacity-20">
+          {/* Mountain Background Image - GSAP Parallax */}
+          <div ref={mountainRef} className="absolute top-[-100px] left-0 right-0 w-full h-full z-0 pointer-events-none opacity-20">
           <Image
             src="/merritt-assets/mountains.png?v=2"
             alt="Merritt Mountains background"
@@ -856,7 +960,7 @@ export default function HomeClient() {
             </div>
             <div className="w-full lg:w-2/3 space-y-6">
                 {/* Mountain Views Image - Top */}
-                <div className="h-[200px] md:h-[300px] rounded-lg overflow-hidden shadow-2xl border border-white/10 relative group">
+                <div ref={mountainViewsRef} className="h-[200px] md:h-[300px] rounded-lg overflow-hidden shadow-2xl border border-white/10 relative group opacity-0 translate-y-8">
                     <Image
                         src="/merritt-assets/mountainviews.jpg"
                         alt="Breathtaking Nicola Valley mountain views from Merritt townhome location"
