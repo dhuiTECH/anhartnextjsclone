@@ -83,7 +83,7 @@ export default function ContactClient() {
       // Note: With no-cors, we can't set custom headers, but JSON body should still work
       // The script expects JSON in e.postData.contents
       try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbxgDQSGyo5GbWuSXs68FUW2S_E6Nio_TI8RFMDuclYpqulveMdHPmzQ6_INc7Lk5hv1jw/exec', {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbx1_okSkRHxckQlGq1lDJFulFggIMAMQWpS3OtZefH0EPDbx6WRYRoQ3wmKpYbASZerFg/exec', {
           method: 'POST',
           mode: 'no-cors', // Required for Google Apps Script to avoid CORS errors
           // Note: Can't set Content-Type header with no-cors, but body will still be sent

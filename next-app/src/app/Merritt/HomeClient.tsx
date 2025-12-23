@@ -274,7 +274,7 @@ export default function HomeClient() {
       // Note: With no-cors, we can't set custom headers, but JSON body should still work
       // The script expects JSON in e.postData.contents
       try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbxgDQSGyo5GbWuSXs68FUW2S_E6Nio_TI8RFMDuclYpqulveMdHPmzQ6_INc7Lk5hv1jw/exec', {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbx1_okSkRHxckQlGq1lDJFulFggIMAMQWpS3OtZefH0EPDbx6WRYRoQ3wmKpYbASZerFg/exec', {
           method: 'POST',
           mode: 'no-cors', // Required for Google Apps Script to avoid CORS errors
           // Note: Can't set Content-Type header with no-cors, but body will still be sent
@@ -909,6 +909,24 @@ export default function HomeClient() {
                     <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10">
                         <h3 className="text-[#a6906c] text-base uppercase tracking-wider mb-4 font-semibold">Frequently Asked Questions</h3>
                         <div className="space-y-3">
+                        <details className="group">
+                            <summary className="text-[#e6e2da] text-sm font-medium cursor-pointer hover:text-[#a6906c] transition-colors flex items-center">
+                                <span className="mr-2 text-[#a6906c]">+</span>
+                                How does Anhart keep housing rates below market average?
+                            </summary>
+                            <p className="text-[#e6e2da]/80 text-xs mt-2 leading-relaxed pl-6">
+                                Our proven approach to affordability rests on three pillars: partnerships with local businesses providing deep discounts on construction costs, cutting-edge modular construction methods for efficient and cost-effective homes, and strategic collaborations with impact investors and credit unions dedicated to affordable housing solutions.
+                            </p>
+                        </details>
+                        <details className="group">
+                            <summary className="text-[#e6e2da] text-sm font-medium cursor-pointer hover:text-[#a6906c] transition-colors flex items-center">
+                                <span className="mr-2 text-[#a6906c]">+</span>
+                                Is it wheelchair accessible?
+                            </summary>
+                            <p className="text-[#e6e2da]/80 text-xs mt-2 leading-relaxed pl-6">
+                                Yes, our Garden Flat is designed for wheelchair accessibility with zero-step entry.
+                            </p>
+                        </details>
                         <details className="group">
                             <summary className="text-[#e6e2da] text-sm font-medium cursor-pointer hover:text-[#a6906c] transition-colors flex items-center">
                                 <span className="mr-2 text-[#a6906c]">+</span>
