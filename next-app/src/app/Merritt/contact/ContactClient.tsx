@@ -85,7 +85,7 @@ export default function ContactClient() {
       console.log('Submitting form data:', jsonData);
 
       // Send JSON data to Google Apps Script
-      const response = await fetch('https://script.google.com/macros/s/AKfycbx1_okSkRHxckQlGq1lDJFulFggIMAMQWpS3OtZefH0EPDbx6WRYRoQ3wmKpYbASZerFg/exec', {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbz44RkG00Hu4_2tUd9L9dCcl8ZfJmouu9tK3-5qcE818JAB-S47qZ3UkCPUeIpkdIhwyg/exec', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
