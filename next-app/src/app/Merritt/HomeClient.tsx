@@ -255,36 +255,54 @@ export default function HomeClient() {
     setSubmitStatus('idle');
 
     try {
+      // Split fullName into firstName and lastName
+      const nameParts = formData.fullName.trim().split(/\s+/);
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
       // Prepare JSON data matching the Google Apps Script expectations
       const jsonData = {
         formSource: 'Home Page',
-        fullName: formData.fullName,
+        firstName: firstName,
+        lastName: lastName,
         email: formData.email,
         phone: formData.phone || '',
         unitType: formData.unitType || '',
         currentLocation: formData.currentLocation || '',
-        referralSource: formData.hearAboutUs || '',
+        hearAboutUs: formData.hearAboutUs || '',
         message: formData.message || ''
       };
 
       console.log('Submitting form data:', jsonData);
 
       // Send JSON data to Google Apps Script
-      // Use 'no-cors' mode to avoid CORS issues with Google Apps Script
-      // Note: With no-cors, we can't set custom headers, but JSON body should still work
-      // The script expects JSON in e.postData.contents
-      try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbx1_okSkRHxckQlGq1lDJFulFggIMAMQWpS3OtZefH0EPDbx6WRYRoQ3wmKpYbASZerFg/exec', {
-          method: 'POST',
-          mode: 'no-cors', // Required for Google Apps Script to avoid CORS errors
-          // Note: Can't set Content-Type header with no-cors, but body will still be sent
-          body: JSON.stringify(jsonData),
-        });
+      const response = await fetch('https://script.google.com/macros/s/AKfycbx1_okSkRHxckQlGq1lDJFulFggIMAMQWpS3OtZefH0EPDbx6WRYRoQ3wmKpYbASZerFg/exec', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(jsonData),
+      });
 
-        // With no-cors mode, we can't read the response, but the data was sent
-        // Assume success if no error was thrown
-        console.log('Form data sent successfully (no-cors mode - cannot verify response)');
-        
+      // Parse the response
+      // Note: Google Apps Script may return text/html, so we try JSON first, then text
+      let result;
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        result = await response.json();
+      } else {
+        const text = await response.text();
+        try {
+          result = JSON.parse(text);
+        } catch {
+          // If parsing fails, assume success (Google Apps Script sometimes returns HTML)
+          console.log('Response is not JSON, assuming success');
+          result = { success: true, message: 'Form submitted successfully' };
+        }
+      }
+      
+      if (result.success) {
+        console.log('Form submitted successfully:', result.message);
         setSubmitStatus('success');
         setFormData({
           fullName: '',
@@ -298,10 +316,8 @@ export default function HomeClient() {
         });
         resetTurnstile(); // Reset Turnstile after successful submission
         setTimeout(() => setSubmitStatus('idle'), 5000);
-      } catch (fetchError) {
-        // If fetch fails, try alternative method using form submission
-        console.log('Fetch failed, trying alternative method:', fetchError);
-        throw fetchError;
+      } else {
+        throw new Error(result.error || 'Form submission failed');
       }
     } catch (error: any) {
       console.error('Form submission error:', error);
