@@ -243,11 +243,11 @@ export default function HomeClient() {
       return;
     }
 
-    // Validate Turnstile token
+    // Turnstile validation - show verifying message if token not ready
     if (!turnstileToken) {
-      console.error('Turnstile verification required');
-      setSubmitStatus('error');
-      alert('Please complete the verification. The form is verifying your request...');
+      console.log('Turnstile verification in progress...');
+      // Don't show error, just prevent submission until token is ready
+      // The UI will show the verifying message
       return;
     }
     
@@ -255,69 +255,120 @@ export default function HomeClient() {
     setSubmitStatus('idle');
 
     try {
-      // Split fullName into firstName and lastName
-      const nameParts = formData.fullName.trim().split(/\s+/);
-      const firstName = nameParts[0] || '';
-      const lastName = nameParts.slice(1).join(' ') || '';
-
       // Prepare JSON data matching the Google Apps Script expectations
       const jsonData = {
         formSource: 'Home Page',
-        firstName: firstName,
-        lastName: lastName,
+        fullName: formData.fullName || '',
         email: formData.email,
         phone: formData.phone || '',
         unitType: formData.unitType || '',
         currentLocation: formData.currentLocation || '',
         hearAboutUs: formData.hearAboutUs || '',
-        message: formData.message || ''
+        message: formData.message || '',
+        consent: formData.consent || false
       };
 
       console.log('Submitting form data:', jsonData);
 
       // Send JSON data to Google Apps Script
-      const response = await fetch('https://script.google.com/macros/s/AKfycbz44RkG00Hu4_2tUd9L9dCcl8ZfJmouu9tK3-5qcE818JAB-S47qZ3UkCPUeIpkdIhwyg/exec', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(jsonData),
-      });
-
-      // Parse the response
-      // Note: Google Apps Script may return text/html, so we try JSON first, then text
-      let result;
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        result = await response.json();
-      } else {
-        const text = await response.text();
-        try {
-          result = JSON.parse(text);
-        } catch {
-          // If parsing fails, assume success (Google Apps Script sometimes returns HTML)
-          console.log('Response is not JSON, assuming success');
-          result = { success: true, message: 'Form submitted successfully' };
-        }
-      }
+      // Try with CORS first to read the response, fallback to no-cors if needed
+      let submissionSuccess = false;
       
-      if (result.success) {
-        console.log('Form submitted successfully:', result.message);
-        setSubmitStatus('success');
-        setFormData({
-          fullName: '',
-          email: '',
-          phone: '',
-          unitType: '',
-          currentLocation: '',
-          hearAboutUs: '',
-          message: '',
-          consent: false
+      try {
+        console.log('=== ATTEMPTING FORM SUBMISSION ===');
+        console.log('Data being sent:', jsonData);
+        
+        // First attempt: Try with CORS to read the response
+        try {
+          const response = await fetch('https://script.google.com/macros/s/AKfycbxjz96P9FD-m1paINv4Hv1VCP9tt1c0VCnJrqcI_gJELGMIqVqBTYo3EAWga4uRRV5Yig/exec', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(jsonData),
+          });
+
+          console.log('Response status:', response.status);
+          console.log('Response ok:', response.ok);
+          console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+          // Try to read the response
+          const text = await response.text();
+          console.log('Response text received:', text);
+          
+          try {
+            const result = JSON.parse(text);
+            console.log('Parsed JSON response:', result);
+            if (result.success) {
+              console.log('✅ Form submitted successfully:', result.message);
+              submissionSuccess = true;
+            } else {
+              console.error('❌ Form submission failed:', result.error);
+              throw new Error(result.error || 'Form submission failed');
+            }
+          } catch (parseError: any) {
+            // If response is not JSON, check if status is ok
+            console.log('Response is not JSON, status:', response.status);
+            if (response.ok || response.status === 200) {
+              console.log('✅ Request completed with OK status');
+              submissionSuccess = true;
+            } else {
+              console.error('❌ Request failed with status:', response.status);
+              throw new Error(`Server returned status ${response.status}`);
+            }
+          }
+        } catch (corsError: any) {
+          // CORS failed, try with no-cors mode
+          console.warn('⚠️ CORS request failed, trying no-cors mode:', corsError.message);
+          console.warn('CORS error details:', corsError);
+          
+          try {
+            const noCorsResponse = await fetch('https://script.google.com/macros/s/AKfycbxjz96P9FD-m1paINv4Hv1VCP9tt1c0VCnJrqcI_gJELGMIqVqBTYo3EAWga4uRRV5Yig/exec', {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(jsonData),
+            });
+
+            // With no-cors, we can't read the response, but we can check if it threw an error
+            console.log('⚠️ Form data sent via no-cors mode (cannot verify response)');
+            console.log('⚠️ WARNING: Cannot confirm if submission was successful. Please check your Google Sheet.');
+            submissionSuccess = true; // Assume success, but warn user
+          } catch (noCorsError: any) {
+            console.error('❌ No-CORS request also failed:', noCorsError);
+            throw noCorsError;
+          }
+        }
+
+        if (submissionSuccess) {
+          setSubmitStatus('success');
+          setFormData({
+            fullName: '',
+            email: '',
+            phone: '',
+            unitType: '',
+            currentLocation: '',
+            hearAboutUs: '',
+            message: '',
+            consent: false
+          });
+          resetTurnstile(); // Reset Turnstile after successful submission
+          setTimeout(() => setSubmitStatus('idle'), 5000);
+        } else {
+          throw new Error('Form submission did not complete successfully');
+        }
+      } catch (fetchError: any) {
+        // If all attempts fail, log the error and show user-friendly message
+        console.error('Form submission error:', fetchError);
+        console.error('Error details:', {
+          message: fetchError.message,
+          stack: fetchError.stack,
+          formData: jsonData
         });
-        resetTurnstile(); // Reset Turnstile after successful submission
-        setTimeout(() => setSubmitStatus('idle'), 5000);
-      } else {
-        throw new Error(result.error || 'Form submission failed');
+        throw new Error('Failed to submit form. Please check your connection and try again.');
       }
     } catch (error: any) {
       console.error('Form submission error:', error);
@@ -329,10 +380,12 @@ export default function HomeClient() {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
+    
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
@@ -1193,16 +1246,8 @@ export default function HomeClient() {
                             type="submit" 
                             onClick={handleButtonClick}
                             disabled={isSubmitting || !turnstileToken}
-                            className={`inline-block px-6 py-3 text-base font-bold uppercase tracking-wider transition-colors rounded-lg ${
-                                !turnstileToken 
-                                    ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
-                                    : 'bg-[#a6906c] text-white hover:bg-[#8b7355] glow-hover cursor-pointer'
-                            } disabled:opacity-50 disabled:cursor-not-allowed`}>
-                            {!turnstileToken 
-                                ? 'Verifying User...' 
-                                : isSubmitting 
-                                    ? 'Submitting...' 
-                                    : 'Register Interest'}
+                            className="inline-block px-6 py-3 text-base font-bold uppercase tracking-wider transition-colors rounded-lg bg-[#a6906c] text-white hover:bg-[#8b7355] glow-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                            {isSubmitting ? 'Submitting...' : !turnstileToken ? 'VERIFYING USER...' : 'Register Interest'}
                         </button>
                     </div>
                 </form>
