@@ -77,7 +77,7 @@ export default function HomeClient() {
 
   // Mobile image switching state
   const [gardenFlatImage, setGardenFlatImage] = useState(0); // 0: exterior, 1: bedroom, 2: kitchen
-  const [skyTownhomeImage, setSkyTownhomeImage] = useState(0); // 0: exterior, 1: bedroom, 2: kitchen
+  const [skyTownhomeImage, setSkyTownhomeImage] = useState(0); // 0: exterior, 1: bedroom, 2: kitchen, 3: deck
 
   // Form state
   const [formData, setFormData] = useState({
@@ -235,13 +235,7 @@ export default function HomeClient() {
       return;
     }
 
-    // Validate consent checkbox
-    if (!formData.consent) {
-      console.error('Validation failed - consent not given');
-      setSubmitStatus('error');
-      alert('Please consent to receiving communications before submitting.');
-      return;
-    }
+    // Consent is optional - users can opt out
 
     // Turnstile validation - show verifying message if token not ready
     if (!turnstileToken) {
@@ -626,16 +620,55 @@ export default function HomeClient() {
             <div className="bg-white rounded-xl shadow-xl border border-[#e6e2da] overflow-hidden group hover:shadow-2xl transition-all duration-300 h-full flex flex-col relative z-10">
               <div
                 className="relative h-80 overflow-hidden group cursor-pointer md:cursor-default"
-                onClick={() => setGardenFlatImage((prev) => (prev + 1) % 3)}
+                onClick={() => setGardenFlatImage((prev) => (prev + 1) % 4)}
                 onTouchEnd={(e) => {
                   e.preventDefault();
-                  setGardenFlatImage((prev) => (prev + 1) % 3);
+                  setGardenFlatImage((prev) => (prev + 1) % 4);
+                }}
+                onMouseEnter={() => {
+                  // Cycle through images until reaching the 4th, then stop
+                  const cycleImages = () => {
+                    setGardenFlatImage((prev) => {
+                      const next = (prev + 1) % 4;
+                      // If we've reached the 4th image (index 3), stop cycling
+                      if (next === 0 && prev === 3) {
+                        if ((window as any).gardenFlatHoverInterval) {
+                          clearInterval((window as any).gardenFlatHoverInterval);
+                          (window as any).gardenFlatHoverInterval = null;
+                        }
+                        return 3; // Stay on 4th image
+                      }
+                      return next;
+                    });
+                  };
+
+                  // Only start cycling if not already on the 4th image
+                  if (gardenFlatImage < 3) {
+                    cycleImages(); // Show next image immediately
+                    const interval = setInterval(cycleImages, 800);
+                    (window as any).gardenFlatHoverInterval = interval;
+                  }
+                }}
+                onMouseLeave={() => {
+                  // Stop cycling and reset to first image immediately
+                  if ((window as any).gardenFlatHoverInterval) {
+                    clearInterval((window as any).gardenFlatHoverInterval);
+                    (window as any).gardenFlatHoverInterval = null;
+                  }
+                  // Small delay to ensure no race condition with interval
+                  setTimeout(() => setGardenFlatImage(0), 10);
                 }}
               >
                 {/* Mobile tap indicator */}
                 <div className="absolute bottom-8 right-4 md:hidden">
                   <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
-                    Tap to cycle
+                    Tap to cycle ({gardenFlatImage + 1}/4)
+                  </div>
+                </div>
+                {/* Desktop hover indicator */}
+                <div className="absolute bottom-8 right-4 hidden md:block">
+                  <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
+                    Hover to cycle images ({gardenFlatImage + 1}/4)
                   </div>
                 </div>
                 {/* Exterior Garden View - Default */}
@@ -646,6 +679,7 @@ export default function HomeClient() {
                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
                      gardenFlatImage === 0 ? 'opacity-100' : 'opacity-0'
                    } md:group-hover:opacity-0`}
+                   style={{ objectPosition: '51% center' }}
                 />
                 {/* Bedroom Interior */}
                 <img
@@ -665,6 +699,15 @@ export default function HomeClient() {
                      gardenFlatImage === 2 ? 'opacity-100' : 'opacity-0'
                    } md:group-hover:opacity-100 md:group-hover:delay-1000`}
                 />
+                {/* Bathroom Interior */}
+                <img
+                  src="/merritt-assets/washroomhd2.jpg"
+                  alt="Garden Flat bathroom - Modern and accessible bathroom design in Merritt townhome"
+                  loading="lazy"
+                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                     gardenFlatImage === 3 ? 'opacity-100' : 'opacity-0'
+                   }`}
+                />
                 <div className="absolute top-4 left-4">
                   <div className="w-16 h-8 bg-[#a6906c] rounded-full flex items-center justify-center text-white font-bold text-xs shadow-lg">GROUND</div>
                 </div>
@@ -677,17 +720,17 @@ export default function HomeClient() {
                 <div className="mb-auto">
                   <p className="text-[#1a2621]/70 leading-relaxed mb-4 text-sm md:text-base">
                     <strong>Potential For:</strong> First-time buyers, seniors/downsizers, or those with mobility needs.<br/>
-                    <strong>Contemplated Features:</strong> Single-level living with zero stairs and direct patio access (subject to final design).
+                    <strong>Contemplated Features:</strong> Single-level living with zero stairs (subject to final design).
                   </p>
                   <div className="hidden md:block space-y-3">
                     <div className="border-l-4 border-[#a6906c] pl-4">
-                      <span className="text-[#1a2621]/70 text-sm"><strong>Potential 2 Bedrooms:</strong> May include primary with ensuite + guest/office</span>
+                      <span className="text-[#1a2621]/70 text-sm"><strong>Potential 2 Bedrooms:</strong> May include primary with ensuite + second bedroom, both with wall closets</span>
                     </div>
                     <div className="border-l-4 border-[#a6906c] pl-4">
                       <span className="text-[#1a2621]/70 text-sm"><strong>Contemplated Open Concept:</strong> Kitchen, dining & living may flow together</span>
                     </div>
                     <div className="border-l-4 border-[#a6906c] pl-4">
-                      <span className="text-[#1a2621]/70 text-sm"><strong>Potential Direct Access:</strong> Grade-level patio may be available for outdoor living</span>
+                      <span className="text-[#1a2621]/70 text-sm"><strong>Enhanced Accessibility:</strong> Zero-step entry and wide doorways for easy mobility</span>
                     </div>
                   </div>
                 </div>
@@ -705,16 +748,55 @@ export default function HomeClient() {
             <div className="bg-white rounded-xl shadow-xl border border-[#e6e2da] overflow-hidden group hover:shadow-2xl transition-all duration-300 h-full flex flex-col relative z-10">
               <div
                 className="relative h-80 overflow-hidden group cursor-pointer md:cursor-default"
-                onClick={() => setSkyTownhomeImage((prev) => (prev + 1) % 3)}
+                onClick={() => setSkyTownhomeImage((prev) => (prev + 1) % 4)}
                 onTouchEnd={(e) => {
                   e.preventDefault();
-                  setSkyTownhomeImage((prev) => (prev + 1) % 3);
+                  setSkyTownhomeImage((prev) => (prev + 1) % 4);
+                }}
+                onMouseEnter={() => {
+                  // Cycle through images until reaching the 4th, then stop
+                  const cycleImages = () => {
+                    setSkyTownhomeImage((prev) => {
+                      const next = (prev + 1) % 4;
+                      // If we've reached the 4th image (index 3), stop cycling
+                      if (next === 0 && prev === 3) {
+                        if ((window as any).skyTownhomeHoverInterval) {
+                          clearInterval((window as any).skyTownhomeHoverInterval);
+                          (window as any).skyTownhomeHoverInterval = null;
+                        }
+                        return 3; // Stay on 4th image
+                      }
+                      return next;
+                    });
+                  };
+
+                  // Only start cycling if not already on the 4th image
+                  if (skyTownhomeImage < 3) {
+                    cycleImages(); // Show next image immediately
+                    const interval = setInterval(cycleImages, 800);
+                    (window as any).skyTownhomeHoverInterval = interval;
+                  }
+                }}
+                onMouseLeave={() => {
+                  // Stop cycling and reset to first image immediately
+                  if ((window as any).skyTownhomeHoverInterval) {
+                    clearInterval((window as any).skyTownhomeHoverInterval);
+                    (window as any).skyTownhomeHoverInterval = null;
+                  }
+                  // Small delay to ensure no race condition with interval
+                  setTimeout(() => setSkyTownhomeImage(0), 10);
                 }}
               >
                 {/* Mobile tap indicator */}
                 <div className="absolute bottom-8 right-4 md:hidden">
                   <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
-                    Tap to cycle
+                    Tap to cycle ({skyTownhomeImage + 1}/4)
+                  </div>
+                </div>
+                {/* Desktop hover indicator */}
+                <div className="absolute bottom-8 right-4 hidden md:block">
+                  <div className="bg-black/50 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
+                    Hover to cycle images ({skyTownhomeImage + 1}/4)
                   </div>
                 </div>
                 {/* Exterior View - Default */}
@@ -744,6 +826,15 @@ export default function HomeClient() {
                      skyTownhomeImage === 2 ? 'opacity-100' : 'opacity-0'
                    } md:group-hover:opacity-100 md:group-hover:delay-1000`}
                 />
+                {/* Deck Exterior */}
+                <img
+                  src="/merritt-assets/merrittdeck.jpg"
+                  alt="Sky Townhome deck - Private outdoor space perfect for entertaining in Merritt townhome"
+                  loading="lazy"
+                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                     skyTownhomeImage === 3 ? 'opacity-100' : 'opacity-0'
+                   }`}
+                />
                 <div className="absolute top-4 left-4">
                   <div className="w-20 md:w-16 h-8 bg-[#a6906c] rounded-full flex items-center justify-center text-white font-bold text-[9px] md:text-[10px] shadow-lg px-2">2-STORY</div>
                 </div>
@@ -766,7 +857,10 @@ export default function HomeClient() {
                       <span className="text-[#1a2621]/70 text-sm"><strong>Contemplated Kitchen:</strong> May include large U-shaped layout with window</span>
                     </div>
                     <div className="border-l-4 border-[#a6906c] pl-4">
-                      <span className="text-[#1a2621]/70 text-sm"><strong>Potential Private Deck:</strong> Balcony may be available off the living area</span>
+                      <span className="text-[#1a2621]/70 text-sm"><strong>Private Patio:</strong> Available right next to the kitchen, perfect for BBQ</span>
+                    </div>
+                    <div className="border-l-4 border-[#a6906c] pl-4">
+                      <span className="text-[#1a2621]/70 text-sm"><strong>Potential Private Deck:</strong> Small outdoor patio accessible from the bedroom</span>
                     </div>
                   </div>
                 </div>
@@ -1223,15 +1317,18 @@ export default function HomeClient() {
                         <input
                             type="checkbox"
                             name="consent"
+                            id="consent"
                             checked={formData.consent || false}
                             onChange={handleInputChange}
-                            required
                             className="mt-1 w-4 h-4 text-[#a6906c] bg-transparent border-[#1a2621]/20 rounded focus:ring-[#a6906c] focus:ring-2"
                         />
                         <label htmlFor="consent" className="text-sm text-[#1a2621]/70 leading-relaxed">
                             Yes, I consent to receiving emails and communications from Anhart.
                         </label>
                     </div>
+                    <p className="text-xs text-[#1a2621]/40 leading-relaxed -mt-2 mb-2">
+                        By clicking submit, you agree to receive project updates. You may opt out at any time.
+                    </p>
 
                     {/* Privacy Policy Text */}
                     <div className="text-xs text-[#1a2621]/60 leading-relaxed py-2 border-t border-[#1a2621]/10 pt-4">

@@ -214,7 +214,7 @@ function Navbar() {
                             }),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                 href: "/Merritt/contact",
-                                className: `px-6 py-2.5 bg-white/20 backdrop-blur-md border border-white/30 transition-all duration-300 hover:bg-white/30 hover:border-white/50 shadow-lg ${contactActive}`,
+                                className: `px-6 py-2.5 border border-[#1a2621] transition-all duration-300 glow-hover ${contactActive}`,
                                 style: {
                                     fontFamily: 'Inter, sans-serif'
                                 },
@@ -324,7 +324,7 @@ function Navbar() {
                             className: "pt-4 border-t border-[#e6e2da]",
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                                 href: "/Merritt/contact",
-                                className: `block text-center px-6 py-3 bg-white/20 backdrop-blur-md border border-white/30 transition-all duration-300 hover:bg-white/30 hover:border-white/50 shadow-lg ${contactActive}`,
+                                className: `block text-center px-6 py-3 border border-[#1a2621] transition-all duration-300 ${contactActive}`,
                                 style: {
                                     fontFamily: 'Inter, sans-serif'
                                 },

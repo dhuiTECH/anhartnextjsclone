@@ -25,6 +25,10 @@ const faqData = [
     answer: "Yes, we do! Anhart offers a no-cost, pre-development phone or Zoom appointment for nonprofits and municipalities. We can help with initial project assessments, feasibility studies, and guidance on financing to get your project off the ground."
   },
   {
+    question: "How does Anhart keep housing rates below market average?",
+    answer: "We use a 'three-fold' development strategy: Community Champions Program (deep discounts from local businesses), Efficient Construction (modular methods for cost-effective homes), and Non-Profit Mission (reinvesting in lower rents rather than maximizing profit)."
+  },
+  {
     question: "How does Anhart get paid?",
     answer: "At Anhart, we help you build affordable homes, which are much needed for strong communities. Our focus is on creating sustainable, accessible housing that benefits everyone. After all project costs are covered and everyone is paid, we take a modest 3% development fee."
   }

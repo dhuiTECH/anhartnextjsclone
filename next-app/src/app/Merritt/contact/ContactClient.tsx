@@ -44,13 +44,7 @@ export default function ContactClient() {
       return;
     }
 
-    // Validate consent checkbox
-    if (!formData.consent) {
-      console.error('Validation failed - consent not given');
-      setSubmitStatus('error');
-      alert('Please consent to receiving communications before submitting.');
-      return;
-    }
+    // Consent is optional - users can opt out
 
     // Turnstile validation - show verifying message if token not ready
     if (!turnstileToken) {
@@ -383,15 +377,18 @@ export default function ContactClient() {
                         <input
                             type="checkbox"
                             name="consent"
+                            id="consent"
                             checked={formData.consent || false}
                             onChange={handleInputChange}
-                            required
                             className="mt-1 w-4 h-4 text-[#a6906c] bg-transparent border-[#1a2621]/20 rounded focus:ring-[#a6906c] focus:ring-2"
                         />
                         <label htmlFor="consent" className="text-sm text-[#1a2621]/70 leading-relaxed">
                             Yes, I consent to receiving emails and communications from Anhart.
                         </label>
                     </div>
+                    <p className="text-xs text-[#1a2621]/40 leading-relaxed -mt-2 mb-2">
+                        By clicking submit, you agree to receive project updates. You may opt out at any time.
+                    </p>
 
                     {/* Privacy Policy Text */}
                     <div className="text-xs text-[#1a2621]/60 leading-relaxed py-2 border-t border-[#1a2621]/10 pt-4">

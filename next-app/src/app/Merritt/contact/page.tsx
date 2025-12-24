@@ -60,7 +60,7 @@ export default function ContactPage() {
           "itemOffered": {
             "@type": "Product",
             "name": "Potential Garden Flat (2-Bedroom)",
-            "description": "Contemplated ground-level configuration with potential direct patio access"
+            "description": "Contemplated ground-level configuration"
           }
         },
         {

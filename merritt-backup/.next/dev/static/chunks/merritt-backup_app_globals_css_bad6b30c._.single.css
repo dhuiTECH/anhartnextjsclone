@@ -1038,10 +1038,6 @@
     cursor: pointer;
   }
 
-  .resize {
-    resize: both;
-  }
-
   .resize-none {
     resize: none;
   }
@@ -1222,6 +1218,10 @@
   .border-dashed {
     --tw-border-style: dashed;
     border-style: dashed;
+  }
+
+  .border-\[\#1a2621\] {
+    border-color: #1a2621;
   }
 
   .border-\[\#1a2621\]\/10 {
@@ -2371,6 +2371,12 @@
     }
   }
 
+  @media (hover: hover) {
+    .group-hover\:delay-1500:is(:where(.group):hover *) {
+      transition-delay: 1.5s;
+    }
+  }
+
   .selection\:bg-\[\#1a2621\] ::selection, .selection\:bg-\[\#1a2621\]::selection {
     background-color: #1a2621;
   }
@@ -3481,13 +3487,6 @@
 body {
   color: rgb(var(--foreground-rgb));
   background: #fff;
-}
-
-@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .backdrop-blur-md {
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-  }
 }
 
 .reveal {

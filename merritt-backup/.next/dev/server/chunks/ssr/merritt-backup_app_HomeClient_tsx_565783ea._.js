@@ -9,7 +9,6 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/merritt-backup/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/merritt-backup/node_modules/styled-jsx/style.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/merritt-backup/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
-// #endregion
 var __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/merritt-backup/node_modules/next/dist/client/app-dir/link.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/merritt-backup/node_modules/next/image.js [app-ssr] (ecmascript)");
 // 1. IMPORT FRAMER MOTION
@@ -24,33 +23,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_mo
 ;
 ;
 ;
-// #region agent log
-(0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
-    const logViewport = ()=>{
-        fetch('http://localhost:7245/ingest/54531fa6-4131-4504-9dac-b25b7e15bf78', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                location: 'HomeClient.tsx:4',
-                message: 'Viewport check',
-                data: {
-                    width: window.innerWidth,
-                    height: window.innerHeight,
-                    isMobile: window.innerWidth < 768,
-                    timestamp: Date.now()
-                },
-                sessionId: 'debug-session',
-                runId: 'viewport-test',
-                hypothesisId: 'D'
-            })
-        }).catch(()=>{});
-    };
-    logViewport();
-    window.addEventListener('resize', logViewport);
-    return ()=>window.removeEventListener('resize', logViewport);
-}, []);
 ;
 ;
 ;
@@ -185,49 +157,16 @@ function HomeClient() {
                 className: "jsx-468171cc8097bfc1" + " " + "hidden md:block fixed left-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"
             }, void 0, false, {
                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                lineNumber: 219,
+                lineNumber: 207,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "jsx-468171cc8097bfc1" + " " + "hidden md:block fixed right-0 top-0 w-6 md:w-16 h-full bg-white z-[60]"
             }, void 0, false, {
                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                lineNumber: 220,
+                lineNumber: 208,
                 columnNumber: 7
             }, this),
-            (()=>{
-                // Check if bars are actually hidden on mobile
-                setTimeout(()=>{
-                    const leftBar = document?.querySelector?.('[class*="fixed left-0"]');
-                    const rightBar = document?.querySelector?.('[class*="fixed right-0"]');
-                    const leftComputed = leftBar ? window.getComputedStyle(leftBar) : null;
-                    const rightComputed = rightBar ? window.getComputedStyle(rightBar) : null;
-                    fetch('http://localhost:7245/ingest/54531fa6-4131-4504-9dac-b25b7e15bf78', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            location: 'HomeClient.tsx:207',
-                            message: 'Editorial frame rendered',
-                            data: {
-                                mobileHidden: ("TURBOPACK compile-time falsy", 0) ? "TURBOPACK unreachable" : 'SSR',
-                                leftBarExists: !!leftBar,
-                                rightBarExists: !!rightBar,
-                                leftBarDisplay: leftComputed?.display || 'unknown',
-                                rightBarDisplay: rightComputed?.display || 'unknown',
-                                leftClasses: leftBar?.className || 'unknown',
-                                rightClasses: rightBar?.className || 'unknown',
-                                timestamp: Date.now()
-                            },
-                            sessionId: 'debug-session',
-                            runId: 'mobile-bars-test',
-                            hypothesisId: 'A'
-                        })
-                    }).catch(()=>{});
-                }, 500);
-                return null;
-            })(),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
                 className: "jsx-468171cc8097bfc1" + " " + "relative h-[85vh] md:h-[90vh] w-full overflow-hidden flex items-center justify-center bg-black",
                 children: [
@@ -248,20 +187,20 @@ function HomeClient() {
                                 className: "jsx-468171cc8097bfc1" + " " + "w-full h-full object-cover border-0"
                             }, void 0, false, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 240,
+                                lineNumber: 215,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "jsx-468171cc8097bfc1" + " " + "absolute inset-0 bg-black/30"
                             }, void 0, false, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 251,
+                                lineNumber: 226,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                        lineNumber: 239,
+                        lineNumber: 214,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -281,14 +220,14 @@ function HomeClient() {
                                                 className: "jsx-468171cc8097bfc1"
                                             }, void 0, false, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 256,
+                                                lineNumber: 231,
                                                 columnNumber: 45
                                             }, this),
                                             "in Merritt, BC"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 255,
+                                        lineNumber: 230,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -302,7 +241,7 @@ function HomeClient() {
                                                 children: "Modern townhomes for sale in Merritt, BC."
                                             }, void 0, false, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 259,
+                                                lineNumber: 234,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -310,19 +249,19 @@ function HomeClient() {
                                                 children: "Discover modern townhomes for sale in beautiful Merritt, BC. Your accessible gateway to homeownership in BC's scenic Nicola Valley."
                                             }, void 0, false, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 260,
+                                                lineNumber: 235,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 258,
+                                        lineNumber: 233,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 254,
+                                lineNumber: 229,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
@@ -334,13 +273,13 @@ function HomeClient() {
                                 children: "Contact Sales Team"
                             }, void 0, false, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 263,
+                                lineNumber: 238,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                        lineNumber: 253,
+                        lineNumber: 228,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -360,7 +299,7 @@ function HomeClient() {
                                         className: "jsx-468171cc8097bfc1"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 272,
+                                        lineNumber: 247,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("polygon", {
@@ -368,7 +307,7 @@ function HomeClient() {
                                         className: "jsx-468171cc8097bfc1"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 273,
+                                        lineNumber: 248,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("polygon", {
@@ -376,7 +315,7 @@ function HomeClient() {
                                         className: "jsx-468171cc8097bfc1"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 274,
+                                        lineNumber: 249,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("polygon", {
@@ -384,7 +323,7 @@ function HomeClient() {
                                         className: "jsx-468171cc8097bfc1"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 277,
+                                        lineNumber: 252,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("polygon", {
@@ -392,7 +331,7 @@ function HomeClient() {
                                         className: "jsx-468171cc8097bfc1"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 278,
+                                        lineNumber: 253,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("polygon", {
@@ -400,7 +339,7 @@ function HomeClient() {
                                         className: "jsx-468171cc8097bfc1"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 279,
+                                        lineNumber: 254,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("polygon", {
@@ -408,7 +347,7 @@ function HomeClient() {
                                         className: "jsx-468171cc8097bfc1"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 282,
+                                        lineNumber: 257,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("polygon", {
@@ -416,7 +355,7 @@ function HomeClient() {
                                         className: "jsx-468171cc8097bfc1"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 283,
+                                        lineNumber: 258,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("polygon", {
@@ -424,7 +363,7 @@ function HomeClient() {
                                         className: "jsx-468171cc8097bfc1"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 284,
+                                        lineNumber: 259,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("polygon", {
@@ -432,7 +371,7 @@ function HomeClient() {
                                         className: "jsx-468171cc8097bfc1"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 287,
+                                        lineNumber: 262,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("polygon", {
@@ -440,7 +379,7 @@ function HomeClient() {
                                         className: "jsx-468171cc8097bfc1"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 288,
+                                        lineNumber: 263,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("polygon", {
@@ -448,7 +387,7 @@ function HomeClient() {
                                         className: "jsx-468171cc8097bfc1"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 289,
+                                        lineNumber: 264,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("polygon", {
@@ -456,7 +395,7 @@ function HomeClient() {
                                         className: "jsx-468171cc8097bfc1"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 290,
+                                        lineNumber: 265,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("polygon", {
@@ -464,29 +403,29 @@ function HomeClient() {
                                         className: "jsx-468171cc8097bfc1"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 291,
+                                        lineNumber: 266,
                                         columnNumber: 21
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 270,
+                                lineNumber: 245,
                                 columnNumber: 17
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                            lineNumber: 268,
+                            lineNumber: 243,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                        lineNumber: 267,
+                        lineNumber: 242,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                lineNumber: 238,
+                lineNumber: 213,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -504,7 +443,7 @@ function HomeClient() {
                                         children: "Affordable Homeownership"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 304,
+                                        lineNumber: 279,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -515,7 +454,7 @@ function HomeClient() {
                                                 className: "jsx-468171cc8097bfc1"
                                             }, void 0, false, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 309,
+                                                lineNumber: 284,
                                                 columnNumber: 31
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -523,14 +462,14 @@ function HomeClient() {
                                                 children: "value"
                                             }, void 0, false, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 310,
+                                                lineNumber: 285,
                                                 columnNumber: 15
                                             }, this),
                                             " in BC."
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 308,
+                                        lineNumber: 283,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -541,7 +480,7 @@ function HomeClient() {
                                                 children: "We believe housing should be within reach. As a dedicated affordable housing developer, we are proud to introduce our newest community at 3757 De Wolf Way, Merritt, BC."
                                             }, void 0, false, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 314,
+                                                lineNumber: 289,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -569,20 +508,20 @@ function HomeClient() {
                                                         children: "$249k"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 319,
+                                                        lineNumber: 294,
                                                         columnNumber: 17
                                                     }, this),
                                                     "."
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 317,
+                                                lineNumber: 292,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 313,
+                                        lineNumber: 288,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -595,18 +534,18 @@ function HomeClient() {
                                             children: "Learn More About Anhart"
                                         }, void 0, false, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 337,
+                                            lineNumber: 312,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 336,
+                                        lineNumber: 311,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 303,
+                                lineNumber: 278,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -623,12 +562,12 @@ function HomeClient() {
                                             className: "w-full h-auto object-cover"
                                         }, void 0, false, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 354,
+                                            lineNumber: 329,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 353,
+                                        lineNumber: 328,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -642,17 +581,17 @@ function HomeClient() {
                                                 className: "object-cover"
                                             }, void 0, false, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 369,
+                                                lineNumber: 344,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 368,
+                                            lineNumber: 343,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 366,
+                                        lineNumber: 341,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -662,41 +601,41 @@ function HomeClient() {
                                             children: "Co-Founder Keith Wiebe Gordon"
                                         }, void 0, false, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 380,
+                                            lineNumber: 355,
                                             columnNumber: 15
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 379,
+                                        lineNumber: 354,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "jsx-468171cc8097bfc1" + " " + "absolute -top-12 -right-12 w-full h-full bg-white/50 rounded-full blur-3xl -z-10"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 387,
+                                        lineNumber: 362,
                                         columnNumber: 11
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 350,
+                                lineNumber: 325,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                        lineNumber: 300,
+                        lineNumber: 275,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                    lineNumber: 299,
+                    lineNumber: 274,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                lineNumber: 298,
+                lineNumber: 273,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -716,7 +655,7 @@ function HomeClient() {
                                 className: "jsx-468171cc8097bfc1"
                             }, void 0, false, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 405,
+                                lineNumber: 380,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
@@ -725,23 +664,23 @@ function HomeClient() {
                                 className: "jsx-468171cc8097bfc1" + " " + "w-full h-full object-cover scale-110"
                             }, void 0, false, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 406,
+                                lineNumber: 381,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                        lineNumber: 404,
+                        lineNumber: 379,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                    lineNumber: 400,
+                    lineNumber: 375,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                lineNumber: 399,
+                lineNumber: 374,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -758,7 +697,7 @@ function HomeClient() {
                                     children: "Available Properties"
                                 }, void 0, false, {
                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                    lineNumber: 419,
+                                    lineNumber: 394,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -766,13 +705,13 @@ function HomeClient() {
                                     children: "Featured Units & Homes"
                                 }, void 0, false, {
                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                    lineNumber: 420,
+                                    lineNumber: 395,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                            lineNumber: 418,
+                            lineNumber: 393,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -792,7 +731,7 @@ function HomeClient() {
                                                     className: "jsx-468171cc8097bfc1" + " " + `absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${gardenFlatImage === 0 ? 'opacity-100' : 'opacity-0'} group-hover:opacity-0`
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 430,
+                                                    lineNumber: 405,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
@@ -802,7 +741,7 @@ function HomeClient() {
                                                     className: "jsx-468171cc8097bfc1" + " " + `absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${gardenFlatImage === 1 ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100`
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 439,
+                                                    lineNumber: 414,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
@@ -812,7 +751,7 @@ function HomeClient() {
                                                     className: "jsx-468171cc8097bfc1" + " " + `absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${gardenFlatImage === 2 ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 group-hover:delay-1000`
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 448,
+                                                    lineNumber: 423,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -822,12 +761,12 @@ function HomeClient() {
                                                         children: "GROUND"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 457,
+                                                        lineNumber: 432,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 456,
+                                                    lineNumber: 431,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -837,12 +776,12 @@ function HomeClient() {
                                                         children: "Tap to explore"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 461,
+                                                        lineNumber: 436,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 460,
+                                                    lineNumber: 435,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -856,7 +795,7 @@ function HomeClient() {
                                                             children: "Garden Flat"
                                                         }, void 0, false, {
                                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                            lineNumber: 466,
+                                                            lineNumber: 441,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -867,19 +806,19 @@ function HomeClient() {
                                                             children: "2-Bedroom • 807 sq ft • From $249,000"
                                                         }, void 0, false, {
                                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                            lineNumber: 467,
+                                                            lineNumber: 442,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 465,
+                                                    lineNumber: 440,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 425,
+                                            lineNumber: 400,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -896,7 +835,7 @@ function HomeClient() {
                                                                     children: "Best For:"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                    lineNumber: 473,
+                                                                    lineNumber: 448,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 " First-time buyers, seniors/downsizers, or those with mobility needs.",
@@ -904,7 +843,7 @@ function HomeClient() {
                                                                     className: "jsx-468171cc8097bfc1"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                    lineNumber: 473,
+                                                                    lineNumber: 448,
                                                                     columnNumber: 116
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
@@ -912,14 +851,14 @@ function HomeClient() {
                                                                     children: "Selling Point:"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                    lineNumber: 474,
+                                                                    lineNumber: 449,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 " Single-level living with zero stairs and direct patio access."
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                            lineNumber: 472,
+                                                            lineNumber: 447,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -935,19 +874,19 @@ function HomeClient() {
                                                                                 children: "2 Bedrooms:"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                                lineNumber: 478,
+                                                                                lineNumber: 453,
                                                                                 columnNumber: 67
                                                                             }, this),
                                                                             " Primary with ensuite + guest/office"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 478,
+                                                                        lineNumber: 453,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                    lineNumber: 477,
+                                                                    lineNumber: 452,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -960,19 +899,19 @@ function HomeClient() {
                                                                                 children: "Open Concept:"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                                lineNumber: 481,
+                                                                                lineNumber: 456,
                                                                                 columnNumber: 67
                                                                             }, this),
                                                                             " Kitchen, dining & living flow together"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 481,
+                                                                        lineNumber: 456,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                    lineNumber: 480,
+                                                                    lineNumber: 455,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -985,31 +924,31 @@ function HomeClient() {
                                                                                 children: "Direct Access:"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                                lineNumber: 484,
+                                                                                lineNumber: 459,
                                                                                 columnNumber: 67
                                                                             }, this),
                                                                             " Grade-level patio for easy outdoor living"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 484,
+                                                                        lineNumber: 459,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                    lineNumber: 483,
+                                                                    lineNumber: 458,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                            lineNumber: 476,
+                                                            lineNumber: 451,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 471,
+                                                    lineNumber: 446,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1020,24 +959,24 @@ function HomeClient() {
                                                         children: "View Floor Plan"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 489,
+                                                        lineNumber: 464,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 488,
+                                                    lineNumber: 463,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 470,
+                                            lineNumber: 445,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                    lineNumber: 424,
+                                    lineNumber: 399,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1054,7 +993,7 @@ function HomeClient() {
                                                     className: "jsx-468171cc8097bfc1" + " " + `absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${skyTownhomeImage === 0 ? 'opacity-100' : 'opacity-0'} group-hover:opacity-0`
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 506,
+                                                    lineNumber: 481,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
@@ -1064,7 +1003,7 @@ function HomeClient() {
                                                     className: "jsx-468171cc8097bfc1" + " " + `absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${skyTownhomeImage === 1 ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100`
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 515,
+                                                    lineNumber: 490,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
@@ -1074,7 +1013,7 @@ function HomeClient() {
                                                     className: "jsx-468171cc8097bfc1" + " " + `absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${skyTownhomeImage === 2 ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 group-hover:delay-1000`
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 524,
+                                                    lineNumber: 499,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1084,12 +1023,12 @@ function HomeClient() {
                                                         children: "2-STORY"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 533,
+                                                        lineNumber: 508,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 532,
+                                                    lineNumber: 507,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1099,12 +1038,12 @@ function HomeClient() {
                                                         children: "Tap to explore"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 537,
+                                                        lineNumber: 512,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 536,
+                                                    lineNumber: 511,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1118,7 +1057,7 @@ function HomeClient() {
                                                             children: "Sky Townhome"
                                                         }, void 0, false, {
                                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                            lineNumber: 542,
+                                                            lineNumber: 517,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1129,19 +1068,19 @@ function HomeClient() {
                                                             children: "3-Bedroom • 1,614 sq ft • From $279,000"
                                                         }, void 0, false, {
                                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                            lineNumber: 543,
+                                                            lineNumber: 518,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 541,
+                                                    lineNumber: 516,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 501,
+                                            lineNumber: 476,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1158,7 +1097,7 @@ function HomeClient() {
                                                                     children: "Best For:"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                    lineNumber: 549,
+                                                                    lineNumber: 524,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 ' Growing families, young professionals, or buyers wanting a "house-like" feel.',
@@ -1166,7 +1105,7 @@ function HomeClient() {
                                                                     className: "jsx-468171cc8097bfc1"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                    lineNumber: 549,
+                                                                    lineNumber: 524,
                                                                     columnNumber: 125
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
@@ -1174,14 +1113,14 @@ function HomeClient() {
                                                                     children: "Selling Point:"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                    lineNumber: 550,
+                                                                    lineNumber: 525,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 " Massive two-story home with separate living and sleeping floors."
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                            lineNumber: 548,
+                                                            lineNumber: 523,
                                                             columnNumber: 19
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1197,19 +1136,19 @@ function HomeClient() {
                                                                                 children: "Master Suite:"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                                lineNumber: 554,
+                                                                                lineNumber: 529,
                                                                                 columnNumber: 67
                                                                             }, this),
                                                                             " Spacious with walk-in closet & ensuite"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 554,
+                                                                        lineNumber: 529,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                    lineNumber: 553,
+                                                                    lineNumber: 528,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1222,19 +1161,19 @@ function HomeClient() {
                                                                                 children: "Entertainer's Kitchen:"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                                lineNumber: 557,
+                                                                                lineNumber: 532,
                                                                                 columnNumber: 67
                                                                             }, this),
                                                                             " Large U-shaped with window"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 557,
+                                                                        lineNumber: 532,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                    lineNumber: 556,
+                                                                    lineNumber: 531,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1247,31 +1186,31 @@ function HomeClient() {
                                                                                 children: "Private Deck:"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                                lineNumber: 560,
+                                                                                lineNumber: 535,
                                                                                 columnNumber: 67
                                                                             }, this),
                                                                             " Balcony off the living area"
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 560,
+                                                                        lineNumber: 535,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                    lineNumber: 559,
+                                                                    lineNumber: 534,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                            lineNumber: 552,
+                                                            lineNumber: 527,
                                                             columnNumber: 19
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 547,
+                                                    lineNumber: 522,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1282,30 +1221,30 @@ function HomeClient() {
                                                         children: "View Floor Plan"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 565,
+                                                        lineNumber: 540,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 564,
+                                                    lineNumber: 539,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 546,
+                                            lineNumber: 521,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                    lineNumber: 500,
+                                    lineNumber: 475,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                            lineNumber: 422,
+                            lineNumber: 397,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1319,12 +1258,12 @@ function HomeClient() {
                                 className: "object-contain w-full h-auto"
                             }, void 0, false, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 578,
+                                lineNumber: 553,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                            lineNumber: 577,
+                            lineNumber: 552,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1338,23 +1277,23 @@ function HomeClient() {
                                 className: "object-contain w-full h-auto"
                             }, void 0, false, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 588,
+                                lineNumber: 563,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                            lineNumber: 587,
+                            lineNumber: 562,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                    lineNumber: 417,
+                    lineNumber: 392,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                lineNumber: 416,
+                lineNumber: 391,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1376,12 +1315,12 @@ function HomeClient() {
                             unoptimized: true
                         }, void 0, false, {
                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                            lineNumber: 604,
+                            lineNumber: 579,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                        lineNumber: 603,
+                        lineNumber: 578,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1395,7 +1334,7 @@ function HomeClient() {
                                         children: "Location Advantages"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 617,
+                                        lineNumber: 592,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -1403,13 +1342,13 @@ function HomeClient() {
                                         children: "Three Best Amenities"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 618,
+                                        lineNumber: 593,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 616,
+                                lineNumber: 591,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1428,14 +1367,14 @@ function HomeClient() {
                                                         className: "jsx-468171cc8097bfc1" + " " + "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 624,
+                                                        lineNumber: 599,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "jsx-468171cc8097bfc1" + " " + "absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 630,
+                                                        lineNumber: 605,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1445,12 +1384,12 @@ function HomeClient() {
                                                             children: "1"
                                                         }, void 0, false, {
                                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                            lineNumber: 632,
+                                                            lineNumber: 607,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 631,
+                                                        lineNumber: 606,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1464,7 +1403,7 @@ function HomeClient() {
                                                                 children: "Walking Distance"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                lineNumber: 635,
+                                                                lineNumber: 610,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1475,19 +1414,19 @@ function HomeClient() {
                                                                 children: "Car-free lifestyle"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                lineNumber: 636,
+                                                                lineNumber: 611,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 634,
+                                                        lineNumber: 609,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 623,
+                                                lineNumber: 598,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1498,7 +1437,7 @@ function HomeClient() {
                                                         children: "These quality amenities provide exceptional convenience, allowing residents to walk to education, dining, and entertainment - perfect for busy professionals and growing families."
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 640,
+                                                        lineNumber: 615,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1512,7 +1451,7 @@ function HomeClient() {
                                                                         children: "NVIT Campus"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 645,
+                                                                        lineNumber: 620,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1520,13 +1459,13 @@ function HomeClient() {
                                                                         children: "850m walk • 12 minutes"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 646,
+                                                                        lineNumber: 621,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                lineNumber: 644,
+                                                                lineNumber: 619,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1537,7 +1476,7 @@ function HomeClient() {
                                                                         children: "Game On Sports Bar"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 649,
+                                                                        lineNumber: 624,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1545,31 +1484,31 @@ function HomeClient() {
                                                                         children: "Next door • 3701 De Wolf Way"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 650,
+                                                                        lineNumber: 625,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                lineNumber: 648,
+                                                                lineNumber: 623,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 643,
+                                                        lineNumber: 618,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 639,
+                                                lineNumber: 614,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 622,
+                                        lineNumber: 597,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1585,14 +1524,14 @@ function HomeClient() {
                                                         className: "jsx-468171cc8097bfc1" + " " + "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 659,
+                                                        lineNumber: 634,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "jsx-468171cc8097bfc1" + " " + "absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 665,
+                                                        lineNumber: 640,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1602,12 +1541,12 @@ function HomeClient() {
                                                             children: "2"
                                                         }, void 0, false, {
                                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                            lineNumber: 667,
+                                                            lineNumber: 642,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 666,
+                                                        lineNumber: 641,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1621,7 +1560,7 @@ function HomeClient() {
                                                                 children: "Shopping & Essentials"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                lineNumber: 670,
+                                                                lineNumber: 645,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1632,19 +1571,19 @@ function HomeClient() {
                                                                 children: "2-5 minute drive"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                lineNumber: 671,
+                                                                lineNumber: 646,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 669,
+                                                        lineNumber: 644,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 658,
+                                                lineNumber: 633,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1655,7 +1594,7 @@ function HomeClient() {
                                                         children: "Located just north of the Coquihalla interchange - home to all major retailers and services."
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 675,
+                                                        lineNumber: 650,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1669,7 +1608,7 @@ function HomeClient() {
                                                                         children: "Walmart"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 680,
+                                                                        lineNumber: 655,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1677,13 +1616,13 @@ function HomeClient() {
                                                                         children: "1.9km • 6 min drive"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 681,
+                                                                        lineNumber: 656,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                lineNumber: 679,
+                                                                lineNumber: 654,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1694,7 +1633,7 @@ function HomeClient() {
                                                                         children: "No Frills"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 684,
+                                                                        lineNumber: 659,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1702,13 +1641,13 @@ function HomeClient() {
                                                                         children: "Down the road"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 685,
+                                                                        lineNumber: 660,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                lineNumber: 683,
+                                                                lineNumber: 658,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1719,7 +1658,7 @@ function HomeClient() {
                                                                         children: "Canadian Tire"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 688,
+                                                                        lineNumber: 663,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1727,31 +1666,31 @@ function HomeClient() {
                                                                         children: "Highway hub"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 689,
+                                                                        lineNumber: 664,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                lineNumber: 687,
+                                                                lineNumber: 662,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 678,
+                                                        lineNumber: 653,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 674,
+                                                lineNumber: 649,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 657,
+                                        lineNumber: 632,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1767,14 +1706,14 @@ function HomeClient() {
                                                         className: "jsx-468171cc8097bfc1" + " " + "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 698,
+                                                        lineNumber: 673,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "jsx-468171cc8097bfc1" + " " + "absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 704,
+                                                        lineNumber: 679,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1784,12 +1723,12 @@ function HomeClient() {
                                                             children: "3"
                                                         }, void 0, false, {
                                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                            lineNumber: 706,
+                                                            lineNumber: 681,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 705,
+                                                        lineNumber: 680,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1803,7 +1742,7 @@ function HomeClient() {
                                                                 children: "Schools & Recreation"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                lineNumber: 709,
+                                                                lineNumber: 684,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1814,19 +1753,19 @@ function HomeClient() {
                                                                 children: "5-10 minute drive"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                lineNumber: 710,
+                                                                lineNumber: 685,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 708,
+                                                        lineNumber: 683,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 697,
+                                                lineNumber: 672,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1837,7 +1776,7 @@ function HomeClient() {
                                                         children: "Short commute to Merritt's educational and recreational facilities in the town center."
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 714,
+                                                        lineNumber: 689,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1851,7 +1790,7 @@ function HomeClient() {
                                                                         children: "Elementary & Secondary Schools"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 719,
+                                                                        lineNumber: 694,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1859,13 +1798,13 @@ function HomeClient() {
                                                                         children: "10 min drive"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 720,
+                                                                        lineNumber: 695,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                lineNumber: 718,
+                                                                lineNumber: 693,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1876,7 +1815,7 @@ function HomeClient() {
                                                                         children: "Aquatic Centre"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 723,
+                                                                        lineNumber: 698,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1884,13 +1823,13 @@ function HomeClient() {
                                                                         children: "10 min drive"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 724,
+                                                                        lineNumber: 699,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                lineNumber: 722,
+                                                                lineNumber: 697,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1901,7 +1840,7 @@ function HomeClient() {
                                                                         children: "Central Park"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 727,
+                                                                        lineNumber: 702,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1909,37 +1848,37 @@ function HomeClient() {
                                                                         children: "10 min drive"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                        lineNumber: 728,
+                                                                        lineNumber: 703,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                                lineNumber: 726,
+                                                                lineNumber: 701,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 717,
+                                                        lineNumber: 692,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 713,
+                                                lineNumber: 688,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 696,
+                                        lineNumber: 671,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 620,
+                                lineNumber: 595,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1950,24 +1889,24 @@ function HomeClient() {
                                     children: "Explore the Complete Neighbourhood Guide"
                                 }, void 0, false, {
                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                    lineNumber: 737,
+                                    lineNumber: 712,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 736,
+                                lineNumber: 711,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                        lineNumber: 615,
+                        lineNumber: 590,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                lineNumber: 600,
+                lineNumber: 575,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -1977,7 +1916,7 @@ function HomeClient() {
                         className: "jsx-468171cc8097bfc1" + " " + "absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-10"
                     }, void 0, false, {
                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                        lineNumber: 749,
+                        lineNumber: 724,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1991,7 +1930,7 @@ function HomeClient() {
                                         children: "Location"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 752,
+                                        lineNumber: 727,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -1999,7 +1938,7 @@ function HomeClient() {
                                         children: "3757 De Wolf Way"
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 753,
+                                        lineNumber: 728,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2007,7 +1946,7 @@ function HomeClient() {
                                         children: "Located in the heart of Merritt, BC, our 48-unit townhome development at 3757 De Wolf Way offers the perfect balance of urban convenience and natural beauty in the scenic Nicola Valley."
                                     }, void 0, false, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 754,
+                                        lineNumber: 729,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -2020,14 +1959,14 @@ function HomeClient() {
                                                         className: "text-[#a6906c] w-4 h-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 756,
+                                                        lineNumber: 731,
                                                         columnNumber: 91
                                                     }, this),
                                                     " Prime Merritt Location"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 756,
+                                                lineNumber: 731,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -2037,14 +1976,14 @@ function HomeClient() {
                                                         className: "text-[#a6906c] w-4 h-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 757,
+                                                        lineNumber: 732,
                                                         columnNumber: 91
                                                     }, this),
                                                     " Walking Distance to Amenities"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 757,
+                                                lineNumber: 732,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
@@ -2054,26 +1993,26 @@ function HomeClient() {
                                                         className: "text-[#a6906c] w-4 h-4"
                                                     }, void 0, false, {
                                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                        lineNumber: 758,
+                                                        lineNumber: 733,
                                                         columnNumber: 91
                                                     }, this),
                                                     " Easy Highway Access"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                lineNumber: 758,
+                                                lineNumber: 733,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                        lineNumber: 755,
+                                        lineNumber: 730,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 751,
+                                lineNumber: 726,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2090,24 +2029,24 @@ function HomeClient() {
                                     className: "jsx-468171cc8097bfc1" + " " + "opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-700"
                                 }, void 0, false, {
                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                    lineNumber: 762,
+                                    lineNumber: 737,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                lineNumber: 761,
+                                lineNumber: 736,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                        lineNumber: 750,
+                        lineNumber: 725,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                lineNumber: 748,
+                lineNumber: 723,
                 columnNumber: 5
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -2122,12 +2061,12 @@ function HomeClient() {
                             className: "jsx-468171cc8097bfc1" + " " + "w-full h-full object-cover"
                         }, void 0, false, {
                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                            lineNumber: 771,
+                            lineNumber: 746,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                        lineNumber: 770,
+                        lineNumber: 745,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2139,7 +2078,7 @@ function HomeClient() {
                                     className: "jsx-468171cc8097bfc1" + " " + "absolute top-0 left-0 w-full h-2 bg-[#1a2621]"
                                 }, void 0, false, {
                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                    lineNumber: 779,
+                                    lineNumber: 754,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2150,7 +2089,7 @@ function HomeClient() {
                                             children: "Register Your Interest"
                                         }, void 0, false, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 781,
+                                            lineNumber: 756,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2158,13 +2097,13 @@ function HomeClient() {
                                             children: "Join our interest list for affordable housing in Merritt, BC."
                                         }, void 0, false, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 782,
+                                            lineNumber: 757,
                                             columnNumber: 21
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                    lineNumber: 780,
+                                    lineNumber: 755,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -2179,7 +2118,7 @@ function HomeClient() {
                                                     className: "jsx-468171cc8097bfc1" + " " + "bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 786,
+                                                    lineNumber: 761,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2188,13 +2127,13 @@ function HomeClient() {
                                                     className: "jsx-468171cc8097bfc1" + " " + "bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 787,
+                                                    lineNumber: 762,
                                                     columnNumber: 25
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 785,
+                                            lineNumber: 760,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2203,7 +2142,7 @@ function HomeClient() {
                                             className: "jsx-468171cc8097bfc1" + " " + "w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"
                                         }, void 0, false, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 789,
+                                            lineNumber: 764,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2212,7 +2151,7 @@ function HomeClient() {
                                             className: "jsx-468171cc8097bfc1" + " " + "w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm"
                                         }, void 0, false, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 790,
+                                            lineNumber: 765,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2223,7 +2162,7 @@ function HomeClient() {
                                                     children: "Select Unit Type"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 792,
+                                                    lineNumber: 767,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2231,7 +2170,7 @@ function HomeClient() {
                                                     children: "2-Bedroom Garden Flat"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 793,
+                                                    lineNumber: 768,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2239,7 +2178,7 @@ function HomeClient() {
                                                     children: "3-Bedroom Sky Townhome"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 794,
+                                                    lineNumber: 769,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2247,7 +2186,7 @@ function HomeClient() {
                                                     children: "Corner Unit"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 795,
+                                                    lineNumber: 770,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2255,13 +2194,13 @@ function HomeClient() {
                                                     children: "General Inquiry"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 796,
+                                                    lineNumber: 771,
                                                     columnNumber: 25
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 791,
+                                            lineNumber: 766,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2272,7 +2211,7 @@ function HomeClient() {
                                                     children: "Current Location"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 799,
+                                                    lineNumber: 774,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2280,7 +2219,7 @@ function HomeClient() {
                                                     children: "Kamloops Area"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 800,
+                                                    lineNumber: 775,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2288,7 +2227,7 @@ function HomeClient() {
                                                     children: "Kelowna Area"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 801,
+                                                    lineNumber: 776,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2296,7 +2235,7 @@ function HomeClient() {
                                                     children: "Vancouver Area"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 802,
+                                                    lineNumber: 777,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2304,13 +2243,13 @@ function HomeClient() {
                                                     children: "Other BC Location"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 803,
+                                                    lineNumber: 778,
                                                     columnNumber: 25
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 798,
+                                            lineNumber: 773,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -2321,7 +2260,7 @@ function HomeClient() {
                                                     children: "How did you hear about us?"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 806,
+                                                    lineNumber: 781,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2329,7 +2268,7 @@ function HomeClient() {
                                                     children: "Online Search"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 807,
+                                                    lineNumber: 782,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2337,7 +2276,7 @@ function HomeClient() {
                                                     children: "Social Media"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 808,
+                                                    lineNumber: 783,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2345,7 +2284,7 @@ function HomeClient() {
                                                     children: "Referral from friend/family"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 809,
+                                                    lineNumber: 784,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2353,7 +2292,7 @@ function HomeClient() {
                                                     children: "Real estate agent"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 810,
+                                                    lineNumber: 785,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2361,7 +2300,7 @@ function HomeClient() {
                                                     children: "Newspaper/magazine"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 811,
+                                                    lineNumber: 786,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2369,7 +2308,7 @@ function HomeClient() {
                                                     children: "Billboard/signage"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 812,
+                                                    lineNumber: 787,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2377,7 +2316,7 @@ function HomeClient() {
                                                     children: "Community event"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 813,
+                                                    lineNumber: 788,
                                                     columnNumber: 25
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -2385,13 +2324,13 @@ function HomeClient() {
                                                     children: "Other"
                                                 }, void 0, false, {
                                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 814,
+                                                    lineNumber: 789,
                                                     columnNumber: 25
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 805,
+                                            lineNumber: 780,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -2400,104 +2339,52 @@ function HomeClient() {
                                             className: "jsx-468171cc8097bfc1" + " " + "w-full bg-transparent border-b border-[#1a2621]/20 py-3 md:py-3 outline-none focus:border-[#a6906c] transition-colors placeholder-[#1a2621]/40 text-base md:text-sm resize-none"
                                         }, void 0, false, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 816,
+                                            lineNumber: 791,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "jsx-468171cc8097bfc1" + " " + "pt-4 md:pt-6 text-center",
-                                            children: [
-                                                (()=>{
-                                                    // Check if button has glass styles
-                                                    setTimeout(()=>{
-                                                        const button = document?.querySelector?.('button');
-                                                        const computedStyle = button ? window.getComputedStyle(button) : null;
-                                                        const allButtons = document?.querySelectorAll?.('button');
-                                                        fetch('http://localhost:7245/ingest/54531fa6-4131-4504-9dac-b25b7e15bf78', {
-                                                            method: 'POST',
-                                                            headers: {
-                                                                'Content-Type': 'application/json'
-                                                            },
-                                                            body: JSON.stringify({
-                                                                location: 'HomeClient.tsx:794',
-                                                                message: 'Register button rendered',
-                                                                data: {
-                                                                    buttonCount: allButtons?.length || 0,
-                                                                    hasBackdropBlur: button?.classList?.contains('backdrop-blur-md') || false,
-                                                                    backgroundColor: computedStyle?.backgroundColor || 'unknown',
-                                                                    backdropFilter: computedStyle?.backdropFilter || 'unknown',
-                                                                    classes: button?.className || 'unknown',
-                                                                    allClasses: [
-                                                                        ...button?.classList || []
-                                                                    ],
-                                                                    timestamp: Date.now()
-                                                                },
-                                                                sessionId: 'debug-session',
-                                                                runId: 'glass-button-test',
-                                                                hypothesisId: 'B'
-                                                            })
-                                                        }).catch(()=>{});
-                                                    }, 1000);
-                                                    return null;
-                                                })(),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                    type: "button",
-                                                    onClick: ()=>fetch('http://localhost:7245/ingest/54531fa6-4131-4504-9dac-b25b7e15bf78', {
-                                                            method: 'POST',
-                                                            headers: {
-                                                                'Content-Type': 'application/json'
-                                                            },
-                                                            body: JSON.stringify({
-                                                                location: 'HomeClient.tsx:799',
-                                                                message: 'Button clicked',
-                                                                data: {
-                                                                    classes: event?.currentTarget?.className || 'unknown',
-                                                                    timestamp: Date.now()
-                                                                },
-                                                                sessionId: 'debug-session',
-                                                                runId: 'button-click-test',
-                                                                hypothesisId: 'C'
-                                                            })
-                                                        }).catch(()=>{}),
-                                                    className: "jsx-468171cc8097bfc1" + " " + "inline-block bg-white bg-opacity-20 backdrop-blur-md border border-white border-opacity-30 text-white px-6 py-3 text-base font-bold uppercase tracking-wider hover:bg-opacity-30 hover:border-opacity-50 transition-all duration-300 rounded-lg shadow-lg cursor-pointer",
-                                                    children: "Register Interest"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                                    lineNumber: 831,
-                                                    columnNumber: 25
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$merritt$2d$backup$2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                type: "button",
+                                                className: "jsx-468171cc8097bfc1" + " " + "inline-block bg-white/20 backdrop-blur-md border border-white/30 text-white px-6 py-3 text-base font-bold uppercase tracking-wider hover:bg-white/30 hover:border-white/50 transition-all duration-300 rounded-lg shadow-lg cursor-pointer",
+                                                children: "Register Interest"
+                                            }, void 0, false, {
+                                                fileName: "[project]/merritt-backup/app/HomeClient.tsx",
+                                                lineNumber: 794,
+                                                columnNumber: 25
+                                            }, this)
+                                        }, void 0, false, {
                                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                            lineNumber: 818,
+                                            lineNumber: 793,
                                             columnNumber: 21
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                                    lineNumber: 784,
+                                    lineNumber: 759,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                            lineNumber: 778,
+                            lineNumber: 753,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                        lineNumber: 777,
+                        lineNumber: 752,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-                lineNumber: 768,
+                lineNumber: 743,
                 columnNumber: 5
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/merritt-backup/app/HomeClient.tsx",
-        lineNumber: 139,
+        lineNumber: 127,
         columnNumber: 5
     }, this));
 }

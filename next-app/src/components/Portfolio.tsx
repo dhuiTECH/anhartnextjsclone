@@ -145,7 +145,7 @@ const Portfolio = () => {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {projects.slice(0, visibleProjects).map((project, index) => (
                 <ScrollAnimationWrapper key={project.id} direction="top" delay={Math.min(index * 50, 400)}>
-                  <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 max-w-sm mx-auto md:max-w-none">
+                  <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 max-w-sm mx-auto md:max-w-none h-full flex flex-col">
                     {/* Project Image */}
                     <div className="aspect-video overflow-hidden p-1">
                       {project.image ? (
@@ -183,7 +183,7 @@ const Portfolio = () => {
                       </div>
                     </CardHeader>
 
-                    <CardContent>
+                    <CardContent className="flex-1 flex flex-col">
                       <p className="text-muted-foreground mb-4 line-clamp-5">
                         {project.briefDescription || project.description}
                       </p>

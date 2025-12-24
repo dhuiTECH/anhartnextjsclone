@@ -81,7 +81,7 @@ export default function AboutClient() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-12 md:mb-16">
             {[
               {
-                image: '/merritt-assets/livingroom.jpg',
+                image: '/merritt-assets/merritt living room.jpg',
                 title: 'Modern Living Spaces',
                 description: 'Contemplated open-concept designs with potential quality finishes and natural light.',
                 features: ['Potential hardwood floors', 'Potential large windows', 'Potential contemporary lighting']
@@ -90,19 +90,19 @@ export default function AboutClient() {
                 image: '/merritt-assets/gbedroom.jpg',
                 title: 'Serene Bedrooms',
                 description: 'Contemplated peaceful retreats with potential walk-in closets and ensuite bathrooms.',
-                features: ['Potential queen beds', 'Potential ample storage', 'Potential private bathrooms']
+                features: ['Generous sleeping spaces', 'Potential ample storage', 'Potential private bathrooms']
+              },
+              {
+                image: '/merritt-assets/sbedroom.jpg',
+                title: 'Master Suites',
+                description: 'Contemplated spacious master bedrooms with potential modern ensuite bathrooms.',
+                features: ['Generous sleeping spaces', 'Potential walk-in closets', 'Private bed patio']
               },
               {
                 image: '/merritt-assets/gkitchen.jpg',
                 title: 'Gourmet Kitchens',
                 description: 'Potential stainless steel appliances and granite countertops.',
                 features: ['Potential SS appliances', 'Potential granite counters', 'Potential ample cabinetry']
-              },
-              {
-                image: '/merritt-assets/sbedroom.jpg',
-                title: 'Master Suites',
-                description: 'Contemplated spacious master bedrooms with potential modern ensuite bathrooms.',
-                features: ['Potential king beds', 'Potential walk-in closets', 'Potential spa bathrooms']
               },
               {
                 image: '/merritt-assets/skitchen.jpg',
@@ -282,7 +282,7 @@ export default function AboutClient() {
 
 // Feature Section Component
 function FeatureSection() {
-  const [activeView, setActiveView] = useState<'kitchen' | 'bathroom'>('kitchen');
+  const [activeView, setActiveView] = useState<'kitchen' | 'bathroom' | 'patio'>('kitchen');
 
   return (
     <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-white">
@@ -295,7 +295,9 @@ function FeatureSection() {
               <Image
                 src={activeView === 'kitchen'
                   ? "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?q=80&w=1000&auto=format&fit=crop"
-                  : "/merritt-assets/swashroom.jpg"
+                  : activeView === 'bathroom'
+                  ? "/merritt-assets/swashroom.jpg"
+                  : "/merritt-assets/merrittdeck.jpg"
                 }
                 alt={`${activeView} interior design`}
                 width={800}
@@ -313,10 +315,10 @@ function FeatureSection() {
 
               {/* Toggle Switch */}
               <div className="flex items-center justify-center mb-6 sm:mb-8">
-                <div className="bg-white/10 backdrop-blur-sm rounded-full p-1 flex w-full max-w-xs">
+                <div className="bg-white/10 backdrop-blur-sm rounded-full p-1 flex w-full max-w-sm">
                   <button
                     onClick={() => setActiveView('kitchen')}
-                    className={`flex-1 px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer ${
+                    className={`flex-1 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer ${
                       activeView === 'kitchen'
                         ? 'bg-[#F9F7F2] text-[#14312C]'
                         : 'text-[#A1B5B1] hover:text-white'
@@ -326,7 +328,7 @@ function FeatureSection() {
                   </button>
                   <button
                     onClick={() => setActiveView('bathroom')}
-                    className={`flex-1 px-4 sm:px-6 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer ${
+                    className={`flex-1 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer ${
                       activeView === 'bathroom'
                         ? 'bg-[#F9F7F2] text-[#14312C]'
                         : 'text-[#A1B5B1] hover:text-white'
@@ -334,20 +336,39 @@ function FeatureSection() {
                   >
                     Bathroom
                   </button>
+                  <button
+                    onClick={() => setActiveView('patio')}
+                    className={`flex-1 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 cursor-pointer ${
+                      activeView === 'patio'
+                        ? 'bg-[#F9F7F2] text-[#14312C]'
+                        : 'text-[#A1B5B1] hover:text-white'
+                    }`}
+                  >
+                    Patio
+                  </button>
                 </div>
               </div>
 
               {/* Content area with fixed min-height to prevent jumping */}
               <div className="text-center min-h-[280px] flex flex-col justify-center">
                 <h2 className="text-3xl md:text-4xl font-serif font-bold text-[#F9F7F2] mb-6">
-                  {activeView === 'kitchen' ? 'Kitchen Features.' : 'Bathroom Features.'}
-                </h2>
-                <p className="text-[#A1B5B1] leading-relaxed text-base md:text-lg">
                   {activeView === 'kitchen'
-                    ? 'Experience modern kitchen design with quality appliances, functional cabinetry, and thoughtful layouts. Every detail is crafted for both functionality and aesthetic appeal, creating spaces that are as beautiful as they are practical.'
-                    : 'Experience thoughtfully designed bathrooms featuring modern fixtures, quality finishes, and functional layouts. Every detail is crafted for both comfort and practicality, creating spaces that serve your daily needs beautifully.'
+                    ? 'Kitchen Features.'
+                    : activeView === 'bathroom'
+                    ? 'Bathroom Features.'
+                    : 'Private Patio.'
                   }
-                </p>
+                </h2>
+                <div className="space-y-4">
+                  <p className="text-[#A1B5B1] leading-relaxed text-base md:text-lg">
+                    {activeView === 'kitchen'
+                      ? 'Experience modern kitchen design with quality appliances, functional cabinetry, and thoughtful layouts. Every detail is crafted for both functionality and aesthetic appeal, creating spaces that are as beautiful as they are practical.'
+                      : activeView === 'bathroom'
+                      ? 'Experience thoughtfully designed bathrooms featuring modern fixtures, quality finishes, and functional layouts. Every detail is crafted for both comfort and practicality, creating spaces that serve your daily needs beautifully.'
+                      : 'Enjoy your own private outdoor oasis with direct access from your living space. Perfect for dining, entertaining, or simply relaxing in the fresh Merritt air with beautiful mountain views.'
+                    }
+                  </p>
+                </div>
               </div>
               </div>
             </div>

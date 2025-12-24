@@ -43,14 +43,14 @@ const featuredUnits = [
   },
   {
     id: 4,
-    title: 'Sunny Bungalow',
-    sqft: '1,500 sq ft',
-    image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?q=80&w=1000&auto=format&fit=crop',
+    title: 'Sky Townhome',
+    sqft: '1,614 sq ft',
+    image: '/merritt-assets/merrittdeck.jpg',
     features: [
-      'South-facing orientation',
-      'Garden maintenance included',
-      'Updated bathrooms',
-      'Pet-friendly community'
+      'Private patio perfect for BBQ is available right next to the kitchen',
+      'Potential private deck: is a small patio for your bedroom',
+      'Massive two-story home with separate living and sleeping floors',
+      'Master suite with walk-in closet & ensuite'
     ]
   }
 ];

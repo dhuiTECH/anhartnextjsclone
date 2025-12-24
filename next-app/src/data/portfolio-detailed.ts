@@ -67,11 +67,55 @@ export const portfolioDetailedProjects: ProjectData[] = [
     year: "2021",
     units: 40,
     description:
-      "Delivering 40 modular homes that expand affordable housing efforts in rural and remote communities while fostering resident stability and self-sufficiency.",
+      `Delivering 40 modular homes that expand affordable housing efforts in rural and remote communities while fostering resident stability and self-sufficiency.
+
+## How We Keep Housing Affordable
+
+The Ryder serves as a proof of concept for Anhart's sustainable model of affordable housing that thrives outside major metropolitan hubs. Our approach combines philanthropy, innovation, and community empowerment to keep housing costs below market rates:
+
+**Community Champions Program**: We tackle soaring construction costs through our Community Champions initiative, where local business owners and professionals provide deep discounts on materials and services. In Hope, BC, this meant partnering with local geotechnical engineers, landscape architects, and construction professionals who contributed their expertise at reduced rates. This program is a cornerstone of our plan to build affordable housing without passing high costs to residents.
+
+**Modular Construction Advantage**: Units were assembled in a Kamloops factory before being transported to the site, offering significant advantages: faster completion (from groundbreaking to occupancy in just 8 months), precise quality control in a climate-controlled environment, and accessibility features like Rick Hansen Foundation Silver certification.
+
+**Tenant-Led Management**: Affordability extends beyond initial development through our innovative tenant-led model. Instead of traditional building managers, residents are paid to handle cleaning, maintenance, community watch, and amenity bookings. This creates a 'heartbeat' within the building, fostering volunteerism and mutual aid among diverse residents including seniors, families, and those formerly homeless.
+
+**Non-Profit Mission**: As a charity-owned society, our focus is community impact rather than profit maximization, allowing us to reinvest savings in lower rents and sustainable operations.
+
+## Financing Stack & Partnerships
+
+**Credit Union Partnerships**: We work closely with credit unions like Coast Capital Savings to provide flexible financing solutions. For The Ryder project, Coast Capital provided construction financing that aligned with our community impact goals, offering competitive rates and terms that supported our non-profit mission.
+
+**Impact Investors**: Our financing stack includes impact investors who prioritize social returns alongside financial returns. These investors understand that affordable housing creates long-term community benefits and are willing to provide patient capital that doesn't require rapid exits or excessive returns.
+
+**Community Champions Business Network**: Beyond individual professional discounts, our Community Champions program includes strategic partnerships with local businesses who provide ongoing support. In Hope, this included partnerships with local suppliers who offered volume discounts and payment terms that supported our cash flow needs.
+
+**Hybrid Financing Model**: We combine multiple funding sources including charitable contributions, impact investment, credit union financing, and government grants. This diversified approach reduces risk and ensures we can deliver projects even in challenging economic environments.`,
     briefDescription:
       "40 modular homes in Hope, BC, expanding affordable housing in rural communities with a focus on stability, self-sufficiency, and community-building.",
     comprehensiveDetails:
-      "The Ryder project represents Anhart's commitment to addressing housing needs in rural and remote communities across British Columbia. This innovative modular housing development delivered 40 affordable homes to Hope, demonstrating our ability to adapt construction methods to meet the unique challenges of smaller communities. The project prioritizes resident self-sufficiency through thoughtful design and community support services. Using sustainable building materials and modern construction techniques, The Ryder provides high-quality, energy-efficient housing that serves as a model for rural affordable housing development. The project includes community spaces and support services designed to foster resident independence and community connection.",
+      `The Ryder project represents Anhart's commitment to addressing housing needs in rural and remote communities across British Columbia. This innovative modular housing development delivered 40 affordable homes to Hope, demonstrating our ability to adapt construction methods to meet the unique challenges of smaller communities. The project prioritizes resident self-sufficiency through thoughtful design and community support services. Using sustainable building materials and modern construction techniques, The Ryder provides high-quality, energy-efficient housing that serves as a model for rural affordable housing development. The project includes community spaces and support services designed to foster resident independence and community connection.
+
+## How We Keep Housing Affordable
+
+The Ryder serves as a proof of concept for Anhart's sustainable model of affordable housing that thrives outside major metropolitan hubs. Our approach combines philanthropy, innovation, and community empowerment to keep housing costs below market rates:
+
+**Community Champions Program**: We tackle soaring construction costs through our Community Champions initiative, where local business owners and professionals provide deep discounts on materials and services. In Hope, BC, this meant partnering with local geotechnical engineers, landscape architects, and construction professionals who contributed their expertise at reduced rates. This program is a cornerstone of our plan to build affordable housing without passing high costs to residents.
+
+**Modular Construction Advantage**: Units were assembled in a Kamloops factory before being transported to the site, offering significant advantages: faster completion (from groundbreaking to occupancy in just 8 months), precise quality control in a climate-controlled environment, and accessibility features like Rick Hansen Foundation Silver certification.
+
+**Tenant-Led Management**: Affordability extends beyond initial development through our innovative tenant-led model. Instead of traditional building managers, residents are paid to handle cleaning, maintenance, community watch, and amenity bookings. This creates a 'heartbeat' within the building, fostering volunteerism and mutual aid among diverse residents including seniors, families, and those formerly homeless.
+
+**Non-Profit Mission**: As a charity-owned society, our focus is community impact rather than profit maximization, allowing us to reinvest savings in lower rents and sustainable operations.
+
+## Financing Stack & Partnerships
+
+**Credit Union Partnerships**: We work closely with credit unions like Coast Capital Savings to provide flexible financing solutions. For The Ryder project, Coast Capital provided construction financing that aligned with our community impact goals, offering competitive rates and terms that supported our non-profit mission.
+
+**Impact Investors**: Our financing stack includes impact investors who prioritize social returns alongside financial returns. These investors understand that affordable housing creates long-term community benefits and are willing to provide patient capital that doesn't require rapid exits or excessive returns.
+
+**Community Champions Business Network**: Beyond individual professional discounts, our Community Champions program includes strategic partnerships with local businesses who provide ongoing support. In Hope, this included partnerships with local suppliers who offered volume discounts and payment terms that supported our cash flow needs.
+
+**Hybrid Financing Model**: We combine multiple funding sources including charitable contributions, impact investment, credit union financing, and government grants. This diversified approach reduces risk and ensures we can deliver projects even in challenging economic environments.`,
     image: "Ryder_1",
     status: "completed",
     type: "Modular Housing",
@@ -90,11 +134,55 @@ export const portfolioDetailedProjects: ProjectData[] = [
     year: "2023",
     units: 69,
     description:
-      "Inner-city development that provides affordable homes with integrated support services for individuals facing mental health challenges and low incomes.",
+      `Inner-city development that provides affordable homes with integrated support services for individuals facing mental health challenges and low incomes.
+
+## How We Keep Housing Affordable in Urban Centers
+
+The housing crisis in Canada's major metropolitan areas is particularly acute, and 162 Main St serves as a model for sustainable affordable housing development in dense urban environments. Our approach demonstrates how philanthropy, innovation, and community empowerment can keep housing affordable even in high-cost areas:
+
+**Community Champions Program**: In Vancouver's competitive construction market, we leverage our Community Champions program where local business owners and professionals provide deep discounts on professional services and construction materials. This reduces costs without compromising quality, ensuring the project remains viable for low-income residents.
+
+**Innovative Construction Methods**: The building utilizes a hybrid structure of light wood frame over a concrete podium, optimizing construction efficiency while maintaining structural integrity on a narrow urban infill site. This approach allows us to build high-quality homes more cost-effectively than traditional methods.
+
+**Supportive Housing Model**: Affordability extends beyond rent through integrated support services. The MPA Society provides on-site mental health support, counseling, and community programs that help residents maintain housing stability and reduce the need for emergency services, creating long-term cost savings for both residents and the community.
+
+**Non-Profit Mission**: As a charity-owned society, our goal is community impact rather than profit maximization. We reinvest in lower rents and prioritize vulnerable populations including seniors, newcomers, and individuals transitioning from shelters, ensuring housing remains permanently affordable rather than becoming market-rate over time.
+
+## Financing Stack & Partnerships
+
+**Credit Union Partnerships**: We collaborate with credit unions that share our community-focused values. These partnerships provide construction financing at competitive rates while supporting our mission-driven approach to affordable housing development.
+
+**Impact Investors**: Our financing includes impact investors who recognize the long-term social and economic benefits of affordable housing. These investors provide patient capital that allows us to focus on community impact rather than short-term financial returns.
+
+**Community Champions Business Network**: In urban markets like Vancouver, our Community Champions program extends to include strategic partnerships with local businesses, suppliers, and service providers who offer volume discounts and flexible terms. This network helps reduce construction costs and supports our cash flow needs.
+
+**Hybrid Financing Model**: We employ a diversified financing approach combining charitable foundations, impact investment, credit union financing, and government subsidies. This multi-source funding strategy reduces risk and ensures we can deliver complex urban projects that serve vulnerable populations.`,
     briefDescription:
       "69-unit affordable housing project combining independent suites with on-site support services for vulnerable inner-city residents.",
     comprehensiveDetails:
-      "162 Main St represents a groundbreaking approach to addressing homelessness and mental health challenges in Vancouver's urban core. This innovative development provides 69 micro-suite units designed specifically for individuals transitioning from shelter to permanent housing. The project integrates comprehensive support services directly into the living environment, creating a bridge between emergency shelter and stable housing. Each micro-suite is thoughtfully designed to provide privacy and dignity while fostering community connection. The building includes on-site support staff, counseling services, and community spaces that promote healing and stability. The mixed-use design incorporates retail spaces that serve both residents and the broader community, creating economic opportunities and reducing stigma.",
+      `162 Main St represents a groundbreaking approach to addressing homelessness and mental health challenges in Vancouver's urban core. This innovative development provides 69 micro-suite units designed specifically for individuals transitioning from shelter to permanent housing. The project integrates comprehensive support services directly into the living environment, creating a bridge between emergency shelter and stable housing. Each micro-suite is thoughtfully designed to provide privacy and dignity while fostering community connection. The building includes on-site support staff, counseling services, and community spaces that promote healing and stability. The mixed-use design incorporates retail spaces that serve both residents and the broader community, creating economic opportunities and reducing stigma.
+
+## How We Keep Housing Affordable in Urban Centers
+
+The housing crisis in Canada's major metropolitan areas is particularly acute, and 162 Main St serves as a model for sustainable affordable housing development in dense urban environments. Our approach demonstrates how philanthropy, innovation, and community empowerment can keep housing affordable even in high-cost areas:
+
+**Community Champions Program**: In Vancouver's competitive construction market, we leverage our Community Champions program where local business owners and professionals provide deep discounts on professional services and construction materials. This reduces costs without compromising quality, ensuring the project remains viable for low-income residents.
+
+**Innovative Construction Methods**: The building utilizes a hybrid structure of light wood frame over a concrete podium, optimizing construction efficiency while maintaining structural integrity on a narrow urban infill site. This approach allows us to build high-quality homes more cost-effectively than traditional methods.
+
+**Supportive Housing Model**: Affordability extends beyond rent through integrated support services. The MPA Society provides on-site mental health support, counseling, and community programs that help residents maintain housing stability and reduce the need for emergency services, creating long-term cost savings for both residents and the community.
+
+**Non-Profit Mission**: As a charity-owned society, our goal is community impact rather than profit maximization. We reinvest in lower rents and prioritize vulnerable populations including seniors, newcomers, and individuals transitioning from shelters, ensuring housing remains permanently affordable rather than becoming market-rate over time.
+
+## Financing Stack & Partnerships
+
+**Credit Union Partnerships**: We collaborate with credit unions that share our community-focused values. These partnerships provide construction financing at competitive rates while supporting our mission-driven approach to affordable housing development.
+
+**Impact Investors**: Our financing includes impact investors who recognize the long-term social and economic benefits of affordable housing. These investors provide patient capital that allows us to focus on community impact rather than short-term financial returns.
+
+**Community Champions Business Network**: In urban markets like Vancouver, our Community Champions program extends to include strategic partnerships with local businesses, suppliers, and service providers who offer volume discounts and flexible terms. This network helps reduce construction costs and supports our cash flow needs.
+
+**Hybrid Financing Model**: We employ a diversified financing approach combining charitable foundations, impact investment, credit union financing, and government subsidies. This multi-source funding strategy reduces risk and ensures we can deliver complex urban projects that serve vulnerable populations.`,
     image: "162Main",
     status: "completed",
     type: "Micro-Suites",
@@ -248,11 +336,15 @@ export const portfolioDetailedProjects: ProjectData[] = [
     year: "2026",
     units: "TBD",
     description:
-      "Planned affordable housing development in Merritt, BC, responding to community housing needs following the 2021 flood.",
+      "Planned affordable housing development in Merritt, BC, responding to community housing needs following the 2021 flood.\n\n## How We Keep Housing Affordable\n\nOur proven approach to affordability rests on three pillars: partnerships with local businesses providing deep discounts on construction costs, cutting-edge modular construction methods for efficient and cost-effective homes, and strategic collaborations with impact investors and credit unions dedicated to affordable housing solutions.",
     briefDescription:
       "A planned affordable housing development in Merritt, BC, designed to address community housing needs and support local recovery efforts.",
     comprehensiveDetails:
-      "Merritt Village is a planned affordable housing development in Merritt, British Columbia, developed in response to the community's housing needs following the 2021 flood. This project represents Anhart's commitment to supporting rural communities through thoughtful, sustainable housing solutions. The development aims to provide much-needed housing options while contributing to the community's long-term recovery and resilience. Specific project details, including unit count and design features, will be finalized as the project progresses through the planning and development phases.",
+      `Merritt Village is a planned affordable housing development in Merritt, British Columbia, developed in response to the community's housing needs following the 2021 flood. This project represents Anhart's commitment to supporting rural communities through thoughtful, sustainable housing solutions. The development aims to provide much-needed housing options while contributing to the community's long-term recovery and resilience. Specific project details, including unit count and design features, will be finalized as the project progresses through the planning and development phases.
+
+## How We Keep Housing Affordable
+
+Our proven approach to affordability rests on three pillars: partnerships with local businesses providing deep discounts on construction costs, cutting-edge modular construction methods for efficient and cost-effective homes, and strategic collaborations with impact investors and credit unions dedicated to affordable housing solutions.`,
     image: "Merritt",
     status: "in-planning",
     type: "Affordable Housing Development",
@@ -266,7 +358,7 @@ export const portfolioDetailedProjects: ProjectData[] = [
     description:
       "State-of-the-art modular homes manufacturing facility producing prefabricated affordable housing for rapid deployment across Canada. Advanced prefabrication technology delivers 120+ units annually while reducing construction timelines and housing costs.",
     briefDescription:
-      "Leading modular home manufacturer in British Columbia producing 120+ prefabricated affordable housing units annually through innovative offsite construction and sustainable building practices for rapid deployment.",
+      "State-of-the-art manufacturing facility producing 120+ prefabricated modular homes annually for rapid deployment across Canada.",
     comprehensiveDetails:
       "The Modular Homes Factory is Anhart's flagship manufacturing facility dedicated to solving the affordable housing crisis through industrial-scale modular home production. Located strategically in Hope, BC, this state-of-the-art prefabrication plant manufactures 120+ complete modular homes annually, representing a transformative approach to residential construction. \n\nAdvanced Manufacturing Process: Our facility utilizes computer-aided design (CAD), robotic manufacturing systems, and quality-controlled assembly lines to produce prefabricated housing components with precision and consistency. Each modular home is constructed in a climate-controlled environment, eliminating weather-related delays and ensuring superior craftsmanship compared to traditional on-site construction methods.\n\nAffordable Housing Solutions: By consolidating manufacturing operations, we significantly reduce construction costs—typically 30-40% lower than conventional stick-built homes. These cost savings translate directly into more affordable housing options for low-income families, first-time homebuyers, and underserved communities across Canada.\n\nSustainability & Energy Efficiency: Every modular home manufactured meets rigorous environmental standards, featuring energy-efficient insulation, sustainable materials, and renewable energy integration capabilities. Our commitment to green building practices reduces operational costs for residents while contributing to Canada's climate goals.\n\nRapid Deployment & Housing Crisis Response: Modular construction reduces on-site assembly time from 6-9 months to 2-3 months, enabling rapid response to housing shortages and emergency housing needs. This acceleration is critical for addressing Canada's affordable housing crisis.\n\nEconomic Impact & Local Employment: The facility creates skilled manufacturing jobs in Hope, BC, stimulating local economic growth while building the workforce expertise needed for nationwide housing production scaling.\n\nContribution to 20,000 Homes Goal: This manufacturing capacity is instrumental in Anhart's mission to develop 20,000 affordable homes by 2045, providing a sustainable, scalable solution to housing affordability across Canada.",
     image: "ModularFactory",
@@ -299,7 +391,7 @@ export const portfolioDetailedProjects: ProjectData[] = [
     description:
       "International development initiative working with local communities in regions of Africa to build 6 maternity clinics, approximately 50 homes, and 5 schools, contributing to our 20,000 homes goal by 2045.",
     briefDescription:
-      "International initiative building 6 maternity clinics, ~50 homes, and 5 schools in African regions through local partnerships.",
+      "International development initiative building homes, clinics, and schools in African communities through local partnerships.",
     comprehensiveDetails:
       "Anhart Global Villages represents our commitment to international development and community building in regions of Africa. Through partnerships with local communities, we are working to construct 6 maternity clinics to improve healthcare access, approximately 50 homes to address housing needs, and 5 schools to enhance educational opportunities. This initiative demonstrates our belief that affordable housing and community infrastructure are fundamental human necessities that should be accessible globally. By working directly with local partners and communities, we ensure that our projects are culturally appropriate, sustainable, and truly serve the needs of the people they are designed to help. This international work complements our domestic efforts and contributes to our broader goal of creating 20,000 homes by 2045.",
     image: "Maternity",
