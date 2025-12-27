@@ -10,6 +10,7 @@
   "/login/page": "/login",
   "/neighbourhood/page": "/neighbourhood",
   "/page": "/",
+  "/realtor-portal/page": "/realtor-portal",
   "/relocation/kamloops/page": "/relocation/kamloops",
   "/relocation/kelowna/page": "/relocation/kelowna",
   "/relocation/vancouver/page": "/relocation/vancouver"

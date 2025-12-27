@@ -234,7 +234,7 @@ export default function NeighbourhoodPage() {
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 rounded-full border-2 border-gray-300 overflow-hidden flex-shrink-0">
                   <img
-                    src="/trees.jpg"
+                    src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&crop=center"
                     alt="Beautiful forest and nature scenery"
                     className="w-full h-full object-cover"
                   />
@@ -265,7 +265,7 @@ export default function NeighbourhoodPage() {
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-16 h-16 rounded-full border-2 border-gray-300 overflow-hidden flex-shrink-0">
                     <img
-                      src="/coffee.jpg"
+                      src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=400&fit=crop&crop=center"
                       alt="Local coffee shops and dining"
                       className="w-full h-full object-cover"
                     />
@@ -296,7 +296,7 @@ export default function NeighbourhoodPage() {
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 rounded-full border-2 border-gray-300 overflow-hidden flex-shrink-0">
                   <img
-                    src="/malls.jpg"
+                    src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop&crop=center"
                     alt="Shopping malls and retail centers"
                     className="w-full h-full object-cover"
                   />
@@ -327,7 +327,7 @@ export default function NeighbourhoodPage() {
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-16 h-16 rounded-full border-2 border-gray-300 overflow-hidden flex-shrink-0">
                     <img
-                      src="/schools.jpg"
+                      src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=400&h=400&fit=crop&crop=center"
                       alt="Local schools and educational facilities"
                       className="w-full h-full object-cover"
                     />
@@ -358,7 +358,7 @@ export default function NeighbourhoodPage() {
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-16 h-16 rounded-full border-2 border-gray-300 overflow-hidden flex-shrink-0">
                     <img
-                      src="/transit.jpg"
+                      src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=400&fit=crop&crop=center"
                       alt="Public transit and transportation"
                       className="w-full h-full object-cover"
                     />
@@ -389,7 +389,7 @@ export default function NeighbourhoodPage() {
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-16 h-16 rounded-full border-2 border-gray-300 overflow-hidden flex-shrink-0">
                     <img
-                      src="/countrymusic.jpg"
+                      src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&crop=center"
                       alt="Country music festival and events in Merritt"
                       className="w-full h-full object-cover"
                     />
@@ -439,7 +439,7 @@ export default function NeighbourhoodPage() {
           <div className="bg-white rounded-2xl p-8 shadow-2xl relative overflow-hidden">
             <div className="absolute inset-0">
               <Image
-                src="/nicolavalley.jpg"
+                src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop&crop=center"
                 alt="Nicola Valley landscape background"
                 fill
                 className="object-cover opacity-40"
@@ -481,7 +481,7 @@ export default function NeighbourhoodPage() {
             <div className="text-center">
               <div className="w-28 h-28 mx-auto mb-4 rounded-full border-2 border-gray-300 overflow-hidden">
                 <img
-                  src="/trees.jpg"
+                  src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&crop=center"
                   alt="Beautiful forest and nature scenery"
                   className="w-full h-full object-cover"
                 />
@@ -492,7 +492,7 @@ export default function NeighbourhoodPage() {
             <div className="text-center">
               <div className="w-28 h-28 mx-auto mb-4 rounded-full border-2 border-gray-300 overflow-hidden">
                 <img
-                  src="/schools.jpg"
+                  src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=400&h=400&fit=crop&crop=center"
                   alt="Local schools and educational facilities"
                   className="w-full h-full object-cover"
                 />
@@ -503,7 +503,7 @@ export default function NeighbourhoodPage() {
             <div className="text-center">
               <div className="w-28 h-28 mx-auto mb-4 rounded-full border-2 border-gray-300 overflow-hidden">
                 <img
-                  src="/countrymusic.jpg"
+                  src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&crop=center"
                   alt="Country music festival and events in Merritt"
                   className="w-full h-full object-cover"
                 />
@@ -514,7 +514,7 @@ export default function NeighbourhoodPage() {
             <div className="text-center">
               <div className="w-28 h-28 mx-auto mb-4 rounded-full border-2 border-gray-300 overflow-hidden">
                 <img
-                  src="/coffee.jpg"
+                  src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=400&fit=crop&crop=center"
                   alt="Cozy café and community gathering space"
                   className="w-full h-full object-cover"
                 />
@@ -525,7 +525,7 @@ export default function NeighbourhoodPage() {
             <div className="text-center">
               <div className="w-28 h-28 mx-auto mb-4 rounded-full border-2 border-gray-300 overflow-hidden">
                 <img
-                  src="/transit.jpg"
+                  src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=400&fit=crop&crop=center"
                   alt="Transportation and transit connections in Merritt"
                   className="w-full h-full object-cover"
                 />

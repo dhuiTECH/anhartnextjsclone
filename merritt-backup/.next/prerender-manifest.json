@@ -282,6 +282,31 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/realtor-portal": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "next-action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/realtor-portal",
+      "dataRoute": "/realtor-portal.rsc",
+      "prefetchDataRoute": null,
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/relocation/kamloops": {
       "experimentalBypassFor": [
         {
@@ -361,8 +386,8 @@
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "f6705ad4ffaeeee21fc1193769de26bf",
-    "previewModeSigningKey": "c39e737cd470866dd4e406573d1e60f8707223d607404cc7fe3715c0c1e001ba",
-    "previewModeEncryptionKey": "dd58ddf4fc8e489a9327852165c543a6e48da9511c4189872a5585267a5ec486"
+    "previewModeId": "d3a3a0a24e863c488829a8dc7f9d8efb",
+    "previewModeSigningKey": "ed659e5c6533766a5a9d7ac51dbb4f98d09be74d84ab0c49f462407270c88863",
+    "previewModeEncryptionKey": "4726cb90bd6d2e2deddd9afea28f60936cfe6578f469cfb237fbfc96f8b586bd"
   }
 }

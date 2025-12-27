@@ -10,6 +10,7 @@
   "/login/page": "app/login/page.js",
   "/neighbourhood/page": "app/neighbourhood/page.js",
   "/page": "app/page.js",
+  "/realtor-portal/page": "app/realtor-portal/page.js",
   "/relocation/kamloops/page": "app/relocation/kamloops/page.js",
   "/relocation/kelowna/page": "app/relocation/kelowna/page.js",
   "/relocation/vancouver/page": "app/relocation/vancouver/page.js"

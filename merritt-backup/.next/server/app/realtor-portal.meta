@@ -1,0 +1,15 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/realtor-portal/layout,_N_T_/realtor-portal/page,_N_T_/realtor-portal"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/realtor-portal/__PAGE__",
+    "/realtor-portal",
+    "/_index",
+    "/_head"
+  ]
+}

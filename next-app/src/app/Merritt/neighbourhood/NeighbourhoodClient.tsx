@@ -267,7 +267,7 @@ export default function NeighbourhoodClient() {
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 rounded-full border-2 border-gray-300 overflow-hidden flex-shrink-0">
                   <img
-                    src="/merritt-assets/trees.jpg"
+                    src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=400&fit=crop&crop=center"
                     alt="Nicola Valley forests and nature trails near Merritt townhomes"
                     className="w-full h-full object-cover"
                   />
@@ -298,7 +298,7 @@ export default function NeighbourhoodClient() {
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-16 h-16 rounded-full border-2 border-gray-300 overflow-hidden flex-shrink-0">
                     <img
-                      src="/merritt-assets/coffee.jpg"
+                      src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=400&fit=crop&crop=center"
                       alt="Merritt's local coffee shops and family restaurants"
                       className="w-full h-full object-cover"
                     />
@@ -329,7 +329,7 @@ export default function NeighbourhoodClient() {
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 rounded-full border-2 border-gray-300 overflow-hidden flex-shrink-0">
                   <img
-                    src="/merritt-assets/malls.jpg"
+                    src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop&crop=center"
                     alt="Merritt Mall and local retail shopping centers"
                     className="w-full h-full object-cover"
                   />
@@ -360,7 +360,7 @@ export default function NeighbourhoodClient() {
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-16 h-16 rounded-full border-2 border-gray-300 overflow-hidden flex-shrink-0">
                     <img
-                      src="/merritt-assets/schools.jpg"
+                      src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=400&h=400&fit=crop&crop=center"
                       alt="Merritt Secondary School and Nicola Valley Institute of Technology"
                       className="w-full h-full object-cover"
                     />
@@ -391,7 +391,7 @@ export default function NeighbourhoodClient() {
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-16 h-16 rounded-full border-2 border-gray-300 overflow-hidden flex-shrink-0">
                     <img
-                      src="/merritt-assets/transit.jpg"
+                      src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=400&h=400&fit=crop&crop=center"
                       alt="BC Transit services connecting Merritt to regional destinations"
                       className="w-full h-full object-cover"
                     />
@@ -422,7 +422,7 @@ export default function NeighbourhoodClient() {
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-16 h-16 rounded-full border-2 border-gray-300 overflow-hidden flex-shrink-0">
                     <img
-                      src="/merritt-assets/countrymusic.jpg"
+                      src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop&crop=center"
                       alt="Merritt's Country Music Festival - Canada's Country Music Capital"
                       className="w-full h-full object-cover"
                     />
@@ -447,7 +447,7 @@ export default function NeighbourhoodClient() {
       <section className="py-20 pl-8 pr-8 sm:pl-6 sm:pr-6 bg-[#14312C] text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <Image
-            src="/merritt-assets/nicolavalley.jpg"
+            src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop&crop=center"
             alt="Nicola Valley landscape background"
             fill
             className="object-cover"

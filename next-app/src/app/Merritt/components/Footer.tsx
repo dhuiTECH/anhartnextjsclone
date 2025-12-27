@@ -1,4 +1,5 @@
 import { Facebook, Twitter, Linkedin, Instagram, Phone, Mail, MapPin } from "lucide-react";
+import Link from "next/link";
 
 // Social media links from Anhart
 const socialLinks = [{
@@ -47,6 +48,12 @@ export default function Footer() {
                         <div className="text-[0.5rem] md:text-xs uppercase tracking-[0.4em] opacity-60">Affordable Housing Developer</div>
                         <p className="text-sm opacity-70 leading-relaxed">Building Better Communities | Merritt, BC</p>
                         <p className="text-xs opacity-60">Creating inclusive, sustainable communities where everyone has access to safe, quality homes.</p>
+                        <Link
+                            href="/realtor-portal"
+                            className="text-xs opacity-60 mt-2 text-white hover:text-[#a6906c] hover:opacity-100 transition-colors"
+                        >
+                            Realtor Portal
+                        </Link>
                     </div>
                 </div>
 

@@ -1,0 +1,8 @@
+1:"$Sreact.fragment"
+2:I[97046,["/_next/static/chunks/97b19c29fcc72655.js","/_next/static/chunks/76fe70812b1f2230.js"],"ViewportBoundary"]
+4:I[97046,["/_next/static/chunks/97b19c29fcc72655.js","/_next/static/chunks/76fe70812b1f2230.js"],"MetadataBoundary"]
+5:"$Sreact.suspense"
+7:I[95820,["/_next/static/chunks/97b19c29fcc72655.js","/_next/static/chunks/76fe70812b1f2230.js"],"IconMark"]
+0:{"buildId":"T1jwTPaVWQffY99e6Ldf_","rsc":["$","$1","h",{"children":[null,["$","$L2",null,{"children":"$@3"}],["$","div",null,{"hidden":true,"children":["$","$L4",null,{"children":["$","$5",null,{"name":"Next.Metadata","children":"$@6"}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"loading":null,"isPartial":false}
+3:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1, maximum-scale=5"}]]
+6:[["$","title","0",{"children":"Realtor Portal | Anhart Merritt"}],["$","meta","1",{"name":"description","content":"Exclusive portal for realtors and agents - Anhart affordable townhomes in Merritt, BC."}],["$","meta","2",{"name":"robots","content":"noindex, nofollow, noarchive, nosnippet, noimageindex, nocache"}],["$","link","3",{"rel":"shortcut icon","href":"/favicon.png"}],["$","link","4",{"rel":"icon","href":"/favicon.ico?favicon.0b3bf435.ico","sizes":"256x256","type":"image/x-icon"}],["$","link","5",{"rel":"icon","href":"/favicon.png"}],["$","link","6",{"rel":"apple-touch-icon","href":"/favicon.png"}],["$","link","7",{"rel":"icon","href":"/favicon.png","type":"image/png","sizes":"32x32"}],["$","link","8",{"rel":"icon","href":"/favicon.svg","type":"image/svg+xml"}],["$","$L7","9",{}]]

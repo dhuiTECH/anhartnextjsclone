@@ -2449,12 +2449,6 @@
     }
   }
 
-  @media (hover: hover) {
-    .group-hover\:delay-1500:is(:where(.group):hover *) {
-      transition-delay: 1.5s;
-    }
-  }
-
   .selection\:bg-\[\#1a2621\] ::selection, .selection\:bg-\[\#1a2621\]::selection {
     background-color: #1a2621;
   }

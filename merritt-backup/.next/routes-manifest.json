@@ -88,6 +88,12 @@
       "namedRegex": "^/neighbourhood(?:/)?$"
     },
     {
+      "page": "/realtor-portal",
+      "regex": "^/realtor\\-portal(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/realtor\\-portal(?:/)?$"
+    },
+    {
       "page": "/relocation/kamloops",
       "regex": "^/relocation/kamloops(?:/)?$",
       "routeKeys": {},
