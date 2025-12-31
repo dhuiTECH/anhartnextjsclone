@@ -15,6 +15,7 @@ import { ScrollAnimationWrapper } from '@/components/animations/ScrollAnimationW
 import { generateProjectSlug } from '@/lib/slug';
 import Link from 'next/link';
 import { getPortfolioListingAltText } from '@/lib/altText';
+import { LoadingWithLogo } from '@/components/LoadingWithLogo';
 
 /**
  * Gets alternative paths to try if the primary path fails
@@ -248,15 +249,11 @@ export default function TestPortfolioDBPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <>
         <Header />
-        <main className="py-16">
-          <div className="max-w-7xl mx-auto px-6">
-            <p className="text-muted-foreground text-center">Loading data from Supabase...</p>
-          </div>
-        </main>
+        <LoadingWithLogo message="Loading portfolio..." />
         <Footer />
-      </div>
+      </>
     );
   }
 

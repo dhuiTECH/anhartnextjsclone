@@ -406,7 +406,7 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
   const [isSaving, setIsSaving] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [newHighlight, setNewHighlight] = useState("");
-  const [showFullPreview, setShowFullPreview] = useState(false);
+  const [previewMode, setPreviewMode] = useState<'form' | 'detail'>('form'); // 'form' or 'detail' preview
   const [viewMode, setViewMode] = useState<'create' | 'list'>('list'); // New: view mode
   const [projects, setProjects] = useState<any[]>([]); // New: list of projects
   const [isLoadingProjects, setIsLoadingProjects] = useState(true); // New: loading state
@@ -472,16 +472,17 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
       }
 
       // Populate form with fresh data from database
+      // Schema: year=integer, units=text, highlights=text (JSON string)
       setFormData({
         title: data.title || '',
         location: data.location || '',
-        year: data.year || '',
-        units: data.units?.toString() || '',
+        year: data.year?.toString() || '', // Convert integer to string for form
+        units: data.units || '', // Already text in database (not integer)
         status: data.status || 'in-planning',
         type: data.type || '',
         briefDescription: data.brief_description || '',
         comprehensiveDetails: data.comprehensive_details || '',
-        highlights: normalizeHighlights(data.highlights) || [],
+        highlights: normalizeHighlights(data.highlights) || [], // Parse JSON string to array
         imageUrl: data.image_url || data.image || '',
         displayOrder: data.display_order?.toString() || '0',
         isFeatured: data.is_featured || false,
@@ -663,20 +664,27 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
         return isNaN(parsed) ? defaultValue : parsed;
       };
 
-      const projectData = {
+      // Build project data - match the actual database schema
+      // Schema: id=integer, created_by=integer, year=integer, units=text, highlights=text
+      const projectData: any = {
         title: formData.title,
-        location: formData.location,
-        year: formData.year || null,
-        units: parseInteger(formData.units),
-        status: formData.status,
+        location: formData.location || null,
+        year: parseInteger(formData.year), // Database expects integer
+        units: formData.units || null, // Database expects text (not integer)
+        status: formData.status || null,
         type: formData.type || null,
-        brief_description: formData.briefDescription,
+        brief_description: formData.briefDescription || null,
         comprehensive_details: formData.comprehensiveDetails || null,
-        highlights: formData.highlights.length > 0 ? formData.highlights : null, // Stored as JSON array in database
+        highlights: formData.highlights.length > 0 
+          ? JSON.stringify(formData.highlights) // Database expects text - store as JSON string
+          : null,
         image_url: formData.imageUrl || null,
+        image: formData.imageUrl || null, // Also set image field for backward compatibility
         display_order: parseIntegerWithDefault(formData.displayOrder, 0),
         is_featured: formData.isFeatured || false,
-        created_by: user.id,
+        // Note: created_by is INTEGER in schema but user.id is UUID
+        // Setting to null - database will handle default or you can create a user_id mapping
+        created_by: null,
       };
       
       // Note: highlights is stored as a JSON array (text[] or jsonb) in Supabase
@@ -684,27 +692,73 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
 
       let error;
       if (editingProjectId) {
-        // Update existing project - don't include created_by on updates
-        const { created_by, ...updateData } = projectData;
+        // Update existing project - explicitly exclude created_by and other non-updatable fields
+        const updateData = {
+          title: projectData.title,
+          location: projectData.location,
+          year: projectData.year,
+          units: projectData.units,
+          status: projectData.status,
+          type: projectData.type,
+          brief_description: projectData.brief_description,
+          comprehensive_details: projectData.comprehensive_details,
+          highlights: projectData.highlights,
+          image_url: projectData.image_url,
+          image: projectData.image, // Also update image field for backward compatibility
+          display_order: projectData.display_order,
+          is_featured: projectData.is_featured,
+          // Explicitly exclude: created_by, created_at, id
+        };
+        
+        console.log('Updating project with data:', updateData);
         const { error: updateError } = await supabase
           .from("portfolio")
           .update(updateData)
           .eq('id', editingProjectId);
         error = updateError;
       } else {
-        // Insert new project - include created_by
+        // Insert new project - need to generate a unique integer ID
+        // Query for max ID first, then increment
+        const { data: maxIdData, error: maxIdError } = await supabase
+          .from("portfolio")
+          .select("id")
+          .order("id", { ascending: false })
+          .limit(1)
+          .single();
+        
+        let newId: number;
+        if (maxIdError || !maxIdData) {
+          // If no existing records or error, start with 1
+          newId = 1;
+        } else {
+          // Increment the max ID
+          newId = (maxIdData.id as number) + 1;
+        }
+        
+        // Add the generated ID to project data
+        const insertData = {
+          ...projectData,
+          id: newId,
+        };
+        
+        console.log('Inserting new project with ID:', newId, 'data:', insertData);
         const { error: insertError } = await supabase
           .from("portfolio")
-          .insert([projectData]);
+          .insert([insertData]);
         error = insertError;
       }
 
       if (error) {
-        console.error("Save error:", error);
+        console.error("Save error details:", {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
         // Show the generated code for manual addition if database doesn't exist
         const projectCode = generateProjectCode();
         alert(
-          `Database error: ${error.message}\n\nHere's the project data to add manually:\n\n${projectCode}`
+          `Database error: ${error.message}\n\nDetails: ${error.details || 'No additional details'}\n\nHere's the project data to add manually:\n\n${projectCode}`
         );
         return;
       }
@@ -919,9 +973,22 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
 
         {/* Create/Edit Form View */}
         {viewMode === 'create' ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Column - Form */}
           <div className="space-y-6">
+            {/* Toggle Button */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => setPreviewMode(previewMode === 'form' ? 'detail' : 'form')}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2"
+              >
+                <Eye className="w-4 h-4" />
+                {previewMode === 'form' ? 'Show Detail Page' : 'Show Form'}
+              </button>
+            </div>
+
+            {previewMode === 'form' ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Left Column - Form */}
+                <div className="space-y-6">
             {/* Image Upload Section */}
             <div className="bg-white p-6 rounded-xl shadow">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -931,21 +998,25 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
 
               {/* Image Preview */}
               <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden mb-4 flex items-center justify-center border-2 border-dashed border-gray-300">
-                {formData.imageUrl ? (
-                  <div className="relative w-full h-full">
-                    <img
-                      src={formData.imageUrl}
-                      alt="Project preview"
-                      className="w-full h-full object-cover"
-                    />
-                    <button
-                      onClick={() => setFormData((prev) => ({ ...prev, imageUrl: "" }))}
-                      className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ) : (
+                {formData.imageUrl ? (() => {
+                  // Generate image paths using the helper function to convert filenames to Supabase URLs
+                  const imagePaths = getImagePathsForProject(formData.title, formData.imageUrl);
+                  return (
+                    <div className="relative w-full h-full">
+                      <ImageWithFallback
+                        imagePaths={imagePaths}
+                        alt="Project preview"
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        onClick={() => setFormData((prev) => ({ ...prev, imageUrl: "" }))}
+                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 z-10"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  );
+                })() : (
                   <div className="text-center p-8">
                     <Building className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-500">No image uploaded</p>
@@ -1021,9 +1092,10 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
                 Basic Information
               </h2>
 
-              <div className="space-y-4">
+              <div className="space-y-6">
+                {/* Project Title - Full Width */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Project Title *
                   </label>
                   <input
@@ -1032,12 +1104,13 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
                     value={formData.title}
                     onChange={handleChange}
                     placeholder="e.g., Jubilee Rooms"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
                   />
                 </div>
 
+                {/* Location - Full Width */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Location / Address *
                   </label>
                   <div className="relative">
@@ -1048,30 +1121,30 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
                       value={formData.location}
                       onChange={handleChange}
                       placeholder="e.g., Vancouver, BC"
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
-                  <div className="relative">
-                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      name="year"
-                      value={formData.year}
-                      onChange={handleChange}
-                      placeholder="e.g., 2024"
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
+                {/* Year and Units - Two Column Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="text"
+                        name="year"
+                        value={formData.year}
+                        onChange={handleChange}
+                        placeholder="e.g., 2024"
+                        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Number of Units
                     </label>
                     <div className="relative">
@@ -1082,20 +1155,23 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
                         value={formData.units}
                         onChange={handleChange}
                         placeholder="e.g., 80 or TBD"
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
                       />
                     </div>
                   </div>
+                </div>
 
+                {/* Project Type and Status - Two Column Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Project Type
                     </label>
                     <select
                       name="type"
                       value={formData.type}
                       onChange={handleChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors bg-white"
                     >
                       <option value="">Select type...</option>
                       {projectTypes.map((type) => (
@@ -1105,16 +1181,14 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
                       ))}
                     </select>
                   </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
                     <div className="flex gap-2">
                       {statusOptions.map((option) => (
                         <label
                           key={option.value}
-                          className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all border-2 text-sm ${
+                          className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-all border-2 text-sm ${
                             formData.status === option.value
                               ? `${option.color} border-current`
                               : "bg-gray-50 border-gray-200 hover:border-gray-300"
@@ -1133,9 +1207,12 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
                       ))}
                     </div>
                   </div>
+                </div>
 
+                {/* Display Order and Featured - Two Column Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Display Order
                     </label>
                     <input
@@ -1145,30 +1222,33 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
                       onChange={handleChange}
                       placeholder="0"
                       min="0"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-gray-500 mt-1.5">
                       Lower numbers appear first. Default: 0
                     </p>
                   </div>
-                </div>
 
-                <div>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      name="isFeatured"
-                      checked={formData.isFeatured}
-                      onChange={handleChange}
-                      className="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                    />
-                    <span className="text-sm font-medium text-gray-700">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Featured Project
-                    </span>
-                  </label>
-                  <p className="text-xs text-gray-500 mt-1 ml-7">
-                    Featured projects may be highlighted on the homepage or portfolio page
-                  </p>
+                    </label>
+                    <div className="flex items-center h-[42px]">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="isFeatured"
+                          checked={formData.isFeatured}
+                          onChange={handleChange}
+                          className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                        />
+                        <span className="text-sm text-gray-700">Show as featured project</span>
+                      </label>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1.5">
+                      Featured projects are highlighted in the portfolio
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1314,13 +1394,17 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
                 <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
                   {/* Image */}
                   <div className="aspect-video overflow-hidden bg-gray-100">
-                    {formData.imageUrl ? (
-                      <img
-                        src={formData.imageUrl}
-                        alt={formData.title || "Project preview"}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
+                    {formData.imageUrl ? (() => {
+                      // Generate image paths using the helper function
+                      const imagePaths = getImagePathsForProject(formData.title, formData.imageUrl);
+                      return (
+                        <ImageWithFallback
+                          imagePaths={imagePaths}
+                          alt={formData.title || "Project preview"}
+                          className="w-full h-full object-cover"
+                        />
+                      );
+                    })() : (
                       <div className="w-full h-full flex items-center justify-center">
                         <Building className="w-16 h-16 text-gray-300" />
                       </div>
@@ -1371,124 +1455,130 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
                   </div>
                 </div>
               </div>
-
-              {/* Toggle Full Preview Button */}
-              <button
-                onClick={() => setShowFullPreview(!showFullPreview)}
-                className="w-full mt-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 flex items-center justify-center gap-2"
-              >
-                <Eye className="w-4 h-4" />
-                {showFullPreview ? "Hide" : "Show"} Modal Preview
-              </button>
             </div>
+          </div>
+        </div>
+            ) : (
+            /* Detail Page Preview */
+            <div className="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
+                <div className="mb-8">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Detail Page Preview</h2>
+                  <p className="text-sm text-gray-500">This is how the project will appear on the detail page</p>
+                </div>
 
-            {/* Modal Preview */}
-            {showFullPreview && (
-              <div className="bg-white p-6 rounded-xl shadow">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Modal Preview</h2>
-
-                <div className="border border-gray-200 rounded-xl overflow-hidden">
-                  {/* Modal Header */}
-                  <div className="bg-gray-50 p-4 border-b border-gray-200">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-bold text-gray-900">Project Details</h3>
-                      <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-                        <X className="w-4 h-4 text-gray-500" />
-                      </div>
+                {/* Project Image */}
+                <div className="mb-12 rounded-lg overflow-hidden aspect-video bg-gray-100">
+                  {formData.imageUrl ? (() => {
+                    const imagePaths = getImagePathsForProject(formData.title, formData.imageUrl);
+                    return (
+                      <ImageWithFallback
+                        imagePaths={imagePaths}
+                        alt={formData.title || "Project preview"}
+                        className="w-full h-full object-cover"
+                      />
+                    );
+                  })() : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Building className="w-16 h-16 text-gray-300" />
                     </div>
+                  )}
+                </div>
+
+                {/* Project Header */}
+                <div className="mb-12">
+                  <div className="flex items-center justify-between gap-4 mb-4">
+                    <h1 className="text-4xl font-bold text-gray-900">
+                      {formData.title || "Project Title"}
+                    </h1>
+                    <span className={`text-xs px-3 py-1 rounded-md font-medium ${getStatusBadge(formData.status)}`}>
+                      {statusOptions.find(s => s.value === formData.status)?.label || formData.status}
+                    </span>
                   </div>
 
-                  {/* Modal Content */}
-                  <div className="p-4 space-y-4">
-                    {/* Image */}
-                    <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
-                      {formData.imageUrl ? (
-                        <img
-                          src={formData.imageUrl}
-                          alt={formData.title || "Project"}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <Building className="w-12 h-12 text-gray-300" />
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Project Info */}
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <div className="flex items-start justify-between mb-3">
+                  {/* Project Meta Info */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-8 border-y border-gray-200">
+                    {formData.location && (
+                      <div className="flex items-start gap-2">
+                        <MapPin className="h-5 w-5 text-indigo-600 flex-shrink-0 mt-0.5" />
                         <div>
-                          <h4 className="text-xl font-bold text-gray-900 mb-2">
-                            {formData.title || "Project Title"}
-                          </h4>
-                          <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
-                            <div className="flex items-center gap-1">
-                              <MapPin className="w-4 h-4" />
-                              <span>{formData.location || "Location"}</span>
-                            </div>
-                            {formData.year && (
-                              <div className="flex items-center gap-1">
-                                <Calendar className="w-4 h-4" />
-                                <span>{formData.year}</span>
-                              </div>
-                            )}
-                          </div>
-                          {formData.units && (
-                            <div className="flex items-center gap-1 text-base font-bold text-indigo-600 mt-2">
-                              <Users className="w-5 h-5" />
-                              <span>{formData.units} Units</span>
-                            </div>
-                          )}
+                          <p className="text-sm text-gray-500">Location</p>
+                          <p className="font-semibold text-gray-900">{formData.location}</p>
                         </div>
-                        <span
-                          className={`text-xs px-2 py-1 rounded-md font-medium ${getStatusBadge(formData.status)}`}
-                        >
-                          {formData.status}
-                        </span>
                       </div>
+                    )}
 
-                      {/* Project Overview */}
-                      <div className="mb-4">
-                        <h5 className="font-semibold text-gray-900 mb-2">Project Overview:</h5>
-                        <p className="text-gray-600 text-sm">
-                          {formData.briefDescription ||
-                            "Project overview description will appear here..."}
-                        </p>
+                    {formData.year && (
+                      <div className="flex items-start gap-2">
+                        <Calendar className="h-5 w-5 text-indigo-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm text-gray-500">Year</p>
+                          <p className="font-semibold text-gray-900">{formData.year}</p>
+                        </div>
                       </div>
+                    )}
 
-                      {/* Detailed Information */}
-                      {formData.comprehensiveDetails && (
-                        <div className="mb-4">
-                          <h5 className="font-semibold text-gray-900 mb-2">Detailed Information:</h5>
-                          <p className="text-gray-600 text-sm">{formData.comprehensiveDetails}</p>
+                    {formData.units && (
+                      <div className="flex items-start gap-2">
+                        <Users className="h-5 w-5 text-indigo-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm text-gray-500">Units</p>
+                          <p className="font-semibold text-gray-900">{formData.units}</p>
                         </div>
-                      )}
+                      </div>
+                    )}
 
-                      {/* Highlights */}
-                      {formData.highlights.length > 0 && (
-                        <div className="border-2 border-red-500 rounded-lg p-4 mt-4">
-                          <h5 className="font-semibold text-gray-900 mb-2">Key Highlights:</h5>
-                          <ul className="space-y-1">
-                            {formData.highlights.map((highlight, index) => (
-                              <li
-                                key={index}
-                                className="flex items-start gap-2 text-sm text-gray-600"
-                              >
-                                <span className="text-red-500 font-bold">•</span>
-                                <span>{highlight}</span>
-                              </li>
-                            ))}
-                          </ul>
+                    {formData.type && (
+                      <div className="flex items-start gap-2">
+                        <Building className="h-5 w-5 text-indigo-600 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm text-gray-500">Type</p>
+                          <p className="font-semibold text-gray-900">{formData.type}</p>
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
+                </div>
+
+                {/* Description */}
+                <div className="mb-12 space-y-6">
+                  <div className="prose prose-lg max-w-none">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">Project Overview</h2>
+                    {formData.comprehensiveDetails ? (
+                      <div className="text-gray-700 whitespace-pre-wrap">
+                        {formData.comprehensiveDetails.split('\n\n').map((paragraph, idx) => {
+                          if (paragraph.startsWith('###')) {
+                            return <h4 key={idx} className="text-lg font-semibold text-gray-900 mt-6 mb-3">{paragraph.replace('###', '').trim()}</h4>;
+                          }
+                          if (paragraph.startsWith('##')) {
+                            return <h3 key={idx} className="text-xl font-bold text-gray-900 mt-8 mb-4">{paragraph.replace('##', '').trim()}</h3>;
+                          }
+                          return <p key={idx} className="mb-4">{paragraph}</p>;
+                        })}
+                      </div>
+                    ) : (
+                      <p className="text-gray-700">
+                        {formData.briefDescription || "Project overview description will appear here..."}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Key Highlights */}
+                  {formData.highlights.length > 0 && (
+                    <div className="bg-gray-50 rounded-lg p-6">
+                      <h3 className="text-xl font-bold text-gray-900 mb-4">Key Highlights</h3>
+                      <ul className="space-y-2">
+                        {formData.highlights.map((highlight, index) => (
+                          <li key={index} className="flex items-start gap-3 text-gray-700">
+                            <span className="text-indigo-600 font-bold mt-1">•</span>
+                            <span>{highlight}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
-          </div>
-        </div>
           </div>
         ) : null}
       </div>

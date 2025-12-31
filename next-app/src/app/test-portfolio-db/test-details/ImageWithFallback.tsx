@@ -13,6 +13,7 @@ interface ImageWithFallbackProps {
 
 /**
  * Gets alternative paths based on project title
+ * Handles both full URLs and storage paths (including portfolio/ prefix)
  */
 function getImagePaths(projectTitle: string, originalPath: string | null): string[] {
   const titleMappings: Record<string, string[]> = {
@@ -38,12 +39,52 @@ function getImagePaths(projectTitle: string, originalPath: string | null): strin
   // Otherwise, generate from original path
   if (!originalPath) return [];
   
-  const cleanPath = originalPath.trim();
-  if (cleanPath.includes('.')) {
-    return [cleanPath];
+  let cleanPath = originalPath.trim();
+  
+  // If it's a full URL, extract the path from it
+  if (cleanPath.startsWith('http://') || cleanPath.startsWith('https://')) {
+    // Extract path from Supabase storage URL
+    // URL format: https://...supabase.co/storage/v1/object/public/portfolio-images/path/to/file.png
+    const urlMatch = cleanPath.match(/\/portfolio-images\/(.+)$/);
+    if (urlMatch) {
+      cleanPath = decodeURIComponent(urlMatch[1]); // Extract and decode the path after portfolio-images/
+    } else {
+      // If we can't extract, return the full URL as-is (it should work)
+      return [cleanPath];
+    }
   }
   
-  return [`${cleanPath}.png`, `${cleanPath}.jpg`];
+  // Now we have the storage path (e.g., "portfolio/portfolio-176720438604.png" or just "SkeenaHouse.png")
+  
+  // If path already includes portfolio/ prefix, use it as-is and also try without prefix
+  if (cleanPath.startsWith('portfolio/')) {
+    const withoutPrefix = cleanPath.replace(/^portfolio\//, '');
+    if (cleanPath.includes('.')) {
+      // Has extension - try with and without prefix
+      return [cleanPath, withoutPrefix];
+    }
+    // No extension - try both with and without prefix, with extensions
+    return [
+      `${cleanPath}.png`,
+      `${cleanPath}.jpg`,
+      `${withoutPrefix}.png`,
+      `${withoutPrefix}.jpg`
+    ];
+  }
+  
+  // Path doesn't have portfolio/ prefix
+  if (cleanPath.includes('.')) {
+    // Has extension - try as-is and with portfolio/ prefix
+    return [cleanPath, `portfolio/${cleanPath}`];
+  }
+  
+  // No extension, try both with and without portfolio/ prefix
+  return [
+    `${cleanPath}.png`,
+    `${cleanPath}.jpg`,
+    `portfolio/${cleanPath}.png`,
+    `portfolio/${cleanPath}.jpg`
+  ];
 }
 
 export default function ImageWithFallback({ imagePath, projectTitle, alt, className = '' }: ImageWithFallbackProps) {
@@ -61,10 +102,19 @@ export default function ImageWithFallback({ imagePath, projectTitle, alt, classN
     
     // Construct URL for current path
     const currentPath = paths[currentIndex];
+    
+    // If it's already a full URL, use it directly
+    if (currentPath.startsWith('http://') || currentPath.startsWith('https://')) {
+      setImageUrl(currentPath);
+      setHasError(false);
+      return;
+    }
+    
+    // Otherwise, construct the Supabase storage URL
     const { data } = supabase.storage.from('portfolio-images').getPublicUrl(currentPath);
     setImageUrl(data.publicUrl);
     setHasError(false);
-  }, [currentIndex, projectTitle, imagePath]);
+  }, [currentIndex, paths]);
   
   const handleError = () => {
     console.log(`Image failed to load: ${imageUrl}, trying next path...`);

@@ -12,6 +12,7 @@ import { StatusBadge } from '@/components/shared/StatusBadge';
 import { ScrollAnimationWrapper } from '@/components/animations/ScrollAnimationWrapper';
 import { getPortfolioListingAltText } from '@/lib/altText';
 import ImageWithFallback from './ImageWithFallback';
+import { LoadingWithLogo } from '@/components/LoadingWithLogo';
 
 interface ProjectData {
   id: string;
