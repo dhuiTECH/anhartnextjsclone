@@ -438,8 +438,17 @@ const About = () => {
                       onClick={() => handleStaffClick(member)}
                     >
                       <CardContent className="p-6 text-center">
-                        <div className="h-28 w-28 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 mx-auto mb-4 flex items-center justify-center">
-                          <Users className="h-10 w-10 text-primary" />
+                        <div className="h-28 w-28 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                          {member.image ? (
+                            <img
+                              src={member.image}
+                              alt={member.name}
+                              className="w-full h-full object-cover rounded-full"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <Users className="h-10 w-10 text-primary" />
+                          )}
                         </div>
                         <h3 className="font-semibold text-foreground mb-1 text-lg">
                           {member.name}
@@ -464,8 +473,17 @@ const About = () => {
                       onClick={() => handleStaffClick(member)}
                     >
                       <CardContent className="p-6 text-center">
-                        <div className="h-24 w-24 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 mx-auto mb-4 flex items-center justify-center">
-                          <Users className="h-8 w-8 text-primary" />
+                        <div className="h-24 w-24 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                          {member.image ? (
+                            <img
+                              src={member.image}
+                              alt={member.name}
+                              className="w-full h-full object-cover rounded-full"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <Users className="h-8 w-8 text-primary" />
+                          )}
                         </div>
                         <h3 className="font-semibold text-foreground mb-1 text-lg">
                           {member.name}
@@ -549,8 +567,17 @@ const About = () => {
                                 }
                               >
                                 <CardContent className="p-6 text-center">
-                                  <div className="h-28 w-28 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 mx-auto mb-4 flex items-center justify-center">
-                                    <Users className="h-10 w-10 text-primary" />
+                                  <div className="h-28 w-28 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                                    {boardMembers[currentBoardIndex]?.image ? (
+                                      <img
+                                        src={boardMembers[currentBoardIndex].image}
+                                        alt={boardMembers[currentBoardIndex].name}
+                                        className="w-full h-full object-cover rounded-full"
+                                        loading="lazy"
+                                      />
+                                    ) : (
+                                      <Users className="h-10 w-10 text-primary" />
+                                    )}
                                   </div>
                                   <h3 className="font-semibold text-foreground mb-1 text-lg">
                                     {boardMembers[currentBoardIndex].name}
@@ -590,8 +617,17 @@ const About = () => {
                       onClick={() => handleStaffClick(member)}
                     >
                       <CardContent className="p-6 text-center">
-                        <div className="h-24 w-24 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
-                          <Users className="h-8 w-8 text-muted-foreground" />
+                        <div className="h-24 w-24 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                          {member.image ? (
+                            <img
+                              src={member.image}
+                              alt={member.name}
+                              className="w-full h-full object-cover rounded-full"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <Users className="h-8 w-8 text-muted-foreground" />
+                          )}
                         </div>
                         <h3 className="font-semibold text-foreground mb-1 text-lg">
                           {member.name}
@@ -616,8 +652,17 @@ const About = () => {
                       onClick={() => handleStaffClick(member)}
                     >
                       <CardContent className="p-6 text-center">
-                        <div className="h-20 w-20 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
-                          <Users className="h-6 w-6 text-muted-foreground" />
+                        <div className="h-20 w-20 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                          {member.image ? (
+                            <img
+                              src={member.image}
+                              alt={member.name}
+                              className="w-full h-full object-cover rounded-full"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <Users className="h-6 w-6 text-muted-foreground" />
+                          )}
                         </div>
                         <h3 className="font-semibold text-foreground mb-1">
                           {member.name}
@@ -699,8 +744,17 @@ const About = () => {
                                 }
                               >
                                 <CardContent className="p-6 text-center">
-                                  <div className="h-20 w-20 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center">
-                                    <Users className="h-6 w-6 text-muted-foreground" />
+                                  <div className="h-20 w-20 rounded-full bg-muted mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                                    {staff[currentStaffIndex]?.image ? (
+                                      <img
+                                        src={staff[currentStaffIndex].image}
+                                        alt={staff[currentStaffIndex].name}
+                                        className="w-full h-full object-cover rounded-full"
+                                        loading="lazy"
+                                      />
+                                    ) : (
+                                      <Users className="h-6 w-6 text-muted-foreground" />
+                                    )}
                                   </div>
                                   <h3 className="font-semibold text-foreground mb-1">
                                     {staff[currentStaffIndex].name}

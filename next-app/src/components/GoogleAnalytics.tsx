@@ -4,54 +4,22 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
 // Google Analytics configuration
-const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID || 'G-XXXXXXXXXX';
+const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
 
-// Initialize Google Analytics - deferred to improve performance
-export const initGA = () => {
-  if (typeof window !== 'undefined' && GA_TRACKING_ID) {
-    // Defer GA loading until page is interactive to reduce blocking JS
-    const loadGA = () => {
-      // Load Google Analytics script
-      const script = document.createElement('script');
-      script.async = true;
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`;
-      document.head.appendChild(script);
-
-      // Initialize gtag
-      window.dataLayer = window.dataLayer || [];
-      function gtag(...args: any[]) {
-        window.dataLayer.push(args);
-      }
-      window.gtag = gtag;
-      gtag('js', new Date());
-      gtag('config', GA_TRACKING_ID, {
-        page_title: "Anhart",
-        page_location: window.location.href,
-      });
-    };
-
-    // Use requestIdleCallback if available, otherwise setTimeout
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(loadGA);
-    } else {
-      setTimeout(loadGA, 0);
-    }
-  }
-};
-
-// Track page views
+// Track page views on route changes
 export const trackPageView = (url: string, title?: string) => {
-  if (typeof window !== 'undefined' && window.gtag) {
+  if (typeof window !== 'undefined' && window.gtag && GA_TRACKING_ID) {
     window.gtag('config', GA_TRACKING_ID, {
       page_path: url,
-      page_title: title || "Anhart",
+      page_title: title || document.title,
+      page_location: window.location.href,
     });
   }
 };
 
 // Track custom events
 export const trackEvent = (action: string, category: string, label?: string, value?: number) => {
-  if (typeof window !== 'undefined' && window.gtag) {
+  if (typeof window !== 'undefined' && window.gtag && GA_TRACKING_ID) {
     window.gtag('event', action, {
       event_category: category,
       event_label: label,
@@ -67,7 +35,8 @@ export const GoogleAnalytics = () => {
 
   useEffect(() => {
     if (GA_TRACKING_ID) {
-      trackPageView(pathname + searchParams.toString());
+      const url = pathname + (searchParams.toString() ? '?' + searchParams.toString() : '');
+      trackPageView(url);
     }
   }, [pathname, searchParams]);
 

@@ -11,7 +11,7 @@
  * - Live preview of expanded modal
  */
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import {
@@ -31,15 +31,330 @@ import {
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 
+/**
+ * Image component that tries multiple fallback paths
+ */
+function ImageWithFallback({ 
+  imagePaths, 
+  alt, 
+  className 
+}: { 
+  imagePaths: string[]; 
+  alt: string; 
+  className?: string;
+}) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [hasError, setHasError] = useState(false);
+  
+  const handleError = () => {
+    if (currentIndex < imagePaths.length - 1) {
+      console.log(`Image failed: ${imagePaths[currentIndex]}, trying next...`);
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      console.error(`All image paths failed for: ${alt}`, imagePaths);
+      setHasError(true);
+    }
+  };
+  
+  if (hasError || imagePaths.length === 0) {
+    return (
+      <div className={`w-full h-full flex items-center justify-center ${className}`}>
+        <Building className="w-12 h-12 text-gray-300" />
+        <span className="text-xs text-gray-400 ml-2">Image not found</span>
+      </div>
+    );
+  }
+  
+  return (
+    <img
+      src={imagePaths[currentIndex]}
+      alt={alt}
+      className={className}
+      onError={handleError}
+      onLoad={() => {
+        console.log(`Image loaded: ${imagePaths[currentIndex]} for ${alt}`);
+      }}
+    />
+  );
+}
+
 interface PortfolioManagerClientProps {
   user: User;
+}
+
+/**
+ * Gets all possible image paths for a project (for fallback attempts)
+ */
+function getImagePathsForProject(projectTitle: string, databasePath: string | null): string[] {
+  const normalizedTitle = projectTitle?.trim() || '';
+  const titleLower = normalizedTitle.toLowerCase();
+  
+  // Title-based mappings with fallback options
+  const titleMappings: Record<string, string[]> = {
+    'Jubilee Rooms': ['Jubilee-Sign.jpg', 'Jubilee.png', 'Jubilee.jpg'],
+    'Kwas House': ['Kwas.png', 'Kwas.jpg'],
+    'Anhart Sustainable Villages': ['Maternity.png', 'Maternity.jpg'],
+    'Modular Homes Factory': ['ModularFactory.jpg', 'ModularFactory.png'],
+    'Modular Villages': ['ModularHomes.png', 'ModularHomes.jpg'],
+    'Merritt Village': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'],
+    'Merritt Townhomes': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'],
+    'Merritt': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'],
+    '179 Main & 626 Alexander': ['626Alexander.jpg', '179Main.png', '626Alexander.png'],
+    '179 Main': ['179Main.png', '626Alexander.jpg', '626Alexander.png'],
+    '626 Alexander': ['626Alexander.jpg', '626Alexander.png', '179Main.png'],
+    'Metson Rooms': ['Metsons.jpg', '1060howe.jpg', 'Metson.png', 'Metson.jpg'],
+    'Skeena House': ['SkeenaHouse.png', 'Skeena.png', 'Skeena.jpg'],
+    'Dodson Hotel': ['DodsonsRooms_1.png', 'Dodson.png', 'Dodson.jpg'],
+    '162 Main St': ['162Main.png', '162Main.jpg'],
+    '162 Main': ['162Main.png', '162Main.jpg'],
+    'The Ryder': ['Ryder_1.png', 'Ryder.png', 'Ryder.jpg'],
+  };
+  
+  // Path-based mappings
+  const pathMappings: Record<string, string[]> = {
+    '1060howe': ['Metsons.jpg', '1060howe.jpg', 'Metson.jpg'],
+    'metson': ['Metsons.jpg', 'Metson.png', 'Metson.jpg'],
+    'skeena': ['SkeenaHouse.png', 'Skeena.png'],
+    'jubilee': ['Jubilee-Sign.jpg', 'Jubilee.png'],
+    'kwas': ['Kwas.png'],
+    'maternity': ['Maternity.png'],
+    'modularfactory': ['ModularFactory.jpg'],
+    'modularhomes': ['ModularHomes.png'],
+    '626alexander': ['626Alexander.jpg', '626Alexander.png'],
+    '179main': ['179Main.png', '626Alexander.jpg'],
+    'dodsonsrooms': ['DodsonsRooms_1.png'],
+    '162main': ['162Main.png'],
+    'ryder': ['Ryder_1.png'],
+    'merritt': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'],
+  };
+  
+  // Try exact title match first
+  let imageFiles: string[] = [];
+  if (titleMappings[normalizedTitle]) {
+    imageFiles = titleMappings[normalizedTitle];
+  } else {
+    // Try case-insensitive partial matches
+    for (const [key, value] of Object.entries(titleMappings)) {
+      const keyLower = key.toLowerCase();
+      if (titleLower.includes(keyLower) || keyLower.includes(titleLower)) {
+        imageFiles = value;
+        break;
+      }
+    }
+  }
+  
+  // If we found title-based mappings, return URLs for all of them
+  if (imageFiles.length > 0) {
+    return imageFiles.map(filename => {
+      const { data } = supabase.storage.from('portfolio-images').getPublicUrl(filename);
+      return data.publicUrl;
+    });
+  }
+  
+  // Otherwise, use the database path with fallback logic
+  if (databasePath) {
+    if (databasePath.startsWith('http://') || databasePath.startsWith('https://')) {
+      return [databasePath];
+    }
+    
+    let cleanPath = databasePath.trim();
+    const normalizedPath = cleanPath.toLowerCase().replace(/[^a-z0-9]/g, '');
+    
+    if (pathMappings[normalizedPath]) {
+      return pathMappings[normalizedPath].map(filename => {
+        const { data } = supabase.storage.from('portfolio-images').getPublicUrl(filename);
+        return data.publicUrl;
+      });
+    }
+    
+    if (!cleanPath.includes('.')) {
+      return ['.png', '.jpg'].map(ext => {
+        const { data } = supabase.storage.from('portfolio-images').getPublicUrl(cleanPath + ext);
+        return data.publicUrl;
+      });
+    }
+    
+    const { data } = supabase.storage.from('portfolio-images').getPublicUrl(cleanPath);
+    return [data.publicUrl];
+  }
+  
+  return [];
+}
+
+/**
+ * Gets the correct image URL based on project title and database path
+ * Maps project titles to actual bucket filenames, handles both URLs and paths
+ * Includes fallback logic for title variations and multiple filename attempts
+ */
+function getImageUrlForProject(projectTitle: string, databasePath: string | null): string | null {
+  if (!databasePath && !projectTitle) return null;
+  
+  // Normalize title for matching (case-insensitive, trim whitespace)
+  const normalizedTitle = projectTitle?.trim() || '';
+  const titleLower = normalizedTitle.toLowerCase();
+  
+  // Title-based mappings to actual bucket files with fallback options
+  // Each entry is an array of filenames to try in order
+  const titleMappings: Record<string, string[]> = {
+    'Jubilee Rooms': ['Jubilee-Sign.jpg', 'Jubilee.png', 'Jubilee.jpg'],
+    'Kwas House': ['Kwas.png', 'Kwas.jpg'],
+    'Anhart Sustainable Villages': ['Maternity.png', 'Maternity.jpg'],
+    'Modular Homes Factory': ['ModularFactory.jpg', 'ModularFactory.png'],
+    'Modular Villages': ['ModularHomes.png', 'ModularHomes.jpg'],
+    'Merritt Village': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'], // Try Merritt files first
+    'Merritt Townhomes': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'], // Alternative title
+    'Merritt': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'],
+    '179 Main & 626 Alexander': ['626Alexander.jpg', '179Main.png', '626Alexander.png'], // Multiple fallbacks
+    '179 Main': ['179Main.png', '626Alexander.jpg', '626Alexander.png'], // Partial title match
+    '626 Alexander': ['626Alexander.jpg', '626Alexander.png', '179Main.png'], // Partial title match
+    'Metson Rooms': ['Metsons.jpg', '1060howe.jpg', 'Metson.png', 'Metson.jpg'],
+    'Skeena House': ['SkeenaHouse.png', 'Skeena.png', 'Skeena.jpg'],
+    'Dodson Hotel': ['DodsonsRooms_1.png', 'Dodson.png', 'Dodson.jpg'],
+    '162 Main St': ['162Main.png', '162Main.jpg'],
+    '162 Main': ['162Main.png', '162Main.jpg'], // Alternative without "St"
+    'The Ryder': ['Ryder_1.png', 'Ryder.png', 'Ryder.jpg'],
+  };
+  
+  // Path-based mappings for database paths (normalized)
+  const pathMappings: Record<string, string[]> = {
+    '1060howe': ['Metsons.jpg', '1060howe.jpg', 'Metson.jpg'],
+    'metson': ['Metsons.jpg', 'Metson.png', 'Metson.jpg'],
+    'skeena': ['SkeenaHouse.png', 'Skeena.png'],
+    'jubilee': ['Jubilee-Sign.jpg', 'Jubilee.png'],
+    'kwas': ['Kwas.png'],
+    'maternity': ['Maternity.png'],
+    'modularfactory': ['ModularFactory.jpg'],
+    'modularhomes': ['ModularHomes.png'],
+    '626alexander': ['626Alexander.jpg', '626Alexander.png'],
+    '179main': ['179Main.png', '626Alexander.jpg'],
+    'dodsonsrooms': ['DodsonsRooms_1.png'],
+    '162main': ['162Main.png'],
+    'ryder': ['Ryder_1.png'],
+    'merritt': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'],
+  };
+  
+  // Try exact title match first
+  let imageFiles: string[] = [];
+  if (titleMappings[normalizedTitle]) {
+    imageFiles = titleMappings[normalizedTitle];
+  } else {
+    // Try case-insensitive partial matches
+    for (const [key, value] of Object.entries(titleMappings)) {
+      const keyLower = key.toLowerCase();
+      if (titleLower.includes(keyLower) || keyLower.includes(titleLower)) {
+        imageFiles = value;
+        break;
+      }
+    }
+  }
+  
+  // If we found title-based mappings, use the first one (browser will handle fallback via onError)
+  if (imageFiles.length > 0) {
+    const { data } = supabase.storage.from('portfolio-images').getPublicUrl(imageFiles[0]);
+    return data.publicUrl;
+  }
+  
+  // Otherwise, use the database path with fallback logic
+  if (databasePath) {
+    // If it's already a full URL, return as-is
+    if (databasePath.startsWith('http://') || databasePath.startsWith('https://')) {
+      return databasePath;
+    }
+    
+    // Clean the path
+    let cleanPath = databasePath.trim();
+    
+    // Try path-based mapping first
+    const normalizedPath = cleanPath.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (pathMappings[normalizedPath]) {
+      const { data } = supabase.storage.from('portfolio-images').getPublicUrl(pathMappings[normalizedPath][0]);
+      return data.publicUrl;
+    }
+    
+    // If path doesn't have extension, try common extensions
+    if (!cleanPath.includes('.')) {
+      const extensions = ['.png', '.jpg', '.jpeg'];
+      for (const ext of extensions) {
+        try {
+          const { data } = supabase.storage.from('portfolio-images').getPublicUrl(cleanPath + ext);
+          return data.publicUrl;
+        } catch (error) {
+          continue;
+        }
+      }
+    }
+    
+    // Try the path as-is
+    try {
+      const { data } = supabase.storage.from('portfolio-images').getPublicUrl(cleanPath);
+      return data.publicUrl;
+    } catch (error) {
+      console.warn(`Failed to construct URL for database path ${cleanPath}:`, error);
+    }
+  }
+  
+  return null;
+}
+
+/**
+ * Normalizes highlights to always be an array of strings
+ * Handles: string arrays, pipe-separated strings, JSON strings, null/undefined
+ */
+function normalizeHighlights(highlights: string[] | string | null | undefined): string[] {
+  if (!highlights) {
+    return [];
+  }
+
+  // If it's already an array, return it
+  if (Array.isArray(highlights)) {
+    return highlights.filter(h => h && typeof h === 'string' && h.trim() !== '');
+  }
+
+  // If it's a string, try to parse it
+  if (typeof highlights === 'string') {
+    const trimmed = highlights.trim();
+    if (trimmed === '') {
+      return [];
+    }
+
+    // Try parsing as JSON first (in case it's a JSON string)
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) {
+        return parsed.filter(h => h && typeof h === 'string' && h.trim() !== '');
+      }
+    } catch {
+      // Not JSON, continue to other parsing methods
+    }
+
+    // Check if it's pipe-separated (from CSV)
+    if (trimmed.includes('|')) {
+      return trimmed
+        .split('|')
+        .map(h => h.trim())
+        .filter(h => h !== '');
+    }
+    
+    // Check if it's comma-separated (and looks like a list)
+    if (trimmed.includes(',')) {
+      const parts = trimmed.split(',').map(h => h.trim());
+      // If all parts are relatively short, treat as list
+      if (parts.length > 1 && parts.every(p => p.length < 200)) {
+        return parts.filter(h => h !== '');
+      }
+    }
+
+    // If it's a single string, return as single-item array
+    return [trimmed];
+  }
+
+  return [];
 }
 
 interface ProjectFormData {
   title: string;
   location: string;
   year: string;
-  completion_date: string;
   units: string;
   status: "completed" | "in-progress" | "in-planning";
   type: string;
@@ -47,13 +362,14 @@ interface ProjectFormData {
   comprehensiveDetails: string;
   highlights: string[];
   imageUrl: string;
+  displayOrder: string;
+  isFeatured: boolean;
 }
 
 const initialFormData: ProjectFormData = {
   title: "",
   location: "",
   year: "",
-  completion_date: "",
   units: "",
   status: "in-planning",
   type: "",
@@ -61,6 +377,8 @@ const initialFormData: ProjectFormData = {
   comprehensiveDetails: "",
   highlights: [],
   imageUrl: "",
+  displayOrder: "0",
+  isFeatured: false,
 };
 
 const projectTypes = [
@@ -89,14 +407,117 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
   const [uploadProgress, setUploadProgress] = useState(0);
   const [newHighlight, setNewHighlight] = useState("");
   const [showFullPreview, setShowFullPreview] = useState(false);
+  const [viewMode, setViewMode] = useState<'create' | 'list'>('list'); // New: view mode
+  const [projects, setProjects] = useState<any[]>([]); // New: list of projects
+  const [isLoadingProjects, setIsLoadingProjects] = useState(true); // New: loading state
+  const [editingProjectId, setEditingProjectId] = useState<string | null>(null); // New: editing state
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Load projects list
+  useEffect(() => {
+    loadProjects();
+  }, []);
+
+  const loadProjects = async () => {
+    setIsLoadingProjects(true);
+    try {
+      const { data, error } = await supabase
+        .from('portfolio')
+        .select('*')
+        .order('display_order', { ascending: true, nullsFirst: false })
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error loading projects:', error);
+        return;
+      }
+
+      setProjects(data || []);
+    } catch (error) {
+      console.error('Error loading projects:', error);
+    } finally {
+      setIsLoadingProjects(false);
+    }
+  };
+
+  // Load project for editing
+  const handleEdit = async (projectId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('portfolio')
+        .select('*')
+        .eq('id', projectId)
+        .single();
+
+      if (error || !data) {
+        alert('Error loading project for editing');
+        return;
+      }
+
+      // Populate form with project data
+      setFormData({
+        title: data.title || '',
+        location: data.location || '',
+        year: data.year || '',
+        units: data.units?.toString() || '',
+        status: data.status || 'in-planning',
+        type: data.type || '',
+        briefDescription: data.brief_description || '',
+        comprehensiveDetails: data.comprehensive_details || '',
+        highlights: normalizeHighlights(data.highlights) || [],
+        imageUrl: data.image_url || data.image || '',
+        displayOrder: data.display_order?.toString() || '0',
+        isFeatured: data.is_featured || false,
+      });
+
+      setEditingProjectId(projectId);
+      setViewMode('create');
+      // Scroll to form
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (error) {
+      console.error('Error loading project:', error);
+      alert('Error loading project for editing');
+    }
+  };
+
+  // Delete project
+  const handleDelete = async (projectId: string) => {
+    if (!confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('portfolio')
+        .delete()
+        .eq('id', projectId);
+
+      if (error) {
+        console.error('Error deleting project:', error);
+        alert('Error deleting project');
+        return;
+      }
+
+      alert('Project deleted successfully');
+      loadProjects(); // Reload list
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      alert('Error deleting project');
+    }
+  };
 
   // Handle form field changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+    const checked = (e.target as HTMLInputElement).checked;
+    
+    if (type === 'checkbox') {
+      setFormData((prev) => ({ ...prev, [name]: checked }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   // Handle image upload
@@ -210,42 +631,62 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
     setIsSaving(true);
 
     try {
-      // Insert into Supabase database
-      const { data, error } = await supabase.from("portfolio_projects").insert([
-        {
-          title: formData.title,
-          location: formData.location,
-          year: formData.year || null,
-          completion_date: formData.completion_date || null,
-          units: formData.units ? parseInt(formData.units) : null,
-          status: formData.status,
-          type: formData.type || null,
-          brief_description: formData.briefDescription,
-          comprehensive_details: formData.comprehensiveDetails || null,
-          highlights: formData.highlights.length > 0 ? formData.highlights : null,
-          image_url: formData.imageUrl || null,
-          created_by: user.id,
-        },
-      ]);
+      const projectData = {
+        title: formData.title,
+        location: formData.location,
+        year: formData.year || null,
+        units: formData.units ? parseInt(formData.units) : null,
+        status: formData.status,
+        type: formData.type || null,
+        brief_description: formData.briefDescription,
+        comprehensive_details: formData.comprehensiveDetails || null,
+        highlights: formData.highlights.length > 0 ? formData.highlights : null, // Stored as JSON array in database
+        image_url: formData.imageUrl || null,
+        display_order: formData.displayOrder ? parseInt(formData.displayOrder) : 0,
+        is_featured: formData.isFeatured || false,
+        created_by: user.id,
+      };
+      
+      // Note: highlights is stored as a JSON array (text[] or jsonb) in Supabase
+      // The database will automatically handle the array format
+
+      let error;
+      if (editingProjectId) {
+        // Update existing project
+        const { error: updateError } = await supabase
+          .from("portfolio")
+          .update(projectData)
+          .eq('id', editingProjectId);
+        error = updateError;
+      } else {
+        // Insert new project
+        const { error: insertError } = await supabase
+          .from("portfolio")
+          .insert([projectData]);
+        error = insertError;
+      }
 
       if (error) {
         console.error("Save error:", error);
         // Show the generated code for manual addition if database doesn't exist
         const projectCode = generateProjectCode();
         alert(
-          `Database table may not exist. Here's the project data to add manually:\n\n${projectCode}`
+          `Database error: ${error.message}\n\nHere's the project data to add manually:\n\n${projectCode}`
         );
         return;
       }
 
-      alert("Project saved successfully!");
-      // Reset form
+      alert(editingProjectId ? "Project updated successfully!" : "Project saved successfully!");
+      // Reset form and return to list view
       setFormData(initialFormData);
-    } catch (error) {
+      setEditingProjectId(null);
+      setViewMode('list');
+      loadProjects(); // Reload list
+    } catch (error: any) {
       console.error("Save error:", error);
       // Show the generated code for manual addition
       const projectCode = generateProjectCode();
-      alert(`Error saving to database. Here's the project data:\n\n${projectCode}`);
+      alert(`Error saving to database: ${error.message}\n\nHere's the project data:\n\n${projectCode}`);
     } finally {
       setIsSaving(false);
     }
@@ -258,7 +699,6 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
   title: "${formData.title}",
   location: "${formData.location}",
   ${formData.year ? `year: "${formData.year}",` : ""}
-  ${formData.completion_date ? `completion_date: "${formData.completion_date}",` : ""}
   ${formData.units ? `units: ${formData.units},` : 'units: "TBD",'}
   description: "${formData.briefDescription}",
   ${formData.comprehensiveDetails ? `briefDescription: "${formData.briefDescription}",\n  comprehensiveDetails: "${formData.comprehensiveDetails}",` : ""}
@@ -280,7 +720,16 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
   const handleClear = () => {
     if (confirm("Are you sure you want to clear all form data?")) {
       setFormData(initialFormData);
+      setEditingProjectId(null);
     }
+  };
+
+  // Start creating new project
+  const handleNewProject = () => {
+    setFormData(initialFormData);
+    setEditingProjectId(null);
+    setViewMode('create');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Get status badge styling
@@ -303,9 +752,129 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
               Back to Dashboard
             </Link>
           </div>
-          <h1 className="text-3xl font-bold text-indigo-700 mb-2">Portfolio Manager</h1>
-          <p className="text-gray-600">Create and manage portfolio projects</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-indigo-700 mb-2">Portfolio Manager</h1>
+              <p className="text-gray-600">Create and manage portfolio projects</p>
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setViewMode('list')}
+                className={`px-4 py-2 rounded-lg transition-colors ${
+                  viewMode === 'list'
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                View All Projects
+              </button>
+              <button
+                onClick={handleNewProject}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2"
+              >
+                <Plus className="w-5 h-5" />
+                New Project
+              </button>
+            </div>
+          </div>
         </div>
+
+        {/* Projects List View */}
+        {viewMode === 'list' && (
+          <div className="bg-white p-6 rounded-xl shadow">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">All Portfolio Projects</h2>
+            {isLoadingProjects ? (
+              <div className="text-center py-8">
+                <div className="w-8 h-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                <p className="text-gray-500">Loading projects...</p>
+              </div>
+            ) : projects.length === 0 ? (
+              <div className="text-center py-8">
+                <Building className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500 mb-4">No projects found. Create your first project!</p>
+                <button
+                  onClick={handleNewProject}
+                  className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2 mx-auto"
+                >
+                  <Plus className="w-5 h-5" />
+                  Create First Project
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {projects.map((project) => (
+                  <div
+                    key={project.id}
+                    className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                  >
+                    <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden mb-3">
+                      {(() => {
+                        const imagePaths = getImagePathsForProject(project.title, project.image_url || project.image);
+                        if (imagePaths.length === 0) {
+                          return (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <Building className="w-12 h-12 text-gray-300" />
+                              <span className="text-xs text-gray-400 ml-2">No image</span>
+                            </div>
+                          );
+                        }
+                        
+                        // Create an image that tries multiple fallback paths
+                        return (
+                          <ImageWithFallback
+                            imagePaths={imagePaths}
+                            alt={project.title}
+                            className="w-full h-full object-cover"
+                          />
+                        );
+                      })()}
+                    </div>
+                    <h3 className="font-semibold text-gray-900 mb-1 flex items-center gap-2">
+                      {project.title}
+                      {project.is_featured && (
+                        <span className="text-xs px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded-full font-medium">
+                          ⭐ Featured
+                        </span>
+                      )}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-2">{project.location}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`text-xs px-2 py-1 rounded-md font-medium ${getStatusBadge(project.status)}`}
+                        >
+                          {statusOptions.find((s) => s.value === project.status)?.label}
+                        </span>
+                        {project.display_order !== null && project.display_order !== undefined && (
+                          <span className="text-xs text-gray-500">
+                            Order: {project.display_order}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => handleEdit(project.id)}
+                          className="px-3 py-1 text-sm bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(project.id)}
+                          className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Create/Edit Form View */}
+        {viewMode === 'create' && (
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left Column - Form */}
@@ -386,16 +955,19 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
               {/* Manual URL Input */}
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Or enter image URL directly
+                  Or enter image URL/filename directly
                 </label>
                 <input
-                  type="url"
+                  type="text"
                   name="imageUrl"
                   value={formData.imageUrl}
                   onChange={handleChange}
-                  placeholder="https://example.com/image.jpg"
+                  placeholder="e.g., Jubilee-Sign.jpg or full URL"
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  💡 Tip: You can enter a filename (e.g., "Jubilee-Sign.jpg") or a full URL. The system will automatically map project titles to correct bucket filenames when displaying.
+                </p>
               </div>
             </div>
 
@@ -439,32 +1011,17 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
-                    <div className="relative">
-                      <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                      <input
-                        type="text"
-                        name="year"
-                        value={formData.year}
-                        onChange={handleChange}
-                        placeholder="e.g., 2024"
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Completion Date
-                    </label>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Year</label>
+                  <div className="relative">
+                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type="text"
-                      name="completion_date"
-                      value={formData.completion_date}
+                      name="year"
+                      value={formData.year}
                       onChange={handleChange}
-                      placeholder="e.g., Q4 2024"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      placeholder="e.g., 2024"
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -507,30 +1064,68 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                  <div className="flex gap-3">
-                    {statusOptions.map((option) => (
-                      <label
-                        key={option.value}
-                        className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg cursor-pointer transition-all border-2 ${
-                          formData.status === option.value
-                            ? `${option.color} border-current`
-                            : "bg-gray-50 border-gray-200 hover:border-gray-300"
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name="status"
-                          value={option.value}
-                          checked={formData.status === option.value}
-                          onChange={handleChange}
-                          className="sr-only"
-                        />
-                        <span className="text-sm font-medium">{option.label}</span>
-                      </label>
-                    ))}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <div className="flex gap-2">
+                      {statusOptions.map((option) => (
+                        <label
+                          key={option.value}
+                          className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all border-2 text-sm ${
+                            formData.status === option.value
+                              ? `${option.color} border-current`
+                              : "bg-gray-50 border-gray-200 hover:border-gray-300"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="status"
+                            value={option.value}
+                            checked={formData.status === option.value}
+                            onChange={handleChange}
+                            className="sr-only"
+                          />
+                          <span className="text-sm font-medium">{option.label}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Display Order
+                    </label>
+                    <input
+                      type="number"
+                      name="displayOrder"
+                      value={formData.displayOrder}
+                      onChange={handleChange}
+                      placeholder="0"
+                      min="0"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Lower numbers appear first. Default: 0
+                    </p>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      name="isFeatured"
+                      checked={formData.isFeatured}
+                      onChange={handleChange}
+                      className="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                    />
+                    <span className="text-sm font-medium text-gray-700">
+                      Featured Project
+                    </span>
+                  </label>
+                  <p className="text-xs text-gray-500 mt-1 ml-7">
+                    Featured projects may be highlighted on the homepage or portfolio page
+                  </p>
                 </div>
               </div>
             </div>
@@ -597,22 +1192,27 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
               </div>
 
               {/* Add Highlight */}
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={newHighlight}
-                  onChange={(e) => setNewHighlight(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleAddHighlight()}
-                  placeholder="Add a highlight..."
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                />
-                <button
-                  onClick={handleAddHighlight}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add
-                </button>
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newHighlight}
+                    onChange={(e) => setNewHighlight(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleAddHighlight()}
+                    placeholder="Add a highlight..."
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  />
+                  <button
+                    onClick={handleAddHighlight}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500">
+                  💡 Tip: Highlights are stored as an array in the database. Each highlight will appear as a separate bullet point on the portfolio page.
+                </p>
               </div>
             </div>
 
@@ -846,10 +1446,12 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
             )}
           </div>
         </div>
+        )}
       </div>
     </div>
   );
 }
+
 
 
 

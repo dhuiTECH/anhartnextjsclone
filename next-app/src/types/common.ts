@@ -33,6 +33,7 @@ export interface StaffMember {
   department?: string;
   startDate?: string;
   linkedin?: string;
+  image?: string; // Path to staff member photo
 }
 
 /**

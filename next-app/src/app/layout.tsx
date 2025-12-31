@@ -4,6 +4,7 @@ import Script from "next/script";
 import { CONTACT_INFO, OFFICE_ADDRESS } from "@/config/address";
 import "./globals.css";
 import { Providers } from "./providers";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -193,26 +194,30 @@ export default function RootLayout({
           fetchPriority="high"
         />
         
-        {/* Defer non-critical scripts to improve LCP */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`}
-          strategy="lazyOnload"
-          async
-        />
-        <Script
-          id="google-analytics"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${process.env.NEXT_PUBLIC_GA_TRACKING_ID}', {
-                page_path: window.location.pathname,
-              });
-            `,
-          }}
-        />
+        {/* Google Analytics - Load only when tracking ID is available */}
+        {process.env.NEXT_PUBLIC_GA_TRACKING_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TRACKING_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script
+              id="google-analytics"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${process.env.NEXT_PUBLIC_GA_TRACKING_ID}', {
+                    page_title: document.title,
+                    page_location: window.location.href,
+                  });
+                `,
+              }}
+            />
+          </>
+        )}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -225,7 +230,10 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <GoogleAnalytics />
+          {children}
+        </Providers>
         {/* Load Turnstile script - needed for forms */}
         <Script
           src="https://challenges.cloudflare.com/turnstile/v0/api.js"

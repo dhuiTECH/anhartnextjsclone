@@ -12,6 +12,7 @@ export const boardMembers: StaffMember[] = [
     bio: "Keith has spent over 25+ years bringing affordable housing projects to life across Canada. He's passionate about creating lasting communities where families can thrive.",
     isLeadership: true,
     emailDomain: "anhart.ca",
+    image: "/images/keithpicture.jpg",
   },
   {
     name: "Crystal Wiebe",
@@ -76,6 +77,7 @@ export const staff: StaffMember[] = [
     bio: "",
     isLeadership: false,
     emailDomain: "anhart.ca",
+    image: "/images/dhuipp.jpg",
   },
   {
     name: "Dillon Hui",

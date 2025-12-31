@@ -19,6 +19,7 @@ import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationW
 import { generateProjectSlug } from "@/lib/slug";
 import Link from "next/link";
 import { getPortfolioListingAltText } from "@/lib/altText";
+import { getPortfolioProjects } from "@/lib/portfolio-data";
 
 // =============================================================================
 // EXTRACTED DATA IMPORTS
@@ -39,13 +40,30 @@ const Portfolio = () => {
   const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [visibleProjects, setVisibleProjects] = useState(6); // Initial load: 6 projects
+  const [projects, setProjects] = useState<ProjectData[]>(portfolioDetailedProjects); // Fallback to hardcoded
+  const [isLoading, setIsLoading] = useState(true);
 
   // Constants for pagination
   const INITIAL_PROJECTS = 6;
   const LOAD_MORE_INCREMENT = 3;
 
-  // projects data extracted to @/data/portfolio-detailed.ts
-  const projects = portfolioDetailedProjects;
+  // Fetch projects from Supabase on mount
+  useEffect(() => {
+    const fetchProjects = async () => {
+      setIsLoading(true);
+      try {
+        const fetchedProjects = await getPortfolioProjects();
+        setProjects(fetchedProjects);
+      } catch (error) {
+        console.error('Error loading portfolio projects:', error);
+        // Keep fallback data
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   // Scroll position and visible projects restoration
   useEffect(() => {
