@@ -874,9 +874,8 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
         )}
 
         {/* Create/Edit Form View */}
-        {viewMode === 'create' && (
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {viewMode === 'create' ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left Column - Form */}
           <div className="space-y-6">
             {/* Image Upload Section */}
@@ -1446,7 +1445,8 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
             )}
           </div>
         </div>
-        )}
+          </div>
+        ) : null}
       </div>
     </div>
   );

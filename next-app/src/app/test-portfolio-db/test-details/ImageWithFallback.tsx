@@ -104,3 +104,4 @@ export default function ImageWithFallback({ imagePath, projectTitle, alt, classN
   );
 }
 
+
