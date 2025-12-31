@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
+import { Suspense } from "react";
 import { CONTACT_INFO, OFFICE_ADDRESS } from "@/config/address";
 import "./globals.css";
 import { Providers } from "./providers";
@@ -231,7 +232,9 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Providers>
-          <GoogleAnalytics />
+          <Suspense fallback={null}>
+            <GoogleAnalytics />
+          </Suspense>
           {children}
         </Providers>
         {/* Load Turnstile script - needed for forms */}

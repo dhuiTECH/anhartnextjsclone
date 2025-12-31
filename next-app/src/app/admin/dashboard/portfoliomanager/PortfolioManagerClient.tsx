@@ -650,18 +650,31 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
     setIsSaving(true);
 
     try {
+      // Safely parse integer fields, handling empty strings and invalid values
+      const parseInteger = (value: string | null | undefined): number | null => {
+        if (!value || value.trim() === '') return null;
+        const parsed = parseInt(value.trim(), 10);
+        return isNaN(parsed) ? null : parsed;
+      };
+
+      const parseIntegerWithDefault = (value: string | null | undefined, defaultValue: number): number => {
+        if (!value || value.trim() === '') return defaultValue;
+        const parsed = parseInt(value.trim(), 10);
+        return isNaN(parsed) ? defaultValue : parsed;
+      };
+
       const projectData = {
         title: formData.title,
         location: formData.location,
         year: formData.year || null,
-        units: formData.units ? parseInt(formData.units) : null,
+        units: parseInteger(formData.units),
         status: formData.status,
         type: formData.type || null,
         brief_description: formData.briefDescription,
         comprehensive_details: formData.comprehensiveDetails || null,
         highlights: formData.highlights.length > 0 ? formData.highlights : null, // Stored as JSON array in database
         image_url: formData.imageUrl || null,
-        display_order: formData.displayOrder ? parseInt(formData.displayOrder) : 0,
+        display_order: parseIntegerWithDefault(formData.displayOrder, 0),
         is_featured: formData.isFeatured || false,
         created_by: user.id,
       };
@@ -671,14 +684,15 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
 
       let error;
       if (editingProjectId) {
-        // Update existing project
+        // Update existing project - don't include created_by on updates
+        const { created_by, ...updateData } = projectData;
         const { error: updateError } = await supabase
           .from("portfolio")
-          .update(projectData)
+          .update(updateData)
           .eq('id', editingProjectId);
         error = updateError;
       } else {
-        // Insert new project
+        // Insert new project - include created_by
         const { error: insertError } = await supabase
           .from("portfolio")
           .insert([projectData]);
