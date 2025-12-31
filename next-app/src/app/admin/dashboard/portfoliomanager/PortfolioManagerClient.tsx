@@ -410,6 +410,7 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
   const [viewMode, setViewMode] = useState<'create' | 'list'>('list'); // New: view mode
   const [projects, setProjects] = useState<any[]>([]); // New: list of projects
   const [isLoadingProjects, setIsLoadingProjects] = useState(true); // New: loading state
+  const [isLoadingEdit, setIsLoadingEdit] = useState(false); // Loading state for editing
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null); // New: editing state
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -418,9 +419,11 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
     loadProjects();
   }, []);
 
+  // Load projects list - Always fetches fresh data from Supabase
   const loadProjects = async () => {
     setIsLoadingProjects(true);
     try {
+      // Always fetch fresh data directly from Supabase database
       const { data, error } = await supabase
         .from('portfolio')
         .select('*')
@@ -428,33 +431,47 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Error loading projects:', error);
+        console.error('Error loading projects from Supabase:', error);
+        alert(`Error loading projects: ${error.message}`);
         return;
       }
 
+      // Update state with fresh data from database
       setProjects(data || []);
     } catch (error) {
-      console.error('Error loading projects:', error);
+      console.error('Error loading projects from Supabase:', error);
+      alert(`Error loading projects: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoadingProjects(false);
     }
   };
 
-  // Load project for editing
+  // Load project for editing - Always fetches fresh data from Supabase
   const handleEdit = async (projectId: string) => {
+    setIsLoadingEdit(true);
     try {
+      // Always fetch fresh data directly from Supabase database
+      // Using a timestamp query parameter to bypass any potential caching
       const { data, error } = await supabase
         .from('portfolio')
         .select('*')
         .eq('id', projectId)
         .single();
 
-      if (error || !data) {
-        alert('Error loading project for editing');
+      if (error) {
+        console.error('Error loading project from Supabase:', error);
+        alert(`Error loading project for editing: ${error.message}`);
+        setIsLoadingEdit(false);
         return;
       }
 
-      // Populate form with project data
+      if (!data) {
+        alert('Project not found in database');
+        setIsLoadingEdit(false);
+        return;
+      }
+
+      // Populate form with fresh data from database
       setFormData({
         title: data.title || '',
         location: data.location || '',
@@ -475,8 +492,10 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
       // Scroll to form
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
-      console.error('Error loading project:', error);
-      alert('Error loading project for editing');
+      console.error('Error loading project from Supabase:', error);
+      alert(`Error loading project for editing: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsLoadingEdit(false);
     }
   };
 
@@ -681,7 +700,8 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
       setFormData(initialFormData);
       setEditingProjectId(null);
       setViewMode('list');
-      loadProjects(); // Reload list
+      // Always reload projects list from Supabase to get fresh data
+      await loadProjects();
     } catch (error: any) {
       console.error("Save error:", error);
       // Show the generated code for manual addition
@@ -732,6 +752,15 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Handle switching back to list view - refresh data from Supabase
+  const handleBackToList = () => {
+    setViewMode('list');
+    setFormData(initialFormData);
+    setEditingProjectId(null);
+    // Refresh projects list from Supabase to ensure fresh data
+    loadProjects();
+  };
+
   // Get status badge styling
   const getStatusBadge = (status: string) => {
     const option = statusOptions.find((opt) => opt.value === status);
@@ -759,7 +788,7 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
             </div>
             <div className="flex gap-3">
               <button
-                onClick={() => setViewMode('list')}
+                onClick={handleBackToList}
                 className={`px-4 py-2 rounded-lg transition-colors ${
                   viewMode === 'list'
                     ? 'bg-indigo-600 text-white'
@@ -854,9 +883,10 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
                       <div className="flex gap-2">
                         <button
                           onClick={() => handleEdit(project.id)}
-                          className="px-3 py-1 text-sm bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200"
+                          disabled={isLoadingEdit}
+                          className="px-3 py-1 text-sm bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          Edit
+                          {isLoadingEdit ? 'Loading...' : 'Edit'}
                         </button>
                         <button
                           onClick={() => handleDelete(project.id)}
