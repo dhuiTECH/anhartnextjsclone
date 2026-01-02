@@ -83,217 +83,37 @@ interface PortfolioManagerClientProps {
 }
 
 /**
- * Gets all possible image paths for a project (for fallback attempts)
+ * Gets image URL from database path - uses image_url directly without hardcoded mappings
  */
-function getImagePathsForProject(projectTitle: string, databasePath: string | null): string[] {
-  const normalizedTitle = projectTitle?.trim() || '';
-  const titleLower = normalizedTitle.toLowerCase();
+function getImagePathsForProject(_projectTitle: string, databasePath: string | null): string[] {
+  if (!databasePath) return [];
   
-  // Title-based mappings with fallback options
-  const titleMappings: Record<string, string[]> = {
-    'Jubilee Rooms': ['Jubilee-Sign.jpg', 'Jubilee.png', 'Jubilee.jpg'],
-    'Kwas House': ['Kwas.png', 'Kwas.jpg'],
-    'Anhart Sustainable Villages': ['Maternity.png', 'Maternity.jpg'],
-    'Modular Homes Factory': ['ModularFactory.jpg', 'ModularFactory.png'],
-    'Modular Villages': ['ModularHomes.png', 'ModularHomes.jpg'],
-    'Merritt Village': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'],
-    'Merritt Townhomes': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'],
-    'Merritt': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'],
-    '179 Main & 626 Alexander': ['626Alexander.jpg', '179Main.png', '626Alexander.png'],
-    '179 Main': ['179Main.png', '626Alexander.jpg', '626Alexander.png'],
-    '626 Alexander': ['626Alexander.jpg', '626Alexander.png', '179Main.png'],
-    'Metson Rooms': ['Metsons.jpg', '1060howe.jpg', 'Metson.png', 'Metson.jpg'],
-    'Skeena House': ['SkeenaHouse.png', 'Skeena.png', 'Skeena.jpg'],
-    'Dodson Hotel': ['DodsonsRooms_1.png', 'Dodson.png', 'Dodson.jpg'],
-    '162 Main St': ['162Main.png', '162Main.jpg'],
-    '162 Main': ['162Main.png', '162Main.jpg'],
-    'The Ryder': ['Ryder_1.png', 'Ryder.png', 'Ryder.jpg'],
-  };
-  
-  // Path-based mappings
-  const pathMappings: Record<string, string[]> = {
-    '1060howe': ['Metsons.jpg', '1060howe.jpg', 'Metson.jpg'],
-    'metson': ['Metsons.jpg', 'Metson.png', 'Metson.jpg'],
-    'skeena': ['SkeenaHouse.png', 'Skeena.png'],
-    'jubilee': ['Jubilee-Sign.jpg', 'Jubilee.png'],
-    'kwas': ['Kwas.png'],
-    'maternity': ['Maternity.png'],
-    'modularfactory': ['ModularFactory.jpg'],
-    'modularhomes': ['ModularHomes.png'],
-    '626alexander': ['626Alexander.jpg', '626Alexander.png'],
-    '179main': ['179Main.png', '626Alexander.jpg'],
-    'dodsonsrooms': ['DodsonsRooms_1.png'],
-    '162main': ['162Main.png'],
-    'ryder': ['Ryder_1.png'],
-    'merritt': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'],
-  };
-  
-  // Try exact title match first
-  let imageFiles: string[] = [];
-  if (titleMappings[normalizedTitle]) {
-    imageFiles = titleMappings[normalizedTitle];
-  } else {
-    // Try case-insensitive partial matches
-    for (const [key, value] of Object.entries(titleMappings)) {
-      const keyLower = key.toLowerCase();
-      if (titleLower.includes(keyLower) || keyLower.includes(titleLower)) {
-        imageFiles = value;
-        break;
-      }
-    }
+  // If it's already a full URL, return as-is
+  if (databasePath.startsWith('http://') || databasePath.startsWith('https://')) {
+    return [databasePath];
   }
   
-  // If we found title-based mappings, return URLs for all of them
-  if (imageFiles.length > 0) {
-    return imageFiles.map(filename => {
-      const { data } = supabase.storage.from('portfolio-images').getPublicUrl(filename);
-      return data.publicUrl;
-    });
-  }
-  
-  // Otherwise, use the database path with fallback logic
-  if (databasePath) {
-    if (databasePath.startsWith('http://') || databasePath.startsWith('https://')) {
-      return [databasePath];
-    }
-    
-    let cleanPath = databasePath.trim();
-    const normalizedPath = cleanPath.toLowerCase().replace(/[^a-z0-9]/g, '');
-    
-    if (pathMappings[normalizedPath]) {
-      return pathMappings[normalizedPath].map(filename => {
-        const { data } = supabase.storage.from('portfolio-images').getPublicUrl(filename);
-        return data.publicUrl;
-      });
-    }
-    
-    if (!cleanPath.includes('.')) {
-      return ['.png', '.jpg'].map(ext => {
-        const { data } = supabase.storage.from('portfolio-images').getPublicUrl(cleanPath + ext);
-        return data.publicUrl;
-      });
-    }
-    
-    const { data } = supabase.storage.from('portfolio-images').getPublicUrl(cleanPath);
-    return [data.publicUrl];
-  }
-  
-  return [];
+  // Construct Supabase storage URL
+  const cleanPath = databasePath.trim();
+  const { data } = supabase.storage.from('portfolio-images').getPublicUrl(cleanPath);
+  return [data.publicUrl];
 }
 
 /**
- * Gets the correct image URL based on project title and database path
- * Maps project titles to actual bucket filenames, handles both URLs and paths
- * Includes fallback logic for title variations and multiple filename attempts
+ * Gets the image URL from database path - uses image_url directly without hardcoded mappings
  */
-function getImageUrlForProject(projectTitle: string, databasePath: string | null): string | null {
-  if (!databasePath && !projectTitle) return null;
+function getImageUrlForProject(_projectTitle: string, databasePath: string | null): string | null {
+  if (!databasePath) return null;
   
-  // Normalize title for matching (case-insensitive, trim whitespace)
-  const normalizedTitle = projectTitle?.trim() || '';
-  const titleLower = normalizedTitle.toLowerCase();
-  
-  // Title-based mappings to actual bucket files with fallback options
-  // Each entry is an array of filenames to try in order
-  const titleMappings: Record<string, string[]> = {
-    'Jubilee Rooms': ['Jubilee-Sign.jpg', 'Jubilee.png', 'Jubilee.jpg'],
-    'Kwas House': ['Kwas.png', 'Kwas.jpg'],
-    'Anhart Sustainable Villages': ['Maternity.png', 'Maternity.jpg'],
-    'Modular Homes Factory': ['ModularFactory.jpg', 'ModularFactory.png'],
-    'Modular Villages': ['ModularHomes.png', 'ModularHomes.jpg'],
-    'Merritt Village': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'], // Try Merritt files first
-    'Merritt Townhomes': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'], // Alternative title
-    'Merritt': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'],
-    '179 Main & 626 Alexander': ['626Alexander.jpg', '179Main.png', '626Alexander.png'], // Multiple fallbacks
-    '179 Main': ['179Main.png', '626Alexander.jpg', '626Alexander.png'], // Partial title match
-    '626 Alexander': ['626Alexander.jpg', '626Alexander.png', '179Main.png'], // Partial title match
-    'Metson Rooms': ['Metsons.jpg', '1060howe.jpg', 'Metson.png', 'Metson.jpg'],
-    'Skeena House': ['SkeenaHouse.png', 'Skeena.png', 'Skeena.jpg'],
-    'Dodson Hotel': ['DodsonsRooms_1.png', 'Dodson.png', 'Dodson.jpg'],
-    '162 Main St': ['162Main.png', '162Main.jpg'],
-    '162 Main': ['162Main.png', '162Main.jpg'], // Alternative without "St"
-    'The Ryder': ['Ryder_1.png', 'Ryder.png', 'Ryder.jpg'],
-  };
-  
-  // Path-based mappings for database paths (normalized)
-  const pathMappings: Record<string, string[]> = {
-    '1060howe': ['Metsons.jpg', '1060howe.jpg', 'Metson.jpg'],
-    'metson': ['Metsons.jpg', 'Metson.png', 'Metson.jpg'],
-    'skeena': ['SkeenaHouse.png', 'Skeena.png'],
-    'jubilee': ['Jubilee-Sign.jpg', 'Jubilee.png'],
-    'kwas': ['Kwas.png'],
-    'maternity': ['Maternity.png'],
-    'modularfactory': ['ModularFactory.jpg'],
-    'modularhomes': ['ModularHomes.png'],
-    '626alexander': ['626Alexander.jpg', '626Alexander.png'],
-    '179main': ['179Main.png', '626Alexander.jpg'],
-    'dodsonsrooms': ['DodsonsRooms_1.png'],
-    '162main': ['162Main.png'],
-    'ryder': ['Ryder_1.png'],
-    'merritt': ['Merritt.png', 'Merritt.jpg', 'ModularHomes.png'],
-  };
-  
-  // Try exact title match first
-  let imageFiles: string[] = [];
-  if (titleMappings[normalizedTitle]) {
-    imageFiles = titleMappings[normalizedTitle];
-  } else {
-    // Try case-insensitive partial matches
-    for (const [key, value] of Object.entries(titleMappings)) {
-      const keyLower = key.toLowerCase();
-      if (titleLower.includes(keyLower) || keyLower.includes(titleLower)) {
-        imageFiles = value;
-        break;
-      }
-    }
+  // If it's already a full URL, return as-is
+  if (databasePath.startsWith('http://') || databasePath.startsWith('https://')) {
+    return databasePath;
   }
   
-  // If we found title-based mappings, use the first one (browser will handle fallback via onError)
-  if (imageFiles.length > 0) {
-    const { data } = supabase.storage.from('portfolio-images').getPublicUrl(imageFiles[0]);
-    return data.publicUrl;
-  }
-  
-  // Otherwise, use the database path with fallback logic
-  if (databasePath) {
-    // If it's already a full URL, return as-is
-    if (databasePath.startsWith('http://') || databasePath.startsWith('https://')) {
-      return databasePath;
-    }
-    
-    // Clean the path
-    let cleanPath = databasePath.trim();
-    
-    // Try path-based mapping first
-    const normalizedPath = cleanPath.toLowerCase().replace(/[^a-z0-9]/g, '');
-    if (pathMappings[normalizedPath]) {
-      const { data } = supabase.storage.from('portfolio-images').getPublicUrl(pathMappings[normalizedPath][0]);
-      return data.publicUrl;
-    }
-    
-    // If path doesn't have extension, try common extensions
-    if (!cleanPath.includes('.')) {
-      const extensions = ['.png', '.jpg', '.jpeg'];
-      for (const ext of extensions) {
-        try {
-          const { data } = supabase.storage.from('portfolio-images').getPublicUrl(cleanPath + ext);
-          return data.publicUrl;
-        } catch (error) {
-          continue;
-        }
-      }
-    }
-    
-    // Try the path as-is
-    try {
-      const { data } = supabase.storage.from('portfolio-images').getPublicUrl(cleanPath);
-      return data.publicUrl;
-    } catch (error) {
-      console.warn(`Failed to construct URL for database path ${cleanPath}:`, error);
-    }
-  }
-  
-  return null;
+  // Construct Supabase storage URL
+  const cleanPath = databasePath.trim();
+  const { data } = supabase.storage.from('portfolio-images').getPublicUrl(cleanPath);
+  return data.publicUrl;
 }
 
 /**
@@ -648,6 +468,14 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
       return;
     }
 
+    // Verify user is authenticated
+    const { data: { user: currentUser } } = await supabase.auth.getUser();
+    if (!currentUser) {
+      alert("You must be logged in to save projects. Please refresh the page and log in again.");
+      return;
+    }
+    console.log('User authenticated:', currentUser.id);
+
     setIsSaving(true);
 
     try {
@@ -710,12 +538,36 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
           // Explicitly exclude: created_by, created_at, id
         };
         
-        console.log('Updating project with data:', updateData);
-        const { error: updateError } = await supabase
+        // Convert editingProjectId to integer for database query
+        const projectIdInt = parseInt(editingProjectId, 10);
+        if (isNaN(projectIdInt)) {
+          alert(`Invalid project ID: ${editingProjectId}`);
+          setIsSaving(false);
+          return;
+        }
+        
+        console.log('Updating project with ID:', projectIdInt, 'data:', updateData);
+        const { data: updateResult, error: updateError } = await supabase
           .from("portfolio")
           .update(updateData)
-          .eq('id', editingProjectId);
-        error = updateError;
+          .eq('id', projectIdInt)
+          .select(); // Select to verify update
+        
+        if (updateError) {
+          console.error('Update error:', updateError);
+          error = updateError;
+        } else {
+          console.log('Update successful, affected rows:', updateResult?.length || 0);
+          // Verify the update actually happened
+          if (!updateResult || updateResult.length === 0) {
+            console.warn('Update query returned no rows - project may not exist or RLS policy blocked update');
+            error = { 
+              message: 'Update did not affect any rows. This may be due to RLS policies or the project not existing.',
+              code: 'PGRST116',
+              details: `No rows updated for ID: ${projectIdInt}`
+            } as any;
+          }
+        }
       } else {
         // Insert new project - need to generate a unique integer ID
         // Query for max ID first, then increment
@@ -755,11 +607,30 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
           hint: error.hint,
           code: error.code
         });
-        // Show the generated code for manual addition if database doesn't exist
-        const projectCode = generateProjectCode();
-        alert(
-          `Database error: ${error.message}\n\nDetails: ${error.details || 'No additional details'}\n\nHere's the project data to add manually:\n\n${projectCode}`
-        );
+        
+        // Check for common RLS/auth errors
+        let errorMessage = `Database error: ${error.message}`;
+        if (error.code === '42501' || error.message.includes('permission denied') || error.message.includes('policy')) {
+          errorMessage += '\n\n⚠️ This appears to be a Row Level Security (RLS) policy issue. Please ensure:\n';
+          errorMessage += '1. You are logged in as an authenticated user\n';
+          errorMessage += '2. RLS policies allow authenticated users to update the portfolio table\n';
+          errorMessage += '3. Check Supabase Dashboard → Authentication → Policies';
+        } else if (error.code === 'PGRST116' || error.message.includes('No rows')) {
+          errorMessage += '\n\n⚠️ No rows were updated. This could mean:\n';
+          errorMessage += '1. The project ID does not exist\n';
+          errorMessage += '2. RLS policies are blocking the update\n';
+          errorMessage += '3. The ID format is incorrect (expected integer)';
+        }
+        
+        if (error.details) {
+          errorMessage += `\n\nDetails: ${error.details}`;
+        }
+        if (error.hint) {
+          errorMessage += `\n\nHint: ${error.hint}`;
+        }
+        
+        alert(errorMessage);
+        setIsSaving(false);
         return;
       }
 

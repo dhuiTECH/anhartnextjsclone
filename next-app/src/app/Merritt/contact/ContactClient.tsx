@@ -88,7 +88,10 @@ export default function ContactClient() {
             mode: 'cors',
             headers: {
               'Content-Type': 'application/json',
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
             },
+            cache: 'no-store',
             body: JSON.stringify(jsonData),
           });
 
@@ -132,7 +135,10 @@ export default function ContactClient() {
               mode: 'no-cors',
               headers: {
                 'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
               },
+              cache: 'no-store',
               body: JSON.stringify(jsonData),
             });
 

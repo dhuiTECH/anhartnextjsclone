@@ -279,7 +279,10 @@ export default function HomeClient() {
             mode: 'cors',
             headers: {
               'Content-Type': 'application/json',
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
             },
+            cache: 'no-store',
             body: JSON.stringify(jsonData),
           });
 
@@ -323,7 +326,10 @@ export default function HomeClient() {
               mode: 'no-cors',
               headers: {
                 'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
               },
+              cache: 'no-store',
               body: JSON.stringify(jsonData),
             });
 

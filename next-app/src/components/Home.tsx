@@ -137,18 +137,17 @@ import {
 // EXTRACTED DATA IMPORTS
 // =============================================================================
 import {
-  // @source: src/pages/Home.tsx - portfolioProjects variable
-  portfolioProjects,
   // @source: src/pages/Home.tsx - howDoWeDoItPillars variable
   howDoWeDoItPillars, // @source: src/pages/Home.tsx - howDoWeDoItPillars variable
 } from "@/data";
+import { getPortfolioProjects } from "@/lib/portfolio-data";
 
 // =============================================================================
 // ASSET IMPORTS
 // =============================================================================
 // All asset imports moved to respective data files:
 // - Project images: @/data/projects.ts
-// - Portfolio images: @/data/portfolio.ts
+// - Portfolio data: @/lib/portfolio-data.ts (fetched from Supabase database)
 // - Pillar images: @/data/pillars.ts
 
 /**
@@ -217,6 +216,12 @@ const Home = () => {
    * Stores the featured blog posts to display
    */
   const [featuredBlogs, setFeaturedBlogs] = useState<BlogPost[]>([]);
+
+  /**
+   * Portfolio Projects State Management
+   * Stores portfolio projects fetched from database
+   */
+  const [portfolioProjects, setPortfolioProjects] = useState<ProjectData[]>([]);
 
   // =============================================================================
   // EVENT HANDLERS
@@ -328,6 +333,23 @@ const Home = () => {
       }
     };
     fetchFeaturedBlogs();
+  }, []);
+
+  /**
+   * Fetch Portfolio Projects
+   *
+   * Fetches portfolio projects from the database.
+   */
+  useEffect(() => {
+    const fetchPortfolioProjects = async () => {
+      try {
+        const projects = await getPortfolioProjects();
+        setPortfolioProjects(projects);
+      } catch (error) {
+        logger.error("Error fetching portfolio projects", error, { component: "Home" });
+      }
+    };
+    fetchPortfolioProjects();
   }, []);
 
   // =============================================================================
@@ -473,7 +495,7 @@ const Home = () => {
 
   // howDoWeDoItPillars data extracted to @/data/pillars.ts
 
-  // portfolioProjects data extracted to @/data/portfolio.ts
+  // portfolioProjects data fetched from Supabase database via @/lib/portfolio-data.ts
 
 
   // =============================================================================

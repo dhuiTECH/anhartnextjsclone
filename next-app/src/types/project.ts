@@ -3,6 +3,7 @@
 export interface ProjectData {
   id: number;
   title: string;
+  slug?: string; // URL-safe identifier for routing
   originalTitle?: string;
   location: string; 
   year?: string;

@@ -238,11 +238,8 @@ export default function RootLayout({
           {children}
         </Providers>
         {/* Load Turnstile script - needed for forms */}
-        <Script
-          src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-          strategy="afterInteractive"
-          async
-        />
+        {/* Note: We load with cache-busting in the Turnstile component itself */}
+        {/* This script tag is a fallback, but the component handles loading with cache-busting */}
       </body>
     </html>
   );

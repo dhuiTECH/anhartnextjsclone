@@ -119,7 +119,10 @@ export const useFormSubmission = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
         },
+        cache: "no-store",
         body: body.toString(),
       });
 

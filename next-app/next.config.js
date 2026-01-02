@@ -99,6 +99,24 @@ const nextConfig = {
         ],
       },
       {
+        // API routes and dynamic content - never cache
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache',
+          },
+          {
+            key: 'Expires',
+            value: '0',
+          },
+        ],
+      },
+      {
         // Media assets - long cache
         source: '/mediaAssets/:path*',
         headers: [
@@ -180,6 +198,16 @@ const nextConfig = {
       },
       {
         source: '/work',
+        destination: '/portfolio',
+        permanent: true,
+      },
+      {
+        source: '/projects',
+        destination: '/portfolio',
+        permanent: true,
+      },
+      {
+        source: '/projects/',
         destination: '/portfolio',
         permanent: true,
       },

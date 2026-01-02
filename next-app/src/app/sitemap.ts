@@ -1,8 +1,8 @@
 import { MetadataRoute } from 'next';
-import { portfolioProjectsData } from '@/data/portfolio-server';
+import { getPortfolioProjects } from '@/lib/portfolio-data';
 import { generateProjectSlug } from '@/lib/slug';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://anhart.ca';
 
   // Static pages
@@ -107,10 +107,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // Dynamic project pages
+  // Dynamic project pages from database
   // Note: lastModified omitted as we don't track actual modification dates for projects
-  const projectPages: MetadataRoute.Sitemap = portfolioProjectsData.map((project) => ({
-    url: `${baseUrl}/projects/${generateProjectSlug(project.title)}`,
+  const projects = await getPortfolioProjects();
+  const projectPages: MetadataRoute.Sitemap = projects.map((project) => ({
+    // Use database slug if available, otherwise generate from title
+    url: `${baseUrl}/projects/${project.slug || generateProjectSlug(project.title)}`,
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }));

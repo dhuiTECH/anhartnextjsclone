@@ -74,10 +74,17 @@ export const Turnstile = ({
     }
 
     // Try to load the script if it's not already in the DOM
-    if (!document.querySelector('script[src*="turnstile"]')) {
+    // Add cache-busting query parameter to prevent stale script issues
+    const existingScript = document.querySelector('script[src*="turnstile"]');
+    if (!existingScript) {
       const script = document.createElement('script');
-      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+      // Add cache-busting timestamp to prevent stale script caching
+      const cacheBuster = Date.now();
+      script.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?cb=${cacheBuster}`;
       script.async = true;
+      script.crossOrigin = 'anonymous';
+      // Prevent caching of the script
+      script.setAttribute('data-no-cache', 'true');
       script.onload = () => {
         if (window.turnstile) {
           setIsLoaded(true);
@@ -85,8 +92,42 @@ export const Turnstile = ({
       };
       script.onerror = () => {
         logger.error("Failed to load Turnstile script", new Error("Script load failed"), { component: "Turnstile" });
+        // Retry once after a short delay
+        setTimeout(() => {
+          const retryScript = document.createElement('script');
+          retryScript.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?cb=${Date.now()}`;
+          retryScript.async = true;
+          retryScript.crossOrigin = 'anonymous';
+          retryScript.setAttribute('data-no-cache', 'true');
+          retryScript.onload = () => {
+            if (window.turnstile) {
+              setIsLoaded(true);
+            }
+          };
+          document.body.appendChild(retryScript);
+        }, 1000);
       };
       document.body.appendChild(script);
+    } else {
+      // Script exists, but check if it's actually loaded
+      if (window.turnstile) {
+        setIsLoaded(true);
+      } else {
+        // Script tag exists but not loaded - remove and reload with cache-busting
+        existingScript.remove();
+        const script = document.createElement('script');
+        const cacheBuster = Date.now();
+        script.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?cb=${cacheBuster}`;
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        script.setAttribute('data-no-cache', 'true');
+        script.onload = () => {
+          if (window.turnstile) {
+            setIsLoaded(true);
+          }
+        };
+        document.body.appendChild(script);
+      }
     }
 
     // Otherwise, wait for script to load (with timeout)
