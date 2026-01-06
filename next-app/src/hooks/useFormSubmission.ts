@@ -121,74 +121,61 @@ export const useFormSubmission = () => {
 
       let submissionSuccess = false;
 
-      // First attempt: Try with CORS to read the response
+      // Convert to URL-encoded format to avoid CORS preflight
+      // Using application/x-www-form-urlencoded is a "simple request" that doesn't trigger preflight
+      const body = new URLSearchParams();
+      body.append("name", jsonData.name);
+      body.append("email", jsonData.email);
+      body.append("message", jsonData.message);
+      body.append("form_type", jsonData.form_type);
+      body.append("phone", jsonData.phone);
+      body.append("organization", jsonData.organization);
+      body.append("subject", jsonData.subject);
+      body.append("investment_amount", jsonData.investment_amount);
+      body.append("turnstile_token", jsonData.turnstile_token);
+      body.append("timestamp", jsonData.timestamp);
+      body.append("userAgent", jsonData.userAgent);
+      body.append("referrer", jsonData.referrer);
+
       try {
         const response = await fetch(GOOGLE_SCRIPT_URL, {
           method: "POST",
-          mode: "cors",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
             "Cache-Control": "no-cache, no-store, must-revalidate",
             "Pragma": "no-cache",
           },
           cache: "no-store",
-          body: JSON.stringify(jsonData),
+          body: body.toString(),
         });
 
         console.log('Response status:', response.status);
 
-        // Try to read the response
-        const text = await response.text();
-        console.log('Response text:', text);
-
-        try {
-          const result = JSON.parse(text);
-          if (result.success) {
-            console.log('✅ Form submitted successfully');
-            submissionSuccess = true;
-          } else {
-            console.error('❌ Form submission failed:', result.error);
-            toast({
-              title: "Submission Failed",
-              description: result.error || "The server rejected your submission.",
-              variant: "destructive",
-            });
-            return false;
-          }
-        } catch (parseError) {
-          // If response is not JSON, check if status is ok
-          if (response.ok || response.status === 200) {
-            console.log('✅ Request completed with OK status');
-            submissionSuccess = true;
-          } else {
+        if (response.ok) {
+          console.log('✅ Form submitted successfully');
+          submissionSuccess = true;
+        } else {
+          // Try to read error response
+          try {
+            const text = await response.text();
+            console.log('Response text:', text);
+            const result = JSON.parse(text);
+            if (result.error) {
+              toast({
+                title: "Submission Failed",
+                description: result.error,
+                variant: "destructive",
+              });
+              return false;
+            }
+          } catch {
+            // If we can't parse response but status is not OK
             throw new Error(`Server returned status ${response.status}`);
           }
         }
-      } catch (corsError: any) {
-        // CORS failed, try with no-cors mode
-        // Note: Browser will show CORS error in console - this is expected when Google Apps Script
-        // doesn't have CORS headers configured. The fallback to no-cors mode will still submit the form.
-        if (process.env.NODE_ENV === 'development') {
-          console.warn('⚠️ CORS request failed, trying no-cors mode:', corsError.message);
-        }
-
-        try {
-          await fetch(GOOGLE_SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(jsonData),
-          });
-
-          // With no-cors, we can't read the response, but the request was sent
-          console.log('✅ Form submitted via no-cors mode (cannot verify response)');
-          submissionSuccess = true;
-        } catch (noCorsError: any) {
-          console.error('❌ Both CORS and no-cors requests failed:', noCorsError.message);
-          throw new Error('Failed to submit form. Please try again.');
-        }
+      } catch (fetchError: any) {
+        console.error('❌ Form submission failed:', fetchError.message);
+        throw new Error('Failed to submit form. Please try again.');
       }
 
       if (submissionSuccess) {
