@@ -18,6 +18,10 @@ export async function POST(request: NextRequest) {
     const secretKey = process.env.TURNSTILE_SECRET_KEY;
     if (!secretKey) {
       console.error('TURNSTILE_SECRET_KEY is not configured');
+      console.error('Available env vars:', {
+        hasSecretKey: !!process.env.TURNSTILE_SECRET_KEY,
+        hasSiteKey: !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+      });
       return NextResponse.json(
         { error: 'Security verification service is not configured' },
         { status: 500 }
@@ -45,9 +49,27 @@ export async function POST(request: NextRequest) {
     const data = await response.json();
 
     if (!data.success) {
-      console.warn('Turnstile verification failed:', data);
+      console.warn('Turnstile verification failed:', {
+        success: data.success,
+        errorCodes: data['error-codes'],
+        challengeTs: data['challenge_ts'],
+      });
+      
+      // Provide more specific error messages
+      const errorCodes = data['error-codes'] || [];
+      let errorMessage = 'Security verification failed';
+      
+      if (errorCodes.includes('invalid-input-response')) {
+        errorMessage = 'Invalid verification token. Please try again.';
+      } else if (errorCodes.includes('timeout-or-duplicate')) {
+        errorMessage = 'Verification token expired. Please refresh and try again.';
+      } else if (errorCodes.includes('invalid-input-secret')) {
+        errorMessage = 'Server configuration error. Please contact support.';
+        console.error('TURNSTILE_SECRET_KEY is invalid');
+      }
+      
       return NextResponse.json(
-        { error: 'Security verification failed', details: data['error-codes'] },
+        { error: errorMessage, details: errorCodes },
         { status: 403 }
       );
     }
