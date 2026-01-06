@@ -172,19 +172,14 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://challenges.cloudflare.com" />
         
         {/* Critical LCP images - only preload the most important ones */}
+        {/* Preload WebP first (modern browsers), PNG will be used as fallback by the picture element */}
         <link
           rel="preload"
           href="/images/anhart-logo-text.webp"
           as="image"
           type="image/webp"
           fetchPriority="high"
-        />
-        <link
-          rel="preload"
-          href="/images/anhart-logo-text.png"
-          as="image"
-          type="image/png"
-          fetchPriority="high"
+          crossOrigin="anonymous"
         />
         
         {/* Font CSS preload for faster font rendering */}

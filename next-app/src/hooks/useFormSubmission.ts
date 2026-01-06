@@ -166,7 +166,11 @@ export const useFormSubmission = () => {
         }
       } catch (corsError: any) {
         // CORS failed, try with no-cors mode
-        console.warn('⚠️ CORS request failed, trying no-cors mode:', corsError.message);
+        // Note: Browser will show CORS error in console - this is expected when Google Apps Script
+        // doesn't have CORS headers configured. The fallback to no-cors mode will still submit the form.
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('⚠️ CORS request failed, trying no-cors mode:', corsError.message);
+        }
 
         try {
           await fetch(GOOGLE_SCRIPT_URL, {
