@@ -32,6 +32,7 @@ interface PortfolioProject {
 }
 
 const PROJECTS_PER_PAGE = 9;
+const SCROLL_POSITION_KEY = 'portfolio_scroll_position';
 
 export default function PortfolioPage() {
   const [allProjects, setAllProjects] = useState<PortfolioProject[]>([]);
@@ -40,6 +41,22 @@ export default function PortfolioPage() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
+
+  // Restore scroll position when returning from project detail page
+  // Wait until loading is complete and projects are displayed
+  useEffect(() => {
+    if (!loading && displayedProjects.length > 0) {
+      const savedScrollPosition = sessionStorage.getItem(SCROLL_POSITION_KEY);
+      if (savedScrollPosition) {
+        const scrollY = parseInt(savedScrollPosition, 10);
+        // Use setTimeout to ensure DOM is fully rendered
+        setTimeout(() => {
+          window.scrollTo(0, scrollY);
+          sessionStorage.removeItem(SCROLL_POSITION_KEY);
+        }, 100);
+      }
+    }
+  }, [loading, displayedProjects.length]);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -99,6 +116,13 @@ export default function PortfolioPage() {
       setHasMore(nextProjects.length < allProjects.length);
       setLoadingMore(false);
     }, 300);
+  };
+
+  // Save scroll position before navigating to project detail page
+  const handleViewDetails = (e: React.MouseEvent<HTMLAnchorElement>, projectSlug: string) => {
+    // Save current scroll position
+    sessionStorage.setItem(SCROLL_POSITION_KEY, window.scrollY.toString());
+    // Navigation will proceed normally via the Link component
   };
 
   if (loading) {
@@ -231,6 +255,7 @@ export default function PortfolioPage() {
 
                             <Link
                               href={`/projects/${projectSlug}`}
+                              onClick={(e) => handleViewDetails(e, projectSlug)}
                               className="w-full inline-flex items-center justify-center bg-primary hover:bg-primary/90 text-primary-foreground transition-colors px-4 py-2 rounded-md font-medium mt-auto"
                               aria-label={`View details for ${project.title}`}
                             >
