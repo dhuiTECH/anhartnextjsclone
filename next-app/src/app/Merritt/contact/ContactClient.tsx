@@ -77,10 +77,10 @@ export default function ContactClient() {
       // Try with CORS first to read the response, fallback to no-cors if needed
       let submissionSuccess = false;
       
-      // Get Google Script URL from environment variable
-      const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
+      // Get Google Script URL from environment variable (Merritt-specific)
+      const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_MERRITT_GOOGLE_SCRIPT_URL;
       if (!GOOGLE_SCRIPT_URL) {
-        throw new Error('Form submission service is not configured. Please set NEXT_PUBLIC_GOOGLE_SCRIPT_URL.');
+        throw new Error('Form submission service is not configured. Please set NEXT_PUBLIC_MERRITT_GOOGLE_SCRIPT_URL.');
       }
 
       try {

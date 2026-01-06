@@ -96,80 +96,106 @@ export const useFormSubmission = () => {
         return false;
       }
 
-      // Build URL-encoded body exactly as Google Apps Script expects
-      const body = new URLSearchParams();
-      body.append("name", formData.name);
-      body.append("email", formData.email);
-      body.append("message", formData.message);
-      body.append("form_type", formData.form_type);
-      if (formData.phone) body.append("phone", formData.phone);
-      if (formData.organization) body.append("organization", formData.organization);
-      if (formData.subject) body.append("subject", formData.subject);
-      if (formData.investment_amount) body.append("investment_amount", formData.investment_amount);
-      if (formData.turnstile_token) body.append("turnstile_token", formData.turnstile_token);
-      body.append("timestamp", new Date().toISOString());
-      body.append("userAgent", navigator.userAgent);
-      body.append("referrer", document.referrer);
+      // Build JSON body for Google Apps Script
+      const jsonData = {
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+        form_type: formData.form_type,
+        phone: formData.phone || '',
+        organization: formData.organization || '',
+        subject: formData.subject || '',
+        investment_amount: formData.investment_amount || '',
+        turnstile_token: formData.turnstile_token || '',
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        referrer: document.referrer,
+      };
 
       if (!GOOGLE_SCRIPT_URL) {
         throw new Error("Form submission service is not configured");
       }
 
-      const response = await fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          "Pragma": "no-cache",
-        },
-        cache: "no-store",
-        body: body.toString(),
-      });
+      console.log('Submitting form to:', GOOGLE_SCRIPT_URL);
+      console.log('Form data:', { ...jsonData, email: '***' }); // Log without exposing email
 
-      // --- Enhanced HTTP Error Handling ---
-      if (!response.ok) {
-        // Log the full response status for debugging
-        logger.error("HTTP Error during submission", new Error(`Status: ${response.status} ${response.statusText}`), {
-          status: response.status,
-          statusText: response.statusText,
+      let submissionSuccess = false;
+
+      // First attempt: Try with CORS to read the response
+      try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+          },
+          cache: "no-store",
+          body: JSON.stringify(jsonData),
         });
 
-        // Try to get more info from the response body if it's text
-        let errorBodyText = `Status: ${response.status} ${response.statusText}`;
+        console.log('Response status:', response.status);
+
+        // Try to read the response
+        const text = await response.text();
+        console.log('Response text:', text);
+
         try {
-          // Clone the response so we can read the body without affecting later calls
-          const clonedResponse = response.clone();
-          errorBodyText += `. Body: ${await clonedResponse.text()}`;
-        } catch (e) {
-          // Ignore if reading the body fails
+          const result = JSON.parse(text);
+          if (result.success) {
+            console.log('✅ Form submitted successfully');
+            submissionSuccess = true;
+          } else {
+            console.error('❌ Form submission failed:', result.error);
+            toast({
+              title: "Submission Failed",
+              description: result.error || "The server rejected your submission.",
+              variant: "destructive",
+            });
+            return false;
+          }
+        } catch (parseError) {
+          // If response is not JSON, check if status is ok
+          if (response.ok || response.status === 200) {
+            console.log('✅ Request completed with OK status');
+            submissionSuccess = true;
+          } else {
+            throw new Error(`Server returned status ${response.status}`);
+          }
         }
+      } catch (corsError: any) {
+        // CORS failed, try with no-cors mode
+        console.warn('⚠️ CORS request failed, trying no-cors mode:', corsError.message);
 
-        // Throw an error with the status for the catch block
-        throw new Error(`Script responded with status ${response.status}.`);
+        try {
+          await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(jsonData),
+          });
+
+          // With no-cors, we can't read the response, but the request was sent
+          console.log('✅ Form submitted via no-cors mode (cannot verify response)');
+          submissionSuccess = true;
+        } catch (noCorsError: any) {
+          console.error('❌ Both CORS and no-cors requests failed:', noCorsError.message);
+          throw new Error('Failed to submit form. Please try again.');
+        }
       }
-      // ------------------------------------
 
-      const result = await response.json();
-
-      if (result.success) {
+      if (submissionSuccess) {
         toast({
-          title: "Message Sent Successfully! ",
+          title: "Message Sent Successfully!",
           description: "Thank you! Check your email for confirmation. We'll connect with you as soon as possible.",
         });
         return true;
-      } else {
-        // Log the specific error from the Google Apps Script response
-        logger.error("Google Script Error", new Error(result.error || "No specific error message provided"));
-
-        // Display the specific error from the script, if available
-        const description = result.error || "The server rejected your submission. Please try again.";
-        toast({
-          title: "Submission Failed ",
-          description: description,
-          variant: "destructive",
-        });
-        return false;
       }
+
+      return false;
     } catch (error) {
       // --- Enhanced Unexpected Error Handling ---
       logger.error("Unexpected error during form submission", error);
