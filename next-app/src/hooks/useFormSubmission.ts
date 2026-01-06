@@ -179,7 +179,7 @@ export const useFormSubmission = () => {
       // If we reach here, submission was successful
       toast({
         title: "Message Sent Successfully!",
-        description: "Thank you! Check your email for confirmation. We'll connect with you as soon as possible.",
+        description: "Thank you for your submission. We have received your submission and will get back to you as soon as possible.",
       });
       return true;
     } catch (error) {

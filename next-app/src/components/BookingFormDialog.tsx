@@ -187,10 +187,7 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
         {isSuccess ? (
           <div className="text-center py-2">
             <p className="text-green-600 font-semibold text-sm">
-              Your form has been successfully sent!
-            </p>
-            <p className="text-muted-foreground mt-1 text-xs">
-              We will reach out within 24-48 hours.
+              Thank you for your submission. We have received your submission and will get back to you as soon as possible.
             </p>
           </div>
         ) : (
