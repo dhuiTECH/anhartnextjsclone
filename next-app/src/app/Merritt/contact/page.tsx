@@ -4,7 +4,43 @@ import ContactClient from './ContactClient';
 export const metadata: Metadata = {
   title: 'Register for Affordable Townhomes in Merritt | Anhart',
   description: 'Join the waitlist for Anhart\'s affordable housing community in Merritt, BC. Vancouver developer - entry-level homes with pricing TBD.',
+  keywords: 'Merritt townhomes waitlist, affordable housing registration, Merritt BC housing, Anhart waitlist, Nicola Valley homes',
   alternates: { canonical: 'https://anhart.ca/Merritt/contact' },
+  openGraph: {
+    title: 'Register for Affordable Townhomes in Merritt | Anhart',
+    description: 'Join the waitlist for Anhart\'s affordable housing community in Merritt, BC. Vancouver developer - entry-level homes with pricing TBD.',
+    images: [
+      {
+        url: '/merritt-assets/fullvillage.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Merritt Townhomes Waitlist Registration',
+      },
+    ],
+    url: 'https://anhart.ca/Merritt/contact',
+    siteName: 'Anhart',
+    locale: 'en_CA',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Register for Affordable Townhomes in Merritt | Anhart',
+    description: 'Join the waitlist for Anhart\'s affordable housing community in Merritt, BC. Vancouver developer - entry-level homes with pricing TBD.',
+    images: ['/merritt-assets/fullvillage.webp'],
+    site: '@anhart_housing',
+    creator: '@anhart_housing',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function ContactPage() {

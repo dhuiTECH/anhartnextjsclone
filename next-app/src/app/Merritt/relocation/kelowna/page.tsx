@@ -7,10 +7,70 @@ import Footer from "../../components/Footer";
 export const metadata: Metadata = {
   title: "Relocating from Kelowna to Merritt | Affordable Housing Solutions",
   description: "Escape Kelowna's high costs. Discover affordable, beautiful homes in scenic Merritt, BC.",
+  keywords: 'Kelowna to Merritt relocation, affordable housing Merritt, escape Kelowna housing costs, Merritt BC townhomes, Okanagan to Nicola Valley',
   alternates: { canonical: 'https://anhart.ca/Merritt/relocation/kelowna' },
+  openGraph: {
+    title: "Relocating from Kelowna to Merritt | Affordable Housing Solutions",
+    description: "Escape Kelowna's high costs. Discover affordable, beautiful homes in scenic Merritt, BC.",
+    images: [
+      {
+        url: '/merritt-assets/fullvillage.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Relocate from Kelowna to Merritt - Affordable Townhomes',
+      },
+    ],
+    url: 'https://anhart.ca/Merritt/relocation/kelowna',
+    siteName: 'Anhart',
+    locale: 'en_CA',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Relocating from Kelowna to Merritt | Affordable Housing Solutions",
+    description: "Escape Kelowna's high costs. Discover affordable, beautiful homes in scenic Merritt, BC.",
+    images: ['/merritt-assets/fullvillage.webp'],
+    site: '@anhart_housing',
+    creator: '@anhart_housing',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function KelownaRelocationPage() {
+  // Schema markup for relocation guide
+  const relocationSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Kelowna to Merritt Relocation Guide",
+    "description": "Guide for relocating from Kelowna to Merritt, BC for affordable homeownership",
+    "url": "https://anhart.ca/Merritt/relocation/kelowna",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "Anhart - Merritt Townhomes",
+      "url": "https://anhart.ca/Merritt"
+    },
+    "about": {
+      "@type": "Place",
+      "name": "Merritt, British Columbia",
+      "description": "Affordable townhome community in Merritt, BC - alternative to Kelowna housing costs"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Anhart",
+      "url": "https://anhart.ca"
+    }
+  };
+
   return (
     <div className="bg-[#f9f8f6] text-[#1a2621] font-sans antialiased min-h-screen">
       {/* Editorial frame */}
@@ -283,6 +343,12 @@ export default function KelownaRelocationPage() {
 
       {/* Footer */}
       <Footer />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(relocationSchema),
+        }}
+      />
     </div>
   );
 }

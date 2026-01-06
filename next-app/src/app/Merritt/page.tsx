@@ -14,8 +14,37 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Affordable Townhomes in Merritt, BC',
     description: 'Affordable 3-bedroom townhomes for families and zero-stair flats for downsizers in the Nicola Valley.',
-    images: ['/merritt-assets/fullvillage.webp'],
+    images: [
+      {
+        url: '/merritt-assets/fullvillage.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Merritt Townhome Community - Affordable Housing in Nicola Valley',
+      },
+    ],
     url: 'https://anhart.ca/Merritt',
+    siteName: 'Anhart',
+    locale: 'en_CA',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Affordable Townhomes in Merritt, BC',
+    description: 'Affordable 3-bedroom townhomes for families and zero-stair flats for downsizers in the Nicola Valley.',
+    images: ['/merritt-assets/fullvillage.webp'],
+    site: '@anhart_housing',
+    creator: '@anhart_housing',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 

@@ -7,10 +7,70 @@ import Footer from "../../components/Footer";
 export const metadata: Metadata = {
   title: "Vancouver to Merritt Relocation | Affordable Townhomes",
   description: "Escape Vancouver's high costs. Discover affordable homeownership in Merritt, BC with Anhart's townhome community.",
+  keywords: 'Vancouver to Merritt relocation, affordable housing Merritt, escape Vancouver housing costs, Merritt BC townhomes, affordable homeownership BC',
   alternates: { canonical: 'https://anhart.ca/Merritt/relocation/vancouver' },
+  openGraph: {
+    title: "Vancouver to Merritt Relocation | Affordable Townhomes",
+    description: "Escape Vancouver's high costs. Discover affordable homeownership in Merritt, BC with Anhart's townhome community.",
+    images: [
+      {
+        url: '/merritt-assets/fullvillage.webp',
+        width: 1200,
+        height: 630,
+        alt: 'Relocate from Vancouver to Merritt - Affordable Townhomes',
+      },
+    ],
+    url: 'https://anhart.ca/Merritt/relocation/vancouver',
+    siteName: 'Anhart',
+    locale: 'en_CA',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Vancouver to Merritt Relocation | Affordable Townhomes",
+    description: "Escape Vancouver's high costs. Discover affordable homeownership in Merritt, BC with Anhart's townhome community.",
+    images: ['/merritt-assets/fullvillage.webp'],
+    site: '@anhart_housing',
+    creator: '@anhart_housing',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function VancouverRelocationPage() {
+  // Schema markup for relocation guide
+  const relocationSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Vancouver to Merritt Relocation Guide",
+    "description": "Guide for relocating from Vancouver to Merritt, BC for affordable homeownership",
+    "url": "https://anhart.ca/Merritt/relocation/vancouver",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "Anhart - Merritt Townhomes",
+      "url": "https://anhart.ca/Merritt"
+    },
+    "about": {
+      "@type": "Place",
+      "name": "Merritt, British Columbia",
+      "description": "Affordable townhome community in Merritt, BC - alternative to Vancouver housing costs"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Anhart",
+      "url": "https://anhart.ca"
+    }
+  };
+
   return (
     <div className="bg-[#f9f8f6] text-[#1a2621] font-sans antialiased min-h-screen">
       {/* Editorial frame */}
@@ -283,6 +343,12 @@ export default function VancouverRelocationPage() {
 
       {/* Footer */}
       <Footer />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(relocationSchema),
+        }}
+      />
     </div>
   );
 }
