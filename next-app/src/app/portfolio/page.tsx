@@ -44,6 +44,13 @@ export default function PortfolioPage() {
   useEffect(() => {
     async function fetchProjects() {
       try {
+        // Check if Supabase is properly configured
+        if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+          setError('Database configuration error. Please contact support.');
+          setLoading(false);
+          return;
+        }
+
         const { data, error: fetchError } = await supabase
           .from('portfolio')
           .select('id, title, slug, location, year, units, status, type, brief_description, image_url')
@@ -51,7 +58,15 @@ export default function PortfolioPage() {
           .order('created_at', { ascending: false });
 
         if (fetchError) {
-          setError(fetchError.message);
+          console.error('Supabase error:', fetchError);
+          // Provide more helpful error messages
+          if (fetchError.message.includes('API key') || fetchError.message.includes('apikey')) {
+            setError('Database authentication error. Please check your configuration.');
+          } else if (fetchError.message.includes('relation') || fetchError.message.includes('does not exist')) {
+            setError('Database table not found. Please check your database setup.');
+          } else {
+            setError(`Failed to load projects: ${fetchError.message}`);
+          }
           return;
         }
 
@@ -63,6 +78,7 @@ export default function PortfolioPage() {
         setDisplayedProjects(initialProjects);
         setHasMore(projects.length > PROJECTS_PER_PAGE);
       } catch (err) {
+        console.error('Error fetching projects:', err);
         setError(err instanceof Error ? err.message : 'Failed to load projects');
       } finally {
         setLoading(false);
