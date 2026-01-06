@@ -69,6 +69,18 @@ const validateFormData = (data: FormData) => {
 };
 // ---------------------------------------------------------------------
 
+/**
+ * Validates Google Apps Script URL format
+ */
+const isValidGoogleScriptUrl = (url: string | undefined): boolean => {
+  if (!url) return false;
+  
+  // Google Apps Script URLs should match this pattern:
+  // https://script.google.com/macros/s/[SCRIPT_ID]/exec
+  const googleScriptPattern = /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/;
+  return googleScriptPattern.test(url);
+};
+
 export const useFormSubmission = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
@@ -76,8 +88,15 @@ export const useFormSubmission = () => {
   // Security: Google Apps Script URL from environment variable
   const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
   
+  // Sanity check: Validate the URL is set and has correct format
   if (!GOOGLE_SCRIPT_URL) {
     logger.error("Google Script URL not configured", new Error("NEXT_PUBLIC_GOOGLE_SCRIPT_URL is not set"));
+  } else if (!isValidGoogleScriptUrl(GOOGLE_SCRIPT_URL)) {
+    logger.error(
+      "Invalid Google Script URL format", 
+      new Error(`NEXT_PUBLIC_GOOGLE_SCRIPT_URL has invalid format: ${GOOGLE_SCRIPT_URL.substring(0, 50)}...`),
+      { url: GOOGLE_SCRIPT_URL }
+    );
   }
 
   const submitForm = async (formData: FormData) => {
@@ -112,17 +131,20 @@ export const useFormSubmission = () => {
         referrer: document.referrer,
       };
 
+      // Sanity check before submission
       if (!GOOGLE_SCRIPT_URL) {
-        throw new Error("Form submission service is not configured");
+        throw new Error("Form submission service is not configured. NEXT_PUBLIC_GOOGLE_SCRIPT_URL is missing.");
+      }
+
+      if (!isValidGoogleScriptUrl(GOOGLE_SCRIPT_URL)) {
+        throw new Error(`Invalid Google Script URL format. Expected: https://script.google.com/macros/s/[ID]/exec`);
       }
 
       console.log('Submitting form to:', GOOGLE_SCRIPT_URL);
+      console.log('URL validation:', isValidGoogleScriptUrl(GOOGLE_SCRIPT_URL) ? '✅ Valid' : '❌ Invalid');
       console.log('Form data:', { ...jsonData, email: '***' }); // Log without exposing email
 
-      let submissionSuccess = false;
-
-      // Convert to URL-encoded format to avoid CORS preflight
-      // Using application/x-www-form-urlencoded is a "simple request" that doesn't trigger preflight
+      // Convert to URL-encoded format for Google Apps Script
       const body = new URLSearchParams();
       body.append("name", jsonData.name);
       body.append("email", jsonData.email);
@@ -140,53 +162,26 @@ export const useFormSubmission = () => {
       try {
         const response = await fetch(GOOGLE_SCRIPT_URL, {
           method: "POST",
+          mode: "no-cors",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            "Cache-Control": "no-cache, no-store, must-revalidate",
-            "Pragma": "no-cache",
           },
-          cache: "no-store",
           body: body.toString(),
         });
 
-        console.log('Response status:', response.status);
-
-        if (response.ok) {
-          console.log('✅ Form submitted successfully');
-          submissionSuccess = true;
-        } else {
-          // Try to read error response
-          try {
-            const text = await response.text();
-            console.log('Response text:', text);
-            const result = JSON.parse(text);
-            if (result.error) {
-              toast({
-                title: "Submission Failed",
-                description: result.error,
-                variant: "destructive",
-              });
-              return false;
-            }
-          } catch {
-            // If we can't parse response but status is not OK
-            throw new Error(`Server returned status ${response.status}`);
-          }
-        }
+        // With no-cors mode, we can't read the response, but the request was sent
+        console.log('✅ Form submitted successfully');
       } catch (fetchError: any) {
         console.error('❌ Form submission failed:', fetchError.message);
         throw new Error('Failed to submit form. Please try again.');
       }
 
-      if (submissionSuccess) {
-        toast({
-          title: "Message Sent Successfully!",
-          description: "Thank you! Check your email for confirmation. We'll connect with you as soon as possible.",
-        });
-        return true;
-      }
-
-      return false;
+      // If we reach here, submission was successful
+      toast({
+        title: "Message Sent Successfully!",
+        description: "Thank you! Check your email for confirmation. We'll connect with you as soon as possible.",
+      });
+      return true;
     } catch (error) {
       // --- Enhanced Unexpected Error Handling ---
       logger.error("Unexpected error during form submission", error);

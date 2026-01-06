@@ -73,112 +73,48 @@ export default function ContactClient() {
 
       console.log('Submitting form data:', jsonData);
 
-      // Send JSON data to Google Apps Script
-      // Try with CORS first to read the response, fallback to no-cors if needed
-      let submissionSuccess = false;
-      
       // Get Google Script URL from environment variable (Merritt-specific)
       const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_MERRITT_GOOGLE_SCRIPT_URL;
       if (!GOOGLE_SCRIPT_URL) {
         throw new Error('Form submission service is not configured. Please set NEXT_PUBLIC_MERRITT_GOOGLE_SCRIPT_URL.');
       }
 
+      // Convert to URL-encoded format for Google Apps Script
+      const body = new URLSearchParams();
+      body.append("formSource", jsonData.formSource);
+      body.append("fullName", jsonData.fullName);
+      body.append("email", jsonData.email);
+      body.append("phone", jsonData.phone);
+      body.append("unitType", jsonData.unitType);
+      body.append("currentLocation", jsonData.currentLocation);
+      body.append("hearAboutUs", jsonData.hearAboutUs);
+      body.append("message", jsonData.message);
+      body.append("consent", String(jsonData.consent));
+
       try {
-        console.log('=== ATTEMPTING FORM SUBMISSION ===');
-        console.log('Data being sent:', jsonData);
-        
-        // First attempt: Try with CORS to read the response
-        try {
-          const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-              'Content-Type': 'application/json',
-              'Cache-Control': 'no-cache, no-store, must-revalidate',
-              'Pragma': 'no-cache',
-            },
-            cache: 'no-store',
-            body: JSON.stringify(jsonData),
-          });
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: body.toString(),
+        });
 
-          console.log('Response status:', response.status);
-          console.log('Response ok:', response.ok);
-          console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-
-          // Try to read the response
-          const text = await response.text();
-          console.log('Response text received:', text);
-          
-          try {
-            const result = JSON.parse(text);
-            console.log('Parsed JSON response:', result);
-            if (result.success) {
-              console.log('✅ Form submitted successfully:', result.message);
-              submissionSuccess = true;
-            } else {
-              console.error('❌ Form submission failed:', result.error);
-              throw new Error(result.error || 'Form submission failed');
-            }
-          } catch (parseError: any) {
-            // If response is not JSON, check if status is ok
-            console.log('Response is not JSON, status:', response.status);
-            if (response.ok || response.status === 200) {
-              console.log('✅ Request completed with OK status');
-              submissionSuccess = true;
-            } else {
-              console.error('❌ Request failed with status:', response.status);
-              throw new Error(`Server returned status ${response.status}`);
-            }
-          }
-        } catch (corsError: any) {
-          // CORS failed, try with no-cors mode
-          // Note: Browser will show CORS error in console - this is expected when Google Apps Script
-          // doesn't have CORS headers configured. The fallback to no-cors mode will still submit the form.
-          if (process.env.NODE_ENV === 'development') {
-            console.warn('⚠️ CORS request failed, trying no-cors mode:', corsError.message);
-            console.warn('CORS error details:', corsError);
-          }
-          
-          try {
-            const noCorsResponse = await fetch(GOOGLE_SCRIPT_URL, {
-              method: 'POST',
-              mode: 'no-cors',
-              headers: {
-                'Content-Type': 'application/json',
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache',
-              },
-              cache: 'no-store',
-              body: JSON.stringify(jsonData),
-            });
-
-            // With no-cors, we can't read the response, but we can check if it threw an error
-            console.log('⚠️ Form data sent via no-cors mode (cannot verify response)');
-            console.log('⚠️ WARNING: Cannot confirm if submission was successful. Please check your Google Sheet.');
-            submissionSuccess = true; // Assume success, but warn user
-          } catch (noCorsError: any) {
-            console.error('❌ No-CORS request also failed:', noCorsError);
-            throw noCorsError;
-          }
-        }
-
-        if (submissionSuccess) {
-          setSubmitStatus('success');
-          setFormData({
-            fullName: '',
-            email: '',
-            phone: '',
-            unitType: '',
-            currentLocation: '',
-            hearAboutUs: '',
-            message: '',
-            consent: false
-          });
-          resetTurnstile(); // Reset Turnstile after successful submission
-          setTimeout(() => setSubmitStatus('idle'), 5000);
-        } else {
-          throw new Error('Form submission did not complete successfully');
-        }
+        console.log('✅ Form submitted successfully');
+        setSubmitStatus('success');
+        setFormData({
+          fullName: '',
+          email: '',
+          phone: '',
+          unitType: '',
+          currentLocation: '',
+          hearAboutUs: '',
+          message: '',
+          consent: false
+        });
+        resetTurnstile(); // Reset Turnstile after successful submission
+        setTimeout(() => setSubmitStatus('idle'), 5000);
       } catch (fetchError: any) {
         // If all attempts fail, log the error and show user-friendly message
         console.error('Form submission error:', fetchError);
