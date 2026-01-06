@@ -19,9 +19,6 @@ import { Button } from "@/components/ui/button";
 import { Turnstile } from "@/components/Turnstile";
 import { X } from "lucide-react";
 
-const GOOGLE_SHEET_URL =
-  "https://script.google.com/macros/s/AKfycbzfMQYjHKQSR5lOwodWizxUoY4NgB1y03O3tAbHSBCV4ZgpgDbu-4xNbkUTl18lTZzw/exec";
-
 interface BookingFormData {
   name: string;
   email: string;
@@ -89,6 +86,15 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
       return;
     }
 
+    // Get Google Script URL from environment variable
+    const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
+    if (!GOOGLE_SCRIPT_URL) {
+      logger.error("Google Script URL not configured", new Error("NEXT_PUBLIC_GOOGLE_SCRIPT_URL is not set"), {
+        component: "BookingFormDialog",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -107,7 +113,7 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
       body.append("userAgent", navigator.userAgent);
       body.append("referrer", document.referrer);
 
-      const res = await fetch(GOOGLE_SHEET_URL, {
+      const res = await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
