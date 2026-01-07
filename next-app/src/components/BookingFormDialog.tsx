@@ -77,8 +77,11 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
     setFormData({ ...formData, [e.target.name]: value });
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, retryCount = 0) => {
     e.preventDefault();
+
+    const MAX_RETRIES = 3;
+    const RETRY_DELAYS = [1000, 2000, 4000]; // Exponential backoff
 
     // Validate Turnstile token
     if (!turnstileToken) {
@@ -92,6 +95,10 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
       logger.error("Google Script URL not configured", new Error("NEXT_PUBLIC_GOOGLE_SCRIPT_URL is not set"), {
         component: "BookingFormDialog",
       });
+      // Suggest page reload if this might be stale code
+      if (retryCount === 0) {
+        console.warn('GOOGLE_SCRIPT_URL is missing, this might be stale cached code. Suggesting page reload.');
+      }
       return;
     }
 
@@ -113,7 +120,10 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
       body.append("userAgent", navigator.userAgent);
       body.append("referrer", document.referrer);
 
-      const res = await fetch(GOOGLE_SCRIPT_URL, {
+      // Add cache-busting query parameter
+      const urlWithCacheBust = `${GOOGLE_SCRIPT_URL}${GOOGLE_SCRIPT_URL.includes('?') ? '&' : '?'}_t=${Date.now()}`;
+
+      const res = await fetch(urlWithCacheBust, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -141,17 +151,46 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
           setIsSuccess(false);
         }, 3000);
       } else {
+        // Retry on server errors (5xx) or specific client errors
+        if (retryCount < MAX_RETRIES && (res.status >= 500 || res.status === 408 || res.status === 429)) {
+          const delay = RETRY_DELAYS[retryCount] || 4000;
+          console.log(`Server error ${res.status}, retrying in ${delay}ms... (attempt ${retryCount + 1}/${MAX_RETRIES})`);
+          
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return handleSubmit(e, retryCount + 1);
+        }
+        
         logger.error("Form submission failed", new Error(`HTTP ${res.status}`), {
           component: "BookingFormDialog",
           status: res.status,
         });
-        // Error will be handled by toast notification if we integrate useFormSubmission
       }
-    } catch (error) {
-      logger.error("Network error during form submission", error, {
-        component: "BookingFormDialog",
-      });
-      // Error will be handled by toast notification if we integrate useFormSubmission
+    } catch (error: any) {
+      // Retry on network errors
+      if (retryCount < MAX_RETRIES && (
+        error.message?.includes('Failed to fetch') ||
+        error.message?.includes('NetworkError') ||
+        error.message?.includes('network')
+      )) {
+        const delay = RETRY_DELAYS[retryCount] || 4000;
+        console.log(`Network error, retrying in ${delay}ms... (attempt ${retryCount + 1}/${MAX_RETRIES})`);
+        
+        // On last retry, suggest page reload
+        if (retryCount === MAX_RETRIES - 1) {
+          console.log('Last retry failed, suggesting page reload...');
+          logger.error("Form submission failed after retries", error, {
+            component: "BookingFormDialog",
+            suggestion: "User should refresh page (Ctrl+Shift+R)",
+          });
+        } else {
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return handleSubmit(e, retryCount + 1);
+        }
+      } else {
+        logger.error("Network error during form submission", error, {
+          component: "BookingFormDialog",
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }

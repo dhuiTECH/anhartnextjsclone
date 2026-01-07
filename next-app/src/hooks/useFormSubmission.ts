@@ -99,7 +99,10 @@ export const useFormSubmission = () => {
     );
   }
 
-  const submitForm = async (formData: FormData) => {
+  const submitForm = async (formData: FormData, retryCount = 0) => {
+    const MAX_RETRIES = 3;
+    const RETRY_DELAYS = [1000, 2000, 4000]; // Exponential backoff
+
     setIsSubmitting(true);
 
     try {
@@ -112,6 +115,7 @@ export const useFormSubmission = () => {
           variant: "destructive",
         });
         logger.error("Client-side validation errors", { validationErrors });
+        setIsSubmitting(false);
         return false;
       }
 
@@ -133,11 +137,35 @@ export const useFormSubmission = () => {
 
       // Sanity check before submission
       if (!GOOGLE_SCRIPT_URL) {
-        throw new Error("Form submission service is not configured. NEXT_PUBLIC_GOOGLE_SCRIPT_URL is missing.");
+        // If URL is missing and we haven't retried, suggest page reload
+        if (retryCount === 0) {
+          console.warn('GOOGLE_SCRIPT_URL is missing, this might be stale cached code. Suggesting page reload.');
+          toast({
+            title: "Configuration Error",
+            description: "Form submission service is not configured. Please refresh the page (Ctrl+Shift+R) and try again.",
+            variant: "destructive",
+          });
+        } else {
+          throw new Error("Form submission service is not configured. NEXT_PUBLIC_GOOGLE_SCRIPT_URL is missing.");
+        }
+        setIsSubmitting(false);
+        return false;
       }
 
       if (!isValidGoogleScriptUrl(GOOGLE_SCRIPT_URL)) {
-        throw new Error(`Invalid Google Script URL format. Expected: https://script.google.com/macros/s/[ID]/exec`);
+        // If URL format is invalid and we haven't retried, suggest page reload
+        if (retryCount === 0) {
+          console.warn('GOOGLE_SCRIPT_URL format is invalid, this might be stale cached code. Suggesting page reload.');
+          toast({
+            title: "Configuration Error",
+            description: "Invalid form configuration. Please refresh the page (Ctrl+Shift+R) and try again.",
+            variant: "destructive",
+          });
+        } else {
+          throw new Error(`Invalid Google Script URL format. Expected: https://script.google.com/macros/s/[ID]/exec`);
+        }
+        setIsSubmitting(false);
+        return false;
       }
 
       console.log('Submitting form to:', GOOGLE_SCRIPT_URL);
@@ -160,12 +188,18 @@ export const useFormSubmission = () => {
       body.append("referrer", jsonData.referrer);
 
       try {
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
+        // Add cache-busting query parameter to prevent stale requests
+        const urlWithCacheBust = `${GOOGLE_SCRIPT_URL}${GOOGLE_SCRIPT_URL.includes('?') ? '&' : '?'}_t=${Date.now()}`;
+        
+        const response = await fetch(urlWithCacheBust, {
           method: "POST",
           mode: "no-cors",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
           },
+          cache: "no-store",
           body: body.toString(),
         });
 
@@ -173,6 +207,32 @@ export const useFormSubmission = () => {
         console.log('✅ Form submitted successfully');
       } catch (fetchError: any) {
         console.error('❌ Form submission failed:', fetchError.message);
+        
+        // Retry on network errors
+        if (retryCount < MAX_RETRIES && (
+          fetchError.message.includes('Failed to fetch') ||
+          fetchError.message.includes('NetworkError') ||
+          fetchError.message.includes('network')
+        )) {
+          const delay = RETRY_DELAYS[retryCount] || 4000;
+          console.log(`Network error, retrying form submission in ${delay}ms... (attempt ${retryCount + 1}/${MAX_RETRIES})`);
+          
+          // On last retry, suggest page reload
+          if (retryCount === MAX_RETRIES - 1) {
+            console.log('Last retry failed, suggesting page reload...');
+            toast({
+              title: "Submission Failed",
+              description: "Unable to submit form. Please refresh the page (Ctrl+Shift+R) and try again.",
+              variant: "destructive",
+            });
+            setIsSubmitting(false);
+            return false;
+          }
+          
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return submitForm(formData, retryCount + 1);
+        }
+        
         throw new Error('Failed to submit form. Please try again.');
       }
 
@@ -181,6 +241,12 @@ export const useFormSubmission = () => {
         title: "Message Sent Successfully!",
         description: "Thank you for your submission. We have received your submission and will get back to you as soon as possible.",
       });
+
+      // Trigger Google Ads conversion event
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'conversion', {'send_to': 'AW-17630924755/KUO-CIXqqNgbENOfitdB'});
+      }
+
       return true;
     } catch (error) {
       // --- Enhanced Unexpected Error Handling ---

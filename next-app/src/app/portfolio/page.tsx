@@ -71,6 +71,11 @@ export default function PortfolioPage() {
           return;
         }
 
+        // Validate Supabase client is properly initialized
+        if (!supabase) {
+          throw new Error('Supabase client is not initialized. This may be due to stale cached code.');
+        }
+
         const { data, error: fetchError } = await supabase
           .from('portfolio')
           .select('id, title, slug, location, year, units, status, type, brief_description, image_url')
@@ -85,8 +90,11 @@ export default function PortfolioPage() {
                              fetchError.message.includes('apikey') ||
                              fetchError.message.includes('JWT') ||
                              fetchError.message.includes('authentication') ||
+                             fetchError.message.includes('Invalid API key') ||
                              fetchError.code === 'PGRST301' ||
-                             fetchError.code === '42501';
+                             fetchError.code === '42501' ||
+                             fetchError.status === 401 ||
+                             fetchError.status === 403;
 
           // Retry on auth errors (might be stale bundle issue)
           if (isAuthError && retryCount < MAX_RETRIES) {
@@ -115,16 +123,77 @@ export default function PortfolioPage() {
           } else {
             setError(`Failed to load projects: ${fetchError.message}`);
           }
+          setLoading(false);
           return;
         }
 
-        const projects = data || [];
-        setAllProjects(projects);
-        
+        // Check if data is null/undefined (might indicate silent failure)
+        if (data === null || data === undefined) {
+          console.warn('Supabase returned null data, this might indicate a configuration issue');
+          
+          // Retry if we haven't exhausted retries
+          if (retryCount < MAX_RETRIES) {
+            const delay = RETRY_DELAYS[retryCount] || 4000;
+            console.log(`Null data received, retrying in ${delay}ms... (attempt ${retryCount + 1}/${MAX_RETRIES})`);
+            
+            if (retryCount === MAX_RETRIES - 1) {
+              console.log('Last retry failed, forcing page reload to get fresh code...');
+              setTimeout(() => {
+                window.location.reload();
+              }, delay);
+              return;
+            }
+            
+            await new Promise(resolve => setTimeout(resolve, delay));
+            return fetchProjects(retryCount + 1);
+          }
+          
+          setError('No data received from database. This may be due to stale cached code. Please refresh the page (Ctrl+Shift+R or Cmd+Shift+R).');
+          setLoading(false);
+          return;
+        }
+
+        const projects = Array.isArray(data) ? data : [];
+
+        // If we get an empty array, it might be legitimate (no projects) or a silent failure
+        // Check if env vars are properly set as a sanity check
+        if (projects.length === 0 && (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)) {
+          setError('Database configuration error. Please refresh the page (Ctrl+Shift+R or Cmd+Shift+R) to get the latest version.');
+          setLoading(false);
+          return;
+        }
+
+        // Sort projects by status priority: completed -> in-progress -> planned
+        const statusPriority = {
+          'completed': 1,
+          'in progress': 2,
+          'in-progress': 2,
+          'planned': 3,
+          'in-planning': 3
+        };
+
+        const sortedProjects = projects.sort((a, b) => {
+          const statusA = (a.status || '').toLowerCase();
+          const statusB = (b.status || '').toLowerCase();
+
+          const priorityA = statusPriority[statusA as keyof typeof statusPriority] || 999;
+          const priorityB = statusPriority[statusB as keyof typeof statusPriority] || 999;
+
+          // Sort by status priority first
+          if (priorityA !== priorityB) {
+            return priorityA - priorityB;
+          }
+
+          // If same status, maintain database ordering
+          return 0;
+        });
+
+        setAllProjects(sortedProjects);
+
         // Initially show first page
-        const initialProjects = projects.slice(0, PROJECTS_PER_PAGE);
+        const initialProjects = sortedProjects.slice(0, PROJECTS_PER_PAGE);
         setDisplayedProjects(initialProjects);
-        setHasMore(projects.length > PROJECTS_PER_PAGE);
+        setHasMore(sortedProjects.length > PROJECTS_PER_PAGE);
       } catch (err) {
         console.error('Error fetching projects:', err);
         

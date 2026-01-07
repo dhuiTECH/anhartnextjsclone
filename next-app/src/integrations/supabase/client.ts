@@ -26,6 +26,17 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   );
 }
 
+// Validate URL format to catch stale/malformed env vars
+if (SUPABASE_URL && !SUPABASE_URL.startsWith('http')) {
+  console.error('Invalid Supabase URL format. This might indicate stale cached code.');
+  console.error('Expected URL to start with http/https, got:', SUPABASE_URL.substring(0, 20));
+}
+
+// Validate API key format (Supabase anon keys typically start with 'eyJ')
+if (SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.startsWith('eyJ')) {
+  console.warn('Supabase anon key format looks unusual. This might indicate stale cached code.');
+}
+
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
 
@@ -41,3 +52,19 @@ export const supabase = createBrowserClient<Database>(
     },
   }
 );
+
+// Add a helper function to validate the client can connect
+export async function validateSupabaseConnection(): Promise<boolean> {
+  try {
+    // Try a simple query to validate the connection
+    const { error } = await supabase.from('portfolio').select('id').limit(1);
+    if (error) {
+      console.error('Supabase connection validation failed:', error);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error('Supabase connection validation error:', err);
+    return false;
+  }
+}
