@@ -35,7 +35,22 @@ export default function AdminLogin() {
 
       if (!verifyResponse.ok) {
         const verifyData = await verifyResponse.json();
-        throw new Error(verifyData.error || 'Security verification failed');
+        const errorCode = verifyData.code || 'UNKNOWN';
+        
+        // Provide user-friendly error messages based on error code
+        let userMessage = verifyData.error || 'Security verification failed';
+        
+        if (errorCode === 'CONFIG_INVALID' || errorCode === 'CONFIG_MISSING') {
+          userMessage = 'Server configuration error. Please contact support.';
+        } else if (errorCode === 'TOKEN_EXPIRED' || errorCode === 'INVALID_TOKEN') {
+          userMessage = 'Security verification expired. Please refresh the page and try again.';
+          // Auto-reset Turnstile on token errors
+          resetTurnstile();
+        } else if (errorCode === 'SERVICE_UNAVAILABLE') {
+          userMessage = 'Security service temporarily unavailable. Please try again in a moment.';
+        }
+        
+        throw new Error(userMessage);
       }
 
       // Proceed with login

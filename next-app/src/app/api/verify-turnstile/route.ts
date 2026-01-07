@@ -23,32 +23,74 @@ export async function POST(request: NextRequest) {
         hasSiteKey: !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
       });
       return NextResponse.json(
-        { error: 'Security verification service is not configured' },
+        { 
+          error: 'Security verification service is not configured. Please contact support.',
+          code: 'CONFIG_MISSING'
+        },
+        { status: 500 }
+      );
+    }
+
+    // Validate secret key format (Turnstile secret keys are typically long alphanumeric strings)
+    if (secretKey.length < 20) {
+      console.error('TURNSTILE_SECRET_KEY appears to be invalid (too short)');
+      return NextResponse.json(
+        { 
+          error: 'Server configuration error. Please contact support.',
+          code: 'CONFIG_INVALID'
+        },
         { status: 500 }
       );
     }
 
     // Verify token with Cloudflare
     const verifyUrl = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
-    const response = await fetch(verifyUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        secret: secretKey,
-        response: token,
-        // Get client IP from headers (Cloudflare provides this)
-        remoteip: request.headers.get('cf-connecting-ip') || 
-                 request.headers.get('x-forwarded-for')?.split(',')[0] ||
-                 request.headers.get('x-real-ip') ||
-                 'unknown',
-      }),
-    });
+    
+    try {
+      const response = await fetch(verifyUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent': 'Anhart-Website/1.0',
+        },
+        body: JSON.stringify({
+          secret: secretKey,
+          response: token,
+          // Get client IP from headers (Cloudflare provides this)
+          remoteip: request.headers.get('cf-connecting-ip') || 
+                   request.headers.get('x-forwarded-for')?.split(',')[0] ||
+                   request.headers.get('x-real-ip') ||
+                   'unknown',
+        }),
+      });
 
-    const data = await response.json();
+      // Handle Cloudflare PAT (Private Access Token) challenges
+      if (response.status === 401) {
+        console.warn('Cloudflare PAT challenge received. This is a Cloudflare security feature and may require additional configuration.');
+        // Return a more user-friendly error
+        return NextResponse.json(
+          { 
+            error: 'Security verification temporarily unavailable. Please try again in a moment.',
+            code: 'CLOUDFLARE_CHALLENGE'
+          },
+          { status: 503 }
+        );
+      }
 
-    if (!data.success) {
+      if (!response.ok) {
+        console.error('Turnstile API returned non-OK status:', response.status);
+        return NextResponse.json(
+          { 
+            error: 'Security verification service error. Please try again.',
+            code: 'SERVICE_ERROR'
+          },
+          { status: 503 }
+        );
+      }
+
+      const data = await response.json();
+
+      if (!data.success) {
       console.warn('Turnstile verification failed:', {
         success: data.success,
         errorCodes: data['error-codes'],
@@ -58,27 +100,68 @@ export async function POST(request: NextRequest) {
       // Provide more specific error messages
       const errorCodes = data['error-codes'] || [];
       let errorMessage = 'Security verification failed';
+      let errorCode = 'VERIFICATION_FAILED';
       
       if (errorCodes.includes('invalid-input-response')) {
-        errorMessage = 'Invalid verification token. Please try again.';
+        errorMessage = 'Invalid verification token. Please refresh the page and try again.';
+        errorCode = 'INVALID_TOKEN';
       } else if (errorCodes.includes('timeout-or-duplicate')) {
-        errorMessage = 'Verification token expired. Please refresh and try again.';
+        errorMessage = 'Verification token expired. Please refresh the page and try again.';
+        errorCode = 'TOKEN_EXPIRED';
       } else if (errorCodes.includes('invalid-input-secret')) {
+        errorMessage = 'Server configuration error. The security service is not properly configured. Please contact support.';
+        errorCode = 'CONFIG_INVALID';
+        console.error('TURNSTILE_SECRET_KEY is invalid or rejected by Cloudflare');
+        console.error('Error codes:', errorCodes);
+      } else if (errorCodes.includes('internal-error')) {
+        errorMessage = 'Security verification service temporarily unavailable. Please try again in a moment.';
+        errorCode = 'SERVICE_UNAVAILABLE';
+      } else if (errorCodes.includes('invalid-input-sitekey')) {
         errorMessage = 'Server configuration error. Please contact support.';
-        console.error('TURNSTILE_SECRET_KEY is invalid');
+        errorCode = 'SITEKEY_INVALID';
+        console.error('NEXT_PUBLIC_TURNSTILE_SITE_KEY is invalid');
       }
       
       return NextResponse.json(
-        { error: errorMessage, details: errorCodes },
+        { error: errorMessage, code: errorCode, details: errorCodes },
         { status: 403 }
       );
     }
 
-    return NextResponse.json({ success: true });
+      return NextResponse.json({ success: true });
+    } catch (fetchError: any) {
+      // Handle network errors or Cloudflare challenges
+      if (fetchError.message?.includes('401') || fetchError.status === 401) {
+        console.warn('Cloudflare challenge detected during Turnstile verification');
+        return NextResponse.json(
+          { 
+            error: 'Security verification temporarily unavailable. Please try again in a moment.',
+            code: 'CLOUDFLARE_CHALLENGE'
+          },
+          { status: 503 }
+        );
+      }
+      throw fetchError; // Re-throw to be caught by outer catch
+    }
   } catch (error: any) {
     console.error('Turnstile verification error:', error);
+    
+    // Provide more specific error messages
+    if (error.message?.includes('fetch')) {
+      return NextResponse.json(
+        { 
+          error: 'Unable to reach security verification service. Please check your connection and try again.',
+          code: 'NETWORK_ERROR'
+        },
+        { status: 503 }
+      );
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to verify security token' },
+      { 
+        error: 'Failed to verify security token. Please try again.',
+        code: 'VERIFICATION_ERROR'
+      },
       { status: 500 }
     );
   }

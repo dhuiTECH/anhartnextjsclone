@@ -219,6 +219,33 @@ export default function RootLayout({
             ]),
           }}
         />
+        {/* Suppress harmless Firefox deprecation warnings from third-party scripts/extensions */}
+        <Script
+          id="suppress-deprecation-warnings"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Suppress known Firefox deprecation warnings that come from browser extensions
+              // These are harmless and not from our code
+              if (typeof console !== 'undefined') {
+                const originalWarn = console.warn;
+                console.warn = function(...args) {
+                  const message = args.join(' ');
+                  // Suppress known Firefox deprecation warnings
+                  if (
+                    message.includes('InstallTrigger is deprecated') ||
+                    message.includes('onmozfullscreenchange is deprecated') ||
+                    message.includes('onmozfullscreenerror is deprecated') ||
+                    message.includes('WEBGL_debug_renderer_info is deprecated')
+                  ) {
+                    return; // Suppress these warnings
+                  }
+                  originalWarn.apply(console, args);
+                };
+              }
+            `,
+          }}
+        />
       </head>
       <body className={inter.className}>
         <Providers>
