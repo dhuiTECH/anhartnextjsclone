@@ -53,15 +53,33 @@ export const supabase = createBrowserClient<Database>(
     },
     global: {
       // Ensure fetch requests don't use cached responses
+      // IMPORTANT: Properly handle Headers object to preserve Supabase's apikey header
       fetch: (url, options = {}) => {
+        // Convert Headers object to plain object if needed, preserving all existing headers
+        const existingHeaders: Record<string, string> = {};
+        if (options.headers) {
+          if (options.headers instanceof Headers) {
+            // Convert Headers object to plain object
+            options.headers.forEach((value, key) => {
+              existingHeaders[key] = value;
+            });
+          } else if (typeof options.headers === 'object') {
+            // Already a plain object
+            Object.assign(existingHeaders, options.headers);
+          }
+        }
+        
+        // Merge headers properly, ensuring apikey and other Supabase headers are preserved
+        const mergedHeaders = {
+          ...existingHeaders,
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+        };
+        
         return fetch(url, {
           ...options,
           cache: 'no-store', // Never use cached responses
-          headers: {
-            ...options.headers,
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-          },
+          headers: mergedHeaders,
         });
       },
     },
