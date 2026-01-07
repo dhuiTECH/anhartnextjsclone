@@ -190,10 +190,8 @@ export default function RootLayout({
           fetchPriority="high"
         />
         
-        {/* Google Tag Manager */}
-        <Script
-          id="google-tag-manager"
-          strategy="afterInteractive"
+        {/* Google Tag Manager - Load early in head for optimal tracking */}
+        <script
           dangerouslySetInnerHTML={{
             __html: `
               (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
