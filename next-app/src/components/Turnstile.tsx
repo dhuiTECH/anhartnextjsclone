@@ -88,9 +88,8 @@ export const Turnstile = ({
     const existingScript = document.querySelector('script[src*="turnstile"]');
     if (!existingScript) {
       const script = document.createElement('script');
-      // Add cache-busting timestamp + build identifier to prevent stale script caching
-      const cacheBuster = `${Date.now()}_${Math.random().toString(36).substring(7)}`;
-      script.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?cb=${cacheBuster}`;
+      // Load Turnstile script without query parameters (Turnstile doesn't support them)
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
       script.async = true;
       script.defer = false; // Ensure script loads immediately
       script.crossOrigin = 'anonymous';
@@ -107,7 +106,7 @@ export const Turnstile = ({
             // Force reload if script loaded but API is missing
             script.remove();
             const retryScript = document.createElement('script');
-            retryScript.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?cb=${Date.now()}_retry`;
+            retryScript.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
             retryScript.async = true;
             retryScript.crossOrigin = 'anonymous';
             retryScript.setAttribute('data-no-cache', 'true');
@@ -125,7 +124,7 @@ export const Turnstile = ({
         // Retry with fresh cache-busting
         setTimeout(() => {
           const retryScript = document.createElement('script');
-          retryScript.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?cb=${Date.now()}_error_retry`;
+          retryScript.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
           retryScript.async = true;
           retryScript.crossOrigin = 'anonymous';
           retryScript.setAttribute('data-no-cache', 'true');
@@ -147,8 +146,7 @@ export const Turnstile = ({
         console.warn('Existing Turnstile script found but not functional. Reloading with cache-busting...');
         existingScript.remove();
         const script = document.createElement('script');
-        const cacheBuster = `${Date.now()}_${Math.random().toString(36).substring(7)}`;
-        script.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?cb=${cacheBuster}`;
+        script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
         script.async = true;
         script.crossOrigin = 'anonymous';
         script.setAttribute('data-no-cache', 'true');

@@ -83,6 +83,11 @@ export async function POST(request: NextRequest) {
       // Handle Cloudflare PAT (Private Access Token) challenges
       if (response.status === 401) {
         console.warn('Cloudflare PAT challenge received. This is a Cloudflare security feature and may require additional configuration.');
+        console.warn('PAT challenge details:', {
+          status: response.status,
+          statusText: response.statusText,
+          headers: Object.fromEntries(response.headers.entries()),
+        });
         // Return a more user-friendly error
         return NextResponse.json(
           { 
@@ -94,11 +99,17 @@ export async function POST(request: NextRequest) {
       }
 
       if (!response.ok) {
-        console.error('Turnstile API returned non-OK status:', response.status);
+        const errorText = await response.text().catch(() => 'Unable to read error response');
+        console.error('Turnstile API returned non-OK status:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorBody: errorText.substring(0, 200), // First 200 chars
+        });
         return NextResponse.json(
           { 
             error: 'Security verification service error. Please try again.',
-            code: 'SERVICE_ERROR'
+            code: 'SERVICE_ERROR',
+            details: `HTTP ${response.status}: ${response.statusText}`
           },
           { status: 503 }
         );
