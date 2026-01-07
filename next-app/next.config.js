@@ -41,6 +41,8 @@ const nextConfig = {
     return [
       {
         // Security headers for all pages
+        // Cache-Control is set to no-cache for pages, but will be overridden
+        // by more specific rules for static assets below
         source: '/:path*',
         headers: [
           {
@@ -71,6 +73,18 @@ const nextConfig = {
             key: 'Strict-Transport-Security',
             value: 'max-age=31536000; includeSubDomains; preload',
           },
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache',
+          },
+          {
+            key: 'Expires',
+            value: '0',
+          },
         ],
       },
       {
@@ -88,9 +102,8 @@ const nextConfig = {
         ],
       },
       {
-        // Text assets (HTML, CSS, JS, JSON) - Vercel automatically compresses these
-        // We just set appropriate cache headers
-        source: '/:path*.{html,css,js,json,svg,xml}',
+        // CSS, JS, JSON, SVG, XML - short cache with revalidation
+        source: '/:path*.{css,js,json,svg,xml}',
         headers: [
           {
             key: 'Cache-Control',
