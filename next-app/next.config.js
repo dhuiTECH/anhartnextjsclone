@@ -88,7 +88,29 @@ const nextConfig = {
         ],
       },
       {
+        // JavaScript files - never cache to prevent stale bundles with old env vars
+        // This ensures users always get fresh code after deployments
+        // Note: /_next/static/ files will override this with immutable cache (see below)
+        source: '/:path*.js',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache',
+          },
+          {
+            key: 'Expires',
+            value: '0',
+          },
+        ],
+      },
+      {
         // Static assets - long cache, immutable, but don't index in search engines
+        // This comes AFTER the JS rule to override it for /_next/static/ files
+        // These files have content hashes, so they're safe to cache indefinitely
         source: '/_next/static/:path*',
         headers: [
           {
@@ -102,8 +124,9 @@ const nextConfig = {
         ],
       },
       {
-        // CSS, JS, JSON, SVG, XML - short cache with revalidation
-        source: '/:path*.{css,js,json,svg,xml}',
+        // CSS, JSON, SVG, XML - short cache with revalidation
+        // Note: CSS is less critical than JS for preventing stale code issues
+        source: '/:path*.{css,json,svg,xml}',
         headers: [
           {
             key: 'Cache-Control',

@@ -59,7 +59,10 @@ export default function PortfolioPage() {
   }, [loading, displayedProjects.length]);
 
   useEffect(() => {
-    async function fetchProjects() {
+    async function fetchProjects(retryCount = 0) {
+      const MAX_RETRIES = 3;
+      const RETRY_DELAYS = [1000, 2000, 4000]; // Exponential backoff: 1s, 2s, 4s
+
       try {
         // Check if Supabase is properly configured
         if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
@@ -76,9 +79,37 @@ export default function PortfolioPage() {
 
         if (fetchError) {
           console.error('Supabase error:', fetchError);
+          
+          // Check if this is an authentication error that might be due to stale cache
+          const isAuthError = fetchError.message.includes('API key') || 
+                             fetchError.message.includes('apikey') ||
+                             fetchError.message.includes('JWT') ||
+                             fetchError.message.includes('authentication') ||
+                             fetchError.code === 'PGRST301' ||
+                             fetchError.code === '42501';
+
+          // Retry on auth errors (might be stale bundle issue)
+          if (isAuthError && retryCount < MAX_RETRIES) {
+            const delay = RETRY_DELAYS[retryCount] || 4000;
+            console.log(`Auth error detected, retrying in ${delay}ms... (attempt ${retryCount + 1}/${MAX_RETRIES})`);
+            
+            // Force a page reload on the last retry to get fresh bundles
+            if (retryCount === MAX_RETRIES - 1) {
+              console.log('Last retry failed, forcing page reload to get fresh code...');
+              setTimeout(() => {
+                window.location.reload();
+              }, delay);
+              return;
+            }
+            
+            // Wait and retry
+            await new Promise(resolve => setTimeout(resolve, delay));
+            return fetchProjects(retryCount + 1);
+          }
+
           // Provide more helpful error messages
-          if (fetchError.message.includes('API key') || fetchError.message.includes('apikey')) {
-            setError('Database authentication error. Please check your configuration.');
+          if (isAuthError) {
+            setError('Database authentication error. Please refresh the page (Ctrl+Shift+R or Cmd+Shift+R) to get the latest version.');
           } else if (fetchError.message.includes('relation') || fetchError.message.includes('does not exist')) {
             setError('Database table not found. Please check your database setup.');
           } else {
@@ -96,9 +127,21 @@ export default function PortfolioPage() {
         setHasMore(projects.length > PROJECTS_PER_PAGE);
       } catch (err) {
         console.error('Error fetching projects:', err);
+        
+        // Retry on network errors or other transient issues
+        if (retryCount < MAX_RETRIES && (err instanceof TypeError || err instanceof Error)) {
+          const delay = RETRY_DELAYS[retryCount] || 4000;
+          console.log(`Network error, retrying in ${delay}ms... (attempt ${retryCount + 1}/${MAX_RETRIES})`);
+          
+          await new Promise(resolve => setTimeout(resolve, delay));
+          return fetchProjects(retryCount + 1);
+        }
+        
         setError(err instanceof Error ? err.message : 'Failed to load projects');
       } finally {
-        setLoading(false);
+        if (retryCount === 0) {
+          setLoading(false);
+        }
       }
     }
 
@@ -136,12 +179,45 @@ export default function PortfolioPage() {
   }
 
   if (error) {
+    const isAuthError = error.includes('authentication') || error.includes('API key');
+    
     return (
       <div className="min-h-screen bg-background">
         <Header />
         <main className="py-24">
           <div className="mx-auto max-w-4xl px-6 text-center">
-            <p className="text-destructive">Error: {error}</p>
+            <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-8">
+              <h2 className="text-2xl font-bold text-destructive mb-4">Error Loading Portfolio</h2>
+              <p className="text-destructive mb-6">{error}</p>
+              {isAuthError && (
+                <div className="bg-background/50 rounded-md p-4 mb-6">
+                  <p className="text-sm text-muted-foreground mb-4">
+                    This error might be caused by cached code. Please try refreshing the page:
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                    <button
+                      onClick={() => window.location.reload()}
+                      className="px-6 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors font-medium"
+                    >
+                      Refresh Page
+                    </button>
+                    <span className="text-xs text-muted-foreground">
+                      Or press <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl+Shift+R</kbd> (Windows/Linux) or <kbd className="px-2 py-1 bg-muted rounded text-xs">Cmd+Shift+R</kbd> (Mac)
+                    </span>
+                  </div>
+                </div>
+              )}
+              <button
+                onClick={() => {
+                  setError(null);
+                  setLoading(true);
+                  window.location.reload();
+                }}
+                className="px-6 py-2 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90 transition-colors font-medium"
+              >
+                Try Again
+              </button>
+            </div>
           </div>
         </main>
         <Footer />
