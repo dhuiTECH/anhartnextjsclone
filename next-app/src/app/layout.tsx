@@ -191,24 +191,24 @@ export default function RootLayout({
         />
         
         {/* Google Analytics and Google Ads tracking */}
-        <Script
+            <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-STLCYEZYSB"
-          strategy="afterInteractive"
-        />
-        <Script
+              strategy="afterInteractive"
+            />
+            <Script
           id="google-analytics-ads"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
               gtag('config', 'G-STLCYEZYSB');
               gtag('config', 'AW-17630924755');
-            `,
-          }}
-        />
+                `,
+              }}
+            />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

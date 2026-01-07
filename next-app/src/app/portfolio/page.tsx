@@ -17,6 +17,7 @@ import { LoadingWithLogo } from '@/components/LoadingWithLogo';
 import { generateProjectSlug } from '@/lib/slug';
 import { projectStructuredData } from '@/lib/structuredData';
 import ImageWithFallback from '@/components/ImageWithFallback';
+import { validateEnvVars, suggestPageReload } from '@/utils/staleCodeDetection';
 
 interface PortfolioProject {
   id: string;
@@ -64,6 +65,13 @@ export default function PortfolioPage() {
       const RETRY_DELAYS = [1000, 2000, 4000]; // Exponential backoff: 1s, 2s, 4s
 
       try {
+        // Validate environment variables to detect stale code
+        const envValidation = validateEnvVars();
+        if (!envValidation.isValid && retryCount === 0) {
+          console.warn('Environment variable validation issues detected:', envValidation.issues);
+          suggestPageReload(envValidation.issues.join('; '));
+        }
+
         // Check if Supabase is properly configured
         if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
           setError('Database configuration error. Please contact support.');
@@ -76,6 +84,8 @@ export default function PortfolioPage() {
           throw new Error('Supabase client is not initialized. This may be due to stale cached code.');
         }
 
+        // Supabase queries don't cache by default, but we ensure fresh data
+        // by not using any cache options and relying on Supabase's built-in behavior
         const { data, error: fetchError } = await supabase
           .from('portfolio')
           .select('id, title, slug, location, year, units, status, type, brief_description, image_url')

@@ -59,16 +59,26 @@ export const Turnstile = ({
   }, [onSuccess, onError, onExpire]);
 
   useEffect(() => {
-    // Check if Turnstile script is loaded
+    // Check if Turnstile script is loaded and functional
     const checkTurnstile = () => {
-      if (window.turnstile) {
+      if (window.turnstile && typeof window.turnstile.render === 'function') {
         setIsLoaded(true);
         return true;
       }
       return false;
     };
 
-    // If already loaded, set state
+    // Validate siteKey format to detect stale env vars
+    // Turnstile site keys typically start with '0x' or are alphanumeric
+    if (siteKey && !siteKey.match(/^0x[0-9A-Fa-f]+$|^[A-Za-z0-9_-]+$/)) {
+      console.warn('Turnstile siteKey format looks unusual. This might indicate stale cached code.');
+      logger.error("Invalid Turnstile siteKey format", new Error("SiteKey validation failed"), { 
+        component: "Turnstile",
+        siteKeyPrefix: siteKey.substring(0, 10) 
+      });
+    }
+
+    // If already loaded and functional, set state
     if (checkTurnstile()) {
       return;
     }
@@ -78,29 +88,49 @@ export const Turnstile = ({
     const existingScript = document.querySelector('script[src*="turnstile"]');
     if (!existingScript) {
       const script = document.createElement('script');
-      // Add cache-busting timestamp to prevent stale script caching
-      const cacheBuster = Date.now();
+      // Add cache-busting timestamp + build identifier to prevent stale script caching
+      const cacheBuster = `${Date.now()}_${Math.random().toString(36).substring(7)}`;
       script.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?cb=${cacheBuster}`;
       script.async = true;
+      script.defer = false; // Ensure script loads immediately
       script.crossOrigin = 'anonymous';
       // Prevent caching of the script
       script.setAttribute('data-no-cache', 'true');
+      script.setAttribute('data-timestamp', Date.now().toString());
       script.onload = () => {
-        if (window.turnstile) {
-          setIsLoaded(true);
-        }
+        // Double-check that turnstile is actually available and functional
+        setTimeout(() => {
+          if (checkTurnstile()) {
+            setIsLoaded(true);
+          } else {
+            console.warn('Turnstile script loaded but API not available. This might indicate stale code.');
+            // Force reload if script loaded but API is missing
+            script.remove();
+            const retryScript = document.createElement('script');
+            retryScript.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?cb=${Date.now()}_retry`;
+            retryScript.async = true;
+            retryScript.crossOrigin = 'anonymous';
+            retryScript.setAttribute('data-no-cache', 'true');
+            retryScript.onload = () => {
+              if (checkTurnstile()) {
+                setIsLoaded(true);
+              }
+            };
+            document.body.appendChild(retryScript);
+          }
+        }, 100);
       };
       script.onerror = () => {
         logger.error("Failed to load Turnstile script", new Error("Script load failed"), { component: "Turnstile" });
-        // Retry once after a short delay
+        // Retry with fresh cache-busting
         setTimeout(() => {
           const retryScript = document.createElement('script');
-          retryScript.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?cb=${Date.now()}`;
+          retryScript.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?cb=${Date.now()}_error_retry`;
           retryScript.async = true;
           retryScript.crossOrigin = 'anonymous';
           retryScript.setAttribute('data-no-cache', 'true');
           retryScript.onload = () => {
-            if (window.turnstile) {
+            if (checkTurnstile()) {
               setIsLoaded(true);
             }
           };
@@ -109,28 +139,32 @@ export const Turnstile = ({
       };
       document.body.appendChild(script);
     } else {
-      // Script exists, but check if it's actually loaded
-      if (window.turnstile) {
+      // Script exists, but check if it's actually loaded and functional
+      if (checkTurnstile()) {
         setIsLoaded(true);
       } else {
-        // Script tag exists but not loaded - remove and reload with cache-busting
+        // Script tag exists but not loaded or not functional - remove and reload with fresh cache-busting
+        console.warn('Existing Turnstile script found but not functional. Reloading with cache-busting...');
         existingScript.remove();
         const script = document.createElement('script');
-        const cacheBuster = Date.now();
+        const cacheBuster = `${Date.now()}_${Math.random().toString(36).substring(7)}`;
         script.src = `https://challenges.cloudflare.com/turnstile/v0/api.js?cb=${cacheBuster}`;
         script.async = true;
         script.crossOrigin = 'anonymous';
         script.setAttribute('data-no-cache', 'true');
+        script.setAttribute('data-timestamp', Date.now().toString());
         script.onload = () => {
-          if (window.turnstile) {
-            setIsLoaded(true);
-          }
+          setTimeout(() => {
+            if (checkTurnstile()) {
+              setIsLoaded(true);
+            }
+          }, 100);
         };
         document.body.appendChild(script);
       }
     }
 
-    // Otherwise, wait for script to load (with timeout)
+    // Wait for script to load (with timeout and retry mechanism)
     let attempts = 0;
     const maxAttempts = 100; // 10 seconds max wait
     const interval = setInterval(() => {
@@ -139,12 +173,19 @@ export const Turnstile = ({
         clearInterval(interval);
       } else if (attempts >= maxAttempts) {
         clearInterval(interval);
-        logger.error("Turnstile script failed to load within timeout", new Error("Timeout"), { component: "Turnstile" });
+        logger.error("Turnstile script failed to load within timeout", new Error("Timeout"), { 
+          component: "Turnstile",
+          suggestion: "This might be due to stale cached code. User should refresh page (Ctrl+Shift+R)"
+        });
+        // Last resort: suggest page reload
+        if (attempts === maxAttempts) {
+          console.error('Turnstile failed to initialize. This might be due to stale cached code. Consider refreshing the page (Ctrl+Shift+R).');
+        }
       }
     }, 100);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [siteKey]); // Re-run if siteKey changes (might indicate stale env var)
 
   useEffect(() => {
     if (!isLoaded || !containerRef.current) {
