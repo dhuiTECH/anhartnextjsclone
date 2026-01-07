@@ -41,6 +41,7 @@ if (SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.startsWith('eyJ')) {
 // import { supabase } from "@/integrations/supabase/client";
 
 // createBrowserClient from @supabase/ssr - explicitly configure to ensure API key is sent
+// and disable any internal caching to ensure fresh data on every request
 export const supabase = createBrowserClient<Database>(
   SUPABASE_URL,
   SUPABASE_ANON_KEY,
@@ -49,6 +50,20 @@ export const supabase = createBrowserClient<Database>(
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
+    },
+    global: {
+      // Ensure fetch requests don't use cached responses
+      fetch: (url, options = {}) => {
+        return fetch(url, {
+          ...options,
+          cache: 'no-store', // Never use cached responses
+          headers: {
+            ...options.headers,
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+          },
+        });
+      },
     },
   }
 );

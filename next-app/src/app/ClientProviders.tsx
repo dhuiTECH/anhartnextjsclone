@@ -12,21 +12,26 @@ export function ClientProviders({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
-        defaultOptions: { queries: { staleTime: 60 * 1000 } },
+        defaultOptions: { 
+          queries: { 
+            staleTime: 0, // Always refetch to prevent stale data issues
+            gcTime: 5 * 60 * 1000, // Keep in cache for 5 minutes but always refetch
+            refetchOnWindowFocus: true, // Refetch when user returns to tab
+            refetchOnMount: true, // Refetch when component mounts
+            retry: 3, // Retry failed queries 3 times
+          } 
+        },
       }),
   );
 
-  // Clean up stale service workers on mount to prevent caching issues
+  // ALWAYS clean up stale service workers to prevent caching issues
+  // This runs on every page load to ensure users get fresh code
   useEffect(() => {
-    // Only run cleanup if explicitly enabled or in development
-    // In production, the new service worker will handle updates automatically
-    if (process.env.NEXT_PUBLIC_CLEANUP_SW === 'true' || process.env.NODE_ENV === 'development') {
-      // Delay cleanup to ensure page is fully loaded
-      const timer = setTimeout(() => {
-        unregisterServiceWorkers().catch(console.error);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
+    // Clean up service workers to prevent stale code issues
+    const timer = setTimeout(() => {
+      unregisterServiceWorkers().catch(console.error);
+    }, 1000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
