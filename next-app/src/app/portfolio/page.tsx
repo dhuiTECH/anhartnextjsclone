@@ -94,13 +94,21 @@ export default function PortfolioPage() {
 
         if (fetchError) {
           console.error('Supabase error:', fetchError);
+          console.error('Supabase error details:', {
+            message: fetchError.message,
+            code: fetchError.code,
+            status: fetchError.status,
+            details: fetchError.details,
+            hint: fetchError.hint,
+            fullError: JSON.stringify(fetchError, null, 2),
+          });
           
           // Check if this is an authentication error that might be due to stale cache
-          const isAuthError = fetchError.message.includes('API key') || 
-                             fetchError.message.includes('apikey') ||
-                             fetchError.message.includes('JWT') ||
-                             fetchError.message.includes('authentication') ||
-                             fetchError.message.includes('Invalid API key') ||
+          const isAuthError = (fetchError.message && fetchError.message.includes('API key')) || 
+                             (fetchError.message && fetchError.message.includes('apikey')) ||
+                             (fetchError.message && fetchError.message.includes('JWT')) ||
+                             (fetchError.message && fetchError.message.includes('authentication')) ||
+                             (fetchError.message && fetchError.message.includes('Invalid API key')) ||
                              fetchError.code === 'PGRST301' ||
                              fetchError.code === '42501' ||
                              fetchError.status === 401 ||
@@ -126,12 +134,17 @@ export default function PortfolioPage() {
           }
 
           // Provide more helpful error messages
+          const errorMessage = fetchError.message || 'Unknown error';
           if (isAuthError) {
             setError('Database authentication error. Please refresh the page (Ctrl+Shift+R or Cmd+Shift+R) to get the latest version.');
-          } else if (fetchError.message.includes('relation') || fetchError.message.includes('does not exist')) {
+          } else if (errorMessage.includes('relation') || errorMessage.includes('does not exist')) {
             setError('Database table not found. Please check your database setup.');
+          } else if (errorMessage.includes('Failed to fetch') || errorMessage.includes('NetworkError') || errorMessage.includes('CORS')) {
+            setError('Network error connecting to database. Please check your internet connection and try again.');
+          } else if (!errorMessage || errorMessage === '{}') {
+            setError('Database connection error. Please refresh the page (Ctrl+Shift+R or Cmd+Shift+R).');
           } else {
-            setError(`Failed to load projects: ${fetchError.message}`);
+            setError(`Failed to load projects: ${errorMessage}`);
           }
           setLoading(false);
           return;

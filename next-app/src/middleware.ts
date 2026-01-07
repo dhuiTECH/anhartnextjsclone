@@ -122,7 +122,18 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  return NextResponse.next();
+  // For non-admin routes, ensure CSP allows Supabase connections
+  // This is important for pages like /portfolio that need to connect to Supabase
+  const response = NextResponse.next();
+  
+  // Set CSP headers for all routes to ensure Supabase connections work
+  // This complements the _headers file and ensures middleware doesn't block connections
+  response.headers.set(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://challenges.cloudflare.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: https://maps.gstatic.com; connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://script.google.com https://*.googleusercontent.com https://*.googleapis.com https://*.supabase.co https://supabase.co https://challenges.cloudflare.com; frame-src 'self' https://www.googletagmanager.com https://www.googletagmanager.com/ns.html https://www.youtube.com https://www.youtube-nocookie.com https://challenges.cloudflare.com; base-uri 'self'; form-action 'self';"
+  );
+  
+  return response;
 }
 
 export const config = {
