@@ -55,6 +55,8 @@ export async function POST(request: NextRequest) {
       secretKeyLength: secretKey.length,
       hasSiteKey: !!siteKey,
       siteKeyLength: siteKey?.length || 0,
+      secretKeyPrefix: secretKey.substring(0, 10) + '...',
+      siteKeyPrefix: siteKey ? siteKey.substring(0, 10) + '...' : 'undefined',
     });
 
     // Verify token with Cloudflare
@@ -129,14 +131,24 @@ export async function POST(request: NextRequest) {
           console.error('Error codes:', errorCodes);
           console.error('Secret key length:', secretKey.length);
           console.error('Secret key prefix:', secretKey.substring(0, 10) + '...');
+          console.error('Site key prefix:', siteKey ? siteKey.substring(0, 10) + '...' : 'undefined');
+          console.error('Possible causes:');
+          console.error('  1. TURNSTILE_SECRET_KEY does not match NEXT_PUBLIC_TURNSTILE_SITE_KEY');
+          console.error('  2. Keys are from different Turnstile widgets/domains');
+          console.error('  3. Secret key has been regenerated or revoked');
         } else if (errorCodes.includes('internal-error')) {
           errorMessage = 'Security verification service temporarily unavailable. Please try again in a moment.';
           errorCode = 'SERVICE_UNAVAILABLE';
         } else if (errorCodes.includes('invalid-input-sitekey')) {
           errorMessage = 'Server configuration error. Please contact support.';
           errorCode = 'SITEKEY_INVALID';
-          console.error('NEXT_PUBLIC_TURNSTILE_SITE_KEY is invalid');
+          console.error('NEXT_PUBLIC_TURNSTILE_SITE_KEY is invalid or does not match the secret key');
           console.error('Site key value:', process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.substring(0, 10) + '...');
+          console.error('Secret key prefix:', secretKey.substring(0, 10) + '...');
+          console.error('Possible causes:');
+          console.error('  1. NEXT_PUBLIC_TURNSTILE_SITE_KEY does not match TURNSTILE_SECRET_KEY');
+          console.error('  2. Site key is from a different Turnstile widget than the secret key');
+          console.error('  3. Site key has been regenerated or revoked');
         }
         
         return NextResponse.json(
