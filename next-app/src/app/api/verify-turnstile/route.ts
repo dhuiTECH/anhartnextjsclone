@@ -16,11 +16,15 @@ export async function POST(request: NextRequest) {
     }
 
     const secretKey = process.env.TURNSTILE_SECRET_KEY;
+    const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+    
     if (!secretKey) {
       console.error('TURNSTILE_SECRET_KEY is not configured');
       console.error('Available env vars:', {
         hasSecretKey: !!process.env.TURNSTILE_SECRET_KEY,
-        hasSiteKey: !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+        hasSiteKey: !!siteKey,
+        siteKeyValue: siteKey ? siteKey.substring(0, 10) + '...' : 'undefined',
+        nodeEnv: process.env.NODE_ENV,
       });
       return NextResponse.json(
         { 
@@ -34,6 +38,8 @@ export async function POST(request: NextRequest) {
     // Validate secret key format (Turnstile secret keys are typically long alphanumeric strings)
     if (secretKey.length < 20) {
       console.error('TURNSTILE_SECRET_KEY appears to be invalid (too short)');
+      console.error('Secret key length:', secretKey.length);
+      console.error('Secret key value (first 10 chars):', secretKey.substring(0, 10));
       return NextResponse.json(
         { 
           error: 'Server configuration error. Please contact support.',
@@ -42,6 +48,14 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
+    
+    // Log configuration status (without exposing full keys)
+    console.log('Turnstile configuration check:', {
+      hasSecretKey: !!secretKey,
+      secretKeyLength: secretKey.length,
+      hasSiteKey: !!siteKey,
+      siteKeyLength: siteKey?.length || 0,
+    });
 
     // Verify token with Cloudflare
     const verifyUrl = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
@@ -91,42 +105,45 @@ export async function POST(request: NextRequest) {
       const data = await response.json();
 
       if (!data.success) {
-      console.warn('Turnstile verification failed:', {
-        success: data.success,
-        errorCodes: data['error-codes'],
-        challengeTs: data['challenge_ts'],
-      });
-      
-      // Provide more specific error messages
-      const errorCodes = data['error-codes'] || [];
-      let errorMessage = 'Security verification failed';
-      let errorCode = 'VERIFICATION_FAILED';
-      
-      if (errorCodes.includes('invalid-input-response')) {
-        errorMessage = 'Invalid verification token. Please refresh the page and try again.';
-        errorCode = 'INVALID_TOKEN';
-      } else if (errorCodes.includes('timeout-or-duplicate')) {
-        errorMessage = 'Verification token expired. Please refresh the page and try again.';
-        errorCode = 'TOKEN_EXPIRED';
-      } else if (errorCodes.includes('invalid-input-secret')) {
-        errorMessage = 'Server configuration error. The security service is not properly configured. Please contact support.';
-        errorCode = 'CONFIG_INVALID';
-        console.error('TURNSTILE_SECRET_KEY is invalid or rejected by Cloudflare');
-        console.error('Error codes:', errorCodes);
-      } else if (errorCodes.includes('internal-error')) {
-        errorMessage = 'Security verification service temporarily unavailable. Please try again in a moment.';
-        errorCode = 'SERVICE_UNAVAILABLE';
-      } else if (errorCodes.includes('invalid-input-sitekey')) {
-        errorMessage = 'Server configuration error. Please contact support.';
-        errorCode = 'SITEKEY_INVALID';
-        console.error('NEXT_PUBLIC_TURNSTILE_SITE_KEY is invalid');
+        console.warn('Turnstile verification failed:', {
+          success: data.success,
+          errorCodes: data['error-codes'],
+          challengeTs: data['challenge_ts'],
+        });
+        
+        // Provide more specific error messages
+        const errorCodes = data['error-codes'] || [];
+        let errorMessage = 'Security verification failed';
+        let errorCode = 'VERIFICATION_FAILED';
+        
+        if (errorCodes.includes('invalid-input-response')) {
+          errorMessage = 'Invalid verification token. Please refresh the page and try again.';
+          errorCode = 'INVALID_TOKEN';
+        } else if (errorCodes.includes('timeout-or-duplicate')) {
+          errorMessage = 'Verification token expired. Please refresh the page and try again.';
+          errorCode = 'TOKEN_EXPIRED';
+        } else if (errorCodes.includes('invalid-input-secret')) {
+          errorMessage = 'Server configuration error. The security service is not properly configured. Please contact support.';
+          errorCode = 'CONFIG_INVALID';
+          console.error('TURNSTILE_SECRET_KEY is invalid or rejected by Cloudflare');
+          console.error('Error codes:', errorCodes);
+          console.error('Secret key length:', secretKey.length);
+          console.error('Secret key prefix:', secretKey.substring(0, 10) + '...');
+        } else if (errorCodes.includes('internal-error')) {
+          errorMessage = 'Security verification service temporarily unavailable. Please try again in a moment.';
+          errorCode = 'SERVICE_UNAVAILABLE';
+        } else if (errorCodes.includes('invalid-input-sitekey')) {
+          errorMessage = 'Server configuration error. Please contact support.';
+          errorCode = 'SITEKEY_INVALID';
+          console.error('NEXT_PUBLIC_TURNSTILE_SITE_KEY is invalid');
+          console.error('Site key value:', process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.substring(0, 10) + '...');
+        }
+        
+        return NextResponse.json(
+          { error: errorMessage, code: errorCode, details: errorCodes },
+          { status: 403 }
+        );
       }
-      
-      return NextResponse.json(
-        { error: errorMessage, code: errorCode, details: errorCodes },
-        { status: 403 }
-      );
-    }
 
       return NextResponse.json({ success: true });
     } catch (fetchError: any) {
