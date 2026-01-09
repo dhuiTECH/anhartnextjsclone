@@ -55,21 +55,22 @@ export function middleware(request: NextRequest) {
   if (url.pathname.startsWith('/admin')) {
     const clientIP = getClientIP(request);
     
-    // Stricter rate limiting for admin login
+    // Stricter rate limiting for admin login page (GET requests - page loads)
     if (url.pathname === '/admin/login') {
-      const rateLimit = checkRateLimit(`admin-login:${clientIP}`, 5, 15 * 60 * 1000); // 5 attempts per 15 minutes
+      // Allow more GET requests (page loads) but still limit them
+      const rateLimit = checkRateLimit(`admin-login-page:${clientIP}`, 30, 15 * 60 * 1000); // 30 page loads per 15 minutes
       
       if (!rateLimit.allowed) {
         const response = NextResponse.json(
           { 
-            error: 'Too many login attempts. Please try again later.',
+            error: 'Too many requests. Please try again later.',
             retryAfter: Math.ceil((rateLimit.resetTime - Date.now()) / 1000)
           },
           { status: 429 }
         );
         
         // Add rate limit headers
-        response.headers.set('X-RateLimit-Limit', '5');
+        response.headers.set('X-RateLimit-Limit', '30');
         response.headers.set('X-RateLimit-Remaining', '0');
         response.headers.set('X-RateLimit-Reset', rateLimit.resetTime.toString());
         response.headers.set('Retry-After', Math.ceil((rateLimit.resetTime - Date.now()) / 1000).toString());
