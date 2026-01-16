@@ -169,30 +169,30 @@ export const GoogleMapEmbed: React.FC<GoogleMapEmbedProps> = ({
 
       // Create new script
       googleMapsLoadPromise = new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`;
-        script.async = true;
-        script.defer = true;
-        
-        script.onload = () => {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places`;
+    script.async = true;
+    script.defer = true;
+    
+    script.onload = () => {
           isGoogleMapsScriptLoaded = true;
           resolve();
-        };
-        
-        script.onerror = () => {
-          logger.error('Failed to load Google Maps API', new Error('Script load failed'), { component: 'GoogleMaps' });
+    };
+    
+    script.onerror = () => {
+      logger.error('Failed to load Google Maps API', new Error('Script load failed'), { component: 'GoogleMaps' });
           googleMapsLoadPromise = null;
           reject(new Error('Failed to load Google Maps API'));
-        };
+    };
 
-        document.head.appendChild(script);
+    document.head.appendChild(script);
       });
 
       return googleMapsLoadPromise;
     };
 
     // Initialize map function
-    const initializeMap = () => {
+  const initializeMap = () => {
       if (!mapRef.current || !window.google?.maps) {
         console.log('Map initialization skipped:', { hasRef: !!mapRef.current, hasGoogle: !!window.google?.maps });
         return;
@@ -203,67 +203,67 @@ export const GoogleMapEmbed: React.FC<GoogleMapEmbedProps> = ({
         cleanupMap();
       }
 
-      // Use Geocoding API to get coordinates from address
-      const geocoder = new window.google.maps.Geocoder();
-      
-      geocoder.geocode({ address }, (results, status) => {
-        if (status === 'OK' && results && results[0]) {
-          const location = results[0].geometry.location;
-          
+    // Use Geocoding API to get coordinates from address
+    const geocoder = new window.google.maps.Geocoder();
+    
+    geocoder.geocode({ address }, (results, status) => {
+      if (status === 'OK' && results && results[0]) {
+        const location = results[0].geometry.location;
+        
           // Create new map instance
           const map = new window.google.maps.Map(mapRef.current!, {
-            zoom: 15,
-            center: location,
-            mapTypeId: window.google.maps.MapTypeId.ROADMAP,
-            styles: [
-              {
-                featureType: 'poi',
-                elementType: 'labels',
-                stylers: [{ visibility: 'off' }]
-              }
-            ]
-          });
+          zoom: 15,
+          center: location,
+          mapTypeId: window.google.maps.MapTypeId.ROADMAP,
+          styles: [
+            {
+              featureType: 'poi',
+              elementType: 'labels',
+              stylers: [{ visibility: 'off' }]
+            }
+          ]
+        });
 
           mapInstanceRef.current = map;
 
-          // Add marker with info window
-          const marker = new window.google.maps.Marker({
-            position: location,
-            map: map,
-            title: address,
-            animation: window.google.maps.Animation.DROP
-          });
+        // Add marker with info window
+        const marker = new window.google.maps.Marker({
+          position: location,
+          map: map,
+          title: address,
+          animation: window.google.maps.Animation.DROP
+        });
 
           markerRef.current = marker;
 
-          // Add info window
-          const infoWindow = new window.google.maps.InfoWindow({
-            content: `
-              <div style="padding: 10px; max-width: 200px;">
-                <h3 style="margin: 0 0 8px 0; font-weight: bold; color: #1f2937;">Anhart</h3>
-                <p style="margin: 0; color: #6b7280; font-size: 14px;">${address}</p>
-              </div>
-            `
-          });
+        // Add info window
+        const infoWindow = new window.google.maps.InfoWindow({
+          content: `
+            <div style="padding: 10px; max-width: 200px;">
+              <h3 style="margin: 0 0 8px 0; font-weight: bold; color: #1f2937;">Anhart</h3>
+              <p style="margin: 0; color: #6b7280; font-size: 14px;">${address}</p>
+            </div>
+          `
+        });
 
           infoWindowRef.current = infoWindow;
 
-          // Show info window on marker click
-          marker.addListener('click', () => {
-            infoWindow.open(map, marker);
-          });
-
-          // Show info window by default
+        // Show info window on marker click
+        marker.addListener('click', () => {
           infoWindow.open(map, marker);
+        });
+
+        // Show info window by default
+        infoWindow.open(map, marker);
 
           setIsLoaded(true);
           setMapError(false);
-        } else {
-          logger.error('Geocoding failed', new Error(`Status: ${status}`), { component: 'GoogleMaps', status });
-          setMapError(true);
-        }
-      });
-    };
+      } else {
+        logger.error('Geocoding failed', new Error(`Status: ${status}`), { component: 'GoogleMaps', status });
+        setMapError(true);
+      }
+    });
+  };
 
     // Initialize function that handles the full flow
     let timeoutId: NodeJS.Timeout | null = null;

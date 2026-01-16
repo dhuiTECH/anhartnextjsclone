@@ -61,6 +61,15 @@ const Media = () => {
   const [currentDocumentIndex, setCurrentDocumentIndex] = useState(0);
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [currentPressIndex, setCurrentPressIndex] = useState(0);
+  
+  // Media Gallery carousel navigation
+  const goToPreviousMedia = () => {
+    setCurrentMediaIndex((prev) => (prev === 0 ? mediaGallery.length - 1 : prev - 1));
+  };
+  
+  const goToNextMedia = () => {
+    setCurrentMediaIndex((prev) => (prev === mediaGallery.length - 1 ? 0 : prev + 1));
+  };
 
   // Pagination state for 2x2 grid layout (4 items per page)
   const [currentDocumentPage, setCurrentDocumentPage] = useState(0);
@@ -291,12 +300,6 @@ const Media = () => {
   const goToNextDocument = () => {
     setCurrentDocumentIndex(prev => prev < pdfDocuments.length - 1 ? prev + 1 : 0);
   };
-  const goToPreviousMedia = () => {
-    setCurrentMediaIndex(prev => prev > 0 ? prev - 1 : mediaGallery.length - 1);
-  };
-  const goToNextMedia = () => {
-    setCurrentMediaIndex(prev => prev < mediaGallery.length - 1 ? prev + 1 : 0);
-  };
   const goToPreviousPress = () => {
     setCurrentPressIndex(prev => prev > 0 ? prev - 1 : pressReleases.length - 1);
   };
@@ -480,56 +483,77 @@ const Media = () => {
         {/* Hero Banner - Media and news coverage overview */}
         <HeroBanner backgroundImage="media-hero" title="Latest News and Media Coverage" contentPosition="right" />
 
-        {/* Promotional Video */}
-        <section className="py-24 bg-muted/30">
-          <div className="mx-auto max-w-5xl px-6 lg:px-8 text-center">
-            <ScrollAnimationWrapper direction="top">
-              <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">
-                Featured Promotional Video
-              </h2>
-            </ScrollAnimationWrapper>
-            <ScrollAnimationWrapper direction="top" delay={100}>
-              <p className="text-lg leading-8 text-muted-foreground mb-8">
-                Learn more about our mission and impact through this short feature.
-              </p>
-            </ScrollAnimationWrapper>
-        
-            <ScrollAnimationWrapper direction="bottom" delay={200}>
-              <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-sm sm:shadow-lg">
-                <video ref={videoRef} poster={promotionalVideoThumbnail.src} className="w-full h-full object-cover" controls>
-                  <source src="/promotional-video.mp4" type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+        {/* Promotional Video - Asymmetric Layout */}
+        <section className="py-32 relative overflow-hidden">
+          {/* Diagonal Background Gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-muted/20 -skew-y-1 origin-top-left"></div>
           
-                {!isPlaying && <div className="absolute inset-0 flex items-center justify-center bg-black/40 cursor-pointer" onClick={handlePlay}>
-                    <button className="text-white text-lg px-4 py-2 bg-red-600 rounded-lg">
-                      ▶
-                    </button>
-                  </div>}
-          
-                <div className="absolute top-2 right-4 bg-black/60 text-white text-sm px-3 py-1 rounded-lg hover:bg-red-600 transition-colors pointer-events-none">
-                  <a className="pointer-events-auto" href="https://www.youtube.com/watch?v=LIjifKbBRpg" target="_blank" rel="noopener noreferrer nofollow">
-                    Watch on YouTube
-                  </a>
-                </div>
+          <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+            <div className="grid lg:grid-cols-12 gap-8 items-center">
+              {/* Left Column - Text Content (Offset) */}
+              <div className="lg:col-span-5 lg:pr-12">
+                <ScrollAnimationWrapper direction="left">
+                  <div className="inline-block mb-4">
+                    <span className="text-sm font-semibold text-primary uppercase tracking-wider">Featured</span>
+                  </div>
+                  <h2 className="text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-6 leading-tight">
+                    Our Story in Motion
+                  </h2>
+                </ScrollAnimationWrapper>
+                <ScrollAnimationWrapper direction="left" delay={100}>
+                  <p className="text-lg leading-relaxed text-muted-foreground mb-8">
+                    Discover how we're transforming communities through innovative affordable housing solutions.
+                  </p>
+                </ScrollAnimationWrapper>
               </div>
-            </ScrollAnimationWrapper>
+              
+              {/* Right Column - Video (Larger, Overlapping) */}
+              <div className="lg:col-span-7 lg:-mt-16">
+                <ScrollAnimationWrapper direction="right" delay={200}>
+                  <div className="relative w-full aspect-video rounded-3xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-transform duration-500">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-red-500/20 to-primary/20 rounded-3xl blur-xl opacity-50"></div>
+                    <video ref={videoRef} poster={promotionalVideoThumbnail.src} className="relative w-full h-full object-cover rounded-3xl" controls>
+                      <source src="/promotional-video.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+              
+                    {!isPlaying && <div className="absolute inset-0 flex items-center justify-center bg-black/40 cursor-pointer rounded-3xl" onClick={handlePlay}>
+                        <button className="text-white text-2xl px-6 py-3 bg-red-600 rounded-full hover:bg-red-700 transition-all transform hover:scale-110 shadow-lg">
+                          ▶
+                        </button>
+                      </div>}
+              
+                    <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-sm text-white text-sm px-4 py-2 rounded-full hover:bg-red-600 transition-colors pointer-events-none">
+                      <a className="pointer-events-auto" href="https://www.youtube.com/watch?v=LIjifKbBRpg" target="_blank" rel="noopener noreferrer nofollow">
+                        Watch on YouTube
+                      </a>
+                    </div>
+                  </div>
+                </ScrollAnimationWrapper>
+              </div>
+            </div>
           </div>
         </section>
 
-         {/* PDF Documents Section */}
-         <section className="py-24">
-           <div className="mx-auto max-w-6xl px-6 lg:px-8">
-             {/* Section Header */}
-             <div className="text-center mb-16">
-               <ScrollAnimationWrapper direction="top">
-                 <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">
+         {/* PDF Documents Section - Staggered Masonry Layout */}
+         <section className="py-32 relative">
+           {/* Subtle diagonal accent */}
+           <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/3 to-transparent -skew-x-12 origin-top-right"></div>
+           
+           <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+             {/* Section Header - Left Aligned */}
+             <div className="mb-20 max-w-2xl">
+               <ScrollAnimationWrapper direction="left">
+                 <div className="inline-block mb-4">
+                   <span className="text-sm font-semibold text-primary uppercase tracking-wider">Resources</span>
+                 </div>
+                 <h2 className="text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-6">
                    Document Library
                  </h2>
                </ScrollAnimationWrapper>
-               <ScrollAnimationWrapper direction="top" delay={100}>
-                 <p className="text-lg leading-8 text-muted-foreground max-w-2xl mx-auto">
-                   Discover our comprehensive collection of PDF documents. Curated with detailed insights, specifications, and detailed resources.
+               <ScrollAnimationWrapper direction="left" delay={100}>
+                 <p className="text-lg leading-relaxed text-muted-foreground">
+                   Comprehensive collection of PDF documents with detailed insights, specifications, and resources.
                  </p>
                </ScrollAnimationWrapper>
              </div>
@@ -555,38 +579,47 @@ const Media = () => {
                  </button>
                </div>
 
-               {/* 2x2 Grid */}
-               <div className="grid grid-cols-2 gap-6">
-                 {getCurrentPageItems(pdfDocuments, currentDocumentPage).map((pdf, index) => <ScrollAnimationWrapper key={pdf.id} direction="bottom" delay={200 + index * 50}>
-                     <div className="border rounded-lg p-6 hover:shadow-sm sm:hover:shadow-lg transition-shadow">
-                       <div className="flex items-start justify-between mb-3">
-                         <div className="flex items-center gap-3">
-                           <div className="p-2 bg-red-100 text-red-600 rounded-lg">
-                             <FileText className="h-6 w-6" />
+               {/* Staggered Masonry Grid - Varied Heights */}
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                 {getCurrentPageItems(pdfDocuments, currentDocumentPage).map((pdf, index) => {
+                   // Create varied heights for visual interest
+                   const isTall = index % 3 === 0;
+                   return <ScrollAnimationWrapper key={pdf.id} direction="bottom" delay={200 + index * 50}>
+                     <div className={`group relative border rounded-2xl p-6 lg:p-8 bg-card hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 ${isTall ? 'lg:row-span-2' : ''}`}>
+                       {/* Gradient accent on hover */}
+                       <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:via-red-500/5 group-hover:to-primary/5 rounded-2xl transition-all duration-300"></div>
+                       
+                       <div className="relative z-10">
+                         <div className="flex items-start justify-between mb-4">
+                           <div className="p-3 bg-gradient-to-br from-red-500/10 to-primary/10 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                             <FileText className="h-6 w-6 text-red-600" />
                            </div>
+                           <span className="text-xs font-medium text-muted-foreground bg-muted px-3 py-1 rounded-full">{pdf.date}</span>
                          </div>
-                         <span className="text-sm text-muted-foreground">{pdf.date}</span>
-                       </div>
-                       
-                       <h3 className="text-lg font-semibold mb-2">{pdf.title}</h3>
-                       <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                         <span>{pdf.pages} pages</span>
-                         <span>{pdf.size}</span>
-                       </div>
-                       <p className="text-muted-foreground mb-6 text-sm">{pdf.description}</p>
-                       
-                       <div className="flex gap-2">
-                         <Button onClick={() => openPdfModal(pdf)} className="flex-1 flex items-center gap-2" size="sm">
-                           <Eye className="h-4 w-4" />
-                           Preview
-                         </Button>
-                         <Button variant="outline" onClick={() => downloadPdf(pdf)} size="sm" className="flex items-center gap-2">
-                           <Download className="h-4 w-4" />
-                           Download
-                         </Button>
+                         
+                         <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{pdf.title}</h3>
+                         <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+                           <span className="flex items-center gap-1">
+                             <FileText className="h-3 w-3" />
+                             {pdf.pages} pages
+                           </span>
+                           <span>{pdf.size}</span>
+                         </div>
+                         <p className="text-muted-foreground mb-6 leading-relaxed">{pdf.description}</p>
+                         
+                         <div className="flex gap-3">
+                           <Button onClick={() => openPdfModal(pdf)} className="flex-1 bg-gradient-to-r from-primary to-red-600 hover:from-primary/90 hover:to-red-600/90 text-white border-0" size="sm">
+                             <Eye className="h-4 w-4 mr-2" />
+                             Preview
+                           </Button>
+                           <Button variant="outline" onClick={() => downloadPdf(pdf)} size="sm" className="flex items-center gap-2 hover:bg-primary hover:text-primary-foreground transition-colors">
+                             <Download className="h-4 w-4" />
+                           </Button>
+                         </div>
                        </div>
                      </div>
-                   </ScrollAnimationWrapper>)}
+                   </ScrollAnimationWrapper>;
+                 })}
                </div>
 
                {/* Pagination Dots */}
@@ -719,150 +752,277 @@ const Media = () => {
           </div>
         </div>}
 
-        {/* Media Gallery */}
-        <section className="py-24 bg-muted/30">
-          <div className="mx-auto max-w-6xl px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <ScrollAnimationWrapper direction="top">
-                <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">
+        {/* Media Gallery - Asymmetric Grid Layout */}
+        <section className="py-32 relative overflow-hidden bg-gradient-to-br from-background via-muted/20 to-background">
+          {/* Decorative elements */}
+          <div className="absolute top-20 left-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-0 w-96 h-96 bg-red-500/5 rounded-full blur-3xl"></div>
+          
+          <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+            <div className="mb-20 max-w-3xl">
+              <ScrollAnimationWrapper direction="right">
+                <div className="inline-block mb-4">
+                  <span className="text-sm font-semibold text-primary uppercase tracking-wider">Gallery</span>
+                </div>
+                <h2 className="text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-6">
                   Media Gallery
                 </h2>
               </ScrollAnimationWrapper>
-              <ScrollAnimationWrapper direction="top" delay={100}>
-                <p className="text-lg leading-8 text-muted-foreground">
+              <ScrollAnimationWrapper direction="right" delay={100}>
+                <p className="text-lg leading-relaxed text-muted-foreground">
                   Visual stories of our communities, construction progress, and the people we serve.
                 </p>
               </ScrollAnimationWrapper>
             </div>
 
-            {/* Media Gallery - Desktop Grid */}
-            <div className="hidden md:grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {mediaGallery.map((item, index) => {
-              const MediaIcon = getMediaIcon(item.type);
-              return <ScrollAnimationWrapper key={item.id} direction="bottom" delay={200 + index * 50}>
-                  <Card className="h-full flex flex-col overflow-hidden hover:shadow-sm sm:hover:shadow-lg transition-shadow duration-300 group">
-                      <div onClick={() => openVideoModal(item)} className="relative h-48 rounded-xl overflow-hidden group cursor-pointer bg-muted">
-                        <img 
-                          src={item.thumbnail} 
-                          alt={getMediaImageAltText(item.title, item.type)}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                          onError={(e) => {
-                            // Fallback to hqdefault if maxresdefault fails
-                            const img = e.target as HTMLImageElement;
-                            if (img.src.includes('maxresdefault')) {
-                              img.src = img.src.replace('maxresdefault', 'hqdefault');
-                            }
-                          }}
-                        />
-                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <Play className="h-16 w-16 text-white" />
+            {/* Media Gallery - Single Video Carousel */}
+            <div className="relative">
+              {/* Navigation Arrows - Subtle, Outside */}
+              <button 
+                onClick={goToPreviousMedia}
+                className="absolute -left-12 top-1/2 -translate-y-1/2 z-30 bg-white/40 hover:bg-white/60 text-foreground/60 hover:text-foreground rounded-full p-2 shadow-md hover:shadow-lg hover:scale-110 transition-all duration-300 hidden md:flex items-center justify-center backdrop-blur-sm"
+                aria-label="Previous video"
+              >
+                <span className="text-xl font-light">‹</span>
+              </button>
+              
+              <button 
+                onClick={goToNextMedia}
+                className="absolute -right-12 top-1/2 -translate-y-1/2 z-30 bg-white/40 hover:bg-white/60 text-foreground/60 hover:text-foreground rounded-full p-2 shadow-md hover:shadow-lg hover:scale-110 transition-all duration-300 hidden md:flex items-center justify-center backdrop-blur-sm"
+                aria-label="Next video"
+              >
+                <span className="text-xl font-light">›</span>
+              </button>
+              
+              {/* Single Video Display */}
+              <div className="relative h-[600px] rounded-2xl overflow-hidden bg-muted">
+                {mediaGallery.map((item, index) => {
+                  const isActive = index === currentMediaIndex;
+                  
+                  return (
+                    <div
+                      key={item.id}
+                      onClick={() => openVideoModal(item)}
+                      className={`absolute inset-0 group cursor-pointer transition-opacity duration-500 ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+                    >
+                      {/* Thumbnail Background */}
+                      <img 
+                        src={item.thumbnail} 
+                        alt={getMediaImageAltText(item.title, item.type)}
+                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        loading={isActive ? "eager" : "lazy"}
+                        onError={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          if (img.src.includes('maxresdefault')) {
+                            img.src = img.src.replace('maxresdefault', 'hqdefault');
+                          }
+                        }}
+                      />
+                      
+                      {/* Gradient Overlay for Text Readability */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/30"></div>
+                      
+                      {/* Play Button Overlay - Center */}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                        <div className="bg-white/95 backdrop-blur-sm rounded-full p-5 transform group-hover:scale-110 transition-transform duration-300 shadow-2xl">
+                          <Play className="h-16 w-16 text-primary" fill="currentColor" />
                         </div>
                       </div>
-                      <CardHeader>
-                        <div className="flex items-center justify-between mb-2">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${item.type === "video" ? "bg-red-100 text-red-800" : "bg-blue-100 text-blue-800"}`}>
-                            {item.type === "video" ? "Video" : "Image"}
-                          </span>
-                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      
+                      {/* Content Overlay - Bottom */}
+                      <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-12 z-10 max-w-4xl">
+                        {/* Top Badges */}
+                        <div className="flex items-center justify-between mb-6">
+                          <div className="flex items-center gap-3">
+                            {index === 0 && (
+                              <span className="px-4 py-1.5 bg-red-600 text-white text-sm font-semibold rounded-full">
+                                Featured
+                              </span>
+                            )}
+                            <span className="px-4 py-1.5 rounded-full text-sm font-semibold backdrop-blur-sm bg-red-500/90 text-white">
+                              Video
+                            </span>
+                          </div>
+                          {/* Date - Moved to far right */}
+                          <div className="flex items-center gap-2 text-white/70 text-sm absolute right-8 lg:right-12 top-8 lg:top-12">
                             <Calendar className="h-4 w-4" />
                             {item.date}
                           </div>
                         </div>
-                        <CardTitle className="text-lg line-clamp-2">{item.title}</CardTitle>
-                      </CardHeader>
-                      
-                      <CardContent className="flex-1 flex flex-col justify-between">
-                        <p className="text-muted-foreground mb-4 text-sm">{item.description}</p>
-                        <Button variant="outline" size="sm" className="w-full" onClick={() => openVideoModal(item)}>
-                          View Video
+                        
+                        {/* Title */}
+                        <h3 className="text-white font-bold mb-4 group-hover:text-red-400 transition-colors text-3xl lg:text-4xl">
+                          {item.title}
+                        </h3>
+                        
+                        {/* Description - Full Text */}
+                        <p className="text-white/95 mb-8 leading-relaxed text-lg lg:text-xl max-w-3xl">
+                          {item.description}
+                        </p>
+                        
+                        {/* Watch Button */}
+                        <Button 
+                          size="lg" 
+                          className="bg-white/20 hover:bg-red-600 text-white border-2 border-white/40 hover:border-red-600 backdrop-blur-sm transition-all duration-300 px-8 py-6 text-base font-semibold"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openVideoModal(item);
+                          }}
+                        >
+                          <Play className="h-5 w-5 mr-2" fill="currentColor" />
+                          Watch Video
                         </Button>
-                      </CardContent>
-                    </Card>
-                  </ScrollAnimationWrapper>;
-            })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              
+              {/* Pagination Dots */}
+              <div className="flex justify-center items-center mt-8 space-x-3">
+                {mediaGallery.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentMediaIndex(index)}
+                    className={`h-3 rounded-full transition-all duration-300 ${
+                      index === currentMediaIndex 
+                        ? 'bg-primary w-12 shadow-lg shadow-primary/50' 
+                        : 'bg-primary/40 hover:bg-primary/60 w-3'
+                    }`}
+                    aria-label={`Go to video ${index + 1}`}
+                  />
+                ))}
+              </div>
+              
+              {/* Video Counter */}
+              <div className="text-center mt-4 text-sm text-muted-foreground">
+                {currentMediaIndex + 1} of {mediaGallery.length}
+              </div>
             </div>
 
             {/* Media Gallery - Mobile Carousel */}
-            <div className="md:hidden">
-              {/* Pagination Dots */}
-              <ScrollAnimationWrapper direction="top" delay={200}>
-                <div className="flex justify-center items-center mb-6 space-x-2">
-                  {mediaGallery.map((_, index) => <button key={index} onClick={() => setCurrentMediaIndex(index)} className={`h-3 rounded-full transition-all duration-300 ${index === currentMediaIndex ? 'bg-primary w-8 shadow-lg shadow-primary/30' : 'bg-primary/40 hover:bg-primary/60 w-3'}`} aria-label={`Go to media ${index + 1}`} />)}
-                </div>
-              </ScrollAnimationWrapper>
-
-              {/* Navigation Container */}
-              <ScrollAnimationWrapper direction="bottom" delay={300}>
-                <div className={`relative touch-pan-x transition-all duration-300 ${isTouchActive ? 'shadow-2xl shadow-primary/20' : ''} ${
-                  isAnimating 
-                    ? swipeDirection === 'left' 
-                      ? 'animate-slide-out-left' 
-                      : 'animate-slide-out-right'
-                    : ''
-                }`} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={() => handleTouchEnd('media')} onTouchCancel={handleTouchCancel} style={{
-                touchAction: 'auto'
-              }}>
-                  {/* Previous Arrow */}
-                  <button onClick={goToPreviousMedia} className="absolute left-1 top-1/2 -translate-y-1/2 z-20 text-foreground/60 hover:text-foreground text-3xl font-bold transition-all duration-200 hover:scale-110" aria-label="Previous media">
-                    ‹
-                  </button>
-
-                  {/* Next Arrow */}
-                  <button onClick={goToNextMedia} className="absolute right-1 top-1/2 -translate-y-1/2 z-20 text-foreground/60 hover:text-foreground text-3xl font-bold transition-all duration-200 hover:scale-110" aria-label="Next media">
-                    ›
-                  </button>
-
-                  {/* Single Media Display */}
-                  <div className="px-6">
-                    {mediaGallery[currentMediaIndex] && <div className="flex justify-center">
-                        <div className="w-full max-w-sm">
-                          <ScrollAnimationWrapper direction="top" delay={200 + currentMediaIndex * 100}>
-                            <Card className="overflow-hidden hover:shadow-sm sm:hover:shadow-lg transition-shadow duration-300 group">
-                                <div onClick={() => openVideoModal(mediaGallery[currentMediaIndex])} className="relative h-48 rounded-xl overflow-hidden group cursor-pointer bg-muted">
-                                  <img 
-                                    src={mediaGallery[currentMediaIndex].thumbnail} 
-                                    alt={getMediaImageAltText(mediaGallery[currentMediaIndex].title, mediaGallery[currentMediaIndex].type)}
-                                    className="w-full h-full object-cover"
-                                    loading="lazy"
-                                    onError={(e) => {
-                                      // Fallback to hqdefault if maxresdefault fails
-                                      const img = e.target as HTMLImageElement;
-                                      if (img.src.includes('maxresdefault')) {
-                                        img.src = img.src.replace('maxresdefault', 'hqdefault');
-                                      }
-                                    }}
-                                  />
-                                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <Play className="h-16 w-16 text-white" />
-                                  </div>
-                                </div>
-                                <CardHeader>
-                                  <div className="flex items-center justify-between mb-2">
-                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${mediaGallery[currentMediaIndex].type === "video" ? "bg-red-100 text-red-800" : "bg-blue-100 text-blue-800"}`}>
-                                      {mediaGallery[currentMediaIndex].type === "video" ? "Video" : "Image"}
-                                    </span>
-                                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                      <Calendar className="h-4 w-4" />
-                                      {mediaGallery[currentMediaIndex].date}
-                                    </div>
-                                  </div>
-                                  <CardTitle className="text-lg line-clamp-2">{mediaGallery[currentMediaIndex].title}</CardTitle>
-                                </CardHeader>
-                                
-                                <CardContent>
-                                  <p className="text-muted-foreground mb-4 text-sm">{mediaGallery[currentMediaIndex].description}</p>
-                                  <Button variant="outline" size="sm" className="w-full" onClick={() => openVideoModal(mediaGallery[currentMediaIndex])}>
-                                    View Video
-                                  </Button>
-                                </CardContent>
-                              </Card>
-                          </ScrollAnimationWrapper>
+            <div className="md:hidden relative mt-8">
+              {/* Navigation Arrows */}
+              <button 
+                onClick={goToPreviousMedia}
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-30 bg-white/90 text-foreground rounded-full p-2 shadow-lg"
+                aria-label="Previous video"
+              >
+                <span className="text-xl font-bold">‹</span>
+              </button>
+              
+              <button 
+                onClick={goToNextMedia}
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-30 bg-white/90 text-foreground rounded-full p-2 shadow-lg"
+                aria-label="Next video"
+              >
+                <span className="text-xl font-bold">›</span>
+              </button>
+              
+              {/* Single Video Display - Mobile */}
+              <div className="relative h-[500px] rounded-2xl overflow-hidden bg-muted mx-4">
+                {mediaGallery.map((item, index) => {
+                  const isActive = index === currentMediaIndex;
+                  
+                  return (
+                    <div
+                      key={item.id}
+                      onClick={() => openVideoModal(item)}
+                      className={`absolute inset-0 group cursor-pointer transition-opacity duration-500 ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+                    >
+                      {/* Thumbnail Background */}
+                      <img 
+                        src={item.thumbnail} 
+                        alt={getMediaImageAltText(item.title, item.type)}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading={isActive ? "eager" : "lazy"}
+                        onError={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          if (img.src.includes('maxresdefault')) {
+                            img.src = img.src.replace('maxresdefault', 'hqdefault');
+                          }
+                        }}
+                      />
+                      
+                      {/* Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/30"></div>
+                      
+                      {/* Play Button Overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                        <div className="bg-white/95 backdrop-blur-sm rounded-full p-4">
+                          <Play className="h-12 w-12 text-primary" fill="currentColor" />
                         </div>
-                      </div>}
-                  </div>
-                </div>
-              </ScrollAnimationWrapper>
+                      </div>
+                      
+                      {/* Content Overlay */}
+                      <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+                        {/* Top Badges */}
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-2">
+                            {index === 0 && (
+                              <span className="px-3 py-1 bg-red-600 text-white text-xs font-semibold rounded-full">
+                                Featured
+                              </span>
+                            )}
+                            <span className="px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm bg-red-500/90 text-white">
+                              Video
+                            </span>
+                          </div>
+                          {/* Date - Moved to far right */}
+                          <div className="flex items-center gap-1.5 text-white/70 text-xs absolute right-6 top-6">
+                            <Calendar className="h-3.5 w-3.5" />
+                            {item.date}
+                          </div>
+                        </div>
+                        
+                        {/* Title */}
+                        <h3 className="text-white font-bold mb-3 text-xl">
+                          {item.title}
+                        </h3>
+                        
+                        {/* Description - Full Text */}
+                        <p className="text-white/95 mb-6 leading-relaxed text-sm">
+                          {item.description}
+                        </p>
+                        
+                        {/* Watch Button */}
+                        <Button 
+                          size="sm" 
+                          className="bg-white/20 hover:bg-red-600 text-white border border-white/30 hover:border-red-600 backdrop-blur-sm transition-all duration-300 w-full"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openVideoModal(item);
+                          }}
+                        >
+                          <Play className="h-4 w-4 mr-2" fill="currentColor" />
+                          Watch Video
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              
+              {/* Pagination Dots */}
+              <div className="flex justify-center items-center mt-6 space-x-2">
+                {mediaGallery.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentMediaIndex(index)}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      index === currentMediaIndex 
+                        ? 'bg-primary w-8' 
+                        : 'bg-primary/40 hover:bg-primary/60 w-2'
+                    }`}
+                    aria-label={`Go to video ${index + 1}`}
+                  />
+                ))}
+              </div>
+              
+              {/* Video Counter */}
+              <div className="text-center mt-3 text-xs text-muted-foreground">
+                {currentMediaIndex + 1} of {mediaGallery.length}
+              </div>
             </div>
           </div>
         </section>
@@ -882,17 +1042,23 @@ const Media = () => {
             </div>
           </div>}
 
-        {/* Press Coverage */}
-        <section className="py-24">
-          <div className="mx-auto max-w-6xl px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <ScrollAnimationWrapper direction="top">
-                <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">
+        {/* Press Coverage - Diagonal Layout */}
+        <section className="py-32 relative overflow-hidden">
+          {/* Diagonal background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-muted/30 via-background to-primary/5 -skew-y-1 origin-bottom-right"></div>
+          
+          <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+            <div className="mb-20 max-w-2xl ml-auto text-right">
+              <ScrollAnimationWrapper direction="right">
+                <div className="inline-block mb-4">
+                  <span className="text-sm font-semibold text-primary uppercase tracking-wider">News</span>
+                </div>
+                <h2 className="text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-6">
                   Press Coverage
                 </h2>
               </ScrollAnimationWrapper>
-              <ScrollAnimationWrapper direction="top" delay={100}>
-                <p className="text-lg leading-8 text-muted-foreground">
+              <ScrollAnimationWrapper direction="right" delay={100}>
+                <p className="text-lg leading-relaxed text-muted-foreground">
                   Recent news and media coverage of our work and impact in affordable housing.
                 </p>
               </ScrollAnimationWrapper>
@@ -919,13 +1085,16 @@ const Media = () => {
                 </button>
               </div>
 
-              {/* 2x2 Grid */}
-              <div className="grid grid-cols-2 gap-6">
-                {getCurrentPageItems(pressReleases, currentPressPage).map((article, index) => <ScrollAnimationWrapper key={article.id} direction="bottom" delay={200 + index * 50}>
-                    <Card className="h-full flex flex-col hover:shadow-sm sm:hover:shadow-lg transition-shadow duration-300">
-                        <CardHeader>
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">
+              {/* Staggered Grid - Alternating Layout */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                {getCurrentPageItems(pressReleases, currentPressPage).map((article, index) => {
+                  // Alternate card styles for visual variety
+                  const isOffset = index % 3 === 1;
+                  return <ScrollAnimationWrapper key={article.id} direction="bottom" delay={200 + index * 50}>
+                    <Card className={`h-full flex flex-col hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-card border-0 ${isOffset ? 'lg:mt-8' : ''}`}>
+                        <CardHeader className="p-6 pb-4">
+                          <div className="flex items-center justify-between mb-4">
+                            <span className="bg-gradient-to-r from-primary/10 to-red-500/10 text-primary px-3 py-1 rounded-full text-xs font-semibold border border-primary/20">
                               Press Coverage
                             </span>
                             <div className="flex items-center gap-1 text-sm text-muted-foreground">
@@ -933,16 +1102,16 @@ const Media = () => {
                               {article.date}
                             </div>
                           </div>
-                          <CardTitle className="text-lg line-clamp-2 mb-2">{article.title}</CardTitle>
+                          <CardTitle className="text-xl font-bold line-clamp-2 mb-3 group-hover:text-primary transition-colors">{article.title}</CardTitle>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Newspaper className="h-4 w-4" />
                             {article.source}
                           </div>
                         </CardHeader>
                         
-                        <CardContent className="flex-1 flex flex-col justify-between">
-                          <p className="text-muted-foreground mb-4">{article.excerpt}</p>
-                          <Button variant="outline" size="sm" className="flex items-center gap-2 w-fit" onClick={() => handleArticleAction(article)}>
+                        <CardContent className="flex-1 flex flex-col justify-between p-6 pt-0">
+                          <p className="text-muted-foreground mb-6 leading-relaxed">{article.excerpt}</p>
+                          <Button variant="outline" size="sm" className="flex items-center gap-2 w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors" onClick={() => handleArticleAction(article)}>
                             {article.type === "external" ? <>
                                 <ExternalLink className="h-4 w-4" />
                                 Read Full Article
@@ -953,7 +1122,8 @@ const Media = () => {
                           </Button>
                         </CardContent>
                       </Card>
-                  </ScrollAnimationWrapper>)}
+                  </ScrollAnimationWrapper>;
+                })}
               </div>
 
               {/* Pagination Dots */}

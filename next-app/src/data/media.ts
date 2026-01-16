@@ -34,12 +34,12 @@ export const mediaGallery: MediaItem[] = [
   {
     id: 1,
     type: "video",
-    title: "Ryder Village",
+    title: "Anhart Housing Development",
     description:
-      "Ryder Village in Hope, BC is 40 affordable family apartments developed by Anhart in 2022 with impact investments and the CMHC's RCFI program.",
-    date: "November 2020",
-    thumbnail: "https://img.youtube.com/vi/LhDOnUN2SOw/maxresdefault.jpg",
-    youtubeUrl: "https://www.youtube.com/watch?v=LhDOnUN2SOw",
+      "Keith Gordon's interview with CBC News Manitoba focuses on the Sutherland Hotel purchase agreement, the growing issue of derelict homes in the city, and the potential for affordable housing to bring new life to the cityscape.",
+    date: "2026",
+    thumbnail: "https://img.youtube.com/vi/x7e5QOd3WLI/maxresdefault.jpg",
+    youtubeUrl: "https://www.youtube.com/watch?v=x7e5QOd3WLI",
   },
   {
     id: 2,
