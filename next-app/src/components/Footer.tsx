@@ -339,7 +339,7 @@ export const Footer = () => {
                     <div className="mt-4 border-t border-background/20 pt-6 lg:pt-8">
                       <div className="text-center">
                         <p className="text-xs leading-5 text-background/70">
-                          © 2025 Anhart · Shared with the community.
+                          © 2026 Anhart. Anhart is the brand name of the Anhart Community Housing Society.
                         </p>
                         <p className="text-xs leading-5 text-background/70 mt-2">
                           This work is released under a Community Commons philosophy—free to use, adapt, and share for the public good.

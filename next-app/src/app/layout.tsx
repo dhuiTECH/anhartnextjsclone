@@ -64,8 +64,11 @@ export default function RootLayout({
     "@type": "Organization",
     "@id": "https://anhart.ca/#organization",
     name: "Anhart",
-    url: "https://anhart.ca",
+    alternateName: ["Anhart Community Housing Society", "Anhart Housing"],
+    legalName: "Anhart Community Housing Society",
+    url: "https://anhart.ca/",
     logo: "https://anhart.ca/images/anhart-logo.png",
+    description: "Anhart is a Canadian non-profit developer specializing in 100% affordable housing and urban renewal projects.",
     email: CONTACT_INFO.email,
     telephone: "+1-604-529-6259",
     sameAs: [
@@ -74,6 +77,7 @@ export default function RootLayout({
       "https://www.facebook.com/anhartsolutions?rdid=RVW0ZiZ1JKyW8dI3&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2FnG5gD4iinFYGjyeT%2F",
       "https://www.instagram.com/anharthousing/",
       "https://x.com/anharthousing",
+      // TODO: Add CBC article URL here when available
     ],
     contactPoint: [
       {
