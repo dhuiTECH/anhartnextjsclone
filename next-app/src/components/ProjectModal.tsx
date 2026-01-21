@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { ProjectData } from "@/types/project";
 import { StatusBadge } from "@/components/shared/StatusBadge";
+import { HtmlRenderer } from "@/components/shared/HtmlRenderer";
 import { getProjectAltText } from "@/lib/altText";
 
 // Portfolio image imports
@@ -245,20 +246,30 @@ const ProjectModal = ({ isOpen, onClose, project }: ProjectModalProps) => {
                     <h4 className="font-semibold text-foreground mb-3 text-lg">
                       Project Overview:
                     </h4>
-                    <p className="text-muted-foreground leading-relaxed mb-4 line-clamp-4">
-                      {convertUrlsToLinks(
-                        project.briefDescription || project.description,
-                      )}
-                    </p>
+                    {/* Check if content contains HTML tags - if so, render as HTML */}
+                    {/<[a-z][\s\S]*>/i.test(project.briefDescription || project.description) ? (
+                      <HtmlRenderer html={project.briefDescription || project.description} />
+                    ) : (
+                      <p className="text-muted-foreground leading-relaxed mb-4 line-clamp-4">
+                        {convertUrlsToLinks(
+                          project.briefDescription || project.description,
+                        )}
+                      </p>
+                    )}
 
                     {project.comprehensiveDetails && (
                       <div>
                         <h4 className="font-semibold text-foreground mb-3 text-lg">
                           Detailed Information:
                         </h4>
-                        <p className="text-muted-foreground leading-relaxed">
-                          {convertUrlsToLinks(project.comprehensiveDetails)}
-                        </p>
+                        {/* Check if content contains HTML tags - if so, render as HTML */}
+                        {/<[a-z][\s\S]*>/i.test(project.comprehensiveDetails) ? (
+                          <HtmlRenderer html={project.comprehensiveDetails} />
+                        ) : (
+                          <p className="text-muted-foreground leading-relaxed">
+                            {convertUrlsToLinks(project.comprehensiveDetails)}
+                          </p>
+                        )}
                       </div>
                     )}
 

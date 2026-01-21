@@ -35,26 +35,7 @@ import {
   Link as LinkIcon,
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
-
-/**
- * Component to safely render HTML content
- */
-function HtmlRenderer({ html }: { html: string }) {
-  // Decode HTML entities that might be double-encoded
-  const decodedHtml = html
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'");
-
-  return (
-    <div
-      className="prose prose-lg max-w-none [&_*]:text-gray-700 [&_img]:rounded-lg [&_img]:max-w-full [&_img]:h-auto [&_a]:text-indigo-600 [&_a]:hover:text-indigo-800 [&_a]:underline [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:ml-6 [&_ol]:list-decimal [&_ol]:ml-6 [&_li]:mb-1"
-      dangerouslySetInnerHTML={{ __html: decodedHtml }}
-    />
-  );
-}
+import { HtmlRenderer } from "@/components/shared/HtmlRenderer";
 
 /**
  * Image component that tries multiple fallback paths

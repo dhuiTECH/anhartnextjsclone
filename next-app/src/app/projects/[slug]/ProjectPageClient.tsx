@@ -11,6 +11,7 @@ import { Breadcrumb } from '@/components/Breadcrumb';
 import { MapPin, Calendar, Users, Building } from 'lucide-react';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { ScrollAnimationWrapper } from '@/components/animations/ScrollAnimationWrapper';
+import { HtmlRenderer } from '@/components/shared/HtmlRenderer';
 import { getPortfolioListingAltText } from '@/lib/altText';
 import { LoadingWithLogo } from '@/components/LoadingWithLogo';
 import { generateProjectSlug } from '@/lib/slug';
@@ -276,48 +277,54 @@ export default function ProjectPageClient() {
             <div className="mb-12 space-y-6">
               <div className="prose prose-lg max-w-none">
                 <h2 className="text-2xl font-bold text-foreground mb-4">Project Overview</h2>
-                {description.split('\n\n').map((paragraph, idx) => {
-                  if (paragraph.startsWith('###')) {
-                    return <h4 key={idx} className="text-lg font-semibold text-foreground mt-6 mb-3">{paragraph.replace('###', '').trim()}</h4>;
-                  }
-                  if (paragraph.startsWith('##')) {
-                    return <h3 key={idx} className="text-xl font-bold text-foreground mt-8 mb-4">{paragraph.replace('##', '').trim()}</h3>;
-                  }
-                  
-                  // Handle markdown links
-                  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-                  const parts: (string | JSX.Element)[] = [];
-                  let lastIndex = 0;
-                  let match;
-                  
-                  while ((match = linkRegex.exec(paragraph)) !== null) {
-                    if (match.index > lastIndex) {
-                      parts.push(paragraph.substring(lastIndex, match.index));
+                {/* Check if description contains HTML tags - if so, render as HTML */}
+                {/<[a-z][\s\S]*>/i.test(description) ? (
+                  <HtmlRenderer html={description} />
+                ) : (
+                  // Fallback to markdown-like parsing for plain text
+                  description.split('\n\n').map((paragraph, idx) => {
+                    if (paragraph.startsWith('###')) {
+                      return <h4 key={idx} className="text-lg font-semibold text-foreground mt-6 mb-3">{paragraph.replace('###', '').trim()}</h4>;
                     }
-                    parts.push(
-                      <a 
-                        key={`link-${match.index}`}
-                        href={match[2]}
-                        className="text-primary font-semibold underline hover:opacity-80 transition-opacity"
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                      >
-                        {match[1]}
-                      </a>
+                    if (paragraph.startsWith('##')) {
+                      return <h3 key={idx} className="text-xl font-bold text-foreground mt-8 mb-4">{paragraph.replace('##', '').trim()}</h3>;
+                    }
+                    
+                    // Handle markdown links
+                    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+                    const parts: (string | JSX.Element)[] = [];
+                    let lastIndex = 0;
+                    let match;
+                    
+                    while ((match = linkRegex.exec(paragraph)) !== null) {
+                      if (match.index > lastIndex) {
+                        parts.push(paragraph.substring(lastIndex, match.index));
+                      }
+                      parts.push(
+                        <a 
+                          key={`link-${match.index}`}
+                          href={match[2]}
+                          className="text-primary font-semibold underline hover:opacity-80 transition-opacity"
+                          target="_blank"
+                          rel="noopener noreferrer nofollow"
+                        >
+                          {match[1]}
+                        </a>
+                      );
+                      lastIndex = linkRegex.lastIndex;
+                    }
+                    
+                    if (lastIndex < paragraph.length) {
+                      parts.push(paragraph.substring(lastIndex));
+                    }
+                    
+                    return (
+                      <p key={idx} className="text-base text-muted-foreground leading-relaxed mb-4">
+                        {parts.length > 1 ? parts : paragraph}
+                      </p>
                     );
-                    lastIndex = linkRegex.lastIndex;
-                  }
-                  
-                  if (lastIndex < paragraph.length) {
-                    parts.push(paragraph.substring(lastIndex));
-                  }
-                  
-                  return (
-                    <p key={idx} className="text-base text-muted-foreground leading-relaxed mb-4">
-                      {parts.length > 1 ? parts : paragraph}
-                    </p>
-                  );
-                })}
+                  })
+                )}
               </div>
 
               {/* Highlights */}
