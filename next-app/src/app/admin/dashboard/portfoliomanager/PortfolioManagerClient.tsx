@@ -37,6 +37,26 @@ import {
 import type { User } from "@supabase/supabase-js";
 
 /**
+ * Component to safely render HTML content
+ */
+function HtmlRenderer({ html }: { html: string }) {
+  // Decode HTML entities that might be double-encoded
+  const decodedHtml = html
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+
+  return (
+    <div
+      className="prose prose-lg max-w-none [&_*]:text-gray-700 [&_img]:rounded-lg [&_img]:max-w-full [&_img]:h-auto [&_a]:text-indigo-600 [&_a]:hover:text-indigo-800 [&_a]:underline [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:ml-6 [&_ol]:list-decimal [&_ol]:ml-6 [&_li]:mb-1"
+      dangerouslySetInnerHTML={{ __html: decodedHtml }}
+    />
+  );
+}
+
+/**
  * Image component that tries multiple fallback paths
  */
 function ImageWithFallback({ 
@@ -277,8 +297,11 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
 
   // Update editor content when form data changes
   useEffect(() => {
-    if (comprehensiveEditor && formData.comprehensiveDetails !== comprehensiveEditor.getHTML()) {
-      comprehensiveEditor.commands.setContent(formData.comprehensiveDetails || '');
+    if (comprehensiveEditor && formData.comprehensiveDetails) {
+      const currentContent = comprehensiveEditor.getHTML();
+      if (currentContent !== formData.comprehensiveDetails) {
+        comprehensiveEditor.commands.setContent(formData.comprehensiveDetails);
+      }
     }
   }, [formData.comprehensiveDetails, comprehensiveEditor]);
 
@@ -1623,10 +1646,7 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
                   <div className="prose prose-lg max-w-none">
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">Project Overview</h2>
                     {formData.comprehensiveDetails ? (
-                      <div
-                        className="text-gray-700 prose-headings:text-gray-900 prose-p:mb-4 prose-p:leading-relaxed prose-strong:font-semibold prose-strong:text-gray-900 prose-a:text-indigo-600 prose-a:hover:text-indigo-800 prose-a:underline prose-img:rounded-lg prose-img:max-w-full prose-img:h-auto"
-                        dangerouslySetInnerHTML={{ __html: formData.comprehensiveDetails }}
-                      />
+                      <HtmlRenderer html={formData.comprehensiveDetails} />
                     ) : (
                       <p className="text-gray-700">
                         {formData.briefDescription || "Project overview description will appear here..."}
