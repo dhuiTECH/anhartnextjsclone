@@ -44,12 +44,12 @@ export const mediaGallery: MediaItem[] = [
   {
     id: 2,
     type: "video",
-    title: "Winnipeg Revitalized",
+    title: "Understanding Risk and Patient Capital",
     description:
-      "Anhart is working with local non profits and community champion consultants to develop supportive and affordable housing in Winnipeg. Manitoba.",
-    date: "July, 2024",
-    thumbnail: "https://img.youtube.com/vi/RBy5tRKA8FM/maxresdefault.jpg",
-    youtubeUrl: "https://www.youtube.com/watch?v=RBy5tRKA8FM",
+      "In this video, we will explain the \"cruel irony\" of financing for affordable housing and risk of non-profit development. Then we will introduce the concept of Patient Capital—a financial system that includes community bonds, impact investments and social values to help nonprofits bridge this gap.",
+    date: "2024",
+    thumbnail: "https://img.youtube.com/vi/ZoCwf3vMauQ/maxresdefault.jpg",
+    youtubeUrl: "https://www.youtube.com/watch?v=ZoCwf3vMauQ",
   },
   {
     id: 3,

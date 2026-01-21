@@ -6,11 +6,11 @@ import { FAQSchema } from "@/components/FAQSchema";
 import { InternalLinksSection } from "@/components/InternalLinksSection";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AlertCircle, Play, Image, Newspaper, Calendar, ExternalLink, FileText, Download, Eye, X } from "lucide-react";
+import { AlertCircle, Play, Image, Newspaper, Calendar, ExternalLink, FileText, Download, Eye, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { HeroBanner } from "@/components/shared/HeroBanner";
 import { HorizontalScrollCarousel } from "@/components/shared/HorizontalScrollCarousel";
 import { MediaItem, PdfDocument, PressRelease } from "@/types/common";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { logger } from "@/utils/logger";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 // Hero image now uses image registry system
@@ -52,6 +52,7 @@ const Media = () => {
   // Video modal state management
   const [selectedVideo, setSelectedVideo] = useState<MediaItem | null>(null);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
   // Article modal state management
   const [selectedArticle, setSelectedArticle] = useState<PressRelease | null>(null);
@@ -143,7 +144,7 @@ const Media = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isPdfModalOpen]);
 
-  // Close Video modal on Escape key
+  // Close Video modal on Escape key and navigate with arrow keys
   useEffect(() => {
     if (!isVideoModalOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -153,11 +154,21 @@ const Media = () => {
           setSelectedVideo(null);
           setIsVideoModalOpen(false);
         }
+      } else if (e.key === 'ArrowLeft' && mediaGallery.length > 1) {
+        e.preventDefault();
+        const newIndex = currentVideoIndex > 0 ? currentVideoIndex - 1 : mediaGallery.length - 1;
+        setCurrentVideoIndex(newIndex);
+        setSelectedVideo(mediaGallery[newIndex]);
+      } else if (e.key === 'ArrowRight' && mediaGallery.length > 1) {
+        e.preventDefault();
+        const newIndex = currentVideoIndex < mediaGallery.length - 1 ? currentVideoIndex + 1 : 0;
+        setCurrentVideoIndex(newIndex);
+        setSelectedVideo(mediaGallery[newIndex]);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isVideoModalOpen]);
+  }, [isVideoModalOpen, currentVideoIndex, mediaGallery]);
 
   // Close Article modal on Escape key
   useEffect(() => {
@@ -268,13 +279,25 @@ const Media = () => {
     </div>;
   };
   {/*Promotional Video Modal*/}
-  const openVideoModal = video => {
+  const openVideoModal = (video: MediaItem) => {
+    const index = mediaGallery.findIndex(v => v.id === video.id);
+    setCurrentVideoIndex(index >= 0 ? index : 0);
     setSelectedVideo(video);
     setIsVideoModalOpen(true);
   };
   const closeVideoModal = () => {
     setSelectedVideo(null);
     setIsVideoModalOpen(false);
+  };
+  const goToPreviousVideo = () => {
+    const newIndex = currentVideoIndex > 0 ? currentVideoIndex - 1 : mediaGallery.length - 1;
+    setCurrentVideoIndex(newIndex);
+    setSelectedVideo(mediaGallery[newIndex]);
+  };
+  const goToNextVideo = () => {
+    const newIndex = currentVideoIndex < mediaGallery.length - 1 ? currentVideoIndex + 1 : 0;
+    setCurrentVideoIndex(newIndex);
+    setSelectedVideo(mediaGallery[newIndex]);
   };
   {/*Article Modal*/}
   const openArticleModal = article => {
@@ -775,107 +798,277 @@ const Media = () => {
               </ScrollAnimationWrapper>
             </div>
 
-            {/* Media Gallery - Single Video Carousel */}
+            {/* Media Gallery - Carousel with Side Previews */}
             <div className="relative">
-              {/* Navigation Arrows - Subtle, Outside */}
-              <button 
-                onClick={goToPreviousMedia}
-                className="absolute -left-12 top-1/2 -translate-y-1/2 z-30 bg-white/40 hover:bg-white/60 text-foreground/60 hover:text-foreground rounded-full p-2 shadow-md hover:shadow-lg hover:scale-110 transition-all duration-300 hidden md:flex items-center justify-center backdrop-blur-sm"
-                aria-label="Previous video"
-              >
-                <span className="text-xl font-light">‹</span>
-              </button>
-              
-              <button 
-                onClick={goToNextMedia}
-                className="absolute -right-12 top-1/2 -translate-y-1/2 z-30 bg-white/40 hover:bg-white/60 text-foreground/60 hover:text-foreground rounded-full p-2 shadow-md hover:shadow-lg hover:scale-110 transition-all duration-300 hidden md:flex items-center justify-center backdrop-blur-sm"
-                aria-label="Next video"
-              >
-                <span className="text-xl font-light">›</span>
-              </button>
-              
-              {/* Single Video Display */}
-              <div className="relative h-[600px] rounded-2xl overflow-hidden bg-muted">
-                {mediaGallery.map((item, index) => {
-                  const isActive = index === currentMediaIndex;
-                  
-                  return (
-                    <div
-                      key={item.id}
-                      onClick={() => openVideoModal(item)}
-                      className={`absolute inset-0 group cursor-pointer transition-opacity duration-500 ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-                    >
-                      {/* Thumbnail Background */}
-                      <img 
-                        src={item.thumbnail} 
-                        alt={getMediaImageAltText(item.title, item.type)}
-                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        loading={isActive ? "eager" : "lazy"}
-                        onError={(e) => {
-                          const img = e.target as HTMLImageElement;
-                          if (img.src.includes('maxresdefault')) {
-                            img.src = img.src.replace('maxresdefault', 'hqdefault');
-                          }
-                        }}
-                      />
-                      
-                      {/* Gradient Overlay for Text Readability */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/30"></div>
-                      
-                      {/* Play Button Overlay - Center */}
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
-                        <div className="bg-white/95 backdrop-blur-sm rounded-full p-5 transform group-hover:scale-110 transition-transform duration-300 shadow-2xl">
-                          <Play className="h-16 w-16 text-primary" fill="currentColor" />
-                        </div>
-                      </div>
-                      
-                      {/* Content Overlay - Bottom */}
-                      <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-12 z-10 max-w-4xl">
-                        {/* Top Badges */}
-                        <div className="flex items-center justify-between mb-6">
-                          <div className="flex items-center gap-3">
-                            {index === 0 && (
-                              <span className="px-4 py-1.5 bg-red-600 text-white text-sm font-semibold rounded-full">
-                                Featured
-                              </span>
-                            )}
-                            <span className="px-4 py-1.5 rounded-full text-sm font-semibold backdrop-blur-sm bg-red-500/90 text-white">
-                              Video
-                            </span>
-                          </div>
-                          {/* Date - Moved to far right */}
-                          <div className="flex items-center gap-2 text-white/70 text-sm absolute right-8 lg:right-12 top-8 lg:top-12">
-                            <Calendar className="h-4 w-4" />
-                            {item.date}
-                          </div>
-                        </div>
-                        
-                        {/* Title */}
-                        <h3 className="text-white font-bold mb-4 group-hover:text-red-400 transition-colors text-3xl lg:text-4xl">
-                          {item.title}
-                        </h3>
-                        
-                        {/* Description - Full Text */}
-                        <p className="text-white/95 mb-8 leading-relaxed text-lg lg:text-xl max-w-3xl">
-                          {item.description}
-                        </p>
-                        
-                        {/* Watch Button */}
-                        <Button 
-                          size="lg" 
-                          className="bg-white/20 hover:bg-red-600 text-white border-2 border-white/40 hover:border-red-600 backdrop-blur-sm transition-all duration-300 px-8 py-6 text-base font-semibold"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openVideoModal(item);
+              {/* Desktop Layout with Side Previews */}
+              <div className="hidden lg:flex items-center gap-4 relative">
+                {/* Previous Video Preview - Left */}
+                <div 
+                  onClick={goToPreviousMedia}
+                  className="flex-shrink-0 w-[280px] h-[400px] rounded-xl overflow-hidden bg-muted cursor-pointer group relative transform transition-all duration-300 hover:scale-105 opacity-60 hover:opacity-80"
+                >
+                  {(() => {
+                    const prevIndex = currentMediaIndex > 0 ? currentMediaIndex - 1 : mediaGallery.length - 1;
+                    const prevItem = mediaGallery[prevIndex];
+                    return (
+                      <>
+                        <img 
+                          src={prevItem.thumbnail} 
+                          alt={getMediaImageAltText(prevItem.title, prevItem.type)}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          loading="lazy"
+                          onError={(e) => {
+                            const img = e.target as HTMLImageElement;
+                            if (img.src.includes('maxresdefault')) {
+                              img.src = img.src.replace('maxresdefault', 'hqdefault');
+                            }
                           }}
-                        >
-                          <Play className="h-5 w-5 mr-2" fill="currentColor" />
-                          Watch Video
-                        </Button>
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20"></div>
+                        <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
+                          <div className="flex items-center gap-2 mb-2">
+                            <ChevronLeft className="h-4 w-4 text-white/70" />
+                            <span className="text-xs text-white/70 font-medium">Previous</span>
+                          </div>
+                          <h4 className="text-white font-semibold text-sm line-clamp-2">{prevItem.title}</h4>
+                        </div>
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
+                            <ChevronLeft className="h-6 w-6 text-white" />
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })()}
+                </div>
+
+                {/* Current Video - Center (Full Size) */}
+                <div className="flex-1 relative h-[600px] rounded-2xl overflow-hidden bg-muted">
+                  {mediaGallery.map((item, index) => {
+                    const isActive = index === currentMediaIndex;
+                    
+                    return (
+                      <div
+                        key={item.id}
+                        onClick={() => openVideoModal(item)}
+                        className={`absolute inset-0 group cursor-pointer transition-all duration-500 ${isActive ? 'opacity-100 z-10 scale-100' : 'opacity-0 z-0 scale-95'}`}
+                      >
+                        {/* Thumbnail Background */}
+                        <img 
+                          src={item.thumbnail} 
+                          alt={getMediaImageAltText(item.title, item.type)}
+                          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                          loading={isActive ? "eager" : "lazy"}
+                          onError={(e) => {
+                            const img = e.target as HTMLImageElement;
+                            if (img.src.includes('maxresdefault')) {
+                              img.src = img.src.replace('maxresdefault', 'hqdefault');
+                            }
+                          }}
+                        />
+                        
+                        {/* Gradient Overlay for Text Readability */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/30"></div>
+                        
+                        {/* Play Button Overlay - Center */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                          <div className="bg-white/95 backdrop-blur-sm rounded-full p-5 transform group-hover:scale-110 transition-transform duration-300 shadow-2xl">
+                            <Play className="h-16 w-16 text-primary" fill="currentColor" />
+                          </div>
+                        </div>
+                        
+                        {/* Content Overlay - Bottom */}
+                        <div className="absolute bottom-0 left-0 right-0 p-8 lg:p-12 z-10 max-w-4xl">
+                          {/* Top Badges */}
+                          <div className="flex items-center justify-between mb-6">
+                            <div className="flex items-center gap-3">
+                              {index === 0 && (
+                                <span className="px-4 py-1.5 bg-red-600 text-white text-sm font-semibold rounded-full">
+                                  Featured
+                                </span>
+                              )}
+                              <span className="px-4 py-1.5 rounded-full text-sm font-semibold backdrop-blur-sm bg-red-500/90 text-white">
+                                Video
+                              </span>
+                            </div>
+                            {/* Date - Moved to far right */}
+                            <div className="flex items-center gap-2 text-white/70 text-sm absolute right-8 lg:right-12 top-8 lg:top-12">
+                              <Calendar className="h-4 w-4" />
+                              {item.date}
+                            </div>
+                          </div>
+                          
+                          {/* Title */}
+                          <h3 className="text-white font-bold mb-4 group-hover:text-red-400 transition-colors text-3xl lg:text-4xl">
+                            {item.title}
+                          </h3>
+                          
+                          {/* Description - Full Text */}
+                          <p className="text-white/95 mb-8 leading-relaxed text-lg lg:text-xl max-w-3xl">
+                            {item.description}
+                          </p>
+                          
+                          {/* Watch Button */}
+                          <Button 
+                            size="lg" 
+                            className="bg-white/20 hover:bg-red-600 text-white border-2 border-white/40 hover:border-red-600 backdrop-blur-sm transition-all duration-300 px-8 py-6 text-base font-semibold"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openVideoModal(item);
+                            }}
+                          >
+                            <Play className="h-5 w-5 mr-2" fill="currentColor" />
+                            Watch Video
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
+
+                {/* Next Video Preview - Right */}
+                <div 
+                  onClick={goToNextMedia}
+                  className="flex-shrink-0 w-[280px] h-[400px] rounded-xl overflow-hidden bg-muted cursor-pointer group relative transform transition-all duration-300 hover:scale-105 opacity-60 hover:opacity-80"
+                >
+                  {(() => {
+                    const nextIndex = currentMediaIndex < mediaGallery.length - 1 ? currentMediaIndex + 1 : 0;
+                    const nextItem = mediaGallery[nextIndex];
+                    return (
+                      <>
+                        <img 
+                          src={nextItem.thumbnail} 
+                          alt={getMediaImageAltText(nextItem.title, nextItem.type)}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          loading="lazy"
+                          onError={(e) => {
+                            const img = e.target as HTMLImageElement;
+                            if (img.src.includes('maxresdefault')) {
+                              img.src = img.src.replace('maxresdefault', 'hqdefault');
+                            }
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20"></div>
+                        <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-xs text-white/70 font-medium">Next</span>
+                            <ChevronRight className="h-4 w-4 text-white/70" />
+                          </div>
+                          <h4 className="text-white font-semibold text-sm line-clamp-2">{nextItem.title}</h4>
+                        </div>
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
+                            <ChevronRight className="h-6 w-6 text-white" />
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })()}
+                </div>
+              </div>
+
+              {/* Tablet/Mobile Layout - Single Video with Navigation Arrows */}
+              <div className="lg:hidden relative">
+                {/* Navigation Arrows */}
+                <button 
+                  onClick={goToPreviousMedia}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 z-30 bg-white/90 text-foreground rounded-full p-2 shadow-lg hover:scale-110 transition-all"
+                  aria-label="Previous video"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+                
+                <button 
+                  onClick={goToNextMedia}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 z-30 bg-white/90 text-foreground rounded-full p-2 shadow-lg hover:scale-110 transition-all"
+                  aria-label="Next video"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+                
+                {/* Single Video Display */}
+                <div className="relative h-[500px] rounded-2xl overflow-hidden bg-muted mx-4">
+                  {mediaGallery.map((item, index) => {
+                    const isActive = index === currentMediaIndex;
+                    
+                    return (
+                      <div
+                        key={item.id}
+                        onClick={() => openVideoModal(item)}
+                        className={`absolute inset-0 group cursor-pointer transition-opacity duration-500 ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+                      >
+                        {/* Thumbnail Background */}
+                        <img 
+                          src={item.thumbnail} 
+                          alt={getMediaImageAltText(item.title, item.type)}
+                          className="absolute inset-0 w-full h-full object-cover"
+                          loading={isActive ? "eager" : "lazy"}
+                          onError={(e) => {
+                            const img = e.target as HTMLImageElement;
+                            if (img.src.includes('maxresdefault')) {
+                              img.src = img.src.replace('maxresdefault', 'hqdefault');
+                            }
+                          }}
+                        />
+                        
+                        {/* Gradient Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/30"></div>
+                        
+                        {/* Play Button Overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                          <div className="bg-white/95 backdrop-blur-sm rounded-full p-4">
+                            <Play className="h-12 w-12 text-primary" fill="currentColor" />
+                          </div>
+                        </div>
+                        
+                        {/* Content Overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 p-6 z-10">
+                          {/* Top Badges */}
+                          <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center gap-2">
+                              {index === 0 && (
+                                <span className="px-3 py-1 bg-red-600 text-white text-xs font-semibold rounded-full">
+                                  Featured
+                                </span>
+                              )}
+                              <span className="px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-sm bg-red-500/90 text-white">
+                                Video
+                              </span>
+                            </div>
+                            {/* Date - Moved to far right */}
+                            <div className="flex items-center gap-1.5 text-white/70 text-xs absolute right-6 top-6">
+                              <Calendar className="h-3.5 w-3.5" />
+                              {item.date}
+                            </div>
+                          </div>
+                          
+                          {/* Title */}
+                          <h3 className="text-white font-bold mb-3 text-xl">
+                            {item.title}
+                          </h3>
+                          
+                          {/* Description - Full Text */}
+                          <p className="text-white/95 mb-6 leading-relaxed text-sm">
+                            {item.description}
+                          </p>
+                          
+                          {/* Watch Button */}
+                          <Button 
+                            size="sm" 
+                            className="bg-white/20 hover:bg-red-600 text-white border border-white/30 hover:border-red-600 backdrop-blur-sm transition-all duration-300 w-full"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openVideoModal(item);
+                            }}
+                          >
+                            <Play className="h-4 w-4 mr-2" fill="currentColor" />
+                            Watch Video
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
               
               {/* Pagination Dots */}
@@ -1029,15 +1222,58 @@ const Media = () => {
 
         {/* YouTube Video Modal */}
         {isVideoModalOpen && selectedVideo && <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl h-full max-h-[90vh] flex flex-col">
-              <div className="flex items-center justify-between p-6 border-b">
-                <h3 className="font-semibold text-lg">{selectedVideo.title}</h3>
-                <Button variant="ghost" onClick={closeVideoModal} size="sm">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl h-full max-h-[85vh] flex flex-col relative">
+              {/* Navigation Buttons */}
+              {mediaGallery.length > 1 && (
+                <>
+                  <button
+                    onClick={goToPreviousVideo}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-foreground rounded-full p-2 shadow-lg hover:scale-110 transition-all duration-200"
+                    aria-label="Previous video"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={goToNextVideo}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-foreground rounded-full p-2 shadow-lg hover:scale-110 transition-all duration-200"
+                    aria-label="Next video"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+                </>
+              )}
+              
+              <div className="flex items-center justify-between p-4 border-b">
+                <div className="flex-1 min-w-0 pr-4">
+                  <h3 className="font-semibold text-base leading-tight">{selectedVideo.title}</h3>
+                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{selectedVideo.description}</p>
+                </div>
+                <Button variant="ghost" onClick={closeVideoModal} size="sm" className="flex-shrink-0">
                   <X className="h-4 w-4" />
                 </Button>
               </div>
-              <div className="flex-1 p-6 flex items-center justify-center">
-                <iframe width="100%" height="100%" className="rounded-xl" src={selectedVideo.youtubeUrl.replace("watch?v=", "embed/")} title={selectedVideo.title} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+              
+              {/* Video Counter */}
+              {mediaGallery.length > 1 && (
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 bg-black/60 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm">
+                  {currentVideoIndex + 1} / {mediaGallery.length}
+                </div>
+              )}
+              
+              <div className="flex-1 p-4 flex items-center justify-center">
+                <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    className="absolute inset-0"
+                    src={selectedVideo.youtubeUrl.replace("watch?v=", "embed/")}
+                    title={selectedVideo.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    key={selectedVideo.id}
+                  />
+                </div>
               </div>
             </div>
           </div>}

@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { FileText, Users, DollarSign, Building, Shield, Target, Calendar, Mail, CheckCircle, ArrowRight, TrendingUp, Heart, ChevronLeft, ChevronRight, ChevronDown, Lock, Leaf, MapPin, Phone } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { FileText, Users, DollarSign, Building, Shield, Target, Calendar, Mail, CheckCircle, ArrowRight, TrendingUp, Heart, ChevronLeft, ChevronRight, ChevronDown, Lock, Leaf, MapPin, Phone, Play, X } from "lucide-react";
 import { useFormSubmission } from "@/hooks/useFormSubmission";
 import { useTurnstile } from "@/hooks/useTurnstile";
 import { logger } from "@/utils/logger";
@@ -256,6 +257,11 @@ export const LimitedPartnership = () => {
   // DISCLAIMER COLLAPSE STATE
   // =============================================================================
   const [isDisclaimerExpanded, setIsDisclaimerExpanded] = useState(false);
+  
+  // =============================================================================
+  // VIDEO MODAL STATE
+  // =============================================================================
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   
   // Touch handling state
   const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
@@ -1700,5 +1706,57 @@ export const LimitedPartnership = () => {
           </div>
         </ScrollAnimationWrapper>
       </div>
+
+      {/* Sticky Learn More Button - Left Side */}
+      <button
+        onClick={() => setIsVideoModalOpen(true)}
+        className="fixed left-0 top-1/2 -translate-y-1/2 z-50 bg-[#E57373] hover:bg-[#d65b5b] text-white px-3 py-4 rounded-r-lg shadow-lg transition-all duration-300 hover:pl-5 group flex items-center gap-2 writing-mode-vertical"
+        style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+        aria-label="Learn more about Patient Capital"
+      >
+        <Play className="h-4 w-4 rotate-90" />
+        <span className="text-sm font-semibold tracking-wide">Learn More</span>
+      </button>
+
+      {/* Video Modal */}
+      <Dialog open={isVideoModalOpen} onOpenChange={setIsVideoModalOpen}>
+        <DialogContent className="max-w-2xl w-[95vw] p-0 overflow-hidden">
+          <DialogHeader className="p-4 pb-3">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <DialogTitle className="text-xl font-bold text-foreground">
+                  Understanding Risk and Patient Capital
+                </DialogTitle>
+                <p className="text-muted-foreground mt-1.5 text-xs leading-relaxed">
+                  In this video, we explain the "cruel irony" of financing for affordable housing and risk of non-profit development. Then we introduce the concept of Patient Capital—a financial system that includes community bonds, impact investments and social values to help nonprofits bridge this gap.
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsVideoModalOpen(false)}
+                className="h-8 w-8 p-0 hover:bg-gray-200 flex-shrink-0"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </DialogHeader>
+          <div className="px-4 pb-4">
+            <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/ZoCwf3vMauQ?si=JWOxn6KVAH36eevz"
+                title="Understanding Risk and Patient Capital"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+                className="absolute inset-0"
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>;
 };
