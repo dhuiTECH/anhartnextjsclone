@@ -1,5 +1,21 @@
 import { StaffMember } from "@/types/common";
 
+// Import staff images
+import crystalWiebeImg from "@/assets/staffAssets/Crystal Wiebe.jpeg";
+import christineWangImg from "@/assets/staffAssets/Christine Wang.png";
+import gradiousTheonestImg from "@/assets/staffAssets/Gradious Theonest.jpeg";
+import marcieGoodImg from "@/assets/staffAssets/Marcie Good.png";
+import sheriKingImg from "@/assets/staffAssets/Sheri King.jpeg";
+import reyahSobretodoImg from "@/assets/staffAssets/Reyah Sobretodo.jpeg";
+import ivyTsaiImg from "@/assets/staffAssets/Ivy Tsai.jpeg";
+
+// Extract .src from Next.js static imports
+const getImageSrc = (img: string | { src: string } | undefined): string => {
+  if (!img) return "";
+  if (typeof img === "string") return img;
+  return img.src || "";
+};
+
 /**
  * Board Members Data
  *
@@ -20,6 +36,7 @@ export const boardMembers: StaffMember[] = [
     bio: "",
     isLeadership: true,
     emailDomain: "anhart.ca",
+    image: getImageSrc(crystalWiebeImg),
   },
   {
     name: "Christine Wang",
@@ -27,6 +44,7 @@ export const boardMembers: StaffMember[] = [
     bio: "",
     isLeadership: true,
     emailDomain: "anhart.ca",
+    image: getImageSrc(christineWangImg),
   },
   {
     name: "Gradius Theonest",
@@ -34,6 +52,7 @@ export const boardMembers: StaffMember[] = [
     bio: "",
     isLeadership: true,
     emailDomain: "anhart.ca",
+    image: getImageSrc(gradiousTheonestImg),
   },
   {
     name: "Marcie Good",
@@ -41,6 +60,7 @@ export const boardMembers: StaffMember[] = [
     bio: "",
     isLeadership: true,
     emailDomain: "anhart.ca",
+    image: getImageSrc(marcieGoodImg),
   },
 ];
 
@@ -56,6 +76,7 @@ export const staff: StaffMember[] = [
     bio: "",
     isLeadership: true,
     emailDomain: "anhart.ca",
+    image: getImageSrc(sheriKingImg),
   },
   {
     name: "Reyah Sobretodo",
@@ -63,6 +84,7 @@ export const staff: StaffMember[] = [
     bio: "",
     isLeadership: true,
     emailDomain: "anhart.ca",
+    image: getImageSrc(reyahSobretodoImg),
   },
   {
     name: "Mariel Beltran",
@@ -92,5 +114,6 @@ export const staff: StaffMember[] = [
     bio: "",
     isLeadership: false,
     emailDomain: "anhartinvestments.ca",
+    image: getImageSrc(ivyTsaiImg),
   },
 ];
