@@ -56,8 +56,17 @@ export const StaffContactModal = ({
         <div className="space-y-6">
           {/* Profile Header */}
           <div className="text-center">
-            <div className="h-24 w-24 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 mx-auto mb-4 flex items-center justify-center">
-              <User className="h-12 w-12 text-primary" />
+            <div className="h-24 w-24 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 mx-auto mb-4 flex items-center justify-center overflow-hidden">
+              {staffMember.image ? (
+                <img
+                  src={staffMember.image}
+                  alt={staffMember.name}
+                  className="w-full h-full object-cover rounded-full"
+                  loading="lazy"
+                />
+              ) : (
+                <User className="h-12 w-12 text-primary" />
+              )}
             </div>
             <h3 className="text-xl font-semibold text-foreground mb-2">
               {staffMember.role}
