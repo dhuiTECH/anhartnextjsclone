@@ -73,6 +73,18 @@ export default function ContactClient() {
 
       console.log('Submitting form data:', jsonData);
 
+      const MERRITT_SCRIPT_URL = process.env.NEXT_PUBLIC_MERRITT_GOOGLE_SCRIPT_URL;
+      if (!MERRITT_SCRIPT_URL) {
+        toast({
+          title: 'Configuration Error',
+          description: 'Form submission is not configured. Please refresh the page (Ctrl+Shift+R) and try again.',
+          variant: 'destructive',
+        });
+        setIsSubmitting(false);
+        setSubmitStatus('idle');
+        return;
+      }
+
       // Send JSON data to Google Apps Script
       // Try with CORS first to read the response, fallback to no-cors if needed
       let submissionSuccess = false;
@@ -83,7 +95,7 @@ export default function ContactClient() {
         
         // First attempt: Try with CORS to read the response
         try {
-          const response = await fetch('https://script.google.com/macros/s/AKfycbxjz96P9FD-m1paINv4Hv1VCP9tt1c0VCnJrqcI_gJELGMIqVqBTYo3EAWga4uRRV5Yig/exec', {
+          const response = await fetch(MERRITT_SCRIPT_URL, {
             method: 'POST',
             mode: 'cors',
             headers: {
@@ -130,7 +142,7 @@ export default function ContactClient() {
           console.warn('CORS error details:', corsError);
           
           try {
-            const noCorsResponse = await fetch('https://script.google.com/macros/s/AKfycbxjz96P9FD-m1paINv4Hv1VCP9tt1c0VCnJrqcI_gJELGMIqVqBTYo3EAWga4uRRV5Yig/exec', {
+            const noCorsResponse = await fetch(MERRITT_SCRIPT_URL, {
               method: 'POST',
               mode: 'no-cors',
               headers: {

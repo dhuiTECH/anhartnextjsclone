@@ -321,7 +321,7 @@ export default function HomeClient() {
           console.warn('CORS error details:', corsError);
           
           try {
-            const noCorsResponse = await fetch('https://script.google.com/macros/s/AKfycbxjz96P9FD-m1paINv4Hv1VCP9tt1c0VCnJrqcI_gJELGMIqVqBTYo3EAWga4uRRV5Yig/exec', {
+            const noCorsResponse = await fetch(MERRITT_SCRIPT_URL, {
               method: 'POST',
               mode: 'no-cors',
               headers: {
