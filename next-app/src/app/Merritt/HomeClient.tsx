@@ -274,7 +274,7 @@ export default function HomeClient() {
         
         // First attempt: Try with CORS to read the response
         try {
-          const response = await fetch('https://script.google.com/macros/s/AKfycbxjz96P9FD-m1paINv4Hv1VCP9tt1c0VCnJrqcI_gJELGMIqVqBTYo3EAWga4uRRV5Yig/exec', {
+          const response = await fetch(MERRITT_SCRIPT_URL, {
             method: 'POST',
             mode: 'cors',
             headers: {
