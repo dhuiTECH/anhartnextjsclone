@@ -168,11 +168,7 @@ export const useFormSubmission = () => {
         return false;
       }
 
-      console.log('Submitting form to:', GOOGLE_SCRIPT_URL);
-      console.log('URL validation:', isValidGoogleScriptUrl(GOOGLE_SCRIPT_URL) ? '✅ Valid' : '❌ Invalid');
-      console.log('Form data:', { ...jsonData, email: '***' }); // Log without exposing email
-
-      // Convert to URL-encoded format for Google Apps Script
+      // Convert to URL-encoded format (GAS expects application/x-www-form-urlencoded)
       const body = new URLSearchParams();
       body.append("name", jsonData.name);
       body.append("email", jsonData.email);
@@ -187,13 +183,12 @@ export const useFormSubmission = () => {
       body.append("userAgent", jsonData.userAgent);
       body.append("referrer", jsonData.referrer);
 
+      // Submit via same-origin API route so we can read GAS response (no no-cors)
+      const apiUrl = "/api/submit-contact";
+
       try {
-        // Add cache-busting query parameter to prevent stale requests
-        const urlWithCacheBust = `${GOOGLE_SCRIPT_URL}${GOOGLE_SCRIPT_URL.includes('?') ? '&' : '?'}_t=${Date.now()}`;
-        
-        const response = await fetch(urlWithCacheBust, {
+        const response = await fetch(apiUrl, {
           method: "POST",
-          mode: "no-cors",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
             "Cache-Control": "no-cache, no-store, must-revalidate",
@@ -203,51 +198,48 @@ export const useFormSubmission = () => {
           body: body.toString(),
         });
 
-        // With no-cors mode, we can't read the response, but the request was sent
-        console.log('✅ Form submitted successfully');
-      } catch (fetchError: any) {
-        console.error('❌ Form submission failed:', fetchError.message);
-        
-        // Retry on network errors
+        const data = (await response.json()) as { success?: boolean; error?: string; message?: string };
+
+        if (!response.ok) {
+          throw new Error(data?.error ?? `Submission failed (${response.status})`);
+        }
+
+        if (data.success === false) {
+          throw new Error(data.error ?? "Submission was not accepted.");
+        }
+
+        toast({
+          title: "Message Sent Successfully!",
+          description: "Thank you for your submission. We have received your submission and will get back to you as soon as possible.",
+        });
+
+        if (typeof window !== "undefined" && window.gtag) {
+          window.gtag("event", "conversion", { send_to: "AW-17630924755/KUO-CIXqqNgbENOfitdB" });
+        }
+
+        return true;
+      } catch (fetchError: unknown) {
+        const message = fetchError instanceof Error ? fetchError.message : "Failed to submit form.";
+        console.error("Form submission failed:", message);
+
+        // Retry on network errors only
         if (retryCount < MAX_RETRIES && (
-          fetchError.message.includes('Failed to fetch') ||
-          fetchError.message.includes('NetworkError') ||
-          fetchError.message.includes('network')
+          message.includes("Failed to fetch") ||
+          message.includes("NetworkError") ||
+          message.includes("network")
         )) {
-          const delay = RETRY_DELAYS[retryCount] || 4000;
-          console.log(`Network error, retrying form submission in ${delay}ms... (attempt ${retryCount + 1}/${MAX_RETRIES})`);
-          
-          // On last retry, suggest page reload
-          if (retryCount === MAX_RETRIES - 1) {
-            console.log('Last retry failed, suggesting page reload...');
-            toast({
-              title: "Submission Failed",
-              description: "Unable to submit form. Please refresh the page (Ctrl+Shift+R) and try again.",
-              variant: "destructive",
-            });
-            setIsSubmitting(false);
-            return false;
-          }
-          
-          await new Promise(resolve => setTimeout(resolve, delay));
+          const delay = RETRY_DELAYS[retryCount] ?? 4000;
+          await new Promise((resolve) => setTimeout(resolve, delay));
           return submitForm(formData, retryCount + 1);
         }
-        
-        throw new Error('Failed to submit form. Please try again.');
+
+        toast({
+          title: "Submission Failed",
+          description: message,
+          variant: "destructive",
+        });
+        return false;
       }
-
-      // If we reach here, submission was successful
-      toast({
-        title: "Message Sent Successfully!",
-        description: "Thank you for your submission. We have received your submission and will get back to you as soon as possible.",
-      });
-
-      // Trigger Google Ads conversion event
-      if (typeof window !== 'undefined' && window.gtag) {
-        window.gtag('event', 'conversion', {'send_to': 'AW-17630924755/KUO-CIXqqNgbENOfitdB'});
-      }
-
-      return true;
     } catch (error) {
       // --- Enhanced Unexpected Error Handling ---
       logger.error("Unexpected error during form submission", error);
