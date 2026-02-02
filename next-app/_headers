@@ -1,17 +1,17 @@
-# Cache static assets with content hashes for 1 year (immutable)
+# Cache static assets for 1 hour
 /assets/*
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=3600, must-revalidate
 
-# Cache images for 1 year
+# Cache images for 1 hour
 /images/*
-  Cache-Control: public, max-age=31536000
+  Cache-Control: public, max-age=3600, must-revalidate
 
-# Cache fonts for 1 year
+# Cache fonts for 1 hour
 /*.woff2
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=3600, must-revalidate
 
 /*.woff
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=3600, must-revalidate
 
 # HTML files - no cache (always fresh)
 /*.html
