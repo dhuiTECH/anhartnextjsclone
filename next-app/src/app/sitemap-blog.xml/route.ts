@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache';
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
@@ -8,41 +9,31 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 // Create a server-side Supabase client for this route
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+async function fetchBlogPostsForSitemap(): Promise<Array<{ slug: string; updated_at: string; publish_date: string }>> {
+  const { data: posts, error } = await supabase
+    .from('blog_posts')
+    .select('slug, updated_at, publish_date')
+    .eq('is_published', true)
+    .order('publish_date', { ascending: false });
+  if (error) throw error;
+  return posts ?? [];
+}
+
 /**
  * Dynamic Blog Sitemap Route
- * 
- * Purpose: Generates sitemap-blog.xml dynamically from published blog posts in Supabase.
- * This ensures the sitemap is always up-to-date when posts are created or deleted.
- * 
- * Benefits:
- * - Automatically includes new blog posts
- * - Automatically removes deleted blog posts
- * - No manual sitemap updates needed
- * - Always reflects current database state
+ *
+ * Fetches are cached for 1 hour to reduce Supabase egress; CDN headers still allow stale-while-revalidate.
  */
 export async function GET() {
   try {
-    // Fetch all published blog posts from Supabase
-    const { data: posts, error } = await supabase
-      .from('blog_posts')
-      .select('slug, updated_at, publish_date')
-      .eq('is_published', true)
-      .order('publish_date', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching blog posts for sitemap:', error);
-      // Return a minimal sitemap with just the blog listing page on error
-      return generateSitemapXML([
-        {
-          slug: '',
-          updated_at: new Date().toISOString(),
-          publish_date: new Date().toISOString(),
-        },
-      ]);
-    }
+    const posts = await unstable_cache(
+      fetchBlogPostsForSitemap,
+      ['sitemap-blog-posts'],
+      { revalidate: 3600 }
+    )();
 
     // Generate sitemap XML
-    const sitemapXML = generateSitemapXML(posts || []);
+    const sitemapXML = generateSitemapXML(Array.isArray(posts) ? posts : []);
 
     // Return XML response with proper headers
     return new NextResponse(sitemapXML, {
@@ -54,20 +45,13 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error generating blog sitemap:', error);
-    // Return minimal sitemap on error
     return new NextResponse(
       generateSitemapXML([
-        {
-          slug: '',
-          updated_at: new Date().toISOString(),
-          publish_date: new Date().toISOString(),
-        },
+        { slug: '', updated_at: new Date().toISOString(), publish_date: new Date().toISOString() },
       ]),
       {
         status: 200,
-        headers: {
-          'Content-Type': 'application/xml; charset=utf-8',
-        },
+        headers: { 'Content-Type': 'application/xml; charset=utf-8' },
       }
     );
   }

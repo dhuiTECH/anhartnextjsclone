@@ -2,6 +2,9 @@ import { MetadataRoute } from 'next';
 import { getPortfolioProjects } from '@/lib/portfolio-data';
 import { generateProjectSlug } from '@/lib/slug';
 
+// Revalidate sitemap every hour to reduce egress while keeping URLs fresh
+export const revalidate = 3600;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://anhart.ca';
 

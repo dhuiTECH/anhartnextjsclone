@@ -97,13 +97,23 @@ function convertRowToProjectData(row: PortfolioProjectRow): ProjectData {
   };
 }
 
+// Client-side in-memory cache to reduce Supabase egress (TTL 2 min)
+const PORTFOLIO_CACHE_TTL_MS = 2 * 60 * 1000;
+let portfolioCache: { data: ProjectData[]; ts: number } | null = null;
+
 /**
  * Fetches portfolio projects from Supabase
+ * Uses short client-side cache when in browser to reduce egress.
  */
 export async function getPortfolioProjects(): Promise<ProjectData[]> {
+  const isClient = typeof window !== 'undefined';
+  if (isClient && portfolioCache && Date.now() - portfolioCache.ts < PORTFOLIO_CACHE_TTL_MS) {
+    return portfolioCache.data;
+  }
+
   try {
     const client = typeof window === 'undefined' ? supabaseServer : supabase;
-    
+
     const { data, error } = await (client as any)
       .from('portfolio')
       .select('*')
@@ -115,7 +125,11 @@ export async function getPortfolioProjects(): Promise<ProjectData[]> {
       return [];
     }
 
-    return data.map((row: PortfolioProjectRow) => convertRowToProjectData(row));
+    const projects = data.map((row: PortfolioProjectRow) => convertRowToProjectData(row));
+    if (isClient) {
+      portfolioCache = { data: projects, ts: Date.now() };
+    }
+    return projects;
   } catch (error) {
     console.error('Error fetching portfolio projects:', error);
     return [];

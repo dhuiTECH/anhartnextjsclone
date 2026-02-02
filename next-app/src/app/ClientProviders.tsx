@@ -14,11 +14,11 @@ export function ClientProviders({ children }: { children: ReactNode }) {
       new QueryClient({
         defaultOptions: { 
           queries: { 
-            staleTime: 0, // Always refetch to prevent stale data issues
-            gcTime: 5 * 60 * 1000, // Keep in cache for 5 minutes but always refetch
-            refetchOnWindowFocus: true, // Refetch when user returns to tab
-            refetchOnMount: true, // Refetch when component mounts
-            retry: 3, // Retry failed queries 3 times
+            staleTime: 60 * 1000, // Consider data fresh for 1 min to reduce egress
+            gcTime: 5 * 60 * 1000, // Keep in cache for 5 minutes
+            refetchOnWindowFocus: true,
+            refetchOnMount: true,
+            retry: 3,
           } 
         },
       }),

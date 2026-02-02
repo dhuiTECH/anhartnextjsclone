@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache';
 import { BlogPost } from '@/data/blog';
 import { createClient } from '@supabase/supabase-js';
 
@@ -51,25 +52,26 @@ function transformDbPost(dbPost: DbBlogPost): BlogPost & { updatedAt: string } {
 }
 
 export async function getPostBySlugServer(slug: string): Promise<(BlogPost & { updatedAt: string }) | null> {
-  try {
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .select('*')
-      .eq('slug', slug)
-      .eq('is_published', true)
-      .single();
+  const fetcher = async (): Promise<(BlogPost & { updatedAt: string }) | null> => {
+    try {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('slug', slug)
+        .eq('is_published', true)
+        .single();
 
-    if (error || !data) {
-      console.log('⚠️  No post found in database for slug:', slug);
-      console.log('⚠️  This is likely due to Supabase RLS policy blocking anonymous reads.');
-      console.log('⚠️  Blog post will fallback to client-side rendering, but SEO metadata will be limited.');
+      if (error || !data) {
+        console.log('⚠️  No post found in database for slug:', slug);
+        return null;
+      }
+      return transformDbPost(data as DbBlogPost);
+    } catch (error) {
+      console.error('⚠️  Error fetching blog post from Supabase:', error);
       return null;
     }
+  };
 
-    return transformDbPost(data as DbBlogPost);
-  } catch (error) {
-    console.error('⚠️  Error fetching blog post from Supabase:', error);
-    console.log('⚠️  Blog post will fallback to client-side rendering, but SEO metadata will be limited.');
-    return null;
-  }
+  // Cache per slug for 1 hour to reduce Supabase egress
+  return unstable_cache(fetcher, ['blog-post', slug], { revalidate: 3600 })();
 }
