@@ -23,7 +23,8 @@ import { mediaGallery,
 // @source: src/pages/Media.tsx - mediaGallery variable
 pdfDocuments,
 // @source: src/pages/Media.tsx - pdfDocuments variable
-pressReleases // @source: src/pages/Media.tsx - pressReleases variable
+pressReleases, // @source: src/pages/Media.tsx - pressReleases variable
+readingsOfAnhart // Combined PDFs and press releases
 } from "@/data";
 
 // =============================================================================
@@ -58,10 +59,9 @@ const Media = () => {
   const [selectedArticle, setSelectedArticle] = useState<PressRelease | null>(null);
   const [isArticleModalOpen, setIsArticleModalOpen] = useState(false);
 
-  // Carousel state for Document Library, Media Gallery, and Press Coverage
-  const [currentDocumentIndex, setCurrentDocumentIndex] = useState(0);
+  // Carousel state for Media Gallery and Readings of Anhart
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
-  const [currentPressIndex, setCurrentPressIndex] = useState(0);
+  const [currentReadingIndex, setCurrentReadingIndex] = useState(0);
   
   // Media Gallery carousel navigation
   const goToPreviousMedia = () => {
@@ -72,17 +72,48 @@ const Media = () => {
     setCurrentMediaIndex((prev) => (prev === mediaGallery.length - 1 ? 0 : prev + 1));
   };
 
-  // Pagination state for 2x2 grid layout (4 items per page)
-  const [currentDocumentPage, setCurrentDocumentPage] = useState(0);
-  const [currentPressPage, setCurrentPressPage] = useState(0);
+  // Pagination state for Readings of Anhart
+  const [currentReadingPage, setCurrentReadingPage] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(0);
 
-  // Calculate items per page and total pages
-  const itemsPerPage = 4;
-  const totalDocumentPages = Math.ceil(pdfDocuments.length / itemsPerPage);
-  const totalPressPages = Math.ceil(pressReleases.length / itemsPerPage);
+  // Responsive items per page: 6 on desktop (lg), 4 on tablet (md), 1 on mobile
+  useEffect(() => {
+    const handleResize = () => {
+      const newWidth = window.innerWidth;
+      setWindowWidth(newWidth);
+      
+      // Reset to first page when screen size changes to avoid out-of-bounds
+      setCurrentReadingPage(0);
+    };
+    
+    // Set initial width
+    if (typeof window !== 'undefined') {
+      handleResize();
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
+  // Calculate items per page based on screen size
+  const getItemsPerPage = () => {
+    if (typeof window === 'undefined' || windowWidth === 0) return 6; // Default to desktop on SSR
+    if (windowWidth >= 1024) return 6; // Desktop (lg)
+    if (windowWidth >= 768) return 4; // Tablet (md)
+    return 1; // Mobile
+  };
+
+  const itemsPerPage = getItemsPerPage();
+  const totalReadingPages = Math.ceil(readingsOfAnhart.length / itemsPerPage);
+
+  // Reset page if current page is out of bounds
+  useEffect(() => {
+    if (currentReadingPage >= totalReadingPages && totalReadingPages > 0) {
+      setCurrentReadingPage(0);
+    }
+  }, [totalReadingPages, currentReadingPage]);
 
   // Get current page items
-  const getCurrentPageItems = (items: any[], currentPage: number) => {
+  const getCurrentPageItems = (items: any[], currentPage: number, itemsPerPage: number) => {
     const startIndex = currentPage * itemsPerPage;
     return items.slice(startIndex, startIndex + itemsPerPage);
   };
@@ -316,32 +347,22 @@ const Media = () => {
     }
   };
 
-  // Navigation functions for carousels
-  const goToPreviousDocument = () => {
-    setCurrentDocumentIndex(prev => prev > 0 ? prev - 1 : pdfDocuments.length - 1);
+  // Navigation functions for Readings of Anhart
+  const goToPreviousReading = () => {
+    setCurrentReadingIndex(prev => prev > 0 ? prev - 1 : readingsOfAnhart.length - 1);
   };
-  const goToNextDocument = () => {
-    setCurrentDocumentIndex(prev => prev < pdfDocuments.length - 1 ? prev + 1 : 0);
-  };
-  const goToPreviousPress = () => {
-    setCurrentPressIndex(prev => prev > 0 ? prev - 1 : pressReleases.length - 1);
-  };
-  const goToNextPress = () => {
-    setCurrentPressIndex(prev => prev < pressReleases.length - 1 ? prev + 1 : 0);
+  const goToNextReading = () => {
+    setCurrentReadingIndex(prev => prev < readingsOfAnhart.length - 1 ? prev + 1 : 0);
   };
 
-  // Pagination navigation functions
-  const goToPreviousDocumentPage = () => {
-    setCurrentDocumentPage(prev => prev > 0 ? prev - 1 : totalDocumentPages - 1);
+  // Pagination navigation functions for Readings
+  const goToPreviousReadingPage = () => {
+    const totalPages = Math.ceil(readingsOfAnhart.length / getItemsPerPage());
+    setCurrentReadingPage(prev => prev > 0 ? prev - 1 : totalPages - 1);
   };
-  const goToNextDocumentPage = () => {
-    setCurrentDocumentPage(prev => prev < totalDocumentPages - 1 ? prev + 1 : 0);
-  };
-  const goToPreviousPressPage = () => {
-    setCurrentPressPage(prev => prev > 0 ? prev - 1 : totalPressPages - 1);
-  };
-  const goToNextPressPage = () => {
-    setCurrentPressPage(prev => prev < totalPressPages - 1 ? prev + 1 : 0);
+  const goToNextReadingPage = () => {
+    const totalPages = Math.ceil(readingsOfAnhart.length / getItemsPerPage());
+    setCurrentReadingPage(prev => prev < totalPages - 1 ? prev + 1 : 0);
   };
 
   // Touch handling functions
@@ -437,14 +458,12 @@ const Media = () => {
       }
       
       if (isLeftSwipe) {
-        if (type === 'document') goToNextDocument();
+        if (type === 'reading') goToNextReading();
         if (type === 'media') goToNextMedia();
-        if (type === 'press') goToNextPress();
       }
       if (isRightSwipe) {
-        if (type === 'document') goToPreviousDocument();
+        if (type === 'reading') goToPreviousReading();
         if (type === 'media') goToPreviousMedia();
-        if (type === 'press') goToPreviousPress();
       }
     }
 
@@ -557,223 +576,6 @@ const Media = () => {
             </div>
           </div>
         </section>
-
-         {/* PDF Documents Section - Staggered Masonry Layout */}
-         <section className="py-32 relative">
-           {/* Subtle diagonal accent */}
-           <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/3 to-transparent -skew-x-12 origin-top-right"></div>
-           
-           <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-             {/* Section Header - Left Aligned */}
-             <div className="mb-20 max-w-2xl">
-               <ScrollAnimationWrapper direction="left">
-                 <div className="inline-block mb-4">
-                   <span className="text-sm font-semibold text-primary uppercase tracking-wider">Resources</span>
-                 </div>
-                 <h2 className="text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-6">
-                   Document Library
-                 </h2>
-               </ScrollAnimationWrapper>
-               <ScrollAnimationWrapper direction="left" delay={100}>
-                 <p className="text-lg leading-relaxed text-muted-foreground">
-                   Comprehensive collection of PDF documents with detailed insights, specifications, and resources.
-                 </p>
-               </ScrollAnimationWrapper>
-             </div>
-           
-             {/* PDF Documents - Desktop 2x2 Grid with Pagination */}
-             <div className="hidden md:block">
-               {/* Navigation Arrows */}
-               <div className="flex justify-between items-center mb-6">
-                 <button onClick={goToPreviousDocumentPage} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" aria-label="Previous page">
-                   <span className="text-xl">‹</span>
-                   Previous
-                 </button>
-                 
-                 <div className="flex items-center gap-2">
-                   <span className="text-sm text-muted-foreground">
-                     Page {currentDocumentPage + 1} of {totalDocumentPages}
-                   </span>
-                 </div>
-                 
-                 <button onClick={goToNextDocumentPage} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" aria-label="Next page">
-                   Next
-                   <span className="text-xl">›</span>
-                 </button>
-               </div>
-
-               {/* Staggered Masonry Grid - Varied Heights */}
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                 {getCurrentPageItems(pdfDocuments, currentDocumentPage).map((pdf, index) => {
-                   // Create varied heights for visual interest
-                   const isTall = index % 3 === 0;
-                   return <ScrollAnimationWrapper key={pdf.id} direction="bottom" delay={200 + index * 50}>
-                     <div className={`group relative border rounded-2xl p-6 lg:p-8 bg-card hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 ${isTall ? 'lg:row-span-2' : ''}`}>
-                       {/* Gradient accent on hover */}
-                       <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:via-red-500/5 group-hover:to-primary/5 rounded-2xl transition-all duration-300"></div>
-                       
-                       <div className="relative z-10">
-                         <div className="flex items-start justify-between mb-4">
-                           <div className="p-3 bg-gradient-to-br from-red-500/10 to-primary/10 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                             <FileText className="h-6 w-6 text-red-600" />
-                           </div>
-                           <span className="text-xs font-medium text-muted-foreground bg-muted px-3 py-1 rounded-full">{pdf.date}</span>
-                         </div>
-                         
-                         <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{pdf.title}</h3>
-                         <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                           <span className="flex items-center gap-1">
-                             <FileText className="h-3 w-3" />
-                             {pdf.pages} pages
-                           </span>
-                           <span>{pdf.size}</span>
-                         </div>
-                         <p className="text-muted-foreground mb-6 leading-relaxed">{pdf.description}</p>
-                         
-                         <div className="flex gap-3">
-                           <Button onClick={() => openPdfModal(pdf)} className="flex-1 bg-gradient-to-r from-primary to-red-600 hover:from-primary/90 hover:to-red-600/90 text-white border-0" size="sm">
-                             <Eye className="h-4 w-4 mr-2" />
-                             Preview
-                           </Button>
-                           <Button variant="outline" onClick={() => downloadPdf(pdf)} size="sm" className="flex items-center gap-2 hover:bg-primary hover:text-primary-foreground transition-colors">
-                             <Download className="h-4 w-4" />
-                           </Button>
-                         </div>
-                       </div>
-                     </div>
-                   </ScrollAnimationWrapper>;
-                 })}
-               </div>
-
-               {/* Pagination Dots */}
-               <div className="flex justify-center items-center mt-8 space-x-2">
-                 {Array.from({
-                length: totalDocumentPages
-              }, (_, index) => <button key={index} onClick={() => setCurrentDocumentPage(index)} className={`h-3 rounded-full transition-all duration-300 ${index === currentDocumentPage ? 'bg-primary w-8 shadow-lg shadow-primary/30' : 'bg-primary/40 hover:bg-primary/60 w-3'}`} aria-label={`Go to page ${index + 1}`} />)}
-               </div>
-             </div>
-
-             {/* PDF Documents - Mobile Carousel */}
-             <div className="md:hidden">
-               {/* Pagination Dots */}
-               <ScrollAnimationWrapper direction="top" delay={200}>
-                 <div className="flex justify-center items-center mb-6 space-x-2">
-                   {pdfDocuments.map((_, index) => <button key={index} onClick={() => setCurrentDocumentIndex(index)} className={`h-3 rounded-full transition-all duration-300 ${index === currentDocumentIndex ? 'bg-primary w-8 shadow-lg shadow-primary/30' : 'bg-primary/40 hover:bg-primary/60 w-3'}`} aria-label={`Go to document ${index + 1}`} />)}
-                 </div>
-               </ScrollAnimationWrapper>
-
-               {/* Navigation Container */}
-               <ScrollAnimationWrapper direction="bottom" delay={300}>
-                 <div className={`relative touch-pan-x transition-all duration-300 ${isTouchActive ? 'shadow-2xl shadow-primary/20' : ''} ${
-                  isAnimating 
-                    ? swipeDirection === 'left' 
-                      ? 'animate-slide-out-left' 
-                      : 'animate-slide-out-right'
-                    : ''
-                }`} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={() => handleTouchEnd('document')} onTouchCancel={handleTouchCancel} style={{
-                touchAction: 'auto'
-              }}>
-                   {/* Previous Arrow */}
-                   <button onClick={goToPreviousDocument} className="absolute left-1 top-1/2 -translate-y-1/2 z-20 text-foreground/60 hover:text-foreground text-3xl font-bold transition-all duration-200 hover:scale-110" aria-label="Previous document">
-                     ‹
-                   </button>
-
-                   {/* Next Arrow */}
-                   <button onClick={goToNextDocument} className="absolute right-1 top-1/2 -translate-y-1/2 z-20 text-foreground/60 hover:text-foreground text-3xl font-bold transition-all duration-200 hover:scale-110" aria-label="Next document">
-                     ›
-                   </button>
-
-                   {/* Single Document Display */}
-                   <div className="px-6">
-                     {pdfDocuments[currentDocumentIndex] && <div className="flex justify-center">
-                         <div className="w-full max-w-sm">
-                           <ScrollAnimationWrapper direction="top" delay={200 + currentDocumentIndex * 100}>
-                             <div className="border rounded-lg p-6 hover:shadow-sm sm:hover:shadow-lg transition-shadow">
-                               <div className="flex items-start justify-between mb-3">
-                                 <div className="flex items-center gap-3">
-                                   <div className="p-2 bg-red-100 text-red-600 rounded-lg">
-                                     <FileText className="h-6 w-6" />
-                                   </div>
-                                 </div>
-                                 <span className="text-sm text-muted-foreground">{pdfDocuments[currentDocumentIndex].date}</span>
-                               </div>
-                               
-                               <h3 className="text-lg font-semibold mb-2">{pdfDocuments[currentDocumentIndex].title}</h3>
-                               <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                                 <span>{pdfDocuments[currentDocumentIndex].pages} pages</span>
-                                 <span>{pdfDocuments[currentDocumentIndex].size}</span>
-                               </div>
-                               <p className="text-muted-foreground mb-6 text-sm">{pdfDocuments[currentDocumentIndex].description}</p>
-                               
-                               <div className="flex gap-2">
-                                 <Button onClick={() => openPdfModal(pdfDocuments[currentDocumentIndex])} className="flex-1 flex items-center gap-2" size="sm">
-                                   <Eye className="h-4 w-4" />
-                                   Preview
-                                 </Button>
-                                 <Button variant="outline" onClick={() => downloadPdf(pdfDocuments[currentDocumentIndex])} size="sm" className="flex items-center gap-2">
-                                   <Download className="h-4 w-4" />
-                                   Download
-                                 </Button>
-                               </div>
-                             </div>
-                           </ScrollAnimationWrapper>
-                         </div>
-                       </div>}
-                   </div>
-                 </div>
-               </ScrollAnimationWrapper>
-             </div>
-           </div>
-         </section>
-  
-        {/* Enhanced PDF Modal */}
-        {isPdfModalOpen && selectedPdf && <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={e => {
-        if (e.target === e.currentTarget) closePdfModal();
-      }} onKeyDown={e => {
-        if (e.key === 'Escape') closePdfModal();
-      }} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="pdf-modal-title">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-full max-h-[90vh] flex flex-col">
-              {/* Modal Header */}
-              <div className="flex items-center justify-between p-6 border-b">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-red-100 text-red-600 rounded-lg">
-                    <FileText className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h3 id="pdf-modal-title" className="font-semibold text-lg">{selectedPdf.title}</h3>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span>{selectedPdf.pages} pages</span>
-                      <span>{selectedPdf.size}</span>
-                      <span>{selectedPdf.date}</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  
-                  
-                  <Button variant="ghost" onClick={closePdfModal} size="sm">
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-
-            {/* Modal Content */}
-            <div className="flex-1 p-6">
-              <div className="w-full h-full bg-gray-50 rounded-xl overflow-hidden shadow-inner relative">
-                {pdfLoading ? <div className="flex items-center justify-center h-full">
-                    <div className="text-center">
-                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-                      <p className="text-muted-foreground">Checking PDF availability...</p>
-                    </div>
-                  </div> : <PdfFallbackOptions pdf={selectedPdf} />}
-              </div>
-            </div>
-
-            {/* Footer with additional options */}
-            
-          </div>
-        </div>}
 
         {/* Media Gallery - Asymmetric Grid Layout */}
         <section className="py-32 relative overflow-hidden bg-gradient-to-br from-background via-muted/20 to-background">
@@ -1220,6 +1022,290 @@ const Media = () => {
           </div>
         </section>
 
+         {/* Readings of Anhart - Combined PDF Documents and Press Releases */}
+         <section className="py-32 relative">
+           {/* Subtle diagonal accent */}
+           <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/3 to-transparent -skew-x-12 origin-top-right"></div>
+           
+           <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
+             {/* Section Header - Left Aligned */}
+             <div className="mb-20 max-w-2xl">
+               <ScrollAnimationWrapper direction="left">
+                 <div className="inline-block mb-4">
+                   <span className="text-sm font-semibold text-primary uppercase tracking-wider">Resources</span>
+                 </div>
+                 <h2 className="text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-6">
+                   Readings of Anhart
+                 </h2>
+               </ScrollAnimationWrapper>
+               <ScrollAnimationWrapper direction="left" delay={100}>
+                 <p className="text-lg leading-relaxed text-muted-foreground">
+                   Comprehensive collection of documents, reports, and press coverage about Anhart's work in affordable housing.
+                 </p>
+               </ScrollAnimationWrapper>
+             </div>
+           
+             {/* Readings of Anhart - Desktop & Tablet Grid with Pagination */}
+             <div className="hidden md:block">
+               {/* Navigation Arrows */}
+               <div className="flex justify-between items-center mb-6">
+                 <button onClick={goToPreviousReadingPage} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" aria-label="Previous page">
+                   <span className="text-xl">‹</span>
+                   Previous
+                 </button>
+                 
+                 <div className="flex items-center gap-2">
+                   <span className="text-sm text-muted-foreground">
+                     Page {currentReadingPage + 1} of {totalReadingPages}
+                   </span>
+                 </div>
+                 
+                 <button onClick={goToNextReadingPage} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" aria-label="Next page">
+                   Next
+                   <span className="text-xl">›</span>
+                 </button>
+               </div>
+
+               {/* Responsive Grid: 6 columns on desktop (lg), 4 on tablet (md) */}
+               <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6 lg:gap-8">
+                 {getCurrentPageItems(readingsOfAnhart, currentReadingPage, itemsPerPage).map((item, index) => {
+                   // Create varied heights for visual interest
+                   const isTall = index % 3 === 0;
+                   const isPdf = item.itemType === 'pdf';
+                   const isPress = item.itemType === 'press';
+                   
+                   return <ScrollAnimationWrapper key={`${item.itemType}-${item.id}`} direction="bottom" delay={200 + index * 50}>
+                     <div className={`group relative border rounded-2xl p-6 lg:p-8 bg-card hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 ${isTall ? 'lg:row-span-2' : ''}`}>
+                       {/* Gradient accent on hover */}
+                       <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:via-red-500/5 group-hover:to-primary/5 rounded-2xl transition-all duration-300"></div>
+                       
+                       <div className="relative z-10">
+                         <div className="flex items-start justify-between mb-4">
+                           <div className={`p-3 bg-gradient-to-br ${isPdf ? 'from-red-500/10 to-primary/10' : 'from-blue-500/10 to-primary/10'} rounded-xl group-hover:scale-110 transition-transform duration-300`}>
+                             {isPdf ? <FileText className="h-6 w-6 text-red-600" /> : <Newspaper className="h-6 w-6 text-blue-600" />}
+                           </div>
+                           <span className="text-xs font-medium text-muted-foreground bg-muted px-3 py-1 rounded-full">{item.date}</span>
+                         </div>
+                         
+                         <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">{item.title}</h3>
+                         
+                         {isPdf && (
+                           <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+                             <span className="flex items-center gap-1">
+                               <FileText className="h-3 w-3" />
+                               {item.pages} pages
+                             </span>
+                             <span>{item.size}</span>
+                           </div>
+                         )}
+                         
+                         {isPress && (
+                           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+                             <Newspaper className="h-4 w-4" />
+                             {item.source}
+                           </div>
+                         )}
+                         
+                         <p className="text-muted-foreground mb-6 leading-relaxed">{isPdf ? item.description : item.excerpt}</p>
+                         
+                         <div className="flex gap-3">
+                           {isPdf ? (
+                             <>
+                               <Button onClick={() => openPdfModal(item)} className="flex-1 bg-gradient-to-r from-primary to-red-600 hover:from-primary/90 hover:to-red-600/90 text-white border-0" size="sm">
+                                 <Eye className="h-4 w-4 mr-2" />
+                                 Preview
+                               </Button>
+                               <Button variant="outline" onClick={() => downloadPdf(item)} size="sm" className="flex items-center gap-2 hover:bg-primary hover:text-primary-foreground transition-colors">
+                                 <Download className="h-4 w-4" />
+                               </Button>
+                             </>
+                           ) : (
+                             <Button onClick={() => handleArticleAction(item)} className="flex-1 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 text-white border-0" size="sm">
+                               {item.type === "external" ? (
+                                 <>
+                                   <ExternalLink className="h-4 w-4 mr-2" />
+                                   Read Article
+                                 </>
+                               ) : (
+                                 <>
+                                   <Newspaper className="h-4 w-4 mr-2" />
+                                   Read Article
+                                 </>
+                               )}
+                             </Button>
+                           )}
+                         </div>
+                       </div>
+                     </div>
+                   </ScrollAnimationWrapper>;
+                 })}
+               </div>
+
+               {/* Pagination Dots */}
+               <div className="flex justify-center items-center mt-8 space-x-2">
+                 {Array.from({
+                length: totalReadingPages
+              }, (_, index) => <button key={index} onClick={() => setCurrentReadingPage(index)} className={`h-3 rounded-full transition-all duration-300 ${index === currentReadingPage ? 'bg-primary w-8 shadow-lg shadow-primary/30' : 'bg-primary/40 hover:bg-primary/60 w-3'}`} aria-label={`Go to page ${index + 1}`} />)}
+               </div>
+             </div>
+
+             {/* Readings of Anhart - Mobile Carousel (1 item per page) */}
+             <div className="md:hidden">
+               {/* Pagination Dots */}
+               <ScrollAnimationWrapper direction="top" delay={200}>
+                 <div className="flex justify-center items-center mb-6 space-x-2">
+                   {readingsOfAnhart.map((_, index) => <button key={index} onClick={() => setCurrentReadingIndex(index)} className={`h-3 rounded-full transition-all duration-300 ${index === currentReadingIndex ? 'bg-primary w-8 shadow-lg shadow-primary/30' : 'bg-primary/40 hover:bg-primary/60 w-3'}`} aria-label={`Go to reading ${index + 1}`} />)}
+                 </div>
+               </ScrollAnimationWrapper>
+
+               {/* Navigation Container */}
+               <ScrollAnimationWrapper direction="bottom" delay={300}>
+                 <div className={`relative touch-pan-x transition-all duration-300 ${isTouchActive ? 'shadow-2xl shadow-primary/20' : ''} ${
+                  isAnimating 
+                    ? swipeDirection === 'left' 
+                      ? 'animate-slide-out-left' 
+                      : 'animate-slide-out-right'
+                    : ''
+                }`} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={() => handleTouchEnd('reading')} onTouchCancel={handleTouchCancel} style={{
+                touchAction: 'auto'
+              }}>
+                   {/* Previous Arrow */}
+                   <button onClick={goToPreviousReading} className="absolute left-1 top-1/2 -translate-y-1/2 z-20 text-foreground/60 hover:text-foreground text-3xl font-bold transition-all duration-200 hover:scale-110" aria-label="Previous reading">
+                     ‹
+                   </button>
+
+                   {/* Next Arrow */}
+                   <button onClick={goToNextReading} className="absolute right-1 top-1/2 -translate-y-1/2 z-20 text-foreground/60 hover:text-foreground text-3xl font-bold transition-all duration-200 hover:scale-110" aria-label="Next reading">
+                     ›
+                   </button>
+
+                   {/* Single Reading Display */}
+                   <div className="px-6">
+                     {readingsOfAnhart[currentReadingIndex] && (() => {
+                       const item = readingsOfAnhart[currentReadingIndex];
+                       const isPdf = item.itemType === 'pdf';
+                       const isPress = item.itemType === 'press';
+                       
+                       return <div className="flex justify-center">
+                         <div className="w-full max-w-sm">
+                           <ScrollAnimationWrapper direction="top" delay={200 + currentReadingIndex * 100}>
+                             <div className="border rounded-lg p-6 hover:shadow-sm sm:hover:shadow-lg transition-shadow">
+                               <div className="flex items-start justify-between mb-3">
+                                 <div className="flex items-center gap-3">
+                                   <div className={`p-2 ${isPdf ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'} rounded-lg`}>
+                                     {isPdf ? <FileText className="h-6 w-6" /> : <Newspaper className="h-6 w-6" />}
+                                   </div>
+                                 </div>
+                                 <span className="text-sm text-muted-foreground">{item.date}</span>
+                               </div>
+                               
+                               <h3 className="text-lg font-semibold mb-2">{item.title}</h3>
+                               
+                               {isPdf && (
+                                 <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+                                   <span>{item.pages} pages</span>
+                                   <span>{item.size}</span>
+                                 </div>
+                               )}
+                               
+                               {isPress && (
+                                 <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+                                   <Newspaper className="h-4 w-4" />
+                                   {item.source}
+                                 </div>
+                               )}
+                               
+                               <p className="text-muted-foreground mb-6 text-sm">{isPdf ? item.description : item.excerpt}</p>
+                               
+                               <div className="flex gap-2">
+                                 {isPdf ? (
+                                   <>
+                                     <Button onClick={() => openPdfModal(item)} className="flex-1 flex items-center gap-2" size="sm">
+                                       <Eye className="h-4 w-4" />
+                                       Preview
+                                     </Button>
+                                     <Button variant="outline" onClick={() => downloadPdf(item)} size="sm" className="flex items-center gap-2">
+                                       <Download className="h-4 w-4" />
+                                       Download
+                                     </Button>
+                                   </>
+                                 ) : (
+                                   <Button onClick={() => handleArticleAction(item)} className="flex-1 flex items-center gap-2" size="sm">
+                                     {item.type === "external" ? (
+                                       <>
+                                         <ExternalLink className="h-4 w-4" />
+                                         Read Article
+                                       </>
+                                     ) : (
+                                       <>
+                                         <Newspaper className="h-4 w-4" />
+                                         Read Article
+                                       </>
+                                     )}
+                                   </Button>
+                                 )}
+                               </div>
+                             </div>
+                           </ScrollAnimationWrapper>
+                         </div>
+                       </div>;
+                     })()}
+                   </div>
+                 </div>
+               </ScrollAnimationWrapper>
+             </div>
+           </div>
+         </section>
+  
+        {/* Enhanced PDF Modal */}
+        {isPdfModalOpen && selectedPdf && <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={e => {
+        if (e.target === e.currentTarget) closePdfModal();
+      }} onKeyDown={e => {
+        if (e.key === 'Escape') closePdfModal();
+      }} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="pdf-modal-title">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-full max-h-[90vh] flex flex-col">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-6 border-b">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-red-100 text-red-600 rounded-lg">
+                    <FileText className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 id="pdf-modal-title" className="font-semibold text-lg">{selectedPdf.title}</h3>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <span>{selectedPdf.pages} pages</span>
+                      <span>{selectedPdf.size}</span>
+                      <span>{selectedPdf.date}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  
+                  
+                  <Button variant="ghost" onClick={closePdfModal} size="sm">
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+
+            {/* Modal Content */}
+            <div className="flex-1 p-6">
+              <div className="w-full h-full bg-gray-50 rounded-xl overflow-hidden shadow-inner relative">
+                {pdfLoading ? <div className="flex items-center justify-center h-full">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                      <p className="text-muted-foreground">Checking PDF availability...</p>
+                    </div>
+                  </div> : <PdfFallbackOptions pdf={selectedPdf} />}
+              </div>
+            </div>
+
+            {/* Footer with additional options */}
+            
+          </div>
+        </div>}
+
         {/* YouTube Video Modal */}
         {isVideoModalOpen && selectedVideo && <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl h-full max-h-[85vh] flex flex-col relative">
@@ -1277,174 +1363,6 @@ const Media = () => {
               </div>
             </div>
           </div>}
-
-        {/* Press Coverage - Diagonal Layout */}
-        <section className="py-32 relative overflow-hidden">
-          {/* Diagonal background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-muted/30 via-background to-primary/5 -skew-y-1 origin-bottom-right"></div>
-          
-          <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-            <div className="mb-20 max-w-2xl ml-auto text-right">
-              <ScrollAnimationWrapper direction="right">
-                <div className="inline-block mb-4">
-                  <span className="text-sm font-semibold text-primary uppercase tracking-wider">News</span>
-                </div>
-                <h2 className="text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-6">
-                  Press Coverage
-                </h2>
-              </ScrollAnimationWrapper>
-              <ScrollAnimationWrapper direction="right" delay={100}>
-                <p className="text-lg leading-relaxed text-muted-foreground">
-                  Recent news and media coverage of our work and impact in affordable housing.
-                </p>
-              </ScrollAnimationWrapper>
-            </div>
-
-            {/* Press Coverage - Desktop 2x2 Grid with Pagination */}
-            <div className="hidden md:block">
-              {/* Navigation Arrows */}
-              <div className="flex justify-between items-center mb-6">
-                <button onClick={goToPreviousPressPage} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" aria-label="Previous page">
-                  <span className="text-xl">‹</span>
-                  Previous
-                </button>
-                
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">
-                    Page {currentPressPage + 1} of {totalPressPages}
-                  </span>
-                </div>
-                
-                <button onClick={goToNextPressPage} className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" aria-label="Next page">
-                  Next
-                  <span className="text-xl">›</span>
-                </button>
-              </div>
-
-              {/* Staggered Grid - Alternating Layout */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                {getCurrentPageItems(pressReleases, currentPressPage).map((article, index) => {
-                  // Alternate card styles for visual variety
-                  const isOffset = index % 3 === 1;
-                  return <ScrollAnimationWrapper key={article.id} direction="bottom" delay={200 + index * 50}>
-                    <Card className={`h-full flex flex-col hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-card border-0 ${isOffset ? 'lg:mt-8' : ''}`}>
-                        <CardHeader className="p-6 pb-4">
-                          <div className="flex items-center justify-between mb-4">
-                            <span className="bg-gradient-to-r from-primary/10 to-red-500/10 text-primary px-3 py-1 rounded-full text-xs font-semibold border border-primary/20">
-                              Press Coverage
-                            </span>
-                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                              <Calendar className="h-4 w-4" />
-                              {article.date}
-                            </div>
-                          </div>
-                          <CardTitle className="text-xl font-bold line-clamp-2 mb-3 group-hover:text-primary transition-colors">{article.title}</CardTitle>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Newspaper className="h-4 w-4" />
-                            {article.source}
-                          </div>
-                        </CardHeader>
-                        
-                        <CardContent className="flex-1 flex flex-col justify-between p-6 pt-0">
-                          <p className="text-muted-foreground mb-6 leading-relaxed">{article.excerpt}</p>
-                          <Button variant="outline" size="sm" className="flex items-center gap-2 w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors" onClick={() => handleArticleAction(article)}>
-                            {article.type === "external" ? <>
-                                <ExternalLink className="h-4 w-4" />
-                                Read Full Article
-                              </> : <>
-                                <Newspaper className="h-4 w-4" />
-                                Read Article
-                              </>}
-                          </Button>
-                        </CardContent>
-                      </Card>
-                  </ScrollAnimationWrapper>;
-                })}
-              </div>
-
-              {/* Pagination Dots */}
-              <div className="flex justify-center items-center mt-8 space-x-2">
-                {Array.from({
-                length: totalPressPages
-              }, (_, index) => <button key={index} onClick={() => setCurrentPressPage(index)} className={`h-3 rounded-full transition-all duration-300 ${index === currentPressPage ? 'bg-primary w-8 shadow-lg shadow-primary/30' : 'bg-primary/40 hover:bg-primary/60 w-3'}`} aria-label={`Go to page ${index + 1}`} />)}
-              </div>
-            </div>
-
-            {/* Press Coverage - Mobile Carousel */}
-            <div className="md:hidden">
-              {/* Pagination Dots */}
-              <ScrollAnimationWrapper direction="top" delay={200}>
-                <div className="flex justify-center items-center mb-6 space-x-2">
-                  {pressReleases.map((_, index) => <button key={index} onClick={() => setCurrentPressIndex(index)} className={`h-3 rounded-full transition-all duration-300 ${index === currentPressIndex ? 'bg-primary w-8 shadow-lg shadow-primary/30' : 'bg-primary/40 hover:bg-primary/60 w-3'}`} aria-label={`Go to article ${index + 1}`} />)}
-                </div>
-              </ScrollAnimationWrapper>
-
-              {/* Navigation Container */}
-              <ScrollAnimationWrapper direction="bottom" delay={300}>
-                <div className={`relative touch-pan-x transition-all duration-300 ${isTouchActive ? 'shadow-2xl shadow-primary/20' : ''} ${
-                  isAnimating 
-                    ? swipeDirection === 'left' 
-                      ? 'animate-slide-out-left' 
-                      : 'animate-slide-out-right'
-                    : ''
-                }`} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={() => handleTouchEnd('press')} onTouchCancel={handleTouchCancel} style={{
-                touchAction: 'auto'
-              }}>
-                  {/* Previous Arrow */}
-                  <button onClick={goToPreviousPress} className="absolute left-1 top-1/2 -translate-y-1/2 z-20 text-foreground/60 hover:text-foreground text-3xl font-bold transition-all duration-200 hover:scale-110" aria-label="Previous article">
-                    ‹
-                  </button>
-
-                  {/* Next Arrow */}
-                  <button onClick={goToNextPress} className="absolute right-1 top-1/2 -translate-y-1/2 z-20 text-foreground/60 hover:text-foreground text-3xl font-bold transition-all duration-200 hover:scale-110" aria-label="Next article">
-                    ›
-                  </button>
-
-                  {/* Single Article Display */}
-                  <div className="px-6">
-                    {pressReleases[currentPressIndex] && <div className="flex justify-center">
-                        <div className="w-full max-w-sm">
-                          <ScrollAnimationWrapper direction="top" delay={200 + currentPressIndex * 100}>
-                            <Card className="hover:shadow-sm sm:hover:shadow-lg transition-shadow duration-300">
-                                <CardHeader>
-                                  <div className="flex items-center justify-between mb-2">
-                                    <span className="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">
-                                      Press Coverage
-                                    </span>
-                                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                                      <Calendar className="h-4 w-4" />
-                                      {pressReleases[currentPressIndex].date}
-                                    </div>
-                                  </div>
-                                  <CardTitle className="text-lg line-clamp-2 mb-2">{pressReleases[currentPressIndex].title}</CardTitle>
-                                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                    <Newspaper className="h-4 w-4" />
-                                    {pressReleases[currentPressIndex].source}
-                                  </div>
-                                </CardHeader>
-                                
-                                <CardContent>
-                                  <p className="text-muted-foreground mb-4">{pressReleases[currentPressIndex].excerpt}</p>
-                                  <Button variant="outline" size="sm" className="flex items-center gap-2" onClick={() => handleArticleAction(pressReleases[currentPressIndex])}>
-                                    {pressReleases[currentPressIndex].type === "external" ? <>
-                                        <ExternalLink className="h-4 w-4" />
-                                        Read Full Article
-                                      </> : <>
-                                        <Newspaper className="h-4 w-4" />
-                                        Read Article
-                                      </>}
-                                  </Button>
-                                </CardContent>
-                              </Card>
-                          </ScrollAnimationWrapper>
-                        </div>
-                      </div>}
-                  </div>
-                </div>
-              </ScrollAnimationWrapper>
-            </div>
-          </div>
-        </section>
 
         {/* Article Modal */}
         {isArticleModalOpen && selectedArticle && <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">

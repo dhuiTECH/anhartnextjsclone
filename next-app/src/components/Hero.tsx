@@ -72,10 +72,10 @@ export const Hero = () => {
       {/* Moving Banner Carousel - Performance Optimized */}
       <style dangerouslySetInnerHTML={{ __html: marqueeStyle }} />
       <motion.div 
-        className="absolute top-0 left-0 right-0 z-40 flex items-center min-h-[2.75rem] bg-primary text-white overflow-hidden border-b border-primary/90"
+        className="absolute top-0 left-0 right-0 z-40 flex items-center min-h-[2rem] bg-primary text-white overflow-hidden border-b border-primary/90"
         style={{ opacity: bannerOpacity }}
       >
-        <div className="animate-marquee whitespace-nowrap py-2">
+        <div className="animate-marquee whitespace-nowrap py-1">
           <Link
             href="/Merritt"
             className="inline-flex items-center hover:bg-primary/80 transition-colors duration-300 px-4 rounded"

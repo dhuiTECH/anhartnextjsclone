@@ -37,7 +37,7 @@ export const mediaGallery: MediaItem[] = [
     title: "Anhart Housing Development",
     description:
       "Keith Gordon's interview with CBC News Manitoba focuses on the Sutherland Hotel purchase agreement, the growing issue of derelict homes in the city, and the potential for affordable housing to bring new life to the cityscape.",
-    date: "2026",
+    date: "Janurary, 2026",
     thumbnail: "https://img.youtube.com/vi/x7e5QOd3WLI/maxresdefault.jpg",
     youtubeUrl: "https://www.youtube.com/watch?v=x7e5QOd3WLI",
   },
@@ -47,9 +47,9 @@ export const mediaGallery: MediaItem[] = [
     title: "Understanding Risk and Patient Capital",
     description:
       "In this video, we will explain the \"cruel irony\" of financing for affordable housing and risk of non-profit development. Then we will introduce the concept of Patient Capital—a financial system that includes community bonds, impact investments and social values to help nonprofits bridge this gap.",
-    date: "2024",
-    thumbnail: "https://img.youtube.com/vi/ZoCwf3vMauQ/maxresdefault.jpg",
-    youtubeUrl: "https://www.youtube.com/watch?v=ZoCwf3vMauQ",
+    date: "Janurary,2026",
+    thumbnail: "https://img.youtube.com/vi/Az9oRLCCQyc/maxresdefault.jpg",
+    youtubeUrl: "https://www.youtube.com/watch?v=Az9oRLCCQyc",
   },
   {
     id: 3,
@@ -60,6 +60,16 @@ export const mediaGallery: MediaItem[] = [
     date: "September, 2024",
     thumbnail: "https://img.youtube.com/vi/PxIIKiIyYzs/maxresdefault.jpg",
     youtubeUrl: "https://www.youtube.com/watch?v=PxIIKiIyYzs",
+  },
+  {
+    id: 4,
+    type: "video",
+    title: "Anhart Limited Partnership",
+    description:
+      "Learn about Anhart Affordable Housing Limited Partnership which helps bridge the gap between equity gaps that require to taking an idea of a affordable housing project to a physical site.",
+    date: "February, 2026",
+    thumbnail: "https://img.youtube.com/vi/DgnsyjIQR74/maxresdefault.jpg",
+    youtubeUrl: "https://www.youtube.com/watch?v=DgnsyjIQR74",
   },
 ];
 
@@ -87,15 +97,6 @@ export const pdfDocuments: PdfDocument[] = [
     url: ANHART_BROCHURE_PDF,
   },
   {
-    id: 3,
-    title: "Anhart Affordable Limited Partnership",
-    description: "An overview of the Anhart Limited Partnership, including the investment terms and conditions.",
-    date: "January, 2025",
-    pages: 8,
-    size: "1.15 MB",
-    url: ANHART_LP_PDF,
-  },
-  {
     id: 4,
     title: "Investments Prospectus March 24, 2025",
     description: "Detailed investment prospectus outlining Anhart'sopportunities and financial performance for potential investors.",
@@ -111,15 +112,6 @@ export const pdfDocuments: PdfDocument[] = [
 // =============================================================================
 
 export const pressReleases: PressRelease[] = [
-  {
-    id: 1,
-    title: "6-Storey Micro Dwelling Proposed for Vancouver's Main Street",
-    source: "Vancouver Market",
-    date: "August, 2019",
-    excerpt: "A six-storey micro-suite building has been proposed for Main Street, aiming to provide an innonative urban housing solution.",
-    type: "external",
-    url: "https://vancouvermarket.ca/2019/08/26/6-storey-micro-dwelling-building-proposed-for-main-street/",
-  },
   {
     id: 2,
     title: "Anhart Ryder Project Supports Affordable Housing",
@@ -171,4 +163,17 @@ export const pressReleases: PressRelease[] = [
         
         <p><em>This story is part of the Anhart Community Stories project, documenting the people and partnerships that have made affordable housing possible in communities across Canada.</em></p>`,
   },
+];
+
+// =============================================================================
+// READINGS OF ANHART - COMBINED PDF DOCUMENTS AND PRESS RELEASES
+// =============================================================================
+
+export type ReadingItem = (PdfDocument & { itemType: 'pdf' }) | (PressRelease & { itemType: 'press' });
+
+export const readingsOfAnhart: ReadingItem[] = [
+  // PDF Documents
+  ...pdfDocuments.map(doc => ({ ...doc, itemType: 'pdf' as const })),
+  // Press Releases
+  ...pressReleases.map(press => ({ ...press, itemType: 'press' as const })),
 ];

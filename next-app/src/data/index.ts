@@ -12,4 +12,4 @@
 // =============================================================================
 
 export { howDoWeDoItPillars } from './pillars';
-export { mediaGallery, pdfDocuments, pressReleases } from './media';
+export { mediaGallery, pdfDocuments, pressReleases, readingsOfAnhart } from './media';
