@@ -8,6 +8,9 @@ import marcieGoodImg from "@/assets/staffAssets/Marcie Good.png";
 import sheriKingImg from "@/assets/staffAssets/Sheri King.jpeg";
 import reyahSobretodoImg from "@/assets/staffAssets/Reyah Sobretodo.jpeg";
 import ivyTsaiImg from "@/assets/staffAssets/Ivy Tsai.jpeg";
+import marielBeltranImg from "@/assets/staffAssets/MarielBeltran.jpeg";
+import veronicaBalanquitImg from "@/assets/staffAssets/VeronicaBalanquit.jpeg";
+import jessyMarquezImg from "@/assets/staffAssets/JessyMarquez.jpeg";
 
 // Extract .src from Next.js static imports
 const getImageSrc = (img: string | { src: string } | undefined): string => {
@@ -24,7 +27,7 @@ const getImageSrc = (img: string | { src: string } | undefined): string => {
 export const boardMembers: StaffMember[] = [
   {
     name: "Keith Gordon",
-    role: "Co-Founder & Investments",
+    role: "Co-founder & CEO",
     bio: "Keith has spent over 25+ years bringing affordable housing projects to life across Canada. He's passionate about creating lasting communities where families can thrive.",
     isLeadership: true,
     emailDomain: "anhart.ca",
@@ -40,7 +43,7 @@ export const boardMembers: StaffMember[] = [
   },
   {
     name: "Christine Wang",
-    role: "Board Member",
+    role: "Director",
     bio: "",
     isLeadership: true,
     emailDomain: "anhart.ca",
@@ -48,7 +51,7 @@ export const boardMembers: StaffMember[] = [
   },
   {
     name: "Gradius Theonest",
-    role: "Board Member",
+    role: "Director",
     bio: "",
     isLeadership: true,
     emailDomain: "anhart.ca",
@@ -72,7 +75,7 @@ export const boardMembers: StaffMember[] = [
 export const staff: StaffMember[] = [
   {
     name: "Sheri King",
-    role: "Business & Finances",
+    role: "Business Manager",
     bio: "",
     isLeadership: true,
     emailDomain: "anhart.ca",
@@ -80,7 +83,7 @@ export const staff: StaffMember[] = [
   },
   {
     name: "Reyah Sobretodo",
-    role: "Operations Manager",
+    role: "Executive Administrator",
     bio: "",
     isLeadership: true,
     emailDomain: "anhart.ca",
@@ -88,10 +91,27 @@ export const staff: StaffMember[] = [
   },
   {
     name: "Mariel Beltran",
-    role: "Foundation Coordinator",
+    role: "Project Coordinator",
     bio: "",
     isLeadership: false,
-    emailDomain: "anhartfoundation.ca",
+    emailDomain: "anhart.ca",
+    image: getImageSrc(marielBeltranImg),
+  },
+  {
+    name: "Veronica Balanquit",
+    role: "",
+    bio: "",
+    isLeadership: false,
+    emailDomain: "anhart.ca",
+    image: getImageSrc(veronicaBalanquitImg),
+  },
+  {
+    name: "Jessy Marquez",
+    role: "Sales & Marketeer",
+    bio: "",
+    isLeadership: false,
+    emailDomain: "anhart.ca",
+    image: getImageSrc(jessyMarquezImg),
   },
   {
     name: "Damon Hui",

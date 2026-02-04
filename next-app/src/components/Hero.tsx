@@ -20,14 +20,25 @@ const anhartLogoPngSrc =
   typeof anhartLogoPng === "string" ? anhartLogoPng : anhartLogoPng?.src || "";
 
 // Marquee animation styles - optimized for performance
+// On mobile: start with text visible sooner (0% = left edge) so "Check out our featured project..." appears right away
 const marqueeStyle = `
   @keyframes marquee {
     0% { transform: translate3d(100%, 0, 0); }
     100% { transform: translate3d(-100%, 0, 0); }
   }
+  @keyframes marquee-mobile {
+    0% { transform: translate3d(0%, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+  }
   .animate-marquee {
     animation: marquee 18s linear infinite;
     will-change: transform;
+  }
+  @media (max-width: 767px) {
+    .animate-marquee {
+      animation-name: marquee-mobile;
+      animation-duration: 18s;
+    }
   }
 `;
 
@@ -61,20 +72,20 @@ export const Hero = () => {
       {/* Moving Banner Carousel - Performance Optimized */}
       <style dangerouslySetInnerHTML={{ __html: marqueeStyle }} />
       <motion.div 
-        className="absolute top-0 left-0 right-0 z-40 bg-primary text-white py-2 overflow-hidden"
+        className="absolute top-0 left-0 right-0 z-40 flex items-center min-h-[2.75rem] bg-primary text-white overflow-hidden border-b border-primary/90"
         style={{ opacity: bannerOpacity }}
       >
-        <div className="animate-marquee whitespace-nowrap">
+        <div className="animate-marquee whitespace-nowrap py-2">
           <Link
             href="/Merritt"
-            className="inline-flex items-center hover:bg-primary/80 transition-colors duration-300 px-4 py-1 rounded"
+            className="inline-flex items-center hover:bg-primary/80 transition-colors duration-300 px-4 rounded"
           >
             <span className="font-semibold hover:underline">Check out our featured project, Anhart Merritt</span>
           </Link>
           <span className="mx-32">•</span>
           <Link
             href="/Merritt"
-            className="inline-flex items-center hover:bg-primary/80 transition-colors duration-300 px-4 py-1 rounded"
+            className="inline-flex items-center hover:bg-primary/80 transition-colors duration-300 px-4 rounded"
           >
             <span className="font-semibold hover:underline">Check out our featured project, Anhart Merritt</span>
           </Link>
