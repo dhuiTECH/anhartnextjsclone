@@ -11,6 +11,7 @@ import ivyTsaiImg from "@/assets/staffAssets/Ivy Tsai.jpeg";
 import marielBeltranImg from "@/assets/staffAssets/MarielBeltran.jpeg";
 import veronicaBalanquitImg from "@/assets/staffAssets/VeronicaBalanquit.jpeg";
 import jessyMarquezImg from "@/assets/staffAssets/JessyMarquez.jpeg";
+import karenGarciaImg from "@/assets/staffAssets/KarenGarcia.jpeg";
 
 // Extract .src from Next.js static imports
 const getImageSrc = (img: string | { src: string } | undefined): string => {
@@ -91,7 +92,7 @@ export const staff: StaffMember[] = [
   },
   {
     name: "Mariel Beltran",
-    role: "Project Coordinator",
+    role: "Development Coordinator",
     bio: "",
     isLeadership: false,
     emailDomain: "anhart.ca",
@@ -99,7 +100,7 @@ export const staff: StaffMember[] = [
   },
   {
     name: "Veronica Balanquit",
-    role: "",
+    role: "Project Coordinator",
     bio: "",
     isLeadership: false,
     emailDomain: "anhart.ca",
@@ -135,5 +136,14 @@ export const staff: StaffMember[] = [
     isLeadership: false,
     emailDomain: "anhartinvestments.ca",
     image: getImageSrc(ivyTsaiImg),
+  },
+  {
+    name: "Karen Garcia",
+    role: "Research Coordinator",
+    bio: "",
+    isLeadership: false,
+    email: "karen.garcia@anhart.ca",
+    emailDomain: "anhart.ca",
+    image: getImageSrc(karenGarciaImg),
   },
 ];
