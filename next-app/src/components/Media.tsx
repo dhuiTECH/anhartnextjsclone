@@ -76,7 +76,7 @@ const Media = () => {
   const [currentReadingPage, setCurrentReadingPage] = useState(0);
   const [windowWidth, setWindowWidth] = useState(0);
 
-  // Responsive items per page: 6 on desktop (lg), 4 on tablet (md), 1 on mobile
+  // Responsive items per page: 3 on tablet/desktop, 1 on mobile
   useEffect(() => {
     const handleResize = () => {
       const newWidth = window.innerWidth;
@@ -96,9 +96,8 @@ const Media = () => {
 
   // Calculate items per page based on screen size
   const getItemsPerPage = () => {
-    if (typeof window === 'undefined' || windowWidth === 0) return 6; // Default to desktop on SSR
-    if (windowWidth >= 1024) return 6; // Desktop (lg)
-    if (windowWidth >= 768) return 4; // Tablet (md)
+    if (typeof window === 'undefined' || windowWidth === 0) return 3; // Default to desktop on SSR
+    if (windowWidth >= 768) return 3; // Tablet & Desktop
     return 1; // Mobile
   };
 
@@ -1066,20 +1065,18 @@ const Media = () => {
                  </button>
                </div>
 
-               {/* Responsive Grid: 6 columns on desktop (lg), 4 on tablet (md) */}
-               <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6 lg:gap-8">
+              {/* Responsive Grid: 3 items per page on tablet/desktop, 1 on mobile */}
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 lg:gap-8">
                  {getCurrentPageItems(readingsOfAnhart, currentReadingPage, itemsPerPage).map((item, index) => {
-                   // Create varied heights for visual interest
-                   const isTall = index % 3 === 0;
                    const isPdf = item.itemType === 'pdf';
                    const isPress = item.itemType === 'press';
                    
                    return <ScrollAnimationWrapper key={`${item.itemType}-${item.id}`} direction="bottom" delay={200 + index * 50}>
-                     <div className={`group relative border rounded-2xl p-6 lg:p-8 bg-card hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 ${isTall ? 'lg:row-span-2' : ''}`}>
+                    <div className="group relative h-full border rounded-2xl p-6 lg:p-8 bg-card hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col">
                        {/* Gradient accent on hover */}
                        <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:via-red-500/5 group-hover:to-primary/5 rounded-2xl transition-all duration-300"></div>
                        
-                       <div className="relative z-10">
+                       <div className="relative z-10 flex flex-col h-full">
                          <div className="flex items-start justify-between mb-4">
                            <div className={`p-3 bg-gradient-to-br ${isPdf ? 'from-red-500/10 to-primary/10' : 'from-blue-500/10 to-primary/10'} rounded-xl group-hover:scale-110 transition-transform duration-300`}>
                              {isPdf ? <FileText className="h-6 w-6 text-red-600" /> : <Newspaper className="h-6 w-6 text-blue-600" />}
@@ -1106,7 +1103,7 @@ const Media = () => {
                            </div>
                          )}
                          
-                         <p className="text-muted-foreground mb-6 leading-relaxed">{isPdf ? item.description : item.excerpt}</p>
+                         <p className="text-muted-foreground mb-6 leading-relaxed flex-1">{isPdf ? item.description : item.excerpt}</p>
                          
                          <div className="flex gap-3">
                            {isPdf ? (
