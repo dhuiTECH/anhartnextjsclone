@@ -1,0 +1,121 @@
+{
+  "gsf": {
+    "label": "Gross Square Footage",
+    "acronym": "GSF",
+    "definition": "The total enclosed floor area measured from the exterior walls. It drives construction costs but includes non-revenue space.",
+    "fullDefinition": "The total enclosed floor area of the building measured from the exterior walls. This figure acts as the primary driver for construction costs, as it includes all revenue-generating and non-revenue spaces (stairs, hallways, mechanical)."
+  },
+  "nra": {
+    "label": "Net Rentable Area",
+    "acronym": "NRA",
+    "definition": "The subset of GSF exclusively available for tenant occupation and revenue generation. Excludes common areas and is the basis for calculating total rental income.",
+    "fullDefinition": "The subset of GSF that is exclusively available for tenant occupation and revenue generation. It excludes common areas and is the basis for calculating total rental income."
+  },
+  "efficiencyRatio": {
+    "label": "Efficiency Ratio",
+    "definition": "The percentage of the building that is rentable (Net Area / Gross Area). Higher efficiency means less wasted space on hallways/cores.",
+    "fullDefinition": "A measure of architectural efficiency, calculated as Net Rentable Area divided by GSF. It represents the percentage of the built area that actually generates revenue (typically 75-85%). Higher efficiency means less wasted space on hallways and building cores."
+  },
+  "fsr": {
+    "label": "Floor Space Ratio",
+    "acronym": "FSR",
+    "definition": "A density metric representing the ratio of building floor area to land lot size. Indicates density intensity allowed by municipal zoning.",
+    "fullDefinition": "A density metric representing the ratio of the building's total floor area to the size of the land lot. It indicates the density intensity allowed by municipal zoning and is a key planning constraint."
+  },
+  "hardCosts": {
+    "label": "Hard Costs",
+    "definition": "Direct physical construction costs (materials & labor). Typically the largest portion of the budget and highly sensitive to market inflation.",
+    "fullDefinition": "The direct costs associated with physical construction, including labor, materials, and contractor fees. These are highly sensitive to market inflation and material volatility, and typically represent the largest portion of the development budget."
+  },
+  "softCosts": {
+    "label": "Soft Costs",
+    "definition": "Indirect costs including design, permits, consultants, and financing interest reserves. Essential for project completion but do not contribute to physical construction.",
+    "fullDefinition": "The non-construction costs required to deliver the project, including architectural design, city permits, legal fees, and financing charges (interest reserve). These indirect costs are essential for project completion but do not contribute to physical building construction."
+  },
+  "tdc": {
+    "label": "Total Development Cost",
+    "acronym": "TDC",
+    "definition": "The complete capital requirement from concept to occupancy. Sums Land, Hard, and Soft Costs to form the denominator for ROI calculations.",
+    "fullDefinition": "The complete capital requirement to bring the project from concept to occupancy. It sums Land Cost, Hard Costs, and Soft Costs to form the denominator for ROI calculations and represents the total investment needed."
+  },
+  "costPerUnit": {
+    "label": "Cost per Unit",
+    "definition": "A standard benchmarking metric (TDC ÷ Units) that allows quick feasibility comparisons against similar projects in the region.",
+    "fullDefinition": "A standard benchmarking metric derived by dividing Total Development Cost by the number of residential units. It allows for quick feasibility comparisons against similar projects in the region and helps assess project economics."
+  },
+  "gpr": {
+    "label": "Gross Potential Rent",
+    "acronym": "GPR",
+    "definition": "The theoretical maximum revenue if 100% of units were occupied at full market rates, with no credit losses or vacancies.",
+    "fullDefinition": "The theoretical maximum revenue the property would generate if 100% of units were occupied at full market rates, with no credit losses or vacancies. This represents the upper bound of income potential before any real-world adjustments."
+  },
+  "vacancyRate": {
+    "label": "Vacancy Rate",
+    "definition": "A stress-test percentage applied to GPR to account for unit turnover and collection losses. Lenders require this buffer (typically 3-5%) even for high-demand affordable housing.",
+    "fullDefinition": "A stress-test percentage applied to GPR to account for unit turnover and collection losses. Lenders require this buffer (typically 3-5%) even for high-demand affordable housing, as it provides a conservative estimate of actual collections."
+  },
+  "egi": {
+    "label": "Effective Gross Income",
+    "acronym": "EGI",
+    "definition": "The actual anticipated revenue after deducting vacancy and credit losses from GPR. Represents realistic income expectation.",
+    "fullDefinition": "The actual anticipated revenue collected after deducting vacancy and credit losses from the Gross Potential Rent. This represents the realistic income expectation and forms the basis for operating expense and NOI calculations."
+  },
+  "opEx": {
+    "label": "Operating Expenses",
+    "acronym": "OpEx",
+    "definition": "Annual non-recoverable costs to run the building (taxes, insurance, utilities, management). Paid by landlord, directly reducing NOI.",
+    "fullDefinition": "The annual non-recoverable costs to run the building, including property taxes, insurance, utilities, and management. In residential rentals, these are paid by the landlord, directly reducing NOI and representing the ongoing operational burden."
+  },
+  "operatingExpenseRatio": {
+    "label": "Operating Expense Ratio",
+    "definition": "Operating expenses as a percentage of EGI. Typical range is 35-45% for affordable housing. Helps benchmark operational efficiency.",
+    "fullDefinition": "Operating expenses expressed as a percentage of effective gross income. Typical range is 35-45% for affordable housing. This ratio helps benchmark operational efficiency against similar properties."
+  },
+  "noi": {
+    "label": "Net Operating Income",
+    "acronym": "NOI",
+    "definition": "The actual profit generated by operations (Revenue - Expenses) before paying any mortgage debts. Represents funds available for debt service and profit.",
+    "fullDefinition": "The project's unlevered cash flow, calculated as Effective Gross Income minus Operating Expenses. It represents the funds available to pay debt service and generate profit, and is the primary metric for evaluating property performance."
+  },
+  "dscr": {
+    "label": "Debt Service Coverage Ratio",
+    "acronym": "DSCR",
+    "definition": "A safety ratio for lenders. Measures how many times the NOI can cover the mortgage payment. Target: >1.20x for healthy safety margin.",
+    "fullDefinition": "A lender's risk metric measuring the property's ability to cover its mortgage. Calculated as NOI divided by Annual Debt Service, a DSCR above 1.20x indicates a healthy safety margin and is typically required by lenders to ensure adequate cash flow buffer."
+  },
+  "capRate": {
+    "label": "Cap Rate",
+    "definition": "A market-derived metric representing the expected unlevered rate of return (NOI ÷ TDC). Serves as primary measure of asset value and risk.",
+    "fullDefinition": "A market-derived metric representing the expected unlevered rate of return. It is calculated as NOI divided by Total Development Cost and serves as a primary measure of asset value and risk. Lower cap rates indicate higher property values and perceived lower risk."
+  },
+  "debtServiceConstant": {
+    "label": "Debt Service Constant",
+    "definition": "A percentage factor combining interest rate and amortization schedule. Represents annual cash required to service $1 of loan principal.",
+    "fullDefinition": "A percentage factor that combines the interest rate and amortization schedule to determine annual mortgage payments. It represents the annual cash required to service $1 of loan principal and simplifies debt service calculations."
+  },
+  "annualDebtService": {
+    "label": "Annual Debt Service",
+    "definition": "The total annual payment required to service construction and permanent financing debt. Includes both principal and interest payments.",
+    "fullDefinition": "The total annual payment required to service the construction and permanent financing debt. This includes both principal and interest payments and represents the fixed obligation that must be covered by NOI."
+  },
+  "classDEstimate": {
+    "label": "Class D Estimate",
+    "definition": "A preliminary cost estimate with ±25% accuracy. Used for early-stage feasibility analysis and planning purposes, not for final investment decisions.",
+    "fullDefinition": "A preliminary cost estimate with an accuracy range of ±25%. Used for early-stage feasibility analysis and planning purposes. Not intended for final investment decisions, but provides a reasonable starting point for project evaluation."
+  },
+  "proForma": {
+    "label": "Pro Forma",
+    "definition": "A financial projection estimating income and expenses of a real estate development. Used to evaluate feasibility, secure financing, and assess returns.",
+    "fullDefinition": "A financial projection that estimates the income and expenses of a real estate development project. Used to evaluate project feasibility, secure financing, and assess investment returns before construction begins."
+  },
+  "affordableHousing": {
+    "label": "Affordable Housing",
+    "definition": "Housing affordable to households earning below area median income. Often includes government subsidies or rent restrictions, requiring careful financial structuring.",
+    "fullDefinition": "Housing that is affordable to households earning below the area median income. Often includes government subsidies or rent restrictions, and serves a critical social need while requiring careful financial structuring to remain viable."
+  },
+  "stabilizedYear": {
+    "label": "Stabilized Year",
+    "definition": "The first full year of operations after construction completion, when property reaches normal occupancy and operating levels. Used for underwriting.",
+    "fullDefinition": "The first full year of operations after construction completion, when the property has reached normal occupancy and operating levels. This period is used for underwriting and represents the 'steady state' performance of the asset."
+  }
+}
