@@ -2,8 +2,6 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
-import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
 import { pdf } from '@react-pdf/renderer';
 import type { TdceInput, TdceDocument as TdceDocType } from '@/types/tdce';
 import { generateTdceDocument, calculateFinancials } from '@/lib/tdce-calculator';
@@ -16,180 +14,25 @@ const TdceDocument = dynamic(
   { ssr: false }
 );
 
-// ─── Altus + Affordable Housing info blocks (unchanged) ─────────────────────
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 
-function AltusBlock({ compact = false }: { compact?: boolean }) {
-  return (
-    <div className={`rounded-lg border border-slate-200 bg-slate-50/80 text-sm text-slate-700 ${compact ? 'py-3 px-4' : 'py-3 px-4'}`}>
-      <h3 className="font-bold text-slate-800 mb-2">Cost benchmark — Altus Group Canadian Cost Guide</h3>
-      <p className="mb-2">
-        This TDCE uses construction cost benchmarks <strong>strictly based on Altus Group's Canadian Cost Guide</strong>.
-        The Guide is your reference for Canadian real estate development and infrastructure construction costs.
-      </p>
-      {!compact && (
-        <>
-          <p className="mb-2">
-            Altus Group's annual Canadian Cost Guide is based on their proprietary project cost database (e.g. $521B+ total project value, 6,200+ projects, 1.5B+ sq ft). It provides a comprehensive snapshot of construction costs in local markets across Canada, broken down by building type—for high-level estimates (price per square foot by asset type and city) and for benchmarking more detailed estimates.
-          </p>
-          <p className="text-xs text-slate-500">
-            Source: Altus Group, Canadian Cost Guide — altusgroup.com/featured-insights/canadian-cost-guide/
-          </p>
-        </>
-      )}
-      {compact && (
-        <p className="text-xs text-slate-500">
-          Source: altusgroup.com/featured-insights/canadian-cost-guide/
-        </p>
-      )}
-    </div>
-  );
-}
-
-function AffordableHousingBlock({ compact = false }: { compact?: boolean }) {
-  return (
-    <div className={`rounded-lg border border-slate-200 bg-slate-50/80 text-sm text-slate-700 ${compact ? 'py-3 px-4' : 'py-3 px-4'}`}>
-      <h3 className="font-bold text-slate-800 mb-2">Affordable housing (Build Canada Homes)</h3>
-      <p className="mb-2">
-        Build Canada Homes (BCH) defines affordable housing as spending <strong>less than 30%</strong> of a household's before-tax income on shelter costs. Rather than using market rates, the agency sets <strong>fixed rent caps based on the Area Median Income (AMI)</strong> of each city to ensure local affordability.
-      </p>
-      {!compact && (
-        <>
-          <p className="mb-2">
-            This framework is divided into four tiers: <strong>Very Low Income</strong> (0–25% of median), <strong>Low Income</strong> (26–50%), <strong>Moderate Income</strong> (51–75%), and <strong>Median Income</strong> (76–100%). By focusing on these income-based caps, BCH aims to create mixed-income communities with non-market rents that remain permanently affordable.
-          </p>
-          <p className="text-xs text-slate-500">
-            In the unit mix, set "Affordable" counts and rent per unit; the recommended $/mo is based on the Low Income (26–50% AMI) cap for your selected benchmark city.
-          </p>
-        </>
-      )}
-      {compact && (
-        <p className="text-xs text-slate-500">
-          Affordable = &lt;30% of income; rent caps by AMI tier. Set affordable units and rent in the unit mix.
-        </p>
-      )}
-    </div>
-  );
-}
-
-// ─── Email modal ─────────────────────────────────────────────────────────────
-
-type EmailModalState = 'idle' | 'sending' | 'success' | 'error';
-
-interface EmailModalProps {
-  defaultEmail: string;
-  projectTitle: string;
-  onConfirm: (email: string) => Promise<void>;
-  onClose: () => void;
-}
-
-function EmailModal({ defaultEmail, projectTitle, onConfirm, onClose }: EmailModalProps) {
-  const [email, setEmail] = useState(defaultEmail);
-  const [status, setStatus] = useState<EmailModalState>('idle');
-  const [errorMsg, setErrorMsg] = useState('');
-
-  const handleSend = async () => {
-    if (!email) return;
-    setStatus('sending');
-    setErrorMsg('');
-    try {
-      await onConfirm(email);
-      setStatus('success');
-    } catch (err: any) {
-      setStatus('error');
-      setErrorMsg(err?.message ?? 'Unknown error');
-    }
-  };
-
-  return (
-    // Backdrop
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-5">
-        {/* Header */}
-        <div className="flex items-start justify-between">
-          <div>
-            <h2 className="text-base font-bold text-slate-800">Email TDCE Report</h2>
-            <p className="text-xs text-slate-500 mt-0.5 truncate max-w-[280px]">{projectTitle || 'Untitled project'}</p>
-          </div>
-          <button onClick={onClose} disabled={status === 'sending'} className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 disabled:opacity-40">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        {status === 'success' ? (
-          <div className="flex flex-col items-center gap-3 py-4 text-center">
-            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <p className="text-sm font-semibold text-slate-800">Report sent!</p>
-            <p className="text-xs text-slate-500">Check your inbox at <strong>{email}</strong></p>
-            <button onClick={onClose} className="mt-2 px-4 py-2 text-sm font-medium bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">
-              Close
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-500 uppercase tracking-tight">Recipient email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={status === 'sending'}
-                placeholder="you@example.com"
-                className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none disabled:bg-slate-50 disabled:text-slate-400"
-              />
-              <p className="text-[11px] text-slate-400">
-                Pre-filled from your contact info. Edit if needed.
-              </p>
-            </div>
-
-            {status === 'error' && (
-              <p className="text-xs text-red-500 bg-red-50 rounded-lg px-3 py-2">
-                ⚠️ {errorMsg || 'Failed to send. Please try again.'}
-              </p>
-            )}
-
-            <div className="flex gap-3 pt-1">
-              <button
-                onClick={onClose}
-                disabled={status === 'sending'}
-                className="flex-1 py-2.5 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors disabled:opacity-40"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSend}
-                disabled={status === 'sending' || !email}
-                className="flex-1 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {status === 'sending' ? (
-                  <>
-                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                    Sending…
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    Send Report
-                  </>
-                )}
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
+// Custom Icons
+const SolidBuildingIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path fillRule="evenodd" d="M3 2.25a.75.75 0 0 1 .75.75v.54l1.838-.46a9.75 9.75 0 0 1 6.725.738l.108.054A8.25 8.25 0 0 0 18 4.524l3.11-.732a.75.75 0 0 1 .917.81 47.784 47.784 0 0 0 .005 10.337.75.75 0 0 1-.574.812l-3.114.733a9.75 9.75 0 0 1-6.594-.77l-.108-.054a8.25 8.25 0 0 0-5.69-.625l-2.202.55V21a.75.75 0 0 1-1.5 0V3A.75.75 0 0 1 3 2.25Z" clipRule="evenodd" />
+  </svg>
+);
+const SolidInfoIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.732l-1.162 4.743c-.02.08-.03.161-.03.242a.75.75 0 001.5 0c0-.05-.005-.1-.015-.149l1.162-4.743c.475-1.94-1.302-3.48-3.14-2.553l-4.135 2.067a.75.75 0 10.671 1.341l2.25-1.125zM12 8.25a.75.75 0 110-1.5.75.75 0 010 1.5z" clipRule="evenodd" />
+  </svg>
+);
+const SolidDownloadIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path fillRule="evenodd" d="M12 2.25a.75.75 0 01.75.75v11.69l3.22-3.22a.75.75 0 111.06 1.06l-4.5 4.5a.75.75 0 01-1.06 0l-4.5-4.5a.75.75 0 111.06-1.06l3.22 3.22V3a.75.75 0 01.75-.75zm-9 13.5a.75.75 0 01.75.75v2.25a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5V16.5a.75.75 0 011.5 0v2.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V16.5a.75.75 0 01.75-.75z" clipRule="evenodd" />
+  </svg>
+);
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 
@@ -197,7 +40,6 @@ export default function HomePage() {
   const [input, setInput] = useState<TdceInput>(getEmptyTdceInput);
   const [activeSection, setActiveSection] = useState<TdceSectionId>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [showEmailModal, setShowEmailModal] = useState(false);
 
   const output = useMemo(() => {
     try {
@@ -252,116 +94,116 @@ export default function HomePage() {
     }
   }, [generatePdfBlob, input.meta.projectTitle]);
 
-  const handleSendEmail = useCallback(async (recipientEmail: string) => {
-    const blob = await generatePdfBlob();
-
-    // Convert blob to base64
-    const base64 = await new Promise<string>((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        // result is "data:application/pdf;base64,<data>" — strip the prefix
-        const result = reader.result as string;
-        resolve(result.split(',')[1]);
-      };
-      reader.onerror = () => reject(new Error('Failed to read PDF blob'));
-      reader.readAsDataURL(blob);
-    });
-
-    const projectTitle = input.meta.projectTitle || 'Untitled Project';
-    const fileName = `TDCE-${projectTitle.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`;
-
-    const res = await fetch('/api/send-tdce', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        pdfBase64: base64,
-        email: recipientEmail,
-        projectTitle,
-        fileName,
-      }),
-    });
-
-    if (!res.ok) {
-      const { error } = await res.json().catch(() => ({ error: 'Unknown error' }));
-      throw new Error(error || `Server error ${res.status}`);
-    }
-  }, [generatePdfBlob, input.meta.projectTitle]);
-
-  const contactEmail = input.meta?.contactEmail ?? '';
+  const loadDemo = () => setInput(getDefaultTdceInput());
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col font-sans text-gray-800 selection:bg-red-100 selection:text-red-900 bg-[#F8FAFC]">
       <Header />
 
-      <main className="flex-1 flex min-h-0 flex-col lg:flex-row">
-        {!activeSection && (
-          <div className="hidden lg:flex shrink-0 w-80 flex-col gap-4 p-6 border-r border-slate-200 bg-white/80 overflow-y-auto">
-            <AltusBlock />
-            <AffordableHousingBlock />
-          </div>
-        )}
-
-        <div className={`flex-1 min-w-0 overflow-auto transition-all ${activeSection ? 'lg:mr-[380px]' : ''}`}>
-          <div className="max-w-4xl mx-auto p-4 pb-16 lg:p-8 lg:pb-20">
-            {!activeSection && (
-              <div className="lg:hidden mb-4 space-y-4">
-                <AltusBlock compact />
-                <AffordableHousingBlock compact />
-              </div>
-            )}
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-              <p className="text-sm text-slate-500">
-                Tap any section to edit. Tap outside to close the panel.
-              </p>
-              <button
-                type="button"
-                onClick={() => setInput(getDefaultTdceInput())}
-                className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline"
-              >
-                Load demo (1024 Main)
+      <main className="max-w-7xl mx-auto w-full px-6 py-10 flex flex-col lg:flex-row gap-8 relative">
+        
+        {/* Condensed Sidebar */}
+        <div className={`transition-all duration-300 ${activeSection ? 'hidden' : 'w-full lg:w-[320px] opacity-100'} flex-shrink-0 space-y-5`}>
+          {/* Action Card */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <h3 className="font-bold text-gray-900 mb-2">Estimate Controls</h3>
+            <p className="text-xs text-gray-500 mb-4">Populate the form with sample data or export your finished report.</p>
+            <div className="flex flex-col gap-2">
+              <button onClick={loadDemo} className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors">
+                Load Demo Data
+              </button>
+              <button onClick={handleDownloadPdf} disabled={isGenerating} className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-50 text-red-700 border border-red-100 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors disabled:opacity-50">
+                <SolidDownloadIcon className="h-4 w-4" /> {isGenerating ? 'Exporting...' : 'Export to PDF'}
               </button>
             </div>
-            <TdceSheet
-              input={input}
-              output={output}
-              onEditSection={setActiveSection}
-              activeSection={activeSection}
-            />
+          </div>
+
+          {/* Condensed Info Card */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-red-50 to-transparent rounded-full -mr-16 -mt-16 opacity-50" />
+            
+            <h3 className="font-bold text-gray-900 flex items-center gap-2 mb-3 relative z-10">
+              <SolidInfoIcon className="h-5 w-5 text-red-500" />
+              Guidelines
+            </h3>
+            
+            <div className="space-y-5 relative z-10">
+              <div>
+                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Cost Benchmark</h4>
+                <p className="text-sm text-gray-600 leading-snug">
+                  Estimates are strictly based on the <strong>Altus Group Canadian Cost Guide</strong> for accurate, high-level feasibility.
+                </p>
+              </div>
+              
+              <div>
+                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Affordability Tiers (BCH)</h4>
+                <p className="text-xs text-gray-500 mb-3 leading-snug">
+                  Rent caps are fixed based on local Area Median Income (AMI), keeping housing costs below 30% of income.
+                </p>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center justify-between bg-green-50 px-3 py-1.5 rounded text-xs">
+                    <span className="font-bold text-green-700">Very Low</span>
+                    <span className="text-green-600 font-medium">0–25% AMI</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-blue-50 px-3 py-1.5 rounded text-xs">
+                    <span className="font-bold text-blue-700">Low</span>
+                    <span className="text-blue-600 font-medium">26–50% AMI</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-yellow-50 px-3 py-1.5 rounded text-xs">
+                    <span className="font-bold text-yellow-700">Moderate</span>
+                    <span className="text-yellow-600 font-medium">51–75% AMI</span>
+                  </div>
+                  <div className="flex items-center justify-between bg-gray-50 px-3 py-1.5 rounded text-xs">
+                    <span className="font-bold text-gray-700">Median</span>
+                    <span className="text-gray-600 font-medium">76–100% AMI</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {activeSection && (
-          <div className="fixed inset-0 top-16 md:left-auto md:right-0 md:w-full md:max-w-md bg-white border-l border-slate-200 shadow-xl z-40 flex flex-col pb-[env(safe-area-inset-bottom)]">
-            <TdceEditPanel
-              sectionId={activeSection}
-              input={input}
-              output={output}
-              onUpdate={handleUpdateInput}
-              onClose={() => setActiveSection(null)}
-            />
+        {/* Main Document Area */}
+        <div className={`flex-1 min-w-0 transition-all duration-300`}>
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            {/* Report Header */}
+            <div className="bg-gray-900 px-8 py-6 text-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight">TDCE Report</h2>
+                <p className="text-gray-400 text-sm mt-1">Class D Total Development Cost Estimate</p>
+              </div>
+              <div className="bg-white/10 border border-white/20 px-3 py-1.5 rounded-full backdrop-blur-sm flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                <span className="text-xs font-medium text-amber-50">±30% Accuracy</span>
+              </div>
+            </div>
+
+            <div className="p-8 space-y-8">
+              <TdceSheet
+                input={input}
+                output={output}
+                onEditSection={setActiveSection}
+                activeSection={activeSection}
+              />
+            </div>
           </div>
-        )}
+        </div>
       </main>
 
-      <div className="bg-white border-t border-slate-200 py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-500">
-          <p>© 2026 Anhart Affordable Housing. TDCE Generator v1.0</p>
-          <p className="mt-1 flex items-center justify-center gap-1">
-            Class D Estimate (±30%) — For planning purposes only
-          </p>
+      {/* Edit Panel slide-out */}
+      {activeSection && (
+        <div className="fixed inset-0 top-16 md:left-auto md:right-0 md:w-full md:max-w-md bg-white border-l border-gray-200 shadow-xl z-40 flex flex-col pb-[env(safe-area-inset-bottom)]">
+          <TdceEditPanel
+            sectionId={activeSection}
+            input={input}
+            output={output}
+            onUpdate={handleUpdateInput}
+            onClose={() => setActiveSection(null)}
+          />
         </div>
-      </div>
-      <Footer />
-
-      {/* Email modal — rendered at root so it overlays everything */}
-      {showEmailModal && (
-        <EmailModal
-          defaultEmail={contactEmail}
-          projectTitle={input.meta.projectTitle || 'Untitled Project'}
-          onConfirm={handleSendEmail}
-          onClose={() => setShowEmailModal(false)}
-        />
       )}
+
+      <Footer />
     </div>
   );
 }

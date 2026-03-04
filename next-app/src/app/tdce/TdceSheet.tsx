@@ -152,19 +152,28 @@ function SectionBlock({
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       className={`
-        relative rounded border transition-all cursor-pointer py-3 px-4 min-h-[44px] touch-manipulation
+        relative rounded-xl border transition-all cursor-pointer py-4 px-5 min-h-[44px] touch-manipulation group mt-4
         ${
           isActive
-            ? 'border-blue-400 bg-blue-50/50 ring-2 ring-blue-200'
-            : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50/30 active:bg-slate-100'
+            ? 'border-red-500 bg-white ring-2 ring-red-500 shadow-md'
+            : 'border-transparent hover:border-gray-200 hover:bg-gray-50 bg-white'
         }
       `}
     >
-      <h3 className="text-sm font-bold text-slate-800 mb-2 flex items-center gap-2">
-        {title}
-        <span className="text-slate-400 text-s font-normal">(click to edit)</span>
-      </h3>
-      {children}
+      <div className="flex justify-between items-center mb-5 px-2">
+        <h3 className="text-lg font-bold text-gray-900 border-l-4 border-red-500 pl-3">
+          {title}
+        </h3>
+        <button className="opacity-0 group-hover:opacity-100 flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-200 rounded-md text-xs font-bold text-gray-600 hover:text-red-600 hover:border-red-200 transition-all shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-3 w-3">
+            <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.158 3.71 3.71 1.159-1.158a2.625 2.625 0 000-3.71zm-2.925 5.158L15.096 3.717 4.26 14.553a5.25 5.25 0 00-1.425 2.59l-.82 3.692a.75.75 0 00.92.92l3.692-.82a5.25 5.25 0 002.59-1.425L18.806 7.427z" />
+          </svg>
+          Edit
+        </button>
+      </div>
+      <div className="px-4">
+        {children}
+      </div>
     </div>
   );
 }
@@ -208,7 +217,7 @@ function Page({
 
   return (
     <div
-      className="tdce-page relative bg-white shadow-lg flex flex-col overflow-hidden w-full min-w-0 min-h-[70vh] max-w-full md:w-[8.5in] md:min-w-[680px] md:h-[11in] md:min-h-[880px]"
+      className="tdce-page relative bg-white flex flex-col overflow-hidden w-full min-w-0 min-h-[70vh] max-w-full"
       onClick={onClick}
       role="presentation"
     >
@@ -227,7 +236,7 @@ function Page({
       </div>
 
       {/* Page content */}
-      <div className="relative z-10 flex flex-col flex-1 min-h-0 px-4 pt-6 pb-8 sm:px-8 md:px-10 md:pt-8 md:pb-10">
+      <div className="relative z-10 flex flex-col flex-1 min-h-0 pt-6 pb-8 sm:px-8 md:pt-8 md:pb-10">
         {showHeader && (
           <header className="flex items-start justify-between gap-4 mb-6 pb-5 border-b border-slate-200 shrink-0">
             <Image
@@ -246,7 +255,7 @@ function Page({
           </header>
         )}
 
-        <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-5 md:gap-6 text-sm">
+        <div className="flex-1 min-h-0 overflow-y-auto flex flex-col text-sm">
           {children}
         </div>
       </div>
@@ -1479,6 +1488,32 @@ function ProFormaSection({
 // TdceSheet — Main component
 // ---------------------------------------------------------------------------
 
+function LockedSummaryBlock({ id, title, subtitle, onEdit, isActive }: { id: TdceSectionId; title: string; subtitle: string; onEdit: (id: TdceSectionId) => void; isActive: boolean }) {
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={(e) => {
+        e.stopPropagation();
+        onEdit(id);
+      }}
+      className={`rounded-xl p-6 border-2 border-dashed border-gray-200 transition-all cursor-pointer mt-4 ${
+        isActive ? 'ring-2 ring-red-500 bg-white border-transparent shadow-md' : 'bg-gray-50 hover:bg-white hover:border-gray-300'
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5 text-gray-400">
+          <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
+        </svg>
+        <div>
+          <h3 className="text-lg font-bold text-gray-500">{title}</h3>
+          <p className="text-sm text-gray-400">{subtitle}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /**
  * TdceSheet is the top-level render component for the TDCE document view.
  *
@@ -1519,14 +1554,14 @@ export function TdceSheet({ input, output, onEditSection, activeSection }: TdceS
 
   return (
     <div
-      className="tdce-sheet flex flex-col items-center gap-6 md:gap-8 py-4 pb-10 px-2 md:py-6 md:pb-12"
-      style={{ background: 'linear-gradient(180deg, #e5e7eb 0%, #d1d5db 100%)' }}
+      className="tdce-sheet flex flex-col items-center gap-6 md:gap-8 px-2 md:pb-12"
+      style={{ background: 'transparent' }}
     >
       {/* ------------------------------------------------------------------ */}
       {/* PAGE 1 — Project identification & built form                        */}
       {/* ------------------------------------------------------------------ */}
       <Page
-        showHeader
+        showHeader={false}
         estimatePrecisionClass={meta.estimatePrecisionClass}
         onClick={() => onEditSection(null)}
       >
@@ -1575,16 +1610,13 @@ export function TdceSheet({ input, output, onEditSection, activeSection }: TdceS
             isActive={activeSection === 'tdc-summary'}
           />
         ) : (
-          <SectionBlock
+          <LockedSummaryBlock
             id="tdc-summary"
             title="3. Total development cost summary"
+            subtitle="Complete built form and cost inputs to see TDC summary."
             onEdit={onEditSection}
             isActive={activeSection === 'tdc-summary'}
-          >
-            <p className="text-slate-500 text-sm">
-              Complete built form and cost inputs to see TDC summary.
-            </p>
-          </SectionBlock>
+          />
         )}
 
         {output ? (
@@ -1596,14 +1628,13 @@ export function TdceSheet({ input, output, onEditSection, activeSection }: TdceS
             isActive={activeSection === 'financing-sources'}
           />
         ) : (
-          <SectionBlock
+          <LockedSummaryBlock
             id="financing-sources"
             title="4. Capital stack – sources & uses"
+            subtitle="Complete inputs to see capital stack."
             onEdit={onEditSection}
             isActive={activeSection === 'financing-sources'}
-          >
-            <p className="text-slate-500 text-sm">Complete inputs to see capital stack.</p>
-          </SectionBlock>
+          />
         )}
       </Page>
 
@@ -1618,14 +1649,13 @@ export function TdceSheet({ input, output, onEditSection, activeSection }: TdceS
             isActive={activeSection === 'financing-uses'}
           />
         ) : (
-          <SectionBlock
+          <LockedSummaryBlock
             id="financing-uses"
             title="5. Financing structure – uses"
+            subtitle="Complete inputs to see uses."
             onEdit={onEditSection}
             isActive={activeSection === 'financing-uses'}
-          >
-            <p className="text-slate-500 text-sm">Complete inputs to see uses.</p>
-          </SectionBlock>
+          />
         )}
 
         {output ? (
@@ -1637,14 +1667,13 @@ export function TdceSheet({ input, output, onEditSection, activeSection }: TdceS
             isActive={activeSection === 'pro-forma'}
           />
         ) : (
-          <SectionBlock
+          <LockedSummaryBlock
             id="pro-forma"
             title="6. Operating pro forma summary (stabilized)"
+            subtitle="Complete inputs to see pro forma."
             onEdit={onEditSection}
             isActive={activeSection === 'pro-forma'}
-          >
-            <p className="text-slate-500 text-sm">Complete inputs to see pro forma.</p>
-          </SectionBlock>
+          />
         )}
 
        {/* Scenario summary callout — only rendered when output is available */}
