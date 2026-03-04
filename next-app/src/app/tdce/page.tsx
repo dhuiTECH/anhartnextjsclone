@@ -8,6 +8,8 @@ import { generateTdceDocument, calculateFinancials } from '@/lib/tdce-calculator
 import { getEmptyTdceInput, getDefaultTdceInput } from '@/data/tdceDefaults';
 import TdceSheet, { type TdceSectionId } from './TdceSheet';
 import TdceEditPanel from './TdceEditPanel';
+import { TdceLandingPage } from './TdceLandingPage';
+import { TdceSimplifiedView } from './TdceSimplifiedView';
 
 const TdceDocument = dynamic(
   () => import('./TdceDocument').then((mod) => mod.TdceDocument),
@@ -16,6 +18,8 @@ const TdceDocument = dynamic(
 
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
+
+type TdceViewMode = 'landing' | 'simplified' | 'full';
 
 // Custom Icons
 const SolidBuildingIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -37,6 +41,7 @@ const SolidDownloadIcon = (props: React.SVGProps<SVGSVGElement>) => (
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
+  const [viewMode, setViewMode] = useState<TdceViewMode>('landing');
   const [input, setInput] = useState<TdceInput>(getEmptyTdceInput);
   const [activeSection, setActiveSection] = useState<TdceSectionId>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -100,10 +105,40 @@ export default function HomePage() {
     <div className="min-h-screen flex flex-col font-sans text-gray-800 selection:bg-red-100 selection:text-red-900 bg-[#F8FAFC]">
       <Header />
 
+      {/* Landing: Choose your path */}
+      {viewMode === 'landing' && (
+        <main className="max-w-7xl mx-auto w-full px-6">
+          <TdceLandingPage
+            onSelectHomeowners={() => setViewMode('simplified')}
+            onSelectDevelopers={() => setViewMode('full')}
+          />
+        </main>
+      )}
+
+      {/* Simplified: Homeowner view (placeholder) */}
+      {viewMode === 'simplified' && (
+        <main className="max-w-7xl mx-auto w-full px-6">
+          <TdceSimplifiedView onBack={() => setViewMode('landing')} />
+        </main>
+      )}
+
+      {/* Full: Current TDCE tool for developers */}
+      {viewMode === 'full' && (
       <main className="max-w-7xl mx-auto w-full px-6 py-10 flex flex-col lg:flex-row gap-8 relative">
         
         {/* Condensed Sidebar */}
         <div className={`transition-all duration-300 ${activeSection ? 'hidden' : 'w-full lg:w-[320px] opacity-100'} flex-shrink-0 space-y-5`}>
+          {/* Back to landing */}
+          <button
+            onClick={() => setViewMode('landing')}
+            className="w-full flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+              <path d="M19 12H5M12 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Back to choose your path
+          </button>
+
           {/* Action Card */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
             <h3 className="font-bold text-gray-900 mb-2">Estimate Controls</h3>
@@ -189,9 +224,10 @@ export default function HomePage() {
           </div>
         </div>
       </main>
+      )}
 
-      {/* Edit Panel slide-out */}
-      {activeSection && (
+      {/* Edit Panel slide-out (only in full TDCE view) */}
+      {viewMode === 'full' && activeSection && (
         <div className="fixed inset-0 top-16 md:left-auto md:right-0 md:w-full md:max-w-md bg-white border-l border-gray-200 shadow-xl z-40 flex flex-col pb-[env(safe-area-inset-bottom)]">
           <TdceEditPanel
             sectionId={activeSection}
