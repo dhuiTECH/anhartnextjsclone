@@ -79,7 +79,7 @@ export function ResultsPreview({ data }: ResultsPreviewProps) {
         <div className="flex items-center gap-2 text-slate-400 text-sm mb-2">
           <span className="uppercase tracking-wider">TDCE Report</span>
           <span>•</span>
-          <span>Class D Estimate (±25%)</span>
+          <span>Class D Estimate (±30%)</span>
         </div>
         <h2 className="text-2xl font-bold mb-1">{meta.projectTitle || 'Untitled Project'}</h2>
         <p className="text-slate-300">
@@ -258,7 +258,7 @@ export function ResultsPreview({ data }: ResultsPreviewProps) {
           <div>
             <p className="font-medium text-amber-800">Class D Estimate Disclaimer</p>
             <p className="text-sm text-amber-700 mt-1">
-              This is a preliminary estimate with an accuracy range of ±25%. Intended for planning purposes
+              This is a preliminary estimate with an accuracy range of ±30%. Intended for planning purposes
               only. Consult qualified professionals before making investment decisions.
             </p>
           </div>

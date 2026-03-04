@@ -74,7 +74,7 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
               I want to develop a home
             </h3>
             <p className="text-base text-gray-500 leading-relaxed mb-8">
-              Planning a new build, laneway house, or secondary suite? Get a plain-language overview of costs, permits, and timelines for residential development across Canada.
+              Planning a new build, developmental project, or renovation? Get a plain-language overview of costs, permits, and timelines for residential development across Canada.
             </p>
             
           </div>

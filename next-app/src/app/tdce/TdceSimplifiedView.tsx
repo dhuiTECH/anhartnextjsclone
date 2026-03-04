@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
+import { useToast } from '@/components/ui/use-toast';
 
 interface TdceSimplifiedViewProps {
   onBack: () => void;
@@ -297,7 +298,23 @@ const RENTS = [
   { id: 'mixed', label: 'Mixed-income building', sub: 'Market-rate units cross-subsidize deeply affordable ones' },
 ];
 
-function AffordabilityStep({ data, setData, onNext, onBack }: { data: FormData; setData: (d: Partial<FormData>) => void; onNext: () => void; onBack: () => void }) {
+/** Build plain-text message for admin email (no HTML/JSON to avoid validation). */
+function buildTdceSimplifiedMessage(data: FormData): string {
+  const pop = POPS.filter(p => data.populations.includes(p.id)).map(p => p.label).join(', ');
+  const building = data.buildingType === 'other' ? data.otherBuildingType : BUILDINGS.find(b => b.id === data.buildingType)?.label ?? data.buildingType;
+  const rent = RENTS.find(r => r.id === data.rentModel)?.label ?? data.rentModel;
+  return [
+    'TDCE Basic Plan (homeowner intake)',
+    '---',
+    `Location: ${data.location}`,
+    `Ownership: ${data.isOwnedProperty === true ? 'Owned property' : data.isOwnedProperty === false ? 'Not yet owned' : 'N/A'}`,
+    `Populations: ${pop}`,
+    `Building type: ${building}`,
+    `Rent model: ${rent}`,
+  ].join('\n');
+}
+
+function AffordabilityStep({ data, setData, onNext, onBack, isSubmitting }: { data: FormData; setData: (d: Partial<FormData>) => void; onNext: () => void; onBack: () => void; isSubmitting?: boolean }) {
   const toggle = (id: string) => {
     setData({ populations: data.populations.includes(id) ? data.populations.filter(p => p !== id) : [...data.populations, id] });
   };
@@ -337,7 +354,7 @@ function AffordabilityStep({ data, setData, onNext, onBack }: { data: FormData; 
       <SubLabel text="What rent model are you aiming for?" />
       {RENTS.map(r => <RadioRow key={r.id} label={r.label} sub={r.sub} selected={data.rentModel === r.id} onSelect={() => setData({ rentModel: r.id })} />)}
 
-      <div style={{ marginTop: '2.5rem' }}><ArrowBtn onClick={onNext} disabled={!valid} /></div>
+      <div style={{ marginTop: '2.5rem' }}><ArrowBtn onClick={onNext} disabled={!valid || isSubmitting} label={isSubmitting ? 'Sending…' : 'Continue'} /></div>
     </>
   );
 }
@@ -403,7 +420,39 @@ function CompleteStep({ data, onRestart }: { data: FormData; onRestart: () => vo
 export function TdceSimplifiedView({ onBack }: TdceSimplifiedViewProps) {
   const [step, setStep] = useState<Step>('contact');
   const [form, setForm] = useState<FormData>(defaultData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const update = (d: Partial<FormData>) => setForm(f => ({ ...f, ...d }));
+  const { toast } = useToast();
+
+  const handleCompleteSubmit = useCallback(async () => {
+    setIsSubmitting(true);
+    try {
+      const body = new URLSearchParams({
+        form_type: 'tdce_simplified',
+        name: `${form.firstName} ${form.lastName}`.trim(),
+        email: form.email,
+        message: buildTdceSimplifiedMessage(form),
+        organization: form.organization || '',
+        timestamp: new Date().toISOString(),
+      });
+      const res = await fetch('/api/submit-tdce', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+      });
+      const data = (await res.json()) as { success?: boolean; error?: string };
+      if (!res.ok || data.success === false) {
+        toast({ title: 'Submission failed', description: data?.error ?? 'Please try again.', variant: 'destructive' });
+      } else {
+        toast({ title: 'Submitted!', description: "We've received your intake and will be in touch shortly." });
+      }
+    } catch (e) {
+      toast({ title: 'Submission failed', description: 'Please try again.', variant: 'destructive' });
+    } finally {
+      setIsSubmitting(false);
+      setStep('complete');
+    }
+  }, [form, toast]);
 
   const progressSteps = ['contact', 'interest', 'land', 'affordability'];
   const pct = Math.max(0, (progressSteps.indexOf(step) / (progressSteps.length - 1)) * 100);
@@ -448,7 +497,7 @@ export function TdceSimplifiedView({ onBack }: TdceSimplifiedViewProps) {
           {step === 'interest'      && <InterestStep onYes={() => setStep('land')} onNo={() => setStep('no-interest')} />}
           {step === 'no-interest'   && <NoInterestStep />}
           {step === 'land'          && <LandStep data={form} setData={update} onNext={() => setStep('affordability')} onBack={() => setStep('interest')} />}
-          {step === 'affordability' && <AffordabilityStep data={form} setData={update} onNext={() => setStep('complete')} onBack={() => setStep('land')} />}
+          {step === 'affordability' && <AffordabilityStep data={form} setData={update} onNext={handleCompleteSubmit} onBack={() => setStep('land')} isSubmitting={isSubmitting} />}
           {step === 'complete'      && <CompleteStep data={form} onRestart={() => { setStep('contact'); setForm(defaultData); }} />}
         </div>
       </div>

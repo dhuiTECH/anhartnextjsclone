@@ -276,7 +276,7 @@ export function TdceDocument({ data }: TdceDocumentProps) {
 
         <View style={styles.footer}>
           <Text style={styles.small}>
-            Class D estimate (±25%) — for planning purposes only. Consult qualified
+            Class D estimate (±30%) — for planning purposes only. Consult qualified
             professionals before making investment decisions.
           </Text>
         </View>

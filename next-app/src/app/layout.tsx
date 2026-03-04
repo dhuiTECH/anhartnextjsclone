@@ -193,6 +193,11 @@ export default function RootLayout({
           as="style"
           fetchPriority="high"
         />
+        {/* Anhart brand fonts: Roboto (body), Merriweather (headings) */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;600;700&family=Roboto:wght@300;400;500;600;700&display=swap"
+        />
         
         {/* Google Tag Manager - Load early in head for optimal tracking */}
         <script
