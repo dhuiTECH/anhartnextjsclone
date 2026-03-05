@@ -12,6 +12,7 @@ import {
   formatNumber,
   formatPercent,
   truncateTo1Decimal,
+  getEffectiveSiteAreaSqFt,
 } from '@/lib/tdce-calculator';
 import {
   parseRegionBuildingId,
@@ -337,10 +338,11 @@ function BuiltFormSection({
     return result;
   };
 
+  const effectiveSiteArea = getEffectiveSiteAreaSqFt(physicals);
   const specItems: { label: string; value: React.ReactNode }[] = [
     {
       label: 'Site Area',
-      value: physicals.siteAreaSqFt ? formatSqFtWithM2(physicals.siteAreaSqFt) : '—',
+      value: effectiveSiteArea > 0 ? formatSqFtWithM2(effectiveSiteArea) : '—',
     },
     ...(hasDimensions
       ? [{ label: 'Site Dimensions', value: `${physicals.siteDimensionsLengthFt} ft × ${physicals.siteDimensionsWidthFt} ft` }]
@@ -512,7 +514,6 @@ function BenchmarksSection({ input, output, gsf, onEdit, isActive }: BenchmarksS
       <SubHeading label="Operating Expenses" />
       <SpecGrid
         items={[
-          { label: 'Benchmark Range', value: '30–40% of EGI' },
           {
             label: 'Applied Rate',
             value: formatPercent(operations.operatingExpenseRatio ?? 0.35) + ' of EGI',
@@ -530,6 +531,8 @@ function BenchmarksSection({ input, output, gsf, onEdit, isActive }: BenchmarksS
               bedrooms === 0 ? operations.marketRentStudio
               : bedrooms === 1 ? operations.marketRent1Bed
               : bedrooms === 2 ? operations.marketRent2Bed
+              : bedrooms === 3 ? operations.marketRent3Bed
+              : bedrooms === 4 ? operations.marketRent4Bed
               : undefined;
             return (
               <Row

@@ -41,6 +41,9 @@ export default function HomePage() {
   const [input, setInput] = useState<TdceInput>(getEmptyTdceInput);
   const [activeSection, setActiveSection] = useState<TdceSectionId>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [emailCopyChoice, setEmailCopyChoice] = useState<'yes' | 'no' | null>(null);
+  const [emailForCopy, setEmailForCopy] = useState('');
 
   // Brand color to match your logo
   const brandRed = '#D83A42';
@@ -77,30 +80,95 @@ export default function HomePage() {
     return pdf(<TdceDocComponent data={tdceDoc} />).toBlob();
   }, [input]);
 
-  const submitTdceFullToAdmin = useCallback(async (): Promise<void> => {
-    // ... your existing admin submission logic (unchanged) ...
-  }, [input]);
+  const submitTdceFullToAdmin = useCallback(
+    async (opts?: { emailCopyRequested?: boolean; emailForCopy?: string }): Promise<void> => {
+      const name = input.meta.contactName || 'Developer';
+      const email = input.meta.contactEmail || '';
+      const messageLines = [
+        `Project: ${input.meta.projectTitle || 'Untitled'}`,
+        `Address: ${[input.meta.address, input.meta.city, input.meta.province].filter(Boolean).join(', ') || 'N/A'}`,
+        `Units: ${input.physicals.totalUnits ?? input.physicals.unitMix?.reduce((s, u) => s + u.count, 0) ?? 'N/A'}`,
+        `GSF: ${input.physicals.grossFloorAreaSqFt ?? input.physicals.grossBuildableSqFt ?? 'N/A'} sq ft`,
+        output ? `Total Cost: $${(output.costs.totalDevelopmentCost / 1e6).toFixed(2)}M` : '',
+        output ? `NOI: $${(output.operations.noi / 1000).toFixed(0)}K` : '',
+        opts?.emailCopyRequested && opts?.emailForCopy
+          ? `\n---\nEmail copy requested for: ${opts.emailForCopy}`
+          : '',
+      ].filter(Boolean);
+      const body = new URLSearchParams({
+        form_type: 'tdce_full',
+        name,
+        email: email || '(not provided)',
+        message: messageLines.join('\n'),
+        organization: input.meta.partners?.developer || '',
+        timestamp: new Date().toISOString(),
+      });
+      try {
+        const res = await fetch('/api/submit-tdce', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body.toString(),
+        });
+        const data = (await res.json()) as { success?: boolean; error?: string };
+        if (!res.ok || data.success === false) {
+          console.warn('[TDCE] Admin notification failed:', data?.error);
+        }
+      } catch (err) {
+        console.warn('[TDCE] Admin notification failed:', err);
+      }
+    },
+    [input, output]
+  );
 
-  const handleDownloadPdf = useCallback(async () => {
-    setIsGenerating(true);
-    try {
-      const blob = await generatePdfBlob();
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `TDCE-${input.meta.projectTitle?.replace(/\s+/g, '-') || 'Report'}-${new Date().toISOString().split('T')[0]}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      await submitTdceFullToAdmin();
-    } catch (error) {
-      console.error('PDF generation error:', error);
-      alert('Failed to generate PDF. Please try again.');
-    } finally {
-      setIsGenerating(false);
+  const performDownload = useCallback(
+    async (emailCopyRequested: boolean, emailForCopy?: string) => {
+      setIsGenerating(true);
+      try {
+        const blob = await generatePdfBlob();
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `TDCE-${input.meta.projectTitle?.replace(/\s+/g, '-') || 'Report'}-${new Date().toISOString().split('T')[0]}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        await submitTdceFullToAdmin(
+          emailCopyRequested && emailForCopy
+            ? { emailCopyRequested: true, emailForCopy }
+            : undefined
+        );
+      } catch (error) {
+        console.error('PDF generation error:', error);
+        alert('Failed to generate PDF. Please try again.');
+      } finally {
+        setIsGenerating(false);
+      }
+    },
+    [generatePdfBlob, input.meta.projectTitle, submitTdceFullToAdmin]
+  );
+
+  const openExportModal = useCallback(() => {
+    setEmailCopyChoice(null);
+    setEmailForCopy(input.meta.contactEmail ?? '');
+    setShowExportModal(true);
+  }, [input.meta.contactEmail]);
+
+  const handleExportNoEmail = useCallback(() => {
+    setShowExportModal(false);
+    setEmailCopyChoice(null);
+    performDownload(false);
+  }, [performDownload]);
+
+  const handleExportWithEmail = useCallback(() => {
+    if (!emailForCopy.trim()) {
+      alert('Please enter an email address to receive a copy.');
+      return;
     }
-  }, [generatePdfBlob, input.meta.projectTitle, submitTdceFullToAdmin]);
+    setShowExportModal(false);
+    setEmailCopyChoice(null);
+    performDownload(true, emailForCopy.trim());
+  }, [performDownload, emailForCopy]);
 
   const loadDemo = () => setInput(getDefaultTdceInput());
 
@@ -156,7 +224,7 @@ export default function HomePage() {
                   Load Demo Data
                 </button>
                 <button 
-                  onClick={handleDownloadPdf} 
+                  onClick={openExportModal} 
                   disabled={isGenerating} 
                   className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[#D83A42] text-white rounded-xl text-sm font-medium shadow-sm shadow-red-500/20 hover:bg-[#B92B33] hover:shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
@@ -263,6 +331,77 @@ export default function HomePage() {
               onClose={() => setActiveSection(null)}
             />
           )}
+        </div>
+      )}
+
+      {/* Export modal — Email a copy? Yes / No, then Download */}
+      {showExportModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          onClick={(e) => e.target === e.currentTarget && setShowExportModal(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="export-modal-title"
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 max-w-sm w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 id="export-modal-title" className="font-semibold text-slate-900 text-base mb-2">
+              Export to PDF
+            </h3>
+            {emailCopyChoice === null ? (
+              <>
+                <p className="text-sm text-slate-600 mb-4">
+                  Would you like to email a copy to yourself?
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setEmailCopyChoice('yes')}
+                    className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onClick={handleExportNoEmail}
+                    disabled={isGenerating}
+                    className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium bg-[#D83A42] text-white hover:bg-[#B92B33] transition-colors disabled:opacity-50"
+                  >
+                    No, download only
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-slate-600 mb-3">
+                  Enter the email address to receive a copy. The PDF will download now; email delivery can be handled separately.
+                </p>
+                <input
+                  type="email"
+                  value={emailForCopy}
+                  onChange={(e) => setEmailForCopy(e.target.value)}
+                  placeholder="your@email.com"
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#D83A42]/40 focus:border-[#D83A42] mb-4"
+                  autoFocus
+                />
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setEmailCopyChoice(null)}
+                    className="px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={handleExportWithEmail}
+                    disabled={isGenerating}
+                    className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium bg-[#D83A42] text-white hover:bg-[#B92B33] transition-colors disabled:opacity-50"
+                  >
+                    {isGenerating ? 'Exporting...' : 'Download'}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       )}
 

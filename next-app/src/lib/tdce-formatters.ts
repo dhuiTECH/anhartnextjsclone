@@ -31,6 +31,10 @@ export function truncateTo1Decimal(value: number): number {
   return Math.floor(value * 10) / 10;
 }
 
+export function truncateTo4Decimals(value: number): number {
+  return Math.floor(value * 10000) / 10000;
+}
+
 export function formatPercent(value: number, decimals = 1): string {
   return `${(value * 100).toFixed(decimals)}%`;
 }

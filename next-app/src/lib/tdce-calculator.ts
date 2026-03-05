@@ -446,4 +446,5 @@ export {
   formatPercent,
   formatRatio,
   truncateTo1Decimal,
+  truncateTo4Decimals,
 } from '@/lib/tdce-formatters';

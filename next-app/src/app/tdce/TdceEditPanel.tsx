@@ -40,6 +40,7 @@ import {
   formatNumber,
   getMaxNetResidentialSqFt,
   truncateTo1Decimal,
+  truncateTo4Decimals,
   getEffectiveSiteAreaSqFt,
 } from '@/lib/tdce-calculator';
 
@@ -106,7 +107,9 @@ const GRANT_STATUS_OPTIONS: { value: GrantStatus; label: string }[] = [
 // ─────────────────────────────────────────────────────────────────────────────
 
 function getBuiltFormDerivedUpdates(
-  data: TdceInput
+  data: TdceInput,
+  /** When true, auto-apply efficiency (85%) when GFA is set. Only set on blur/apply, not on sync. */
+  shouldApplyEfficiency = false
 ): { physicals?: Partial<TdceInput['physicals']>; financials?: Partial<TdceInput['financials']> } {
   const p = data.physicals;
   const effectiveSite = getEffectiveSiteAreaSqFt(p);
@@ -131,11 +134,16 @@ function getBuiltFormDerivedUpdates(
   const targetFSR = p.targetFSR ?? 0;
   if (p.gfaSource !== 'declared' && effectiveSite > 0 && targetFSR > 0) {
     const gfa = Math.round(effectiveSite * targetFSR);
+    const wasEmpty = (p.grossFloorAreaSqFt ?? p.grossBuildableSqFt ?? 0) === 0;
     physicals.grossFloorAreaSqFt = gfa;
     physicals.grossBuildableSqFt = gfa;
 
     if (commercialInputMode === 'fsr' && commercialFsr > 0) {
       financials.commercialSqFt = Math.round(effectiveSite * commercialFsr);
+    }
+    // Only auto-set efficiency when GFA is applied (blur), not on every keystroke or unit-mix change
+    if (shouldApplyEfficiency && wasEmpty && p.efficiencyRatio == null) {
+      physicals.efficiencyRatio = 0.85;
     }
   }
 
@@ -224,7 +232,7 @@ export function TdceEditPanel({
   });
 
   const apply = (data: TdceInput) => {
-    const derived = getBuiltFormDerivedUpdates(data);
+    const derived = getBuiltFormDerivedUpdates(data, true);
     onUpdate({
       ...data,
       physicals: { ...data.physicals, ...(derived.physicals ?? {}) },
@@ -236,7 +244,7 @@ export function TdceEditPanel({
   syncToParentRef.current = () => {
     const data = getValues();
     if (sectionId === 'built-form') {
-      const derived = getBuiltFormDerivedUpdates(data);
+      const derived = getBuiltFormDerivedUpdates(data, false);
       onUpdate({
         ...data,
         physicals: { ...data.physicals, ...(derived.physicals ?? {}) },
@@ -253,7 +261,7 @@ export function TdceEditPanel({
 
   const applyBuiltFormWithInput = useCallback(
     (overrideInput: TdceInput) => {
-      const derived = getBuiltFormDerivedUpdates(overrideInput);
+      const derived = getBuiltFormDerivedUpdates(overrideInput, true);
       onUpdate({
         ...overrideInput,
         physicals: { ...overrideInput.physicals, ...(derived.physicals ?? {}) },
@@ -340,6 +348,12 @@ export function TdceEditPanel({
             <Field label="City" name="meta.city" control={control} onBlur={handleSubmit(apply)} onAfterChange={syncToParent} />
 
             <div className="space-y-1">
+              <h3 className="text-sm font-semibold text-slate-800">Contact</h3>
+            </div>
+            <Field label="Contact name" name="meta.contactName" control={control} onBlur={handleSubmit(apply)} onAfterChange={syncToParent} />
+            <Field label="Contact email" name="meta.contactEmail" control={control} onBlur={handleSubmit(apply)} onAfterChange={syncToParent} />
+
+            <div className="space-y-1">
               <label className="block text-sm font-medium text-slate-700">Province</label>
               <Controller
                 name="meta.province"
@@ -366,12 +380,6 @@ export function TdceEditPanel({
             <OptionalFields label="More project details" defaultOpen={!!(input.meta?.zoning || input.meta?.scenarioName || input.meta?.description)}>
               <Field label="Zoning" name="meta.zoning" control={control} onBlur={handleSubmit(apply)} onAfterChange={syncToParent} />
               <Field label="Scenario" name="meta.scenarioName" control={control} onBlur={handleSubmit(apply)} onAfterChange={syncToParent} />
-
-              <div className="space-y-1">
-                <h3 className="text-sm font-semibold text-slate-800">Contact</h3>
-              </div>
-              <Field label="Contact name" name="meta.contactName" control={control} onBlur={handleSubmit(apply)} onAfterChange={syncToParent} />
-              <Field label="Contact email" name="meta.contactEmail" control={control} onBlur={handleSubmit(apply)} onAfterChange={syncToParent} />
 
               <div className="space-y-1">
                 <h3 className="text-sm font-semibold text-slate-800">More Details</h3>
@@ -482,7 +490,12 @@ export function TdceEditPanel({
                     onChange={(e) => {
                       const v = e.target.value === '' ? 0 : Number(e.target.value);
                       if (!Number.isNaN(v) && v >= 0) {
-                        onUpdate({ physicals: { ...input.physicals, grossFloorAreaSqFt: v, grossBuildableSqFt: v } });
+                        const updates: Partial<TdceInput['physicals']> = { grossFloorAreaSqFt: v, grossBuildableSqFt: v };
+                        const wasEmpty = (input.physicals.grossFloorAreaSqFt ?? input.physicals.grossBuildableSqFt ?? 0) === 0;
+                        if (wasEmpty && v > 0 && input.physicals.efficiencyRatio == null) {
+                          updates.efficiencyRatio = 0.85;
+                        }
+                        onUpdate({ physicals: { ...input.physicals, ...updates } });
                       }
                     }}
                     placeholder="e.g. 55000"
@@ -874,9 +887,9 @@ export function TdceEditPanel({
                       </div>
                     </OptionalFields>
 
-                    {/* ── OPTIONAL: Operating assumptions (duplicated from pro-forma for convenience) ── */}
-                    <OptionalFields label="Operating assumptions" defaultOpen={false}>
-                      <p className="text-xs text-slate-500">Also editable in the Pro-forma section.</p>
+                    {/* ── CORE: Operating assumptions (section 2 – pro-forma relies on these) ── */}
+                    <div className="border-t border-slate-200 pt-4 mt-4">
+                      <h3 className="text-sm font-semibold text-slate-800 mb-3">Operating assumptions</h3>
                       <Slider
                         label="Operating expense ratio (% of EGI)"
                         value={Math.round((input.operations.operatingExpenseRatio ?? 0.35) * 100)}
@@ -922,7 +935,7 @@ export function TdceEditPanel({
                           </>
                         )}
                       </div>
-                    </OptionalFields>
+                    </div>
                   </>
                 );
               })()}
@@ -1010,11 +1023,11 @@ export function TdceEditPanel({
            ================================================================ */}
         {sectionId === 'pro-forma' && (
           <>
-            {/* ── CORE: Vacancy, opex, DSCR, interest, amortization ── */}
-            <Field label="Vacancy rate (e.g. 0.03)" name="operations.vacancyRate" control={control} type="number" min={0} max={1} step={0.01} onBlur={handleSubmit(apply)} onAfterChange={syncToParent} />
-            <Slider label="Operating expense ratio (% of EGI)" value={Math.round((input.operations.operatingExpenseRatio ?? 0.35) * 100)} min={10} max={100} step={1} suffix="%" onChange={(v) => onUpdate({ operations: { ...input.operations, operatingExpenseRatio: Math.round(v) / 100 } })} onAfterChange={syncToParent} />
-            <Field label="Interest rate (e.g. 0.05)" name="operations.interestRate" control={control} type="number" min={0} max={0.2} step={0.001} onBlur={handleSubmit(apply)} onAfterChange={syncToParent} />
-            <Field label="Amortization (years)" name="operations.amortizationYears" control={control} type="number" min={1} onBlur={handleSubmit(apply)} onAfterChange={syncToParent} />
+            {/* ── CORE: Vacancy, interest, amortization, DSCR (opex ratio in Benchmarks section 2) ── */}
+            <p className="text-xs text-slate-500 mb-2">Operating expense ratio is set in Benchmarks (section 2).</p>
+            <Field label="Vacancy rate (e.g. 0.03)" name="operations.vacancyRate" control={control} type="number" min={0} max={1} step={0.01} placeholder="0.03" onBlur={handleSubmit(apply)} onAfterChange={syncToParent} defaultValueForDisplay={0.03} />
+            <Field label="Interest rate (e.g. 0.049)" name="operations.interestRate" control={control} type="number" min={0} max={0.2} step={0.001} placeholder="0.049" onBlur={handleSubmit(apply)} onAfterChange={syncToParent} defaultValueForDisplay={0.049} />
+            <Field label="Amortization (years)" name="operations.amortizationYears" control={control} type="number" min={1} placeholder="40" onBlur={handleSubmit(apply)} onAfterChange={syncToParent} defaultValueForDisplay={40} />
 
             {/* DSCR with explainer and presets */}
             <div className="rounded-lg bg-slate-50 border border-slate-200 p-3">
@@ -1025,7 +1038,7 @@ export function TdceEditPanel({
               </p>
             </div>
             <div className="space-y-2">
-              <Field label="DSCR target" name="operations.dscrTarget" control={control} type="number" min={1} step={0.05} onBlur={handleSubmit(apply)} onAfterChange={syncToParent} />
+              <Field label="DSCR target" name="operations.dscrTarget" control={control} type="number" min={1} step={0.05} placeholder="1.1" onBlur={handleSubmit(apply)} onAfterChange={syncToParent} defaultValueForDisplay={1.1} />
               <div className="flex flex-wrap gap-2 text-xs">
                 <span className="text-slate-500">Presets:</span>
                 <button type="button" className="px-2 py-1 rounded-full border border-slate-300 text-slate-700 hover:bg-slate-100" onClick={() => onUpdate({ operations: { ...input.operations, dscrTarget: 1.1 } })}>Insured (1.10×)</button>
@@ -1104,10 +1117,13 @@ interface FieldProps {
   step?: number;
   onBlur?: () => void;
   onAfterChange?: () => void;
+  /** When value is undefined/null, show this for display (e.g. default from calculator). */
+  defaultValueForDisplay?: number;
 }
 
-function Field({ label, name, control, type = 'text', placeholder, min, max, step, onBlur, onAfterChange }: FieldProps) {
+function Field({ label, name, control, type = 'text', placeholder, min, max, step, onBlur, onAfterChange, defaultValueForDisplay }: FieldProps) {
   const isNumber = type === 'number';
+  // focusedStr drives display while the field is focused — never reformatted mid-type
   const [focusedStr, setFocusedStr] = useState<string | null>(null);
 
   return (
@@ -1117,9 +1133,17 @@ function Field({ label, name, control, type = 'text', placeholder, min, max, ste
         name={name as any}
         control={control}
         render={({ field }) => {
-          const isZeroOrEmpty = isNumber && (field.value === undefined || field.value === null || field.value === '' || (typeof field.value === 'number' && field.value === 0));
-          const committedDisplay = isZeroOrEmpty ? '' : isNumber ? typeof field.value === 'number' && !Number.isNaN(field.value) ? truncateTo1Decimal(field.value).toFixed(1) : String(field.value) : field.value ?? '';
-          const displayValue = focusedStr !== null ? focusedStr : isNumber ? committedDisplay : (field.value ?? '');
+          // Committed display: what to show when not focused
+          const storedVal = field.value;
+          const isAbsent = storedVal === undefined || storedVal === null || storedVal === '';
+          const isZero = isNumber && typeof storedVal === 'number' && storedVal === 0;
+          const committedDisplay =
+            !isNumber ? (storedVal ?? '') :
+            isAbsent ? (defaultValueForDisplay != null ? String(defaultValueForDisplay) : '') :
+            isZero ? '' :
+            String(storedVal);
+
+          const displayValue = focusedStr !== null ? focusedStr : committedDisplay;
 
           return (
             <input
@@ -1128,10 +1152,23 @@ function Field({ label, name, control, type = 'text', placeholder, min, max, ste
               type={type}
               placeholder={placeholder}
               min={min} max={max} step={step}
-              onFocus={() => { if (isNumber) setFocusedStr(isZeroOrEmpty ? '' : committedDisplay); }}
+              onFocus={() => {
+                if (isNumber) {
+                  // Seed the editable string from the real stored value (not committedDisplay,
+                  // which may be empty for zero). Show blank for 0/absent so user can type freely.
+                  const seed = isAbsent || isZero ? '' : String(storedVal);
+                  setFocusedStr(seed);
+                }
+              }}
               onBlur={() => {
                 if (isNumber && focusedStr !== null) {
-                  if (focusedStr.trim() === '') { field.onChange(0); } else { const num = Number(focusedStr); if (!Number.isNaN(num)) field.onChange(truncateTo1Decimal(num)); }
+                  const trimmed = focusedStr.trim();
+                  if (trimmed === '' || trimmed === '-') {
+                    field.onChange(undefined); // clear → undefined so placeholder shows
+                  } else {
+                    const num = Number(trimmed);
+                    if (!Number.isNaN(num)) field.onChange(truncateTo4Decimals(num));
+                  }
                   setFocusedStr(null);
                   onAfterChange?.();
                 }
@@ -1141,14 +1178,18 @@ function Field({ label, name, control, type = 'text', placeholder, min, max, ste
               onChange={(e) => {
                 if (isNumber) {
                   const raw = e.target.value;
-                  if (focusedStr !== null) {
-                    setFocusedStr(raw);
-                    const parsed = Number(raw);
-                    if (raw !== '' && raw !== '-' && !Number.isNaN(parsed)) { field.onChange(truncateTo1Decimal(parsed)); onAfterChange?.(); }
-                  } else {
-                    if (raw === '') { setFocusedStr(''); } else { const num = Number(raw); if (!Number.isNaN(num)) { field.onChange(truncateTo1Decimal(num)); onAfterChange?.(); } }
+                  // Always keep focusedStr in sync so display matches what user typed
+                  setFocusedStr(raw);
+                  // Only commit to RHF if it's a valid complete number (not mid-typing "0.")
+                  const parsed = Number(raw);
+                  if (raw !== '' && raw !== '-' && raw !== '0.' && !raw.endsWith('.') && !Number.isNaN(parsed)) {
+                    field.onChange(truncateTo4Decimals(parsed));
+                    onAfterChange?.();
                   }
-                } else { field.onChange(e.target.value); onAfterChange?.(); }
+                } else {
+                  field.onChange(e.target.value);
+                  onAfterChange?.();
+                }
               }}
               className="w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-slate-800 text-sm min-h-[44px] touch-manipulation"
             />

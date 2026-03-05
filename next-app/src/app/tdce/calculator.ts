@@ -839,7 +839,7 @@ export function formatNumber(value: number, decimals = 0): string {
 
 /** Truncate to 1 decimal place (no rounding). */
 export function truncateTo1Decimal(value: number): number {
-  return Math.floor(value * 10) / 10;
+  return Math.floor(value * 10000) / 10000;
 }
 
 /**

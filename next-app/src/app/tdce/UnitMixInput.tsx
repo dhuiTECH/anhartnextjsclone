@@ -259,19 +259,19 @@ export function UnitMixInput({
             Add additional bedroom type (3-Bed, 4-Bed, …)
           </button>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {additionalRows.map((row) => (
               <div
                 key={row.bedrooms}
-                className="p-3 rounded-lg border border-slate-200 bg-white space-y-2"
+                className="relative p-4 rounded-xl border border-slate-200 bg-white space-y-3"
               >
-                <div className="grid grid-cols-12 gap-2 items-end">
+                <div className="grid grid-cols-12 gap-4 items-end">
                   <div className="col-span-3 min-w-0 flex items-center shrink-0">
                     <span className="text-sm font-medium text-slate-800 whitespace-nowrap">{getBedroomLabel(row.bedrooms)}</span>
                   </div>
-                  <div className="col-span-3 flex items-end gap-2">
-                    <div className="flex-1 min-w-0">
-                      <label className="block text-xs font-medium text-slate-600 mb-1">Units</label>
+                  <div className="col-span-4 flex flex-col gap-1.5">
+                    <label className="block text-xs font-medium text-slate-600">Units</label>
+                    <div className="flex items-center gap-3">
                       <input
                         type="number"
                         min={0}
@@ -281,12 +281,12 @@ export function UnitMixInput({
                           if (!Number.isNaN(v) && v >= 0) setAdditionalRow(row.bedrooms, 'count', v);
                         }}
                         placeholder="0"
-                        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-800 text-sm"
+                        className="flex-1 min-w-[4rem] rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-800 text-sm"
                       />
+                      {totalUnitsFromBreakdown > 0 && (
+                        <span className="text-sm text-slate-600 shrink-0">({pct(row.count).toFixed(0)}%)</span>
+                      )}
                     </div>
-                    {totalUnitsFromBreakdown > 0 && (
-                      <span className="text-sm text-slate-600 pb-2 shrink-0">({pct(row.count).toFixed(0)}%)</span>
-                    )}
                   </div>
                   <div className="col-span-3">
                     <label className="block text-xs font-medium text-slate-600 mb-1">Sq ft per unit</label>
@@ -300,19 +300,17 @@ export function UnitMixInput({
                         if (!Number.isNaN(v) && v >= 0) setAdditionalRow(row.bedrooms, 'sqFtPerUnit', v);
                       }}
                       placeholder={SQFT_PLACEHOLDER[row.bedrooms] ?? ''}
-                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-800 text-sm"
+                      className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-slate-800 text-sm"
                     />
                   </div>
-                  <div className="col-span-2">
-                    <button
-                      type="button"
-                      onClick={() => removeAdditional(row.bedrooms)}
-                      className="w-full px-2 py-2 text-sm font-medium text-rose-600 hover:bg-rose-50 rounded-lg border border-rose-200 flex items-center justify-center gap-1"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      Remove
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => removeAdditional(row.bedrooms)}
+                    aria-label="Remove"
+                    className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center rounded-full bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 transition-colors"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
                 <div className="flex items-center gap-2 pt-0.5 border-t border-slate-100">
                   <span className="text-xs text-slate-500">Affordable:</span>
