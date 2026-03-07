@@ -47,6 +47,7 @@ export function getEmptyTdceInput(): TdceInput {
       grossFloorAreaSqFt: 0,
       grossBuildableSqFt: 0,
       targetFSR: undefined,
+      gfaSource: 'declared',
       efficiencyRatio: DEFAULT_PHYSICAL_INPUTS.efficiencyRatio ?? 0.85,
       totalUnits: 0,
       stories: undefined,

@@ -4,12 +4,13 @@ import { useState, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { pdf } from '@react-pdf/renderer';
 import type { TdceInput, TdceDocument as TdceDocType } from '@/types/tdce';
-import { generateTdceDocument, calculateFinancials } from '@/lib/tdce-calculator';
+import { generateTdceDocument, calculateFinancials, formatCurrency, formatNumber } from '@/lib/tdce-calculator';
 import { getEmptyTdceInput, getDefaultTdceInput } from '@/data/tdceDefaults';
 import TdceSheet, { type TdceSectionId } from './TdceSheet';
 import TdceEditPanel from './TdceEditPanel';
 import { TdceLandingPage } from './TdceLandingPage';
 import { TdceSimplifiedView } from './TdceSimplifiedView';
+import { TdceDeveloperWizard } from './TdceDeveloperWizard';
 
 const TdceDocument = dynamic(
   () => import('./TdceDocument').then((mod) => mod.TdceDocument),
@@ -19,7 +20,7 @@ const TdceDocument = dynamic(
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 
-type TdceViewMode = 'landing' | 'simplified' | 'full';
+type TdceViewMode = 'landing' | 'simplified' | 'full' | 'developer-wizard';
 
 // Custom Icons (Slightly refined for a lighter line-weight look)
 const SolidDownloadIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -87,10 +88,14 @@ export default function HomePage() {
       const messageLines = [
         `Project: ${input.meta.projectTitle || 'Untitled'}`,
         `Address: ${[input.meta.address, input.meta.city, input.meta.province].filter(Boolean).join(', ') || 'N/A'}`,
-        `Units: ${input.physicals.totalUnits ?? input.physicals.unitMix?.reduce((s, u) => s + u.count, 0) ?? 'N/A'}`,
-        `GSF: ${input.physicals.grossFloorAreaSqFt ?? input.physicals.grossBuildableSqFt ?? 'N/A'} sq ft`,
-        output ? `Total Cost: $${(output.costs.totalDevelopmentCost / 1e6).toFixed(2)}M` : '',
-        output ? `NOI: $${(output.operations.noi / 1000).toFixed(0)}K` : '',
+        `Developer: ${input.meta.partners?.developer || 'N/A'}`,
+        `Construction: ${input.meta.constructionType || 'N/A'}`,
+        `Units: ${input.physicals.totalUnits ?? 'N/A'}`,
+        `GSF: ${input.physicals.grossFloorAreaSqFt ?? 'N/A'} sq ft`,
+        `Land Cost: $${formatNumber(input.financials.landCost || 0)}`,
+        output ? `Total Dev Cost: ${formatCurrency(output.costs.totalDevelopmentCost)}` : '',
+        output ? `${output.operations.fundingGap && output.operations.fundingGap <= 0 ? 'Project Surplus' : 'Funding Gap'}: ${formatCurrency(Math.abs(output.operations.fundingGap || 0))}` : '',
+        output ? `NOI: ${formatCurrency(output.operations.noi)}` : '',
         opts?.emailCopyRequested && opts?.emailForCopy
           ? `\n---\nEmail copy requested for: ${opts.emailForCopy}`
           : '',
@@ -181,7 +186,7 @@ export default function HomePage() {
         <main className="max-w-7xl mx-auto w-full px-6 flex-1 flex items-center">
           <TdceLandingPage
             onSelectHomeowners={() => setViewMode('simplified')}
-            onSelectDevelopers={() => setViewMode('full')}
+            onSelectDevelopers={() => setViewMode('developer-wizard')}
           />
         </main>
       )}
@@ -190,6 +195,23 @@ export default function HomePage() {
       {viewMode === 'simplified' && (
         <main className="max-w-7xl mx-auto w-full px-6 flex-1 pt-12">
           <TdceSimplifiedView onBack={() => setViewMode('landing')} />
+        </main>
+      )}
+
+      {/* Developer Wizard: Step-by-step for pros */}
+      {viewMode === 'developer-wizard' && (
+        <main className="max-w-7xl mx-auto w-full px-6 flex-1 pt-12">
+          <TdceDeveloperWizard 
+            onBack={() => setViewMode('landing')} 
+            onComplete={(finalInput) => {
+              setInput(finalInput);
+              openExportModal();
+            }}
+            onSubmit={async (finalInput) => {
+              setInput(finalInput);
+              await submitTdceFullToAdmin();
+            }}
+          />
         </main>
       )}
 

@@ -257,6 +257,12 @@ export function TdceDocument({ data }: TdceDocumentProps) {
           <Text style={styles.label}>Total Units</Text>
           <Text style={styles.value}>{resolvedUnits} residential</Text>
         </View>
+        {(physicals.parkingSpaces ?? 0) > 0 && (
+          <View style={styles.row}>
+            <Text style={styles.label}>Parking Spaces</Text>
+            <Text style={styles.value}>{physicals.parkingSpaces} stalls</Text>
+          </View>
+        )}
         <View style={styles.row}>
           <Text style={styles.label}>FSR</Text>
           <Text style={styles.value}>
