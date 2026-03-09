@@ -65,7 +65,7 @@ export const supabase = createBrowserClient<Database>(
             });
           } else if (typeof options.headers === 'object') {
             // Already a plain object
-            Object.assign(existingHeaders, options.headers);
+            Object.assign(existingHeaders, (options.headers as any));
           }
         }
         

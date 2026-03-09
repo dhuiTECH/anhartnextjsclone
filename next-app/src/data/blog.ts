@@ -1126,12 +1126,21 @@ export const getFeaturedPosts = async (): Promise<BlogPost[]> => {
     .from("blog_posts")
     .select("*")
     .eq("is_published", true)
-    .gt("featured_slot", 0)
-    .order("featured_slot", { ascending: true })
+    .order("publish_date", { ascending: false })
     .limit(3);
 
   if (error) {
     console.error("Error fetching featured blog posts:", error);
+    try {
+      console.error("Error Details:", JSON.stringify({
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      }, null, 2));
+    } catch (e) {
+      console.error("Could not stringify error:", e);
+    }
     return [];
   }
 
