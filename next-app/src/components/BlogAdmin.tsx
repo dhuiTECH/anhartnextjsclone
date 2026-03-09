@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -49,6 +50,7 @@ interface BlogPost {
   keywords: string[];
   is_published: boolean;
   is_featured: boolean;
+  featured_slot?: number;
 }
 
 const BlogAdmin = () => {
@@ -85,6 +87,7 @@ const BlogAdmin = () => {
     keywords: [],
     is_published: false,
     is_featured: false,
+    featured_slot: 0,
     publish_date: new Date().toISOString().split("T")[0],
   };
 
@@ -163,11 +166,24 @@ const BlogAdmin = () => {
       return;
     }
 
-    // Ensure is_featured is set (defaults to false if not present)
-    const postsWithFeatured = (data || []).map((post: any) => ({
-      ...post,
-      is_featured: post.is_featured ?? false,
-    }));
+    // Ensure is_featured / featured_slot are set (with sensible defaults)
+    const postsWithFeatured = (data || []).map((post: any) => {
+      const hasExplicitSlot =
+        typeof post.featured_slot === "number" && !Number.isNaN(post.featured_slot);
+
+      const derivedSlot =
+        hasExplicitSlot && post.featured_slot > 0
+          ? post.featured_slot
+          : post.is_featured
+          ? 1
+          : 0;
+
+      return {
+        ...post,
+        is_featured: post.is_featured ?? derivedSlot > 0,
+        featured_slot: derivedSlot,
+      };
+    });
 
     setPosts(postsWithFeatured as BlogPost[]);
   };
@@ -203,32 +219,33 @@ const BlogAdmin = () => {
       return;
     }
 
-    // Check if trying to feature a post - ensure max 3 featured posts
-    if (editingPost.is_featured) {
-      const { data: featuredPosts, error: countError } = await supabase
+    // Check featured slot uniqueness (only one post per slot 1–3)
+    const featuredSlot = editingPost.featured_slot ?? 0;
+    if (featuredSlot > 0) {
+      const { data: slotPosts, error: slotError } = await supabase
         .from("blog_posts")
         .select("id")
-        .eq("is_featured", true);
+        .eq("featured_slot", featuredSlot);
 
-      if (countError) {
+      if (slotError) {
         toast({
           title: "Error",
-          description: "Failed to check featured posts count",
+          description: "Failed to check featured slot availability",
           variant: "destructive",
         });
         return;
       }
 
-      // If updating an existing post, exclude it from the count
-      const posts = (featuredPosts as { id: string }[]) || [];
-      const currentFeaturedCount = isCreating
-        ? posts.length
-        : posts.filter((p) => p.id !== editingPost.id).length;
+      const postsInSlot = (slotPosts as { id: string }[]) || [];
+      const otherPostInSlot = isCreating
+        ? postsInSlot.length > 0
+        : postsInSlot.some((p) => p.id !== editingPost.id);
 
-      if (currentFeaturedCount >= 3) {
+      if (otherPostInSlot) {
         toast({
           title: "Validation Error",
-          description: "Maximum 3 posts can be featured. Please unfeature another post first.",
+          description:
+            "That homepage featured position is already assigned to another post. Please choose a different slot or unassign it first.",
           variant: "destructive",
         });
         return;
@@ -237,6 +254,9 @@ const BlogAdmin = () => {
 
     const postData = {
       ...editingPost,
+      // Maintain backward-compatible boolean flag for existing consumers
+      is_featured: (editingPost.featured_slot ?? 0) > 0,
+      featured_slot: editingPost.featured_slot ?? 0,
       tags: Array.isArray(editingPost.tags) ? editingPost.tags : [],
       keywords: Array.isArray(editingPost.keywords) ? editingPost.keywords : [],
     };
@@ -554,23 +574,42 @@ const BlogAdmin = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="featured"
-                    checked={editingPost.is_featured || false}
-                    onCheckedChange={(checked) =>
-                      setEditingPost({
-                        ...editingPost,
-                        is_featured: checked,
-                      })
-                    }
-                  />
-                  <Label htmlFor="featured" className="flex flex-col">
-                    <span>Featured on Homepage</span>
+                <div className="space-y-2">
+                  <Label className="flex flex-col">
+                    <span>Homepage Featured Position</span>
                     <span className="text-xs text-muted-foreground">
-                      (Max 3 posts can be featured)
+                      Choose which of the three homepage featured slots this post should occupy.
                     </span>
                   </Label>
+                  <RadioGroup
+                    className="flex flex-wrap gap-4"
+                    value={String(editingPost.featured_slot ?? 0)}
+                    onValueChange={(value) => {
+                      const numeric = Number(value) || 0;
+                      setEditingPost({
+                        ...editingPost,
+                        featured_slot: numeric,
+                        is_featured: numeric > 0,
+                      });
+                    }}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem id="featured-none" value="0" />
+                      <Label htmlFor="featured-none">Not featured</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem id="featured-slot-1" value="1" />
+                      <Label htmlFor="featured-slot-1">Featured slot 1</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem id="featured-slot-2" value="2" />
+                      <Label htmlFor="featured-slot-2">Featured slot 2</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem id="featured-slot-3" value="3" />
+                      <Label htmlFor="featured-slot-3">Featured slot 3</Label>
+                    </div>
+                  </RadioGroup>
                 </div>
 
                 <div>

@@ -57,6 +57,7 @@ interface DbBlogPost {
   keywords: string[];
   is_published: boolean;
   is_featured?: boolean;
+  featured_slot?: number;
 }
 
 function transformDbPost(dbPost: DbBlogPost): BlogPost {
@@ -1125,8 +1126,8 @@ export const getFeaturedPosts = async (): Promise<BlogPost[]> => {
     .from("blog_posts")
     .select("*")
     .eq("is_published", true)
-    .eq("is_featured", true)
-    .order("publish_date", { ascending: false })
+    .gt("featured_slot", 0)
+    .order("featured_slot", { ascending: true })
     .limit(3);
 
   if (error) {
