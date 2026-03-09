@@ -1049,6 +1049,11 @@ export function TdceSimplifiedView({ onBack }: TdceSimplifiedViewProps) {
   const [step, setStep] = useState<Step>('contact');
   const [form, setForm] = useState<FormData>(defaultData);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [step]);
+
   const update = (d: Partial<FormData>) => setForm((current) => ({ ...current, ...d }));
   const { toast } = useToast();
 

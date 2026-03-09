@@ -488,7 +488,12 @@ export function TdceEditPanel({
                         : (input.physicals.grossFloorAreaSqFt ?? input.physicals.grossBuildableSqFt ?? 0)
                     }
                     onChange={(e) => {
-                      const v = e.target.value === '' ? 0 : Number(e.target.value);
+                      const raw = e.target.value;
+                      if (raw === '') {
+                        onUpdate({ physicals: { ...input.physicals, grossFloorAreaSqFt: undefined, grossBuildableSqFt: undefined } });
+                        return;
+                      }
+                      const v = Number(raw);
                       if (!Number.isNaN(v) && v >= 0) {
                         const updates: Partial<TdceInput['physicals']> = { grossFloorAreaSqFt: v, grossBuildableSqFt: v };
                         const wasEmpty = (input.physicals.grossFloorAreaSqFt ?? input.physicals.grossBuildableSqFt ?? 0) === 0;
@@ -499,7 +504,7 @@ export function TdceEditPanel({
                       }
                     }}
                     placeholder="e.g. 55000"
-                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-800 text-sm"
+                    className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-800 text-sm min-h-[44px] touch-manipulation"
                   />
                 </div>
               )}

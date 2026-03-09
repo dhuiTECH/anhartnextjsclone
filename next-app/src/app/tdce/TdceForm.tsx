@@ -7,7 +7,7 @@
  */
 
 import { useForm, Controller } from 'react-hook-form';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { TdceInput } from '@/types/tdce';
 import {
   DEFAULT_OPERATING_INPUTS,
@@ -102,7 +102,8 @@ const FormField = ({
               ${suffix ? 'pr-12' : ''}
             `}
             onChange={(e) => {
-              const value = type === 'number' ? parseFloat(e.target.value) || 0 : e.target.value;
+              const val = e.target.value;
+              const value = type === 'number' ? (val === '' ? undefined : parseFloat(val)) : val;
               field.onChange(value);
             }}
           />
@@ -123,6 +124,10 @@ const FormField = ({
 
 export function TdceForm({ onSubmit, isGenerating }: TdceFormProps) {
   const [activeSection, setActiveSection] = useState(0);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeSection]);
 
   const { control, handleSubmit, watch, formState: { errors } } = useForm<TdceInput>({
     defaultValues: {

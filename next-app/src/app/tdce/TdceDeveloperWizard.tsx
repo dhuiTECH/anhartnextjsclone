@@ -354,7 +354,7 @@ function SiteDetailsStep({ data, update, onNext, onBack }: { data: TdceInput; up
         placeholder="Site Area" 
         suffix="SQ FT"
         value={data.physicals.siteAreaSqFt ?? ''} 
-        onChange={v => update({ physicals: { ...data.physicals, siteAreaSqFt: parseFloat(v) || 0 } })} 
+        onChange={v => update({ physicals: { ...data.physicals, siteAreaSqFt: v === '' ? undefined : parseFloat(v) } })} 
       />
 
       <div style={{ marginBottom: '2.5rem' }}>
@@ -377,14 +377,14 @@ function SiteDetailsStep({ data, update, onNext, onBack }: { data: TdceInput; up
           placeholder="Gross Floor Area (GFA)" 
           suffix="SQ FT"
           value={data.physicals.grossFloorAreaSqFt ?? ''} 
-          onChange={v => update({ physicals: { ...data.physicals, grossFloorAreaSqFt: parseFloat(v) || 0 } })} 
+          onChange={v => update({ physicals: { ...data.physicals, grossFloorAreaSqFt: v === '' ? undefined : parseFloat(v) } })} 
         />
       ) : (
         <UnderlineInput 
           type="number"
           placeholder="Target FSR" 
           value={data.physicals.targetFSR ?? ''} 
-          onChange={v => update({ physicals: { ...data.physicals, targetFSR: parseFloat(v) || 0 } })} 
+          onChange={v => update({ physicals: { ...data.physicals, targetFSR: v === '' ? undefined : parseFloat(v) } })} 
         />
       )}
 
@@ -393,13 +393,13 @@ function SiteDetailsStep({ data, update, onNext, onBack }: { data: TdceInput; up
           type="number"
           placeholder="Stories" 
           value={data.physicals.stories ?? ''} 
-          onChange={v => update({ physicals: { ...data.physicals, stories: parseInt(v) || 0 } })} 
+          onChange={v => update({ physicals: { ...data.physicals, stories: v === '' ? undefined : parseInt(v) } })} 
         />
         <UnderlineInput 
           type="number"
           placeholder="Parking Spaces" 
           value={data.physicals.parkingSpaces ?? ''} 
-          onChange={v => update({ physicals: { ...data.physicals, parkingSpaces: parseInt(v) || 0 } })} 
+          onChange={v => update({ physicals: { ...data.physicals, parkingSpaces: v === '' ? undefined : parseInt(v) } })} 
         />
       </div>
 
@@ -423,7 +423,7 @@ function BuildingProgramStep({ data, update, onNext, onBack }: { data: TdceInput
         placeholder="Total Residential Units" 
         suffix="UNITS"
         value={data.physicals.totalUnits ?? ''} 
-        onChange={v => update({ physicals: { ...data.physicals, totalUnits: parseInt(v) || 0 } })} 
+        onChange={v => update({ physicals: { ...data.physicals, totalUnits: v === '' ? undefined : parseInt(v) } })} 
       />
 
       <UnderlineInput 
@@ -431,7 +431,7 @@ function BuildingProgramStep({ data, update, onNext, onBack }: { data: TdceInput
         placeholder="Commercial Space (Optional)" 
         suffix="SQ FT"
         value={data.financials.commercialSqFt ?? ''} 
-        onChange={v => update({ financials: { ...data.financials, commercialSqFt: parseFloat(v) || 0 } })} 
+        onChange={v => update({ financials: { ...data.financials, commercialSqFt: v === '' ? undefined : parseFloat(v) } })} 
       />
 
       <ArrowBtn onClick={onNext} disabled={!valid} />
@@ -470,7 +470,7 @@ function FinancialsStep({ data, update, onNext, onBack }: { data: TdceInput; upd
         placeholder="Land Acquisition Cost" 
         prefix="$"
         value={data.financials.landCost ?? ''} 
-        onChange={v => update({ financials: { ...data.financials, landCost: parseFloat(v) || 0 } })} 
+        onChange={v => update({ financials: { ...data.financials, landCost: v === '' ? undefined : parseFloat(v) } })} 
       />
 
       <div style={{ marginBottom: '2.5rem' }}>
@@ -507,7 +507,7 @@ function FinancialsStep({ data, update, onNext, onBack }: { data: TdceInput; upd
           prefix="$"
           suffix="/SF"
           value={data.financials.hardCostPerSqFt ?? ''} 
-          onChange={v => update({ financials: { ...data.financials, hardCostPerSqFt: parseFloat(v) || 0 } })} 
+          onChange={v => update({ financials: { ...data.financials, hardCostPerSqFt: v === '' ? undefined : parseFloat(v) } })} 
         />
       )}
 
@@ -516,7 +516,7 @@ function FinancialsStep({ data, update, onNext, onBack }: { data: TdceInput; upd
         placeholder="Sponsor Equity (Optional)" 
         prefix="$"
         value={data.financials.sponsorEquity ?? ''} 
-        onChange={v => update({ financials: { ...data.financials, sponsorEquity: parseFloat(v) || 0 } })} 
+        onChange={v => update({ financials: { ...data.financials, sponsorEquity: v === '' ? undefined : parseFloat(v) } })} 
       />
 
       <ArrowBtn onClick={onNext} disabled={!valid} />
@@ -619,7 +619,7 @@ function OperationsStep({ data, update, onNext, onBack }: { data: TdceInput; upd
           prefix="$"
           suffix="/SF"
           value={data.operations.residentialRentPerSqFt ?? ''} 
-          onChange={v => update({ operations: { ...data.operations, residentialRentPerSqFt: parseFloat(v) || 0 } })} 
+          onChange={v => update({ operations: { ...data.operations, residentialRentPerSqFt: v === '' ? undefined : parseFloat(v) } })} 
         />
       )}
 
@@ -638,15 +638,15 @@ function OperationsStep({ data, update, onNext, onBack }: { data: TdceInput; upd
           type="number"
           placeholder="Vacancy Rate" 
           suffix="%"
-          value={(data.operations.vacancyRate || 0) * 100} 
-          onChange={v => update({ operations: { ...data.operations, vacancyRate: (parseFloat(v) || 0) / 100 } })} 
+          value={data.operations.vacancyRate != null ? data.operations.vacancyRate * 100 : ''} 
+          onChange={v => update({ operations: { ...data.operations, vacancyRate: v === '' ? undefined : (parseFloat(v) / 100) } })} 
         />
         <UnderlineInput 
           type="number"
           placeholder="Expense Ratio" 
           suffix="%"
-          value={(data.operations.operatingExpenseRatio || 0) * 100} 
-          onChange={v => update({ operations: { ...data.operations, operatingExpenseRatio: (parseFloat(v) || 0) / 100 } })} 
+          value={data.operations.operatingExpenseRatio != null ? data.operations.operatingExpenseRatio * 100 : ''} 
+          onChange={v => update({ operations: { ...data.operations, operatingExpenseRatio: v === '' ? undefined : (parseFloat(v) / 100) } })} 
         />
       </div>
 
@@ -673,6 +673,10 @@ function OperationsStep({ data, update, onNext, onBack }: { data: TdceInput; upd
 export function TdceDeveloperWizard({ onBack, onComplete }: TdceDeveloperWizardProps) {
   const [step, setStep] = useState<Step>('project-info');
   const [form, setForm] = useState<TdceInput>(getEmptyTdceInput());
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [step]);
 
   const update = useCallback((updates: Partial<TdceInput>) => {
     setForm(prev => ({

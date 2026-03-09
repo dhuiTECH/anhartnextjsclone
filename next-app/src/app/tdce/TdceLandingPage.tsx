@@ -42,12 +42,9 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
     <div className="flex flex-col items-center justify-center min-h-[70vh] py-16 px-4 bg-gray-50/50">
       
       {/* Header */}
-      <div className="text-center mb-16 max-w-2xl">
-        <p className={`text-sm font-semibold uppercase tracking-[0.25em] ${brandRedClass} mb-3`}>
-          Where are you starting?
-        </p>
+      <div className="text-center mb-16">
         <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
-          Choose your path
+          How can we help you build today?
         </h2>
       </div>
 
@@ -71,10 +68,10 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
             </p>
             {/* Increased Title Size */}
             <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">
-              I want to develop a home
+              Plan a new home or renovation
             </h3>
             <p className="text-base text-gray-500 leading-relaxed mb-8">
-              Planning a new build, developmental project, or renovation? Get a plain-language overview of costs, permits, and timelines for residential development across Canada.
+              Get a plain-language breakdown of costs, permits, and timelines for your residential project.
             </p>
             
           </div>
@@ -98,20 +95,20 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
               <ChartIcon className="w-8 h-8" />
             </div>
             <p className={`text-xs font-bold uppercase tracking-[0.15em] ${brandRedClass} mb-3`}>
-              For Developers
+              For Developers and Organizations
             </p>
             {/* Increased Title Size */}
             <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">
-              I&apos;m sizing up a project
+              Check project feasibility
             </h3>
             <p className="text-base text-gray-400 leading-relaxed mb-8">
-              Developer, planner, or finance professional? Run a full Total Development Cost Estimate using Altus Group benchmarks and BCH affordable housing parameters.
+              Run a full development cost estimate using current industry benchmarks and affordable housing parameters.
             </p>
           </div>
 
           {/* Action indicator - Arrow moves on group hover */}
           <div className="flex items-center gap-3 text-sm font-bold text-white uppercase tracking-wider group-hover:text-gray-200 transition-colors">
-            Open TDCE tool
+            Start Your Estimate
             <ArrowRightIcon className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2 text-[#D83A42]" />
           </div>
         </div>
