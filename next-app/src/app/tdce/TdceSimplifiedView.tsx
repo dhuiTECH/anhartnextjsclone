@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { getEmptyTdceInput } from '@/data/tdceDefaults';
 import { calculateFinancials, formatCurrency, formatNumber, formatPercent } from '@/lib/tdce-calculator';
@@ -70,8 +70,8 @@ const borderLight = '#E2E8F0';
 const POPS = [
   { id: 'families', label: 'Families' },
   { id: 'seniors', label: 'Seniors' },
-  { id: 'single-professionals', label: 'Single Professionals' },
-  { id: 'vulnerable', label: 'Vulnerable Populations' },
+  { id: 'workforce-housing', label: 'Workforce housing' },
+  { id: 'vulnerable', label: 'Vulnerable populations' },
 ] as const;
 
 const BUILDINGS = [
@@ -82,9 +82,9 @@ const BUILDINGS = [
 ] as const;
 
 const RENTS = [
-  { id: 'income', label: 'Rent geared to income', sub: 'Deep affordability with lower rents and stronger subsidy assumptions' },
-  { id: 'discount', label: 'Discount off market rent', sub: 'Below-market rents with moderate operating support' },
-  { id: 'mixed', label: 'Mixed-income building', sub: 'A blend of affordable and closer-to-market rents' },
+  { id: 'income', label: 'Rent-Geared-to-Income', sub: 'Deep affordability; rents set at approximately 30% below market average.' },
+  { id: 'discount', label: 'Below-Market Rent', sub: 'Supported operations allowing for rents at 10% below market average.' },
+  { id: 'mixed', label: 'Mixed-Income Rent', sub: 'A tiered model averaging 20% below market rates to support a diverse community.' },
 ] as const;
 
 const PROVINCES = [
@@ -161,6 +161,32 @@ const RENT_PRESETS: Record<string, { residentialRentPerSqFt: number; shelterPerc
 function parseNumber(value: string): number {
   const numeric = Number.parseFloat(value.replace(/[^0-9.]/g, ''));
   return Number.isFinite(numeric) ? numeric : 0;
+}
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function isValidEmail(email: string): boolean {
+  return EMAIL_REGEX.test(email.trim());
+}
+
+function isValidNumberString(value: string): boolean {
+  const cleaned = value.trim().replace(/[^0-9.]/g, '');
+  if (!cleaned) return false;
+  const num = parseFloat(cleaned);
+  return Number.isFinite(num);
+}
+
+function isValidPositiveNumber(value: string, allowZero = false): boolean {
+  if (!value.trim()) return false;
+  const num = parseNumber(value);
+  if (!Number.isFinite(num)) return false;
+  return allowZero ? num >= 0 : num > 0;
+}
+
+function isValidPositiveInteger(value: string): boolean {
+  if (!value.trim()) return false;
+  const num = parseNumber(value);
+  return Number.isInteger(num) && num > 0;
 }
 
 function getSelectedBuildingLabel(data: FormData): string {
@@ -280,16 +306,23 @@ function UnderlineInput({
   onChange,
   type = 'text',
   autoFocus = false,
+  error,
+  inputMode,
+  min,
 }: {
   placeholder: string;
   value: string;
   onChange: (v: string) => void;
   type?: string;
   autoFocus?: boolean;
+  error?: string;
+  inputMode?: 'text' | 'email' | 'numeric' | 'decimal';
+  min?: number;
 }) {
   const [isFocused, setIsFocused] = useState(false);
   const hasValue = value !== undefined && value !== null && value !== '';
   const showLabel = isFocused || hasValue;
+  const hasError = !!error;
 
   return (
     <div style={{ position: 'relative', width: '100%', marginBottom: '2.5rem', paddingTop: '1.2rem' }}>
@@ -298,7 +331,7 @@ function UnderlineInput({
         top: showLabel ? 0 : '24px',
         left: 0,
         fontSize: showLabel ? '0.85rem' : '1.2rem',
-        color: isFocused ? brandPrimary : textMuted,
+        color: hasError ? brandPrimary : isFocused ? brandPrimary : textMuted,
         fontFamily: 'Roboto, sans-serif',
         transition: 'all 0.2s ease',
         pointerEvents: 'none',
@@ -313,11 +346,13 @@ function UnderlineInput({
         onChange={(e) => onChange(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        inputMode={inputMode}
+        min={min}
         style={{
           width: '100%',
           background: 'transparent',
           border: 'none',
-          borderBottom: `2px solid ${isFocused ? brandPrimary : borderLight}`,
+          borderBottom: `2px solid ${hasError ? brandPrimary : isFocused ? brandPrimary : borderLight}`,
           outline: 'none',
           fontFamily: 'Roboto, sans-serif',
           fontSize: '1.2rem',
@@ -327,6 +362,11 @@ function UnderlineInput({
           transition: 'border-color 0.3s ease',
         }}
       />
+      {hasError && (
+        <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: brandPrimary, fontFamily: 'Roboto, sans-serif' }}>
+          {error}
+        </p>
+      )}
     </div>
   );
 }
@@ -335,14 +375,17 @@ function UnderlineTextarea({
   placeholder,
   value,
   onChange,
+  error,
 }: {
   placeholder: string;
   value: string;
   onChange: (v: string) => void;
+  error?: string;
 }) {
   const [isFocused, setIsFocused] = useState(false);
   const hasValue = value !== undefined && value !== null && value !== '';
   const showLabel = isFocused || hasValue;
+  const hasError = !!error;
 
   return (
     <div style={{ position: 'relative', width: '100%', marginBottom: '2.5rem', paddingTop: '1.2rem' }}>
@@ -351,7 +394,7 @@ function UnderlineTextarea({
         top: showLabel ? 0 : '24px',
         left: 0,
         fontSize: showLabel ? '0.85rem' : '1.2rem',
-        color: isFocused ? brandPrimary : textMuted,
+        color: hasError ? brandPrimary : isFocused ? brandPrimary : textMuted,
         fontFamily: 'Roboto, sans-serif',
         transition: 'all 0.2s ease',
         pointerEvents: 'none',
@@ -369,7 +412,7 @@ function UnderlineTextarea({
           width: '100%',
           background: 'transparent',
           border: 'none',
-          borderBottom: `2px solid ${isFocused ? brandPrimary : borderLight}`,
+          borderBottom: `2px solid ${hasError ? brandPrimary : isFocused ? brandPrimary : borderLight}`,
           outline: 'none',
           resize: 'none',
           fontFamily: 'Roboto, sans-serif',
@@ -381,6 +424,11 @@ function UnderlineTextarea({
           transition: 'border-color 0.3s ease',
         }}
       />
+      {hasError && (
+        <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: brandPrimary, fontFamily: 'Roboto, sans-serif' }}>
+          {error}
+        </p>
+      )}
     </div>
   );
 }
@@ -390,15 +438,18 @@ function UnderlineSelect({
   onChange,
   options,
   placeholder,
+  error,
 }: {
   value: string;
   onChange: (v: string) => void;
   options: readonly { id: string; label: string }[];
   placeholder: string;
+  error?: string;
 }) {
   const [isFocused, setIsFocused] = useState(false);
   const hasValue = !!value;
   const showLabel = isFocused || hasValue;
+  const hasError = !!error;
 
   return (
     <div style={{ marginBottom: '2.5rem', position: 'relative', paddingTop: '1.2rem' }}>
@@ -407,7 +458,7 @@ function UnderlineSelect({
         top: showLabel ? 0 : '24px',
         left: 0,
         fontSize: showLabel ? '0.85rem' : '1.2rem',
-        color: isFocused ? brandPrimary : textMuted,
+        color: hasError ? brandPrimary : isFocused ? brandPrimary : textMuted,
         fontFamily: 'Roboto, sans-serif',
         transition: 'all 0.2s ease',
         pointerEvents: 'none',
@@ -424,7 +475,7 @@ function UnderlineSelect({
           width: '100%',
           background: 'transparent',
           border: 'none',
-          borderBottom: `2px solid ${isFocused ? brandPrimary : borderLight}`,
+          borderBottom: `2px solid ${hasError ? brandPrimary : isFocused ? brandPrimary : borderLight}`,
           outline: 'none',
           fontFamily: 'Roboto, sans-serif',
           fontSize: '1.2rem',
@@ -444,6 +495,11 @@ function UnderlineSelect({
           </option>
         ))}
       </select>
+      {hasError && (
+        <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: brandPrimary, fontFamily: 'Roboto, sans-serif' }}>
+          {error}
+        </p>
+      )}
       <span style={{ position: 'absolute', right: 0, top: '24px', color: textMuted, pointerEvents: 'none' }}>
         <svg width="14" height="8" viewBox="0 0 14 8" fill="none">
           <path d="M1 1L7 7L13 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -683,18 +739,38 @@ function StatCard({ label, value, sub }: { label: string; value: string; sub?: s
 }
 
 function ContactStep({ data, setData, onNext }: { data: FormData; setData: (d: Partial<FormData>) => void; onNext: () => void }) {
-  const valid = data.firstName && data.lastName && data.email && data.organization;
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+
+  const firstNameTrimmed = data.firstName.trim();
+  const lastNameTrimmed = data.lastName.trim();
+  const emailTrimmed = data.email.trim();
+  const orgTrimmed = data.organization.trim();
+
+  const errors = {
+    firstName: !firstNameTrimmed ? 'Please enter your first name' : firstNameTrimmed.length < 2 ? 'Please enter a valid first name' : undefined,
+    lastName: !lastNameTrimmed ? 'Please enter your last name' : lastNameTrimmed.length < 2 ? 'Please enter a valid last name' : undefined,
+    email: !emailTrimmed ? 'Please enter your email address' : !isValidEmail(data.email) ? 'Please enter a valid email address' : undefined,
+    organization: !orgTrimmed ? 'Please enter your organization' : orgTrimmed.length < 2 ? 'Please enter a valid organization name' : undefined,
+  };
+
+  const isValid = !errors.firstName && !errors.lastName && !errors.email && !errors.organization;
+
+  const handleNext = () => {
+    setAttemptedSubmit(true);
+    if (isValid) onNext();
+  };
+
   return (
     <>
       <Counter n={1} total={5} />
-      <Q label="Let's start with you." sub="A few contact details so we can save and follow up on your rough estimate." />
+      <Q label="Let's start with you." sub="A few contact details so we can save and follow up on your Total Cost Benchmark." />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 2rem' }}>
-        <UnderlineInput autoFocus placeholder="First name" value={data.firstName} onChange={(v) => setData({ firstName: v })} />
-        <UnderlineInput placeholder="Last name" value={data.lastName} onChange={(v) => setData({ lastName: v })} />
+        <UnderlineInput autoFocus placeholder="First name" value={data.firstName} onChange={(v) => setData({ firstName: v })} error={attemptedSubmit ? errors.firstName : undefined} />
+        <UnderlineInput placeholder="Last name" value={data.lastName} onChange={(v) => setData({ lastName: v })} error={attemptedSubmit ? errors.lastName : undefined} />
       </div>
-      <UnderlineInput type="email" placeholder="Email address" value={data.email} onChange={(v) => setData({ email: v })} />
-      <UnderlineInput placeholder="Organization" value={data.organization} onChange={(v) => setData({ organization: v })} />
-      <ArrowBtn onClick={onNext} disabled={!valid} />
+      <UnderlineInput type="email" placeholder="Email address" value={data.email} onChange={(v) => setData({ email: v })} error={attemptedSubmit ? errors.email : undefined} inputMode="email" />
+      <UnderlineInput placeholder="Organization" value={data.organization} onChange={(v) => setData({ organization: v })} error={attemptedSubmit ? errors.organization : undefined} />
+      <ArrowBtn onClick={handleNext} disabled={false} />
     </>
   );
 }
@@ -703,10 +779,10 @@ function InterestStep({ onYes, onNo }: { onYes: () => void; onNo: () => void }) 
   return (
     <>
       <Counter n={2} total={5} />
-      <Q label="Do you have a project in mind?" sub="If you do, we can give you a rough TDCE-style estimate right now." />
+      <Q label="Do you have a project in mind?" sub="If you do, We can give you a rough estimate right now." />
       <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         {[
-          { label: 'Yes — show me a rough estimate', action: onYes },
+          { label: 'Yes — let\'s make a rough estimate', action: onYes },
           { label: 'No — I am just exploring for now', action: onNo },
         ].map((opt) => (
           <button
@@ -791,52 +867,87 @@ function NoInterestStep() {
 }
 
 function LandStep({ data, setData, onNext, onBack }: { data: FormData; setData: (d: Partial<FormData>) => void; onNext: () => void; onBack: () => void }) {
-  const valid = data.location.trim().length > 0 && data.province && data.isOwnedProperty !== null && parseNumber(data.estimatedLandCost) >= 0;
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+
+  const locationTrimmed = data.location.trim();
+  const errors = {
+    location: !locationTrimmed ? 'Please enter an address, neighbourhood, or general area' : locationTrimmed.length < 5 ? 'Please provide more detail about the location' : undefined,
+    province: !data.province ? 'Please select a province or territory' : undefined,
+    isOwnedProperty: data.isOwnedProperty === null ? 'Please indicate whether you own the property' : undefined,
+    estimatedLandCost: !data.estimatedLandCost.trim() ? 'Please enter estimated land value (use 0 for donated land)' : !isValidNumberString(data.estimatedLandCost) ? 'Please enter a valid number' : parseNumber(data.estimatedLandCost) < 0 ? 'Land value cannot be negative' : undefined,
+  };
+
+  const isValid = !errors.location && !errors.province && !errors.isOwnedProperty && !errors.estimatedLandCost;
+
+  const handleNext = () => {
+    setAttemptedSubmit(true);
+    if (isValid) onNext();
+  };
 
   return (
     <>
       <BackBtn onClick={onBack} />
       <Counter n={3} total={5} />
-      <Q label="Tell us about the land." sub="A rough address and rough land value are enough to size up the deal." />
-      <UnderlineTextarea placeholder="Address, neighbourhood, or general area..." value={data.location} onChange={(v) => setData({ location: v })} />
-      <UnderlineSelect value={data.province} onChange={(v) => setData({ province: v })} options={PROVINCES} placeholder="Select province or territory" />
+      <Q label="Tell us about the land." />
+      <UnderlineTextarea placeholder="Address, neighbourhood, or general area..." value={data.location} onChange={(v) => setData({ location: v })} error={attemptedSubmit ? errors.location : undefined} />
+      <UnderlineSelect value={data.province} onChange={(v) => setData({ province: v })} options={PROVINCES} placeholder="Select province or territory" error={attemptedSubmit ? errors.province : undefined} />
       <div style={{ marginTop: '1rem' }}>
         <SubLabel text="Is this your owned property?" />
         <RadioRow label="Yes, I already own the land" selected={data.isOwnedProperty === true} onSelect={() => setData({ isOwnedProperty: true })} />
         <RadioRow label="No, I would need to acquire it" selected={data.isOwnedProperty === false} onSelect={() => setData({ isOwnedProperty: false })} />
+        {attemptedSubmit && errors.isOwnedProperty && (
+          <p style={{ margin: '8px 0 0', fontSize: '0.85rem', color: brandPrimary, fontFamily: 'Roboto, sans-serif' }}>{errors.isOwnedProperty}</p>
+        )}
       </div>
       <UnderlineInput
         type="number"
+        inputMode="decimal"
         placeholder={data.isOwnedProperty ? 'Estimated land value' : 'Estimated land acquisition cost'}
         value={data.estimatedLandCost}
         onChange={(v) => setData({ estimatedLandCost: v })}
+        error={attemptedSubmit ? errors.estimatedLandCost : undefined}
       />
       <div style={{ marginTop: '2rem' }}>
-        <ArrowBtn onClick={onNext} disabled={!valid} />
+        <ArrowBtn onClick={handleNext} disabled={false} />
       </div>
     </>
   );
 }
 
 function ProjectStep({ data, setData, onNext, onBack }: { data: FormData; setData: (d: Partial<FormData>) => void; onNext: () => void; onBack: () => void }) {
-  const valid = parseNumber(data.siteAreaSqFt) > 0 && parseNumber(data.grossFloorAreaSqFt) > 0 && parseNumber(data.totalUnits) > 0;
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+
+  const errors = {
+    siteAreaSqFt: !data.siteAreaSqFt.trim() ? 'Please enter land area' : !isValidPositiveNumber(data.siteAreaSqFt) ? 'Please enter a valid number greater than 0' : undefined,
+    grossFloorAreaSqFt: !data.grossFloorAreaSqFt.trim() ? 'Please enter total floor area' : !isValidPositiveNumber(data.grossFloorAreaSqFt) ? 'Please enter a valid number greater than 0' : undefined,
+    totalUnits: !data.totalUnits.trim() ? 'Please enter number of units' : !isValidPositiveInteger(data.totalUnits) ? 'Please enter a whole number greater than 0' : undefined,
+  };
+
+  const isValid = !errors.siteAreaSqFt && !errors.grossFloorAreaSqFt && !errors.totalUnits;
+
+  const handleNext = () => {
+    setAttemptedSubmit(true);
+    if (isValid) onNext();
+  };
 
   return (
     <>
       <BackBtn onClick={onBack} />
       <Counter n={4} total={5} />
-      <Q label="Now the rough building size." sub="Use broad numbers. We only need enough to create a first-pass estimate." />
-      <UnderlineInput type="number" placeholder="Site area in square feet" value={data.siteAreaSqFt} onChange={(v) => setData({ siteAreaSqFt: v })} />
-      <UnderlineInput type="number" placeholder="Gross floor area in square feet" value={data.grossFloorAreaSqFt} onChange={(v) => setData({ grossFloorAreaSqFt: v })} />
-      <UnderlineInput type="number" placeholder="Approximate number of homes / units" value={data.totalUnits} onChange={(v) => setData({ totalUnits: v })} />
+      <Q label="Now the proposed building size." />
+      <UnderlineInput type="number" inputMode="decimal" placeholder="Land area in square feet" value={data.siteAreaSqFt} onChange={(v) => setData({ siteAreaSqFt: v })} error={attemptedSubmit ? errors.siteAreaSqFt : undefined} />
+      <UnderlineInput type="number" inputMode="decimal" placeholder="Total floor area in square feet" value={data.grossFloorAreaSqFt} onChange={(v) => setData({ grossFloorAreaSqFt: v })} error={attemptedSubmit ? errors.grossFloorAreaSqFt : undefined} />
+      <UnderlineInput type="number" inputMode="numeric" placeholder="Approximate number of units" value={data.totalUnits} onChange={(v) => setData({ totalUnits: v })} error={attemptedSubmit ? errors.totalUnits : undefined} />
       <div style={{ marginTop: '2rem' }}>
-        <ArrowBtn onClick={onNext} disabled={!valid} />
+        <ArrowBtn onClick={handleNext} disabled={false} />
       </div>
     </>
   );
 }
 
 function AffordabilityStep({ data, setData, onNext, onBack }: { data: FormData; setData: (d: Partial<FormData>) => void; onNext: () => void; onBack: () => void }) {
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+
   const toggle = (id: string) => {
     setData({
       populations: data.populations.includes(id)
@@ -845,8 +956,19 @@ function AffordabilityStep({ data, setData, onNext, onBack }: { data: FormData; 
     });
   };
 
-  const isBuildingValid = data.buildingType === 'other' ? data.otherBuildingType.trim().length > 0 : !!data.buildingType;
-  const valid = data.populations.length > 0 && isBuildingValid && data.rentModel;
+  const errors = {
+    populations: data.populations.length === 0 ? 'Please select at least one target population' : undefined,
+    buildingType: !data.buildingType ? 'Please select a building type' : undefined,
+    otherBuildingType: data.buildingType === 'other' && !data.otherBuildingType.trim() ? 'Please specify the building type' : undefined,
+    rentModel: !data.rentModel ? 'Please select a rent model' : undefined,
+  };
+
+  const isValid = !errors.populations && !errors.buildingType && !errors.otherBuildingType && !errors.rentModel;
+
+  const handleNext = () => {
+    setAttemptedSubmit(true);
+    if (isValid) onNext();
+  };
 
   return (
     <>
@@ -858,6 +980,9 @@ function AffordabilityStep({ data, setData, onNext, onBack }: { data: FormData; 
       {POPS.map((item) => (
         <CheckRow key={item.id} label={item.label} checked={data.populations.includes(item.id)} onChange={() => toggle(item.id)} />
       ))}
+      {attemptedSubmit && errors.populations && (
+        <p style={{ margin: '-0.5rem 0 1rem', fontSize: '0.85rem', color: brandPrimary, fontFamily: 'Roboto, sans-serif' }}>{errors.populations}</p>
+      )}
 
       <Divider />
 
@@ -865,10 +990,13 @@ function AffordabilityStep({ data, setData, onNext, onBack }: { data: FormData; 
       {BUILDINGS.map((item) => (
         <RadioRow key={item.id} label={item.label} sub={item.sub} selected={data.buildingType === item.id} onSelect={() => setData({ buildingType: item.id })} />
       ))}
+      {attemptedSubmit && errors.buildingType && (
+        <p style={{ margin: '8px 0 0', fontSize: '0.85rem', color: brandPrimary, fontFamily: 'Roboto, sans-serif' }}>{errors.buildingType}</p>
+      )}
 
       {data.buildingType === 'other' && (
         <div style={{ paddingLeft: '1rem', marginTop: '-0.5rem', marginBottom: '1.5rem', animation: 'fadeUp 0.3s ease both' }}>
-          <UnderlineInput autoFocus placeholder="Please specify..." value={data.otherBuildingType} onChange={(v) => setData({ otherBuildingType: v })} />
+          <UnderlineInput autoFocus placeholder="Please specify..." value={data.otherBuildingType} onChange={(v) => setData({ otherBuildingType: v })} error={attemptedSubmit ? errors.otherBuildingType : undefined} />
         </div>
       )}
 
@@ -878,9 +1006,12 @@ function AffordabilityStep({ data, setData, onNext, onBack }: { data: FormData; 
       {RENTS.map((item) => (
         <RadioRow key={item.id} label={item.label} sub={item.sub} selected={data.rentModel === item.id} onSelect={() => setData({ rentModel: item.id })} />
       ))}
+      {attemptedSubmit && errors.rentModel && (
+        <p style={{ margin: '8px 0 0', fontSize: '0.85rem', color: brandPrimary, fontFamily: 'Roboto, sans-serif' }}>{errors.rentModel}</p>
+      )}
 
       <div style={{ marginTop: '2.5rem' }}>
-        <ArrowBtn onClick={onNext} disabled={!valid} label="Show rough estimate" />
+        <ArrowBtn onClick={handleNext} disabled={false} label="Show rough estimate" />
       </div>
     </>
   );
@@ -906,12 +1037,12 @@ function EstimateStep({
   return (
     <>
       <BackBtn onClick={onBack} />
-      <Q label="Here is your rough TDCE." sub="This is a fast planning estimate based on the numbers you entered and preset Class D assumptions." />
+      <Q label="Here is your rough estimate." sub="This is a fast planning estimate based on the numbers you entered." />
 
       {output ? (
         <>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
-            <StatCard label="Total Development Cost" value={formatCurrency(output.costs.totalDevelopmentCost)} sub={`${formatCurrency(output.costMetrics.costPerUnit)} per home`} />
+            <StatCard label="Total Cost Benchmark" value={formatCurrency(output.costs.totalDevelopmentCost)} sub={`${formatCurrency(output.costMetrics.costPerUnit)} per home`} />
             <StatCard label="Funding Gap" value={formatCurrency(output.operations.fundingGap ?? 0)} sub={`${formatCurrency(output.operations.maxMortgage ?? 0)} max mortgage`} />
             <StatCard label="Gross Floor Area" value={`${formatNumber(output.areas.resolvedGsf ?? 0)} sf`} sub={`${formatNumber(output.areas.resolvedTotalUnits ?? 0)} homes`} />
             <StatCard label="Net Operating Income" value={formatCurrency(output.operations.noi)} sub={`Cap rate ${formatPercent(output.operations.capRate)}`} />
@@ -931,7 +1062,7 @@ function EstimateStep({
 
           <div style={{ padding: '1rem 1.1rem', borderRadius: '14px', background: brandPrimaryLight, border: `1px solid #F5C6C8`, marginBottom: '1.75rem' }}>
             <p style={{ margin: 0, fontFamily: 'Roboto, sans-serif', fontSize: '0.96rem', color: textDark, lineHeight: 1.6 }}>
-              This is a rough Class D estimate for early planning only. It is intentionally simplified and should be refined with real site due diligence, municipal constraints, and a full development team review.
+              This Class D estimate ±30% provides a high-level snapshot for initial planning. Real-world constraints and site-specific due diligence will be required for accuracy. Contact Anhart today to discuss bridging your project&apos;s funding gaps. For a fully refined, professional project estimate and development roadmap, we invite you to sign an engagement letter with our team.
             </p>
           </div>
         </>

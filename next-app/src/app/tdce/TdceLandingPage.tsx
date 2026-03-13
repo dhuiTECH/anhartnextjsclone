@@ -64,14 +64,14 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
               <HouseIcon className="w-8 h-8" />
             </div>
             <p className={`text-xs font-bold uppercase tracking-[0.15em] ${brandRedClass} mb-3`}>
-              For Homeowners
+              For Municipalities, Non-profits and Indigenous Organizations
             </p>
             {/* Increased Title Size */}
             <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">
-              Plan a new home or renovation
+              Affordable Housing Calculator
             </h3>
             <p className="text-base text-gray-500 leading-relaxed mb-8">
-              Get a plain-language breakdown of costs, permits, and timelines for your residential project.
+              Get a breakdown of costs, benchmarks, and assumptions for your affordable housing project.
             </p>
             
           </div>
