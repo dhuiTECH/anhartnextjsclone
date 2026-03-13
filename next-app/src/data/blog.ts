@@ -1126,6 +1126,7 @@ export const getFeaturedPosts = async (): Promise<BlogPost[]> => {
     .from("blog_posts")
     .select("*")
     .eq("is_published", true)
+    .eq("is_featured", true)
     .order("publish_date", { ascending: false })
     .limit(3);
 
