@@ -61,7 +61,9 @@ export const Hero = () => {
   // Scroll-based opacity fade for promotional banner - fades out as user scrolls down
   const { scrollYProgress } = useScroll();
   // Banner fades from full opacity at top to 0 opacity as user scrolls through first 5% of page (very aggressive fade)
-  const bannerOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0], { clamp: true });
+  const bannerOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0], {
+    clamp: true,
+  });
 
   return (
     <section
@@ -70,7 +72,7 @@ export const Hero = () => {
     >
       {/* Moving Banner Carousel - Performance Optimized */}
       <style dangerouslySetInnerHTML={{ __html: marqueeStyle }} />
-      <motion.div 
+      <motion.div
         className="absolute top-0 left-0 right-0 z-40 flex items-center min-h-[2rem] bg-primary text-white overflow-hidden border-b border-primary/90"
         style={{ opacity: bannerOpacity }}
       >
@@ -79,14 +81,18 @@ export const Hero = () => {
             href="/Merritt"
             className="inline-flex items-center hover:bg-primary/80 transition-colors duration-300 px-4 rounded"
           >
-            <span className="font-semibold hover:underline">Check out our featured project, Anhart Merritt</span>
+            <span className="font-semibold hover:underline">
+              Check out our featured project, Anhart Merritt
+            </span>
           </Link>
           <span className="mx-32">•</span>
           <Link
             href="/Merritt"
             className="inline-flex items-center hover:bg-primary/80 transition-colors duration-300 px-4 rounded"
           >
-            <span className="font-semibold hover:underline">Check out our featured project, Anhart Merritt</span>
+            <span className="font-semibold hover:underline">
+              Check out our featured project, Anhart Merritt
+            </span>
           </Link>
         </div>
       </motion.div>
@@ -102,11 +108,11 @@ export const Hero = () => {
           fetchPriority="low"
           width="1200"
           height="600"
-          style={{ 
-            maxWidth: '100%',
-            maxHeight: '100%',
-            objectFit: 'contain',
-            opacity: 0.3
+          style={{
+            maxWidth: "100%",
+            maxHeight: "100%",
+            objectFit: "contain",
+            opacity: 0.3,
           }}
         />
       </picture>
@@ -130,9 +136,12 @@ export const Hero = () => {
         poster=""
         aria-label="Background video showing housing development animation"
         onError={() => {
-          logger.warn("Hero background video failed to load, using fallback gradient", {
-            component: "Hero",
-          });
+          logger.warn(
+            "Hero background video failed to load, using fallback gradient",
+            {
+              component: "Hero",
+            },
+          );
           setVideoError(true);
         }}
       >
@@ -164,13 +173,8 @@ export const Hero = () => {
           </ScrollAnimationWrapper>
           <ScrollAnimationWrapper direction="top" delay={200}>
             <p className="text-base sm:text-xl md:text-2xl lg:text-3xl text-white font-light bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] tracking-wider">
-              Instant development estimates and data-driven feasibility.
+              Get started in minutes with our free development cost estimator.
             </p>
-          </ScrollAnimationWrapper>
-          <ScrollAnimationWrapper direction="top" delay={250}>
-            <h2 className="text-xs sm:text-base md:text-base lg:text-xl font-semibold text-white/60 mb-6 [text-shadow:_0_2px_8px_rgba(0,0,0,0.7)]">
-              Free pre-development consultations across Canada.
-            </h2>
           </ScrollAnimationWrapper>
           {/* Single CTA button - width fits text */}
           <div className="mt-8 sm:mt-12 flex justify-center">
@@ -188,7 +192,6 @@ export const Hero = () => {
             </ScrollAnimationWrapper>
           </div>
         </div>
-
       </div>
       {/* Scroll Down Arrow */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40">
