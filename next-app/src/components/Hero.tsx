@@ -6,7 +6,6 @@ import anhartLogoWebp from "@/assets/anhart-logo.webp";
 import anhartLogoPng from "@/assets/anhart-logo.png";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { useRef, useState } from "react";
-import { BookingFormDialog } from "@/components/BookingFormDialog";
 import { useParallax } from "@/hooks/useParallax";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { logger } from "@/utils/logger";
@@ -159,99 +158,34 @@ export const Hero = () => {
       >
         <div className="text-center">
           <ScrollAnimationWrapper direction="top" delay={100}>
-            <h1 className="text-4xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight text-white mb-4 sm:mb-6 [text-shadow:_0_4px_16px_rgba(0,0,0,0.8)]">
-              The Power of Small
+            <h1 className="text-4xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-tight text-white mb-2 sm:mb-4 [text-shadow:_0_4px_16px_rgba(0,0,0,0.8)]">
+              Plan Your Housing Project for Free
             </h1>
           </ScrollAnimationWrapper>
           <ScrollAnimationWrapper direction="top" delay={200}>
             <p className="text-base sm:text-xl md:text-2xl lg:text-3xl text-white font-light bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] tracking-wider">
-              Redefining Affordable Housing Development
+              Instant development estimates and data-driven feasibility.
             </p>
           </ScrollAnimationWrapper>
           <ScrollAnimationWrapper direction="top" delay={250}>
-            <h2 className="text-xs sm:text-base md:text-base lg:text-xl font-semibold text-white/80 mb-6 [text-shadow:_0_2px_8px_rgba(0,0,0,0.7)]">
-              (Free Pre-Development Consultation - Across Canada)
+            <h2 className="text-xs sm:text-base md:text-base lg:text-xl font-semibold text-white/60 mb-6 [text-shadow:_0_2px_8px_rgba(0,0,0,0.7)]">
+              Free pre-development consultations across Canada.
             </h2>
           </ScrollAnimationWrapper>
-          {/* Buttons positioned below text */}
-          <div className="mt-8 sm:mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-            {/* Mobile: Side-by-side buttons */}
-            <div className="flex flex-row gap-2 sm:hidden w-full max-w-sm">
-              <ScrollAnimationWrapper
-                direction="bottom"
-                delay={300}
-                className="flex-1"
-              >
-                <a
-                  href="https://anhart.ca/portfolio"
-                  className="block"
+          {/* Single CTA button - width fits text */}
+          <div className="mt-8 sm:mt-12 flex justify-center">
+            <ScrollAnimationWrapper direction="bottom" delay={300}>
+              <Link href="/tdce?view=simplified">
+                <Button
+                  name="Start Your Estimate"
+                  size="lg"
+                  variant="outline"
+                  className="bg-primary/65 backdrop-blur-md text-white hover:bg-white hover:text-primary font-semibold px-6 py-3 text-lg w-fit transition-all duration-300 border border-primary/50 hover:border-white shadow-lg hover:shadow-xl"
                 >
-                  <Button
-                    name="explore our work"
-                    size="sm"
-                    variant="outline"
-                    className="bg-white/5 backdrop-blur-sm border-white/30 text-white font-semibold px-3 py-2 text-sm w-full hover:bg-white/15 hover:border-white/50 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg"
-                  >
-                    Explore Projects
-                    <span className="ml-1 text-sm font-bold">{">"}</span>
-                  </Button>
-                </a>
-              </ScrollAnimationWrapper>
-              <ScrollAnimationWrapper
-                direction="bottom"
-                delay={400}
-                className="flex-1"
-              >
-                <BookingFormDialog
-                  trigger={
-                    <Button
-                      name="Book Now"
-                      size="sm"
-                      variant="outline"
-                      className="bg-primary/60 backdrop-blur-md text-white hover:bg-white hover:text-primary font-semibold px-3 py-2 text-sm w-full transition-all duration-300 border border-primary/50 hover:border-white shadow-lg hover:shadow-xl"
-                    >
-                      Book Now
-                    </Button>
-                  }
-                  titleSize="sm"
-                />
-              </ScrollAnimationWrapper>
-            </div>
-            {/* Desktop: Original buttons */}
-            <div className="hidden sm:flex flex-row items-center justify-center gap-4">
-              <ScrollAnimationWrapper direction="bottom" delay={300}>
-                <a
-                  href="https://anhart.ca/portfolio"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button
-                    name="explore our work"
-                    size="lg"
-                    variant="outline"
-                    className="bg-white/5 backdrop-blur-sm border-white/30 text-white font-semibold px-6 py-3 text-lg hover:bg-white/15 hover:border-white/50 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg"
-                  >
-                    Explore Our Work
-                    <span className="ml-2 text-lg font-bold">{">"}</span>
-                  </Button>
-                </a>
-              </ScrollAnimationWrapper>
-              <ScrollAnimationWrapper direction="bottom" delay={400}>
-                <BookingFormDialog
-                  trigger={
-                    <Button
-                      name="Book Now"
-                      size="lg"
-                      variant="outline"
-                      className="bg-primary/65 backdrop-blur-md text-white hover:bg-white hover:text-primary font-semibold px-6 py-3 text-lg w-[200px] flex-shrink-0 transition-all duration-300 border border-primary/50 hover:border-white shadow-lg hover:shadow-xl"
-                    >
-                      Book Now
-                    </Button>
-                  }
-                  titleSize="lg"
-                />
-              </ScrollAnimationWrapper>
-            </div>
+                  Start Your Estimate
+                </Button>
+              </Link>
+            </ScrollAnimationWrapper>
           </div>
         </div>
 

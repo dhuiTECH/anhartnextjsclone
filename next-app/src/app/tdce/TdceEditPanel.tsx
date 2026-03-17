@@ -21,7 +21,7 @@
  * └─────────────────────────────────────────────────────────────┘
  */
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 // ─── Type imports ─────────────────────────────────────────────────────────────
@@ -53,9 +53,12 @@ import {
 import UnitMixInput, { getBedroomLabel } from './UnitMixInput';
 import {
   BCH_MAX_RENT_26_50_AMI,
+  DEFAULT_BENCHMARK_BUILDING_TYPE,
   getCostForRegionBuildingWithUplifts,
   getOptionsForRegion,
+  getRegionBuildingId,
   parseRegionBuildingId,
+  PROVINCE_TO_REGION,
   REGION_KEYS,
   REGION_LABELS,
   type RegionKey,
@@ -258,6 +261,42 @@ export function TdceEditPanel({
   const syncToParent = useCallback(() => {
     queueMicrotask(() => syncToParentRef.current());
   }, [sectionId]);
+
+  // Auto-fill Hard Cost Benchmark from province when benchmarks section opens and no benchmark selected,
+  // or when province changes and current benchmark is for a different region.
+  // Use ref to avoid re-applying when user explicitly selects Custom after our auto-fill.
+  const benchmarkAutoFillRef = useRef({ lastProvince: null as string | null, hasFilled: false });
+  useEffect(() => {
+    if (sectionId !== 'benchmarks') {
+      benchmarkAutoFillRef.current = { lastProvince: null, hasFilled: false };
+      return;
+    }
+    const province = input.meta?.province?.trim();
+    if (!province) return;
+    const region = PROVINCE_TO_REGION[province];
+    if (!region) return;
+    const parsed = input.financials.constructionBenchmarkId
+      ? parseRegionBuildingId(input.financials.constructionBenchmarkId)
+      : null;
+    const shouldApply =
+      !parsed
+        ? !benchmarkAutoFillRef.current.hasFilled || province !== benchmarkAutoFillRef.current.lastProvince
+        : parsed.region !== region; // province changed, current benchmark is for different region
+    if (!shouldApply) return;
+    if (province !== benchmarkAutoFillRef.current.lastProvince) {
+      benchmarkAutoFillRef.current = { lastProvince: province, hasFilled: false };
+    }
+    if (!parsed && benchmarkAutoFillRef.current.hasFilled) return; // user chose Custom, don't override
+    benchmarkAutoFillRef.current = { ...benchmarkAutoFillRef.current, lastProvince: province, hasFilled: true };
+    const id = getRegionBuildingId(region, DEFAULT_BENCHMARK_BUILDING_TYPE);
+    const upliftParams: UpliftParams = {
+      escalationPercent: input.financials.escalationUpliftPercent ?? 0,
+      complexityPercent: input.financials.complexityUpliftPercent ?? 0,
+      locationUplift: false,
+    };
+    const newCost = getCostForRegionBuildingWithUplifts(region, DEFAULT_BENCHMARK_BUILDING_TYPE, upliftParams);
+    onUpdate({ financials: { ...input.financials, constructionBenchmarkId: id, hardCostPerSqFt: newCost } });
+  }, [sectionId, input, onUpdate]);
 
   const applyBuiltFormWithInput = useCallback(
     (overrideInput: TdceInput) => {
@@ -703,16 +742,27 @@ export function TdceEditPanel({
           <>
             {/* ── CORE: Region / building type ── */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">Construction cost / sq ft</label>
-              <p className="text-xs text-slate-500 mb-2">
-                Select region and building type for the Altus benchmark range.
-              </p>
+              <label className="block text-sm font-medium text-slate-700 mb-2">Select Hard Cost Benchmark</label>
+              {!input.meta?.province?.trim() ? (
+                <p className="text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2 mb-2">
+                  Select a province in the Project section first to auto-fill benchmarks, or choose a region below.
+                </p>
+              ) : (
+                <p className="text-xs text-slate-500 mb-2">
+                  {PROVINCE_TO_REGION[input.meta.province.trim()]
+                    ? `Province ${input.meta.province} maps to ${REGION_LABELS[PROVINCE_TO_REGION[input.meta.province.trim()]!]}. Select region and building type for the Altus benchmark range.`
+                    : `Province ${input.meta.province} has no matching benchmark region. Select a region below or use Custom.`}
+                </p>
+              )}
 
               {(() => {
                 const parsed = input.financials.constructionBenchmarkId
                   ? parseRegionBuildingId(input.financials.constructionBenchmarkId)
                   : null;
-                const currentRegion: RegionKey = parsed?.region ?? 'vancouver';
+                const provinceRegion = input.meta?.province?.trim()
+                  ? PROVINCE_TO_REGION[input.meta.province.trim()]
+                  : null;
+                const currentRegion: RegionKey = parsed?.region ?? provinceRegion ?? 'vancouver';
                 const regionOptions = getOptionsForRegion(currentRegion);
                 const upliftParams: UpliftParams = {
                   escalationPercent: input.financials.escalationUpliftPercent ?? 0,
@@ -765,28 +815,42 @@ export function TdceEditPanel({
                       ))}
                     </select>
 
-                    <label className="block text-xs font-medium text-slate-600 mb-1 mt-3">
-                      Building type (cost range for {REGION_LABELS[currentRegion]})
+                    <label className="block text-xs font-medium text-slate-600 mb-2 mt-3">
+                      {REGION_LABELS[currentRegion]}
                     </label>
-                    <select
-                      value={parsed ? (input.financials.constructionBenchmarkId ?? '') : ''}
-                      onChange={(e) => {
-                        const id = e.target.value;
-                        if (!id) { onUpdate({ financials: { ...input.financials, constructionBenchmarkId: undefined } }); return; }
-                        const nextParsed = parseRegionBuildingId(id);
-                        if (!nextParsed) return;
-                        const newCost = getCostForRegionBuildingWithUplifts(nextParsed.region, nextParsed.buildingType, upliftParams);
-                        onUpdate({ financials: { ...input.financials, constructionBenchmarkId: id, hardCostPerSqFt: newCost } });
-                      }}
-                      className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-800 min-h-[44px] touch-manipulation"
-                    >
-                      <option value="">Custom (enter amount below)</option>
-                      {regionOptions.map((o) => (
-                        <option key={o.id} value={o.id}>
-                          {o.label} — ${o.low}–${o.high}/sf → ${appliedCost} applied
-                        </option>
-                      ))}
-                    </select>
+                    <div className="space-y-2">
+                      {regionOptions.map((o) => {
+                        const isSelected = input.financials.constructionBenchmarkId === o.id;
+                        return (
+                          <button
+                            key={o.id}
+                            type="button"
+                            onClick={() => {
+                              const newCost = getCostForRegionBuildingWithUplifts(o.region, o.buildingType, upliftParams);
+                              onUpdate({ financials: { ...input.financials, constructionBenchmarkId: o.id, hardCostPerSqFt: newCost } });
+                            }}
+                            className={`w-full text-left rounded-lg border px-4 py-3 text-sm transition-colors touch-manipulation ${
+                              isSelected
+                                ? 'border-blue-500 bg-blue-50 text-blue-900'
+                                : 'border-slate-200 bg-white text-slate-800 hover:border-slate-300 hover:bg-slate-50'
+                            }`}
+                          >
+                            {o.label} — ${o.low}–${o.high}/sf
+                          </button>
+                        );
+                      })}
+                      <button
+                        type="button"
+                        onClick={() => onUpdate({ financials: { ...input.financials, constructionBenchmarkId: undefined } })}
+                        className={`w-full text-left rounded-lg border px-4 py-3 text-sm transition-colors touch-manipulation ${
+                          !input.financials.constructionBenchmarkId || !parseRegionBuildingId(input.financials.constructionBenchmarkId ?? '')
+                            ? 'border-blue-500 bg-blue-50 text-blue-900'
+                            : 'border-slate-200 bg-white text-slate-800 hover:border-slate-300 hover:bg-slate-50'
+                        }`}
+                      >
+                        Custom (enter amount below)
+                      </button>
+                    </div>
 
                     {!input.financials.constructionBenchmarkId && (
                       <div className="mt-2">

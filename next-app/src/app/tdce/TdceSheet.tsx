@@ -18,6 +18,8 @@ import {
   parseRegionBuildingId,
   getBaseHighForRegionBuilding,
   getUpliftBreakdown,
+  REGION_LABELS,
+  PROVINCE_TO_REGION,
 } from '@/data/constructionBenchmarks';
 import { getBedroomLabel } from './UnitMixInput';
 
@@ -509,6 +511,32 @@ function BenchmarksSection({ input, output, gsf, onEdit, isActive }: BenchmarksS
           <p>{meta.costAssumptionNote}</p>
         </Note>
       )}
+
+      {/* Transparent footer: current benchmark + click to change */}
+      {(() => {
+        const parsed = financials.constructionBenchmarkId
+          ? parseRegionBuildingId(financials.constructionBenchmarkId)
+          : null;
+        const regionFromProvince = meta.province?.trim()
+          ? PROVINCE_TO_REGION[meta.province.trim()]
+          : null;
+        const regionLabel = parsed
+          ? REGION_LABELS[parsed.region]
+          : regionFromProvince
+            ? REGION_LABELS[regionFromProvince]
+            : 'your region';
+        return (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onEdit('benchmarks'); }}
+            className="mt-3 block w-full text-left text-[11px] text-slate-500/70 hover:text-slate-600/85 transition-colors"
+          >
+            This is the current hard-cost benchmark for {regionLabel} by Altus Group. To change{' '}
+            <span className="underline underline-offset-1">click here</span>
+            <span className="inline-block ml-0.5" aria-hidden>↓</span>
+          </button>
+        );
+      })()}
 
       {/* Operating Expenses */}
       <SubHeading label="Operating Expenses" />

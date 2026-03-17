@@ -5,6 +5,16 @@ import { useToast } from '@/components/ui/use-toast';
 import type { TdceInput, UnitMixItem } from '@/types/tdce';
 import { getEmptyTdceInput } from '@/data/tdceDefaults';
 import { TdceReview } from './TdceReview';
+import {
+  parseRegionBuildingId,
+  getOptionsForRegion,
+  getCostForRegionBuildingWithUplifts,
+  REGION_KEYS,
+  REGION_LABELS,
+  PROVINCE_TO_REGION,
+  type RegionKey,
+  type RegionBuildingOption,
+} from '@/data/constructionBenchmarks';
 
 interface TdceDeveloperWizardProps {
   onBack: () => void;
@@ -13,12 +23,18 @@ interface TdceDeveloperWizardProps {
 }
 
 type Step = 
+  | 'contact'
   | 'project-info' 
   | 'site-details' 
   | 'unit-mix' 
   | 'financials' 
   | 'operations' 
   | 'review';
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+function isValidEmail(email: string): boolean {
+  return EMAIL_REGEX.test(email.trim());
+}
 
 /* ── Palette ── */
 const brandPrimary = '#D83A42'; 
@@ -35,7 +51,9 @@ function UnderlineInput({
   type = 'text', 
   autoFocus = false,
   prefix,
-  suffix 
+  suffix,
+  error,
+  inputMode,
 }: {
   placeholder: string; 
   value: string | number; 
@@ -44,10 +62,13 @@ function UnderlineInput({
   autoFocus?: boolean;
   prefix?: string;
   suffix?: string;
+  error?: string;
+  inputMode?: 'text' | 'email' | 'numeric' | 'decimal';
 }) {
   const [isFocused, setIsFocused] = useState(false);
   const hasValue = value !== undefined && value !== null && value !== '';
   const showLabel = isFocused || hasValue;
+  const hasError = !!error;
 
   return (
     <div style={{ position: 'relative', width: '100%', marginBottom: '2.5rem', paddingTop: '1.2rem' }}>
@@ -56,7 +77,7 @@ function UnderlineInput({
         top: showLabel ? 0 : '24px',
         left: (showLabel || !prefix) ? 0 : '20px',
         fontSize: showLabel ? '0.85rem' : '1.2rem',
-        color: isFocused ? brandPrimary : textMuted,
+        color: hasError ? brandPrimary : isFocused ? brandPrimary : textMuted,
         fontFamily: 'Roboto, sans-serif',
         transition: 'all 0.2s ease',
         pointerEvents: 'none',
@@ -73,13 +94,13 @@ function UnderlineInput({
         </span>
       )}
       <input
-        autoFocus={autoFocus} type={type} value={value}
+        autoFocus={autoFocus} type={type} value={value} inputMode={inputMode}
         onChange={e => onChange(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         style={{
           width: '100%', background: 'transparent', border: 'none',
-          borderBottom: `2px solid ${isFocused ? brandPrimary : borderLight}`, outline: 'none',
+          borderBottom: `2px solid ${hasError ? brandPrimary : isFocused ? brandPrimary : borderLight}`, outline: 'none',
           fontFamily: 'Roboto, sans-serif', fontSize: '1.2rem', color: textDark,
           paddingTop: '12px',
           paddingBottom: '12px',
@@ -87,6 +108,11 @@ function UnderlineInput({
           paddingRight: suffix ? '40px' : '0',
         }}
       />
+      {hasError && (
+        <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: brandPrimary, fontFamily: 'Roboto, sans-serif' }}>
+          {error}
+        </p>
+      )}
       {suffix && (
         <span style={{ 
           position: 'absolute', right: 0, top: '24px', 
@@ -256,13 +282,70 @@ function UnderlineSelect({
 
 /* ── Step Components ── */
 
-function ProjectInfoStep({ data, update, onNext, onBack }: { data: TdceInput; update: (d: Partial<TdceInput>) => void; onNext: () => void; onBack: () => void }) {
+function ContactStep({ data, update, onNext }: { data: TdceInput; update: (d: Partial<TdceInput>) => void; onNext: () => void }) {
+  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
+
+  const parts = (data.meta.contactName || '').trim().split(/\s+/);
+  const firstName = parts[0] || '';
+  const lastName = parts.slice(1).join(' ') || '';
+  const email = data.meta.contactEmail || '';
+  const organization = data.meta.partners?.developer || '';
+
+  const firstNameTrimmed = firstName.trim();
+  const lastNameTrimmed = lastName.trim();
+  const emailTrimmed = email.trim();
+  const orgTrimmed = organization.trim();
+
+  const errors = {
+    firstName: !firstNameTrimmed ? 'Please enter your first name' : firstNameTrimmed.length < 2 ? 'Please enter a valid first name' : undefined,
+    lastName: !lastNameTrimmed ? 'Please enter your last name' : lastNameTrimmed.length < 2 ? 'Please enter a valid last name' : undefined,
+    email: !emailTrimmed ? 'Please enter your email address' : !isValidEmail(email) ? 'Please enter a valid email address' : undefined,
+    organization: !orgTrimmed ? 'Please enter your organization' : orgTrimmed.length < 2 ? 'Please enter a valid organization name' : undefined,
+  };
+
+  const isValid = !errors.firstName && !errors.lastName && !errors.email && !errors.organization;
+
+  const handleNext = () => {
+    setAttemptedSubmit(true);
+    if (isValid) {
+      update({
+        meta: {
+          ...data.meta,
+          contactName: `${firstNameTrimmed} ${lastNameTrimmed}`.trim(),
+          contactEmail: emailTrimmed,
+          partners: { ...data.meta.partners, developer: orgTrimmed || undefined },
+        },
+      });
+      onNext();
+    }
+  };
+
+  const setFirstName = (v: string) => update({ meta: { ...data.meta, contactName: `${v} ${lastName}`.trim() } });
+  const setLastName = (v: string) => update({ meta: { ...data.meta, contactName: `${firstName} ${v}`.trim() } });
+  const setEmail = (v: string) => update({ meta: { ...data.meta, contactEmail: v } });
+  const setOrganization = (v: string) => update({ meta: { ...data.meta, partners: { ...data.meta.partners, developer: v } } });
+
+  return (
+    <>
+      <Counter n={1} total={6} />
+      <Q label="Let's start with you." sub="A few contact details so we can save and follow up on your Total Cost Benchmark." />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 2rem' }}>
+        <UnderlineInput autoFocus placeholder="First name" value={firstName} onChange={setFirstName} error={attemptedSubmit ? errors.firstName : undefined} />
+        <UnderlineInput placeholder="Last name" value={lastName} onChange={setLastName} error={attemptedSubmit ? errors.lastName : undefined} />
+      </div>
+      <UnderlineInput type="email" placeholder="Email address" value={email} onChange={setEmail} error={attemptedSubmit ? errors.email : undefined} inputMode="email" />
+      <UnderlineInput placeholder="Organization" value={organization} onChange={setOrganization} error={attemptedSubmit ? errors.organization : undefined} />
+      <ArrowBtn onClick={handleNext} disabled={false} />
+    </>
+  );
+}
+
+function ProjectInfoStep({ data, update, onNext }: { data: TdceInput; update: (d: Partial<TdceInput>) => void; onNext: () => void }) {
   const valid = data.meta.projectTitle && data.meta.address && data.meta.city && data.meta.province;
   
   return (
     <>
-      <BackBtn onClick={onBack} />
-      <Counter n={1} total={5} />
+      <Counter n={2} total={6} />
       <Q label="Let's start with project basics." sub="Where is this development located and who is behind it?" />
       <UnderlineInput 
         autoFocus 
@@ -333,7 +416,7 @@ function SiteDetailsStep({ data, update, onNext, onBack }: { data: TdceInput; up
   return (
     <>
       <BackBtn onClick={onBack} />
-      <Counter n={2} total={5} />
+      <Counter n={3} total={6} />
       <Q label="Tell us about the site and building shape." sub="How much land are we working with and what's the building size?" />
       
       <UnderlineSelect 
@@ -414,7 +497,7 @@ function BuildingProgramStep({ data, update, onNext, onBack }: { data: TdceInput
   return (
     <>
       <BackBtn onClick={onBack} />
-      <Counter n={3} total={5} />
+      <Counter n={4} total={6} />
       <Q label="What's the residential program?" sub="How many homes and what type of building is this?" />
       
       <UnderlineInput 
@@ -439,29 +522,114 @@ function BuildingProgramStep({ data, update, onNext, onBack }: { data: TdceInput
   );
 }
 
+function FullBenchmarkSelector({ data, update, onClose }: { data: TdceInput; update: (d: Partial<TdceInput>) => void; onClose: () => void }) {
+  const parsed = data.financials.constructionBenchmarkId
+    ? parseRegionBuildingId(data.financials.constructionBenchmarkId)
+    : null;
+  const provinceRegion = data.meta?.province?.trim()
+    ? PROVINCE_TO_REGION[data.meta.province.trim()]
+    : null;
+  const currentRegion: RegionKey = parsed?.region ?? provinceRegion ?? 'vancouver';
+  const upliftParams = {
+    escalationPercent: data.financials.escalationUpliftPercent ?? 0,
+    complexityPercent: data.financials.complexityUpliftPercent ?? 0,
+    locationUplift: false,
+  };
+
+  return (
+    <div
+      style={{
+        marginTop: '1rem',
+        padding: '1rem',
+        background: 'rgba(248, 250, 252, 0.9)',
+        borderRadius: '8px',
+        border: `1px solid ${borderLight}`,
+      }}
+    >
+      <p style={{ fontSize: '0.75rem', color: textMuted, marginBottom: '0.75rem' }}>
+        Change region
+      </p>
+      <div style={{ marginBottom: '0.75rem' }}>
+        <select
+          value={currentRegion}
+          onChange={(e) => {
+            const region = e.target.value as RegionKey;
+            const opts = getOptionsForRegion(region);
+            const keepBuildingType = parsed?.buildingType;
+            const sameType = keepBuildingType ? opts.find((o) => o.buildingType === keepBuildingType) : null;
+            const selected = sameType ?? opts[0];
+            const id = selected?.id;
+            const newCost = id && selected
+              ? getCostForRegionBuildingWithUplifts(region, selected.buildingType, upliftParams)
+              : data.financials.hardCostPerSqFt;
+            update({ financials: { ...data.financials, constructionBenchmarkId: id ?? undefined, hardCostPerSqFt: id ? newCost : data.financials.hardCostPerSqFt } });
+          }}
+          style={{
+            width: '100%',
+            padding: '8px 12px',
+            borderRadius: '6px',
+            border: `1px solid ${borderLight}`,
+            fontSize: '0.875rem',
+            color: textDark,
+          }}
+        >
+          {REGION_KEYS.map((r) => (
+            <option key={r} value={r}>{REGION_LABELS[r]}</option>
+          ))}
+        </select>
+      </div>
+      <button
+        type="button"
+        onClick={onClose}
+        style={{
+          fontSize: '0.7rem',
+          color: textMuted,
+          background: 'transparent',
+          border: 'none',
+          cursor: 'pointer',
+          textDecoration: 'underline',
+        }}
+      >
+        Close
+      </button>
+    </div>
+  );
+}
+
 function FinancialsStep({ data, update, onNext, onBack }: { data: TdceInput; update: (d: Partial<TdceInput>) => void; onNext: () => void; onBack: () => void }) {
+  const [showFullBenchmarkSelection, setShowFullBenchmarkSelection] = useState(false);
   const valid = (data.financials.hardCostPerSqFt || 0) > 0;
 
-  // Preset logic
-  const handlePresetSelect = (preset: string) => {
-    let cost = 0;
-    if (preset === 'conservative') cost = 450;
-    if (preset === 'standard') cost = 380;
-    if (preset === 'efficiency') cost = 320;
-    
-    update({ 
-      financials: { 
-        ...data.financials, 
-        hardCostPerSqFt: cost,
-        constructionBenchmarkId: preset
-      } 
-    });
+  // Region from province or current benchmark
+  const parsed = data.financials.constructionBenchmarkId
+    ? parseRegionBuildingId(data.financials.constructionBenchmarkId)
+    : null;
+  const provinceRegion = data.meta?.province?.trim()
+    ? PROVINCE_TO_REGION[data.meta.province.trim()]
+    : null;
+  const currentRegion: RegionKey = parsed?.region ?? provinceRegion ?? 'vancouver';
+  const regionOptions = getOptionsForRegion(currentRegion);
+  const upliftParams = {
+    escalationPercent: data.financials.escalationUpliftPercent ?? 0,
+    complexityPercent: data.financials.complexityUpliftPercent ?? 0,
+    locationUplift: false,
   };
+
+  const handleRegionBuildingSelect = (option: RegionBuildingOption) => {
+    const newCost = getCostForRegionBuildingWithUplifts(currentRegion, option.buildingType, upliftParams);
+    update({ financials: { ...data.financials, constructionBenchmarkId: option.id, hardCostPerSqFt: newCost } });
+  };
+
+  const regionLabel = parsed
+    ? REGION_LABELS[parsed.region]
+    : provinceRegion
+      ? REGION_LABELS[provinceRegion]
+      : 'your region';
 
   return (
     <>
       <BackBtn onClick={onBack} />
-      <Counter n={4} total={5} />
+      <Counter n={5} total={6} />
       <Q label="Let's talk dollars." sub="Land acquisition and construction costs are the biggest factors." />
       
       <UnderlineInput 
@@ -474,33 +642,49 @@ function FinancialsStep({ data, update, onNext, onBack }: { data: TdceInput; upd
       />
 
       <div style={{ marginBottom: '2.5rem' }}>
-        <SubLabel text="Select a Hard Cost Benchmark ($/SQ FT)" />
-        <RadioRow 
-          label="Conservative ($450/SF)" 
-          sub="High-end finishes or complex site conditions"
-          selected={data.financials.constructionBenchmarkId === 'conservative'}
-          onSelect={() => handlePresetSelect('conservative')}
-        />
-        <RadioRow 
-          label="Standard ($380/SF)" 
-          sub="Typical mid-range urban construction"
-          selected={data.financials.constructionBenchmarkId === 'standard'}
-          onSelect={() => handlePresetSelect('standard')}
-        />
-        <RadioRow 
-          label="Efficiency ($320/SF)" 
-          sub="Optimized design, standard finishes"
-          selected={data.financials.constructionBenchmarkId === 'efficiency'}
-          onSelect={() => handlePresetSelect('efficiency')}
-        />
+        <SubLabel text={`Select a Hard Cost Benchmark ($/SQ FT) — ${REGION_LABELS[currentRegion]}`} />
+        {regionOptions.map((o) => (
+          <RadioRow
+            key={o.id}
+            label={`${o.label} — $${o.low}–$${o.high}/sf`}
+            selected={data.financials.constructionBenchmarkId === o.id}
+            onSelect={() => handleRegionBuildingSelect(o)}
+          />
+        ))}
         <RadioRow 
           label="Custom" 
-          selected={data.financials.constructionBenchmarkId === 'custom'}
+          selected={data.financials.constructionBenchmarkId === 'custom' || (!data.financials.constructionBenchmarkId && !parsed)}
           onSelect={() => update({ financials: { ...data.financials, constructionBenchmarkId: 'custom' } })}
         />
+
+        {/* Transparent footer: current benchmark + click to expand full selection */}
+        <button
+          type="button"
+          onClick={() => setShowFullBenchmarkSelection((v) => !v)}
+          style={{
+            marginTop: '1rem',
+            fontSize: '11px',
+            color: 'rgba(100, 116, 139, 0.7)',
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            textAlign: 'left',
+            width: '100%',
+            fontFamily: 'Roboto, sans-serif',
+          }}
+        >
+          This is the current hard-cost benchmark for {regionLabel} by Altus Group. To change{' '}
+          <span style={{ textDecoration: 'underline', textDecorationSkipInk: 'auto' }}>click here</span>
+          <span style={{ marginLeft: '2px' }} aria-hidden>↓</span>
+        </button>
+
+        {/* Expanded: change region to see different region's options */}
+        {showFullBenchmarkSelection && (
+          <FullBenchmarkSelector data={data} update={update} onClose={() => setShowFullBenchmarkSelection(false)} />
+        )}
       </div>
 
-      {(data.financials.constructionBenchmarkId === 'custom' || !data.financials.constructionBenchmarkId) && (
+      {(data.financials.constructionBenchmarkId === 'custom' || !data.financials.constructionBenchmarkId) && !parsed && (
         <UnderlineInput 
           type="number"
           placeholder="Hard Cost per SQ FT" 
@@ -568,7 +752,7 @@ function OperationsStep({ data, update, onNext, onBack }: { data: TdceInput; upd
   return (
     <>
       <BackBtn onClick={onBack} />
-      <Counter n={5} total={5} />
+      <Counter n={6} total={6} />
       <Q label="Lastly, operating assumptions." sub="What are the expected rents and expenses?" />
       
       <div style={{ marginBottom: '2.5rem' }}>
@@ -671,7 +855,7 @@ function OperationsStep({ data, update, onNext, onBack }: { data: TdceInput; upd
 
 /* ══ Main Wizard Component ══ */
 export function TdceDeveloperWizard({ onBack, onComplete }: TdceDeveloperWizardProps) {
-  const [step, setStep] = useState<Step>('project-info');
+  const [step, setStep] = useState<Step>('contact');
   const [form, setForm] = useState<TdceInput>(getEmptyTdceInput());
 
   useEffect(() => {
@@ -689,7 +873,7 @@ export function TdceDeveloperWizard({ onBack, onComplete }: TdceDeveloperWizardP
     }));
   }, []);
 
-  const progressSteps: Step[] = ['project-info', 'site-details', 'unit-mix', 'financials', 'operations', 'review'];
+  const progressSteps: Step[] = ['contact', 'project-info', 'site-details', 'unit-mix', 'financials', 'operations', 'review'];
   const pct = (progressSteps.indexOf(step) / (progressSteps.length - 1)) * 100;
 
   return (
@@ -702,7 +886,35 @@ export function TdceDeveloperWizard({ onBack, onComplete }: TdceDeveloperWizardP
       `}</style>
 
       <div style={{ width: '100%', maxWidth: 650 }}>
-        {/* Progress Bar */}
+        {/* Back to choose path — above the gray line */}
+        <button
+          onClick={onBack}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            color: textMuted,
+            fontFamily: 'Roboto, sans-serif',
+            fontSize: '0.8rem',
+            letterSpacing: '0.1em',
+            textTransform: 'uppercase',
+            padding: 0,
+            marginBottom: '1rem',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            transition: 'color 0.2s ease',
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = textDark; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = textMuted; }}
+        >
+          <svg width="18" height="10" viewBox="0 0 18 10" fill="none">
+            <path d="M17 5H1M1 5L5 1M1 5L5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Back to choose path
+        </button>
+
+        {/* Progress Bar (gray line) */}
         {step !== 'review' && (
           <div style={{ width: '100%', height: 4, background: borderLight, borderRadius: 2, marginBottom: '4rem', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: `${pct}%`, background: brandPrimary, transition: 'width 0.6s cubic-bezier(0.25, 1, 0.5, 1)' }} />
@@ -711,7 +923,8 @@ export function TdceDeveloperWizard({ onBack, onComplete }: TdceDeveloperWizardP
 
         {/* content */}
         <div key={step} style={{ animation: 'fadeUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both' }}>
-          {step === 'project-info' && <ProjectInfoStep data={form} update={update} onNext={() => setStep('site-details')} onBack={onBack} />}
+          {step === 'contact' && <ContactStep data={form} update={update} onNext={() => setStep('project-info')} />}
+          {step === 'project-info' && <ProjectInfoStep data={form} update={update} onNext={() => setStep('site-details')} />}
           {step === 'site-details' && <SiteDetailsStep data={form} update={update} onNext={() => setStep('unit-mix')} onBack={() => setStep('project-info')} />}
           {step === 'unit-mix' && <BuildingProgramStep data={form} update={update} onNext={() => setStep('financials')} onBack={() => setStep('site-details')} />}
           {step === 'financials' && <FinancialsStep data={form} update={update} onNext={() => setStep('operations')} onBack={() => setStep('unit-mix')} />}

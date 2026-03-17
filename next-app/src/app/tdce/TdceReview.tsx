@@ -153,6 +153,12 @@ export function TdceReview({ data, onEdit, onComplete, onSubmit, onBack }: TdceR
           </div>
         )}
 
+        <ReviewSection title="Contact" onEdit={() => onEdit('contact')}>
+          <ReviewItem label="Name" value={data.meta.contactName || ''} />
+          <ReviewItem label="Email" value={data.meta.contactEmail || ''} />
+          <ReviewItem label="Organization" value={data.meta.partners?.developer || ''} />
+        </ReviewSection>
+
         <ReviewSection title="Project Details" onEdit={() => onEdit('project-info')}>
           <ReviewItem label="Project Title" value={data.meta.projectTitle || ''} />
           <ReviewItem label="Location" value={`${data.meta.city}, ${data.meta.province}`} />

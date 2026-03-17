@@ -1,7 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { BookingFormDialog } from '@/components/BookingFormDialog';
 import { getEmptyTdceInput } from '@/data/tdceDefaults';
 import { calculateFinancials, formatCurrency, formatNumber, formatPercent } from '@/lib/tdce-calculator';
 import type { TdceInput, TdceOutput } from '@/types/tdce';
@@ -36,6 +38,8 @@ interface FormData {
   buildingType: string;
   rentModel: string;
   otherBuildingType: string;
+  hasCapitalSources: boolean | null;
+  capitalSourcesTotal: string;
 }
 
 interface HomeownerEstimate {
@@ -59,6 +63,8 @@ const defaultData: FormData = {
   buildingType: '',
   rentModel: '',
   otherBuildingType: '',
+  hasCapitalSources: null,
+  capitalSourcesTotal: '',
 };
 
 const brandPrimary = '#D83A42';
@@ -293,6 +299,7 @@ function buildTdceSimplifiedMessage(data: FormData, estimate: HomeownerEstimate)
     `Populations: ${pop || 'N/A'}`,
     `Building type: ${building}`,
     `Rent model: ${rent}`,
+    `Capital sources: ${data.hasCapitalSources === true ? `Yes — ${data.capitalSourcesTotal.trim() ? formatCurrency(parseNumber(data.capitalSourcesTotal)) + ' total' : 'amount not specified'}` : data.hasCapitalSources === false ? 'No' : 'N/A'}`,
     output ? `Rough TDCE total development cost: ${formatCurrency(output.costs.totalDevelopmentCost)}` : '',
     output ? `Rough cost per unit: ${formatCurrency(output.costMetrics.costPerUnit)}` : '',
     output ? `Rough max mortgage: ${formatCurrency(output.operations.maxMortgage ?? 0)}` : '',
@@ -388,10 +395,10 @@ function UnderlineTextarea({
   const hasError = !!error;
 
   return (
-    <div style={{ position: 'relative', width: '100%', marginBottom: '2.5rem', paddingTop: '1.2rem' }}>
+    <div style={{ position: 'relative', width: '100%', marginBottom: '2.5rem', paddingTop: '0.5rem' }}>
       <label style={{
         position: 'absolute',
-        top: showLabel ? 0 : '24px',
+        top: showLabel ? 0 : '12px',
         left: 0,
         fontSize: showLabel ? '0.85rem' : '1.2rem',
         color: hasError ? brandPrimary : isFocused ? brandPrimary : textMuted,
@@ -407,7 +414,7 @@ function UnderlineTextarea({
         onChange={(e) => onChange(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        rows={3}
+        rows={2}
         style={{
           width: '100%',
           background: 'transparent',
@@ -418,9 +425,9 @@ function UnderlineTextarea({
           fontFamily: 'Roboto, sans-serif',
           fontSize: '1.2rem',
           color: textDark,
-          paddingTop: '12px',
-          paddingBottom: '12px',
-          lineHeight: 1.6,
+          paddingTop: '8px',
+          paddingBottom: '8px',
+          lineHeight: 1.5,
           transition: 'border-color 0.3s ease',
         }}
       />
@@ -583,9 +590,9 @@ function BackBtn({ onClick }: { onClick: () => void }) {
   );
 }
 
-function Q({ label, sub }: { label: string; sub?: string }) {
+function Q({ label, sub, compact }: { label: string; sub?: string; compact?: boolean }) {
   return (
-    <div style={{ marginBottom: '3rem' }}>
+    <div style={{ marginBottom: compact ? '1rem' : '3rem' }}>
       <h2 style={{ fontFamily: 'Roboto, sans-serif', fontSize: '2.2rem', fontWeight: 400, color: textDark, lineHeight: 1.3, margin: 0 }}>
         {label}
       </h2>
@@ -717,7 +724,19 @@ function RadioRow({
   );
 }
 
-function StatCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
+function StatCard({
+  label,
+  value,
+  sub,
+  derivation,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+  derivation?: string[];
+}) {
+  const [expanded, setExpanded] = useState(false);
+
   return (
     <div
       style={{
@@ -734,6 +753,47 @@ function StatCard({ label, value, sub }: { label: string; value: string; sub?: s
         {value}
       </p>
       {sub && <p style={{ margin: '0.35rem 0 0', fontFamily: 'Roboto, sans-serif', fontSize: '0.9rem', color: textMuted, lineHeight: 1.45 }}>{sub}</p>}
+      {derivation && derivation.length > 0 && (
+        <div style={{ marginTop: '0.75rem' }}>
+          <button
+            type="button"
+            onClick={() => setExpanded(!expanded)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0,
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '0.8rem',
+              color: brandPrimary,
+              fontWeight: 500,
+              letterSpacing: '0.02em',
+            }}
+          >
+            {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+            How is this calculated?
+          </button>
+          {expanded && (
+            <ul
+              style={{
+                margin: '0.5rem 0 0',
+                paddingLeft: '1.1rem',
+                fontFamily: 'Roboto, sans-serif',
+                fontSize: '0.82rem',
+                color: textMuted,
+                lineHeight: 1.6,
+              }}
+            >
+              {derivation.map((line, i) => (
+                <li key={i} style={{ marginBottom: '0.25rem' }}>{line}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -1010,6 +1070,31 @@ function AffordabilityStep({ data, setData, onNext, onBack }: { data: FormData; 
         <p style={{ margin: '8px 0 0', fontSize: '0.85rem', color: brandPrimary, fontFamily: 'Roboto, sans-serif' }}>{errors.rentModel}</p>
       )}
 
+      <Divider />
+
+      <SubLabel text="Any capital sources including grants, equity, subsidies, and available liquidity to support the development project?" />
+      <RadioRow
+        label="Yes"
+        selected={data.hasCapitalSources === true}
+        onSelect={() => setData({ hasCapitalSources: true })}
+      />
+      <RadioRow
+        label="No"
+        selected={data.hasCapitalSources === false}
+        onSelect={() => setData({ hasCapitalSources: false, capitalSourcesTotal: '' })}
+      />
+      {data.hasCapitalSources === true && (
+        <div style={{ paddingLeft: '1rem', marginTop: '0.75rem', marginBottom: '1.5rem' }}>
+          <UnderlineInput
+            type="number"
+            inputMode="decimal"
+            placeholder="How much in total?"
+            value={data.capitalSourcesTotal}
+            onChange={(v) => setData({ capitalSourcesTotal: v })}
+          />
+        </div>
+      )}
+
       <div style={{ marginTop: '2.5rem' }}>
         <ArrowBtn onClick={handleNext} disabled={false} label="Show rough estimate" />
       </div>
@@ -1037,15 +1122,71 @@ function EstimateStep({
   return (
     <>
       <BackBtn onClick={onBack} />
-      <Q label="Here is your rough estimate." sub="This is a fast planning estimate based on the numbers you entered." />
-
+      <Q label="Your development estimate is ready." sub="Contact Anhart for a free consultation on securing your equity gap." compact />
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '2rem' }}>
+        <ArrowBtn onClick={onSubmit} disabled={!output || isSubmitting} label={isSubmitting ? 'Sending…' : 'Send this estimate to Anhart'} />
+        <button
+          onClick={onBack}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontFamily: 'Roboto, sans-serif',
+            fontSize: '0.9rem',
+            color: textMuted,
+            fontWeight: 500,
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+            transition: 'color 0.2s ease',
+            padding: 0,
+            marginTop: '1.5rem',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = textDark)}
+          onMouseLeave={(e) => (e.currentTarget.style.color = textMuted)}
+        >
+          Adjust inputs
+        </button>
+      </div>
       {output ? (
         <>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
-            <StatCard label="Total Cost Benchmark" value={formatCurrency(output.costs.totalDevelopmentCost)} sub={`${formatCurrency(output.costMetrics.costPerUnit)} per home`} />
-            <StatCard label="Funding Gap" value={formatCurrency(output.operations.fundingGap ?? 0)} sub={`${formatCurrency(output.operations.maxMortgage ?? 0)} max mortgage`} />
+            <StatCard
+              label="Total Cost Benchmark"
+              value={formatCurrency(output.costs.totalDevelopmentCost)}
+              sub={`${formatCurrency(output.costMetrics.costPerUnit)} per home`}
+              derivation={[
+                `Land: ${formatCurrency(output.costs.landCost)}`,
+                `Hard construction: ${formatCurrency(output.costs.hardCosts)}`,
+                output.costs.hardCostContingency > 0 ? `Hard cost contingency: ${formatCurrency(output.costs.hardCostContingency)}` : null,
+                `Soft costs: ${formatCurrency(output.costs.softCosts)}`,
+                output.costs.softCostContingency > 0 ? `Soft cost contingency: ${formatCurrency(output.costs.softCostContingency)}` : null,
+                output.costs.developmentFees > 0 ? `Development fees: ${formatCurrency(output.costs.developmentFees)}` : null,
+                output.costs.financingCosts > 0 ? `Financing: ${formatCurrency(output.costs.financingCosts)}` : null,
+                output.costs.reserves > 0 ? `Reserves: ${formatCurrency(output.costs.reserves)}` : null,
+              ].filter(Boolean) as string[]}
+            />
+            <StatCard
+              label="Funding Gap"
+              value={formatCurrency(output.operations.fundingGap ?? 0)}
+              sub={`${formatCurrency(output.operations.maxMortgage ?? 0)} max mortgage`}
+              derivation={[
+                `Total development cost: ${formatCurrency(output.costs.totalDevelopmentCost)}`,
+                `Max mortgage: ${formatCurrency(output.operations.maxMortgage ?? 0)}`,
+                `Funding gap: ${formatCurrency(output.operations.fundingGap ?? 0)}`,
+              ]}
+            />
             <StatCard label="Gross Floor Area" value={`${formatNumber(output.areas.resolvedGsf ?? 0)} sf`} sub={`${formatNumber(output.areas.resolvedTotalUnits ?? 0)} homes`} />
-            <StatCard label="Net Operating Income" value={formatCurrency(output.operations.noi)} sub={`Cap rate ${formatPercent(output.operations.capRate)}`} />
+            <StatCard
+              label="Net Operating Income"
+              value={formatCurrency(output.operations.noi)}
+              sub={`Cap rate ${formatPercent(output.operations.capRate)}`}
+              derivation={[
+                `Gross potential rent: ${formatCurrency(output.income.grossPotentialRent)}`,
+                `Effective gross income: ${formatCurrency(output.income.effectiveGrossIncome)}`,
+                `Operating expenses: ${formatCurrency(output.operations.operatingExpenses)}`,
+                `Replacement reserves: ${formatCurrency(output.operations.replacementReserves)}`,
+              ]}
+            />
           </div>
 
           <div style={{ borderTop: `1px solid ${borderLight}`, paddingTop: '1.75rem', marginBottom: '2rem' }}>
@@ -1073,42 +1214,25 @@ function EstimateStep({
           </p>
         </div>
       )}
-
-      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
-        <ArrowBtn onClick={onSubmit} disabled={!output || isSubmitting} label={isSubmitting ? 'Sending…' : 'Send this estimate to Anhart'} />
-        <button
-          onClick={onBack}
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            fontFamily: 'Roboto, sans-serif',
-            fontSize: '0.9rem',
-            color: textMuted,
-            fontWeight: 500,
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase',
-            transition: 'color 0.2s ease',
-            padding: 0,
-            marginTop: '1.5rem',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = textDark)}
-          onMouseLeave={(e) => (e.currentTarget.style.color = textMuted)}
-        >
-          Adjust inputs
-        </button>
-      </div>
     </>
   );
 }
 
 function CompleteStep({ data, estimate, onRestart }: { data: FormData; estimate: HomeownerEstimate; onRestart: () => void }) {
   const output = estimate.output;
+  const capitalSourcesDisplay =
+    data.hasCapitalSources === true && data.capitalSourcesTotal.trim()
+      ? formatCurrency(parseNumber(data.capitalSourcesTotal))
+      : data.hasCapitalSources === false
+        ? 'None'
+        : 'Not specified';
+
   const rows = [
     ['Contact', `${data.firstName} ${data.lastName} · ${data.email}`],
     ['Location', `${data.location}${data.province ? `, ${data.province}` : ''}`],
     ['Building', getSelectedBuildingLabel(data)],
     ['Rent model', getSelectedRentLabel(data)],
+    ['Capital sources', capitalSourcesDisplay],
     ['Estimated TDCE', output ? formatCurrency(output.costs.totalDevelopmentCost) : 'Not available'],
     ['Funding gap', output ? formatCurrency(output.operations.fundingGap ?? 0) : 'Not available'],
   ];

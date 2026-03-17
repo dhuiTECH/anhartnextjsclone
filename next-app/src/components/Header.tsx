@@ -36,6 +36,12 @@ const portfolioDropdown = [
       "Explore a few of our affordable housing projects across Canada",
   },
   {
+    name: "TDCE Calculator",
+    href: "/tdce",
+    description:
+      "Run a full development cost estimate using industry benchmarks and affordable housing parameters",
+  },
+  {
     name: "Impact Investing",
     href: "/limited-partnership",
     description:

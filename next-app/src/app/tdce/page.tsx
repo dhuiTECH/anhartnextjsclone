@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { pdf } from '@react-pdf/renderer';
 import type { TdceInput, TdceDocument as TdceDocType } from '@/types/tdce';
@@ -38,7 +39,27 @@ const SolidInfoIcon = (props: React.SVGProps<SVGSVGElement>) => (
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
+  const searchParams = useSearchParams();
   const [viewMode, setViewMode] = useState<TdceViewMode>('landing');
+
+  useEffect(() => {
+    const view = searchParams.get('view');
+    if (view === 'simplified') {
+      setViewMode('simplified');
+    }
+  }, [searchParams]);
+
+  // Prevent mouse wheel from changing number input values
+  useEffect(() => {
+    const handleWheel = (e: WheelEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' && (target as HTMLInputElement).type === 'number') {
+        e.preventDefault();
+      }
+    };
+    document.addEventListener('wheel', handleWheel, { passive: false });
+    return () => document.removeEventListener('wheel', handleWheel);
+  }, []);
   const [input, setInput] = useState<TdceInput>(getEmptyTdceInput);
   const [activeSection, setActiveSection] = useState<TdceSectionId>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -179,6 +200,17 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans text-slate-800 selection:bg-red-100 selection:text-red-900 bg-[#F8FAFC]">
+      <style>{`
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        input[type="number"] {
+          -moz-appearance: textfield;
+          appearance: textfield;
+        }
+      `}</style>
       <Header />
 
       {/* Landing: Choose your path */}

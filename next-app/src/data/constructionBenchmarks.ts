@@ -33,6 +33,30 @@ export const BUILDING_TYPE_LABELS: Record<BuildingTypeKey, string> = {
 export const REGION_KEYS = ['vancouver', 'toronto', 'ottawa', 'calgary', 'edmonton', 'montreal', 'halifax', 'winnipeg'] as const;
 export type RegionKey = (typeof REGION_KEYS)[number];
 
+/**
+ * Map Canadian province/territory codes to benchmark regions.
+ * Used to auto-select Hard Cost Benchmark when user has already chosen a province.
+ * Provinces without a matching region (NB, NL, PE, SK, NT, NU, YT) return null.
+ */
+export const PROVINCE_TO_REGION: Record<string, RegionKey | null> = {
+  BC: 'vancouver',
+  AB: 'calgary',
+  ON: 'toronto',
+  QC: 'montreal',
+  NS: 'halifax',
+  MB: 'winnipeg',
+  NB: null,
+  NL: null,
+  PE: null,
+  SK: null,
+  NT: null,
+  NU: null,
+  YT: null,
+};
+
+/** Default building type when auto-selecting from province (condo/apartment 13–39 storey) */
+export const DEFAULT_BENCHMARK_BUILDING_TYPE: BuildingTypeKey = 'condo_apart';
+
 /** Human-readable region names */
 export const REGION_LABELS: Record<RegionKey, string> = {
   vancouver: 'Vancouver',

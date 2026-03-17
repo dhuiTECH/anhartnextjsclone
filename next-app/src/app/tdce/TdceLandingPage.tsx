@@ -39,17 +39,17 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
   const brandRedClass = 'text-[#D83A42]';
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[70vh] py-16 px-4 bg-gray-50/50">
+    <div className="flex flex-col items-center justify-center min-h-[70vh] py-16 px-4 sm:px-6 w-full max-w-full bg-gray-50/40">
       
       {/* Header */}
-      <div className="text-center mb-16">
-        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
+      <div className="text-center mb-16 w-full flex flex-col items-center">
+        <h2 className="text-4xl md:text-5xl font-bold text-gray-900/90 tracking-tight">
           How can we help you build today?
         </h2>
       </div>
 
       {/* Two Cards - Increased max-width and gap for better breathing room */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl w-full mx-auto">
         
         {/* Left Card - For Homeowners (Light) */}
         {/* Added 'group', 'cursor-pointer', and 'hover:-translate-y-2' to make the whole card interactive */}
@@ -57,7 +57,7 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
           onClick={onSelectHomeowners}
           role="button"
           tabIndex={0}
-          className="group bg-white rounded-3xl shadow-sm border border-gray-100 p-10 flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:border-gray-200 text-left"
+          className="group bg-white/85 backdrop-blur-sm rounded-3xl shadow-sm border border-gray-100/80 p-10 flex flex-col transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:border-gray-200/80 hover:bg-white/90 text-left"
         >
           <div className="flex-1">
             <div className={`w-14 h-14 flex items-center justify-center rounded-xl mb-8 bg-red-50 ${brandRedClass} group-hover:scale-110 transition-transform duration-300`}>
@@ -88,7 +88,7 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
           onClick={onSelectDevelopers}
           role="button"
           tabIndex={0}
-          className="group bg-[#111827] rounded-3xl shadow-lg border border-gray-800 p-10 flex flex-col transition-all duration-300 hover:shadow-2xl hover:shadow-[#D83A42]/10 hover:-translate-y-2 hover:border-gray-700 text-left"
+          className="group bg-[#111827]/90 backdrop-blur-sm rounded-3xl shadow-lg border border-gray-800/80 p-10 flex flex-col transition-all duration-300 hover:shadow-2xl hover:shadow-[#D83A42]/10 hover:-translate-y-2 hover:border-gray-700/80 hover:bg-[#111827]/95 text-left"
         >
           <div className="flex-1">
             <div className={`w-14 h-14 flex items-center justify-center rounded-xl mb-8 bg-gray-800/50 ${brandRedClass} group-hover:scale-110 transition-transform duration-300`}>
@@ -115,8 +115,8 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
       </div>
 
       {/* Footer - Consultation CTA */}
-      <div className="mt-20 text-center max-w-lg mx-auto">
-        <p className="text-gray-500 text-base mb-6">
+      <div className="mt-20 text-center max-w-lg mx-auto w-full flex flex-col items-center">
+        <p className="text-gray-500/90 text-base mb-6">
           Not sure where to start? Book a free pre-development consultation with our team.
         </p>
         <BookingFormDialog
@@ -124,7 +124,7 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
             <Button
               variant="default"
               size="lg"
-              className="bg-[#D83A42] hover:bg-[#B92B33] text-white rounded-full px-8 py-6 text-base font-semibold shadow-lg hover:shadow-xl transition-all"
+              className="bg-[#D83A42]/90 hover:bg-[#B92B33]/95 text-white rounded-full px-8 py-6 text-base font-semibold shadow-lg hover:shadow-xl transition-all backdrop-blur-sm"
             >
               Book a Consultation
             </Button>
