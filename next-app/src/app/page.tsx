@@ -50,5 +50,34 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  return <Home />;
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Anhart",
+    "url": "https://anhart.ca",
+    "logo": "https://anhart.ca/images/anhart-logo.png",
+    "sameAs": [
+      "https://www.linkedin.com/company/anhart",
+      "https://twitter.com/anhart_housing",
+      "https://www.facebook.com/anhartsolutions",
+      "https://www.instagram.com/anharthousing/",
+      "https://x.com/anharthousing"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+1-604-529-6259",
+      "contactType": "customer service",
+      "email": "info@anhart.ca"
+    }
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <Home />
+    </>
+  );
 }
