@@ -151,7 +151,7 @@ export const Footer = () => {
                     <form onSubmit={handleNewsletterSubmit} className="space-y-3">
                       <div className="flex gap-x-3">
                         <Input type="email" placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} required disabled={isSubmitting} className="flex-1 bg-background/10 text-background placeholder:text-background/60 border-background/30 focus:border-background/50" />
-                        <Button type="submit" variant="secondary" size="sm" className="px-4" disabled={isSubmitting || !turnstileToken} aria-label="Subscribe to newsletter">
+                        <Button type="submit" variant="secondary" size="sm" className="px-4" disabled={isSubmitting || !turnstileToken} aria-label={!turnstileToken ? "Verifying user..." : "Subscribe to newsletter"} title={!turnstileToken ? "Verifying user..." : undefined}>
                           <Mail className="h-4 w-4" />
                         </Button>
                       </div>
@@ -286,7 +286,8 @@ export const Footer = () => {
                       size="sm" 
                       className="px-2" 
                       disabled={isSubmitting || !turnstileToken} 
-                      aria-label="Subscribe to newsletter"
+                      aria-label={!turnstileToken ? "Verifying user..." : "Subscribe to newsletter"}
+                      title={!turnstileToken ? "Verifying user..." : undefined}
                     >
                       <Mail className="h-3 w-3" />
                     </Button>

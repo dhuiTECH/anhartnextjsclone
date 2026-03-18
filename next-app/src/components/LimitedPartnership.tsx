@@ -1589,7 +1589,7 @@ export const LimitedPartnership = () => {
                 </div>
                 
                 <Button type="submit" className="w-full mt-auto" size="lg" disabled={isSubmitting || !turnstileToken}>
-                  {isSubmitting ? "Sending Inquiry..." : "Send Investment Inquiry"}
+                  {isSubmitting ? "Sending Inquiry..." : !turnstileToken ? "Verifying user..." : "Send Investment Inquiry"}
                 </Button>
               </form>
             </CardContent>

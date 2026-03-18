@@ -150,7 +150,7 @@ export default function AdminLogin() {
           disabled={loading || isLocked || !turnstileToken} 
           className="w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-700 transition-colors"
         >
-          {loading ? 'Signing in...' : isLocked ? 'Account Locked' : 'Enter Admin Panel'}
+          {loading ? 'Signing in...' : isLocked ? 'Account Locked' : !turnstileToken ? 'Verifying user...' : 'Enter Admin Panel'}
         </button>
       </form>
     </div>

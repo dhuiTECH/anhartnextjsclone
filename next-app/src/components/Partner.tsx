@@ -267,7 +267,7 @@ const Partner = () => {
 
                     <div className="flex justify-center">
                       <Button type="submit" size="lg" className="bg-accent hover:bg-accent/90 text-white font-semibold px-8 sm:px-12 py-3 w-full sm:w-auto" disabled={isSubmitting || !turnstileToken}>
-                        {isSubmitting ? 'Submitting...' : 'Submit Partnership Request'}
+                        {isSubmitting ? 'Submitting...' : !turnstileToken ? 'Verifying user...' : 'Submit Partnership Request'}
                       </Button>
                     </div>
                   </form>

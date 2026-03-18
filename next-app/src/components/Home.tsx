@@ -876,7 +876,7 @@ const Home = () => {
                         className="w-full mt-6"
                         disabled={isSubmitting || !turnstileToken}
                       >
-                        {isSubmitting ? "Submitting..." : "Submit Message"}
+                        {isSubmitting ? "Submitting..." : !turnstileToken ? "Verifying user..." : "Submit Message"}
                       </Button>
                     </form>
                   </CardContent>

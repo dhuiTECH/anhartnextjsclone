@@ -354,7 +354,7 @@ export const BookingFormDialog = ({ trigger, titleSize = "lg" }: BookingFormDial
                 disabled={isSubmitting || !turnstileToken}
                 className="w-full sm:w-auto h-9"
               >
-                {isSubmitting ? "Sending..." : "Send"}
+                {isSubmitting ? "Sending..." : !turnstileToken ? "Verifying user..." : "Send"}
               </Button>
             </DialogFooter>
           </form>

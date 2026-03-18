@@ -242,7 +242,7 @@ export const Contact = () => {
                       />
                     </div>
                     <Button type="submit" size="sm" className="w-full" disabled={isSubscribing || !newsletterTurnstileToken}>
-                      {isSubscribing ? "Subscribing…" : "Subscribe"}
+                      {isSubscribing ? "Subscribing…" : !newsletterTurnstileToken ? "Verifying user..." : "Subscribe"}
                     </Button>
                   </form>
                 </CardContent>
@@ -350,7 +350,7 @@ export const Contact = () => {
                   </div>
 
                   <Button size="lg" className="w-full" type="submit" disabled={isSubmitting || !turnstileToken}>
-                    {isSubmitting ? "Submitting..." : "Submit Message"}
+                    {isSubmitting ? "Submitting..." : !turnstileToken ? "Verifying user..." : "Submit Message"}
                   </Button>
                 </form>
               </CardContent>
