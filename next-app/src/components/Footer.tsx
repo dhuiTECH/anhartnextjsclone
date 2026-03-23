@@ -307,6 +307,47 @@ export const Footer = () => {
                     />
                   </div>
 
+                  {/* Schema.org Organization Data */}
+                  <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                      __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "Organization",
+                        "name": "Anhart Community Housing Society",
+                        "url": "https://anhart.ca",
+                        "logo": "https://anhart.ca/images/anhart-logo.png",
+                        "description": "Canada's national non-profit affordable housing developer.",
+                        "address": {
+                          "@type": "PostalAddress",
+                          "streetAddress": "312 Main St",
+                          "addressLocality": "Vancouver",
+                          "addressRegion": "BC",
+                          "postalCode": "V6A 2T2",
+                          "addressCountry": "CA"
+                        },
+                        "areaServed": [
+                          {
+                            "@type": "State",
+                            "name": "British Columbia"
+                          },
+                          {
+                            "@type": "State",
+                            "name": "Manitoba"
+                          },
+                          {
+                            "@type": "State",
+                            "name": "Ontario"
+                          },
+                          {
+                            "@type": "Country",
+                            "name": "Canada"
+                          }
+                        ]
+                      })
+                    }}
+                  />
+
                   {/* Cloudflare Turnstile Widget */}
                   <div key={turnstileKey}>
                     <Turnstile

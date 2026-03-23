@@ -276,7 +276,9 @@ export default function ProjectPageClient() {
             {/* Description */}
             <div className="mb-12 space-y-6">
               <div className="prose prose-lg max-w-none">
-                <h2 className="text-2xl font-bold text-foreground mb-4">Project Overview</h2>
+                <h2 className="text-2xl font-bold text-foreground mb-4">
+                  {project.title} | Affordable Housing Development in {project.location}
+                </h2>
                 {/* Check if description contains HTML tags - if so, render as HTML */}
                 {/<[a-z][\s\S]*>/i.test(description) ? (
                   <HtmlRenderer html={description} />

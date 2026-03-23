@@ -245,8 +245,8 @@ const About = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title="About Us - Our Mission & Team"
-        description="Learn about Anhart's mission to create inclusive communities through innovative housing solutions. Meet our experienced team of housing professionals and community advocates."
+        title="About Us - Our Mission & Team | National Housing Developer"
+        description="Learn about Anhart's mission to create inclusive communities through innovative housing solutions across Canada. Meet our experienced team of housing professionals and community advocates."
         keywords="about anhart, affordable housing team, housing professionals, community development, mission, values, leadership"
         url="/about"
         structuredData={organizationStructuredData}
@@ -262,7 +262,7 @@ const About = () => {
           {
             question: "Where does Anhart operate?",
             answer:
-              "Anhart is based in Vancouver, BC and partners with communities across Canada to deliver affordable housing projects.",
+              "Anhart operates nationwide across Canada, partnering with communities in provinces like British Columbia, Alberta, Manitoba, and Ontario to deliver affordable housing projects.",
           },
           {
             question: "What is Anhart’s long-term housing goal?",
@@ -286,18 +286,17 @@ const About = () => {
             <ScrollAnimationWrapper direction="top" delay={0}>
               <div className="text-center mb-16">
                 <h2 className="text-3xl font-bold tracking-tight text-foreground mb-6">
-                  Our Journey
+                  Our Journey Across Canada
                 </h2>
                 <p className="text-lg leading-8 text-muted-foreground">
                   Anhart was founded on a simple mission: build practical,
-                  affordable homes that put communities first. Since our first
-                  real estate development projects in Vancouver’s Downtown
+                  affordable homes that put communities first. From our national roots in Vancouver’s Downtown
                   Eastside—including the revitalization of Jubilee Rooms and
-                  Dodson Hotel—we’ve delivered micro-suites, mixed-income
+                  Dodson Hotel—we’ve grown to deliver micro-suites, mixed-income
                   housing, and community-based housing solutions across Canada.
-                  From local roots to nationwide housing development, Anhart
-                  partners with communities coast to coast to coast. Our
-                  non-profit real estate development model combines business
+                  From local beginnings to nationwide housing development, Anhart
+                  partners with communities from coast to coast to coast. Our
+                  national non-profit real estate development model combines business
                   discipline with community values to deliver sustainable,
                   inclusive affordable housing projects that last.
                 </p>

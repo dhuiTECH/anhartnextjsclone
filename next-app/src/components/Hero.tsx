@@ -203,10 +203,15 @@ export const Hero = () => {
         className="relative z-30 h-full flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 bg-black/20 rounded-lg py-4 pb-20"
       >
         <div className="text-center">
-          <ScrollAnimationWrapper direction="top" delay={100}>
-            <h1 className="text-4xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-tight text-white mb-2 sm:mb-4 [text-shadow:_0_4px_16px_rgba(0,0,0,0.8)]">
-              Plan Your Housing Project for Free
+          <ScrollAnimationWrapper direction="top" delay={50}>
+            <h1 className="text-sm sm:text-base md:text-lg text-white/80 font-medium uppercase tracking-[0.2em] mb-4 drop-shadow-md m-0 p-0">
+              Canada&apos;s National Non-Profit Housing Developer
             </h1>
+          </ScrollAnimationWrapper>
+          <ScrollAnimationWrapper direction="top" delay={100}>
+            <div className="text-4xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-bold tracking-tight text-white mb-2 sm:mb-4 [text-shadow:_0_4px_16px_rgba(0,0,0,0.8)]">
+              Plan Your Housing Project for Free
+            </div>
           </ScrollAnimationWrapper>
           <ScrollAnimationWrapper direction="top" delay={200}>
             <p className="text-base sm:text-xl md:text-2xl lg:text-3xl text-white font-light bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] tracking-wider">

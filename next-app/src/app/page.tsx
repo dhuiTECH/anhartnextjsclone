@@ -2,18 +2,18 @@ import { Metadata } from 'next';
 import Home from '@/components/Home';
 
 export const metadata: Metadata = {
-  title: 'Anhart | Canada Housing Developer | Free Consultation',
+  title: 'Anhart | National Non-Profit Affordable Housing Developer | Canada',
   description:
-    'Anhart builds affordable, sustainable housing. Expert development and financing + free consultation. Contact us to start your project.',
-  keywords: 'affordable housing, SROs, modular homes, non-profit housing, low-income housing, subsidized housing, below-market housing, supportive housing, inclusionary housing, affordability, micro-suites, micro-units, vacancy development, derelict homes, single room occupancy, social housing, community housing, rental housing, housing continuum, transitional housing, Vancouver, Toronto, Calgary, Edmonton, Winnipeg, Ottawa, Hamilton, London, BC, Alberta, Manitoba, Ontario, Canada, housing development, housing solutions, community development, sustainable housing, housing policy, housing finance, community planning, affordable housing Vancouver, affordable housing Toronto, affordable housing Calgary, affordable housing Edmonton, affordable housing Winnipeg, SRO conversion Vancouver, SRO conversion Toronto, modular housing BC, modular housing Alberta, modular housing Ontario, micro-suites Vancouver, micro-suites Toronto, supportive housing Calgary, supportive housing Winnipeg',
+    'Anhart builds affordable, sustainable housing with a goal of creating 20,000 homes across Canadian provinces. Expert development and financing + free consultation.',
+  keywords: 'affordable housing, SROs, modular homes, non-profit housing, low-income housing, subsidized housing, below-market housing, supportive housing, inclusionary housing, affordability, micro-suites, micro-units, vacancy development, derelict homes, single room occupancy, social housing, community housing, rental housing, housing continuum, transitional housing, Vancouver, Toronto, Calgary, Edmonton, Winnipeg, Ottawa, Hamilton, London, BC, Alberta, Manitoba, Ontario, Canada, housing development, housing solutions, community development, sustainable housing, housing policy, housing finance, community planning, affordable housing Vancouver, affordable housing Toronto, affordable housing Calgary, affordable housing Edmonton, affordable housing Winnipeg, SRO conversion Vancouver, SRO conversion Toronto, modular housing BC, modular housing Alberta, modular housing Ontario, micro-suites Vancouver, micro-suites Toronto, supportive housing Calgary, supportive housing Winnipeg, national non-profit housing developer, Canada housing developer',
   authors: [{ name: 'Anhart' }],
   alternates: {
     canonical: 'https://anhart.ca',
   },
   openGraph: {
-    title: 'Anhart | Canada Housing Developer | Free Consultation',
+    title: 'Anhart | National Non-Profit Affordable Housing Developer | Canada',
     description:
-      'Anhart builds affordable, sustainable housing. Expert development and financing + free consultation. Contact us to start your project.',
+      'Anhart builds affordable, sustainable housing with a goal of creating 20,000 homes across Canadian provinces. Expert development and financing + free consultation.',
     url: 'https://anhart.ca',
     siteName: 'Anhart',
     images: [
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Anhart - Affordable Housing Developer in Canada',
+        alt: 'Anhart - National Non-Profit Affordable Housing Developer in Canada',
       },
     ],
     locale: 'en_CA',
@@ -29,9 +29,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Anhart | Canada Housing Developer | Free Consultation',
+    title: 'Anhart | National Non-Profit Affordable Housing Developer | Canada',
     description:
-      'Anhart builds affordable, sustainable housing. Expert development and financing + free consultation. Contact us to start your project.',
+      'Anhart builds affordable, sustainable housing with a goal of creating 20,000 homes across Canadian provinces. Expert development and financing + free consultation.',
     images: ['/og-image.jpg'],
     site: '@anhart_housing',
     creator: '@anhart_housing',
