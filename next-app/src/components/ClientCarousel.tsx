@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from "react";
 
 import comBuildImg from "@/assets/partnercarousel/communitybuilder.jpg";
 import AACImg from "@/assets/partnercarousel/AAC.png";
-import cleanStartImg from "@/assets/partnercarousel/cleanstart.png";
 import GWAImg from "@/assets/partnercarousel/gwa_architecture.png";
 import smartantImg from "@/assets/partnercarousel/smartant.png";
 import FISHImg from "@/assets/FISH.png";
@@ -17,6 +16,7 @@ import GLCImg from "@/assets/GLC.png";
 import ATCOImg from "@/assets/partnercarousel/atco.jpg";
 import LCLAImg from "@/assets/partnercarousel/lcla.jpg";
 import MWGImg from "@/assets/partnercarousel/markwilson.jpg";
+import propestcleanImg from "@/assets/partnercarousel/propestcleanlogo.png";
 
 // Helper to extract .src from Next.js static imports
 const getImageSrc = (img: any): string => typeof img === 'string' ? img : img?.src || '';
@@ -31,9 +31,13 @@ interface Client {
 
 export const ClientCarousel: React.FC<{
   children?: React.ReactNode;
+  className?: string;
+  hideTitle?: boolean;
 }> = (
   {
-    children
+    children,
+    className,
+    hideTitle = false
   }
 ) => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -62,24 +66,24 @@ export const ClientCarousel: React.FC<{
   const clients: Client[] = [
     {
       id: 1,
+      name: "ProPestClean",
+      logo: getImageSrc(propestcleanImg),
+      alt: "ProPestClean Logo",
+      website: "https://www.propestclean.ca/",
+    },
+    {
+      id: 2,
       name: "Community Builders",
       logo: getImageSrc(comBuildImg),
       alt: "Community Builders Logo",
       website: "https://www.communitybuilders.ca/",
     },
     {
-      id: 2,
+      id: 3,
       name: "Anhart Constructions",
       logo: getImageSrc(AACImg),
       alt: "Anhart Constructions Logo",
       website: "https://anhartconstruction.ca/",
-    },
-    {
-      id: 3,
-      name: "CleanStart",
-      logo: getImageSrc(cleanStartImg),
-      alt: "CleanStart Logo",
-      website: "https://cleanstartbc.ca/",
     },
     {
       id: 4,
@@ -344,10 +348,12 @@ export const ClientCarousel: React.FC<{
   }, [currentPage, totalPages]);
 
   return (
-    <section className="py-16 bg-background">
+    <section className={className || "py-16 bg-background"}>
       <div className="mx-auto max-w-6xl px-6 lg:px-8">
         {/* Title */}
-        <h2 className="text-3xl font-bold text-center text-primary mb-12">Our Partners</h2>
+        {!hideTitle && (
+          <h2 className="text-3xl font-bold text-center text-primary mb-12">Our Partners</h2>
+        )}
 
         {/* Desktop Layout - Grid view with pagination */}
         <div className="hidden lg:block">

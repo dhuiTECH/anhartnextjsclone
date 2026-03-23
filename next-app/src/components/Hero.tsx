@@ -1,9 +1,42 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
 import Link from "next/link";
-import anhartLogoWebp from "@/assets/anhart-logo.webp";
-import anhartLogoPng from "@/assets/anhart-logo.png";
+import comBuildImg from "@/assets/partnercarousel/communitybuilder.jpg";
+import AACImg from "@/assets/partnercarousel/AAC.png";
+import GWAImg from "@/assets/partnercarousel/gwa_architecture.png";
+import smartantImg from "@/assets/partnercarousel/smartant.png";
+import FISHImg from "@/assets/FISH.png";
+import PURPOSEImg from "@/assets/Purpose.jpg";
+import QUIXULINImg from "@/assets/QUIXULIN.png";
+import OTTVALImg from "@/assets/OTTVAL.png";
+import SVImg from "@/assets/SV.png";
+import TPOSImg from "@/assets/TPOS.png";
+import GLCImg from "@/assets/GLC.png";
+import ATCOImg from "@/assets/partnercarousel/atco.jpg";
+import LCLAImg from "@/assets/partnercarousel/lcla.jpg";
+import MWGImg from "@/assets/partnercarousel/markwilson.jpg";
+import propestcleanImg from "@/assets/partnercarousel/propestcleanlogo.png";
+
+// Helper to extract .src from Next.js static imports
+const getImageSrc = (img: any): string => typeof img === 'string' ? img : img?.src || '';
+
+const partners = [
+  { src: getImageSrc(propestcleanImg), website: "https://www.propestclean.ca/" },
+  { src: getImageSrc(comBuildImg), website: "https://www.communitybuilders.ca/" },
+  { src: getImageSrc(AACImg), website: "https://anhartconstruction.ca/" },
+  { src: getImageSrc(GWAImg), website: "https://www.gwaarchitecture.com/" },
+  { src: getImageSrc(smartantImg), website: "https://smartant.ca/" },
+  { src: getImageSrc(FISHImg), website: "https://www.facebook.com/p/Fraser-Inclusive-and-Supportive-Housing-Society-100068298222053/" },
+  { src: getImageSrc(PURPOSEImg), website: "https://www.purposeconstruction.ca/" },
+  { src: getImageSrc(QUIXULINImg), website: "https://quixulin.com/" },
+  { src: getImageSrc(OTTVALImg), website: "https://www.ahaov.com/" },
+  { src: getImageSrc(SVImg), website: "https://sustainable-villages.org/" },
+  { src: getImageSrc(TPOSImg), website: "https://thepowerofsmall.net/" },
+  { src: getImageSrc(GLCImg), website: "https://gottalovecanada.ca/" },
+  { src: getImageSrc(ATCOImg), website: "https://www.atco.com/en-ca.html" },
+  { src: getImageSrc(LCLAImg), website: "https://www.lcla.ca/" },
+  { src: getImageSrc(MWGImg), website: "https://markwilsongroup.ca/" },
+];
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { useRef, useState } from "react";
 import { useParallax } from "@/hooks/useParallax";
@@ -11,12 +44,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { logger } from "@/utils/logger";
 import { useScroll, useTransform, motion } from "framer-motion";
 
-const anhartLogoWebpSrc =
-  typeof anhartLogoWebp === "string"
-    ? anhartLogoWebp
-    : anhartLogoWebp?.src || "";
-const anhartLogoPngSrc =
-  typeof anhartLogoPng === "string" ? anhartLogoPng : anhartLogoPng?.src || "";
 
 // Marquee animation styles - optimized for performance
 // On mobile: start with text visible sooner (0% = left edge) so "Check out our featured project..." appears right away
@@ -29,9 +56,21 @@ const marqueeStyle = `
     0% { transform: translate3d(0%, 0, 0); }
     100% { transform: translate3d(-100%, 0, 0); }
   }
+  @keyframes marquee-fast {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-33.33%); } /* Adjusted for 3 duplicate sets to scroll exactly one set width */
+  }
   .animate-marquee {
     animation: marquee 18s linear infinite;
     will-change: transform;
+  }
+  .animate-marquee-fast {
+    animation: marquee-fast 60s linear infinite;
+    display: flex;
+    width: max-content;
+  }
+  .hover\\:pause-animation:hover {
+    animation-play-state: paused;
   }
   @media (max-width: 767px) {
     .animate-marquee {
@@ -67,7 +106,7 @@ export const Hero = () => {
 
   return (
     <section
-      className="relative h-[85vh] sm:h-[95vh] w-full overflow-hidden" // ADJUST THIS: Original heights—change percentages for size (e.g., 90vh for medium)
+      className="relative h-[85vh] sm:h-[95vh] w-full overflow-hidden"
       aria-label="Hero section with affordable housing information"
     >
       {/* Moving Banner Carousel - Performance Optimized */}
@@ -98,9 +137,8 @@ export const Hero = () => {
       </motion.div>
       {/* Anhart logo as backdrop with WebP/PNG fallback */}
       <picture className="absolute inset-0 z-0 flex items-center justify-center opacity-30 pointer-events-none">
-        <source srcSet={anhartLogoWebpSrc} type="image/webp" />
         <img
-          src={anhartLogoPngSrc}
+          src="/images/anhart-logo.png"
           alt=""
           className="w-full h-full object-contain object-center"
           aria-hidden="true"
@@ -152,8 +190,7 @@ export const Hero = () => {
         <div
           className="absolute top-0 left-0 w-full z-[1]"
           style={{
-            height: isMobile ? "100vh" : "150vh",
-            minHeight: isMobile ? "100vh" : "150vh",
+            height: "100%",
             background:
               "linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%)",
           }}
@@ -163,7 +200,7 @@ export const Hero = () => {
       {/* Centered content container */}
       <div
         ref={contentRef}
-        className="relative z-30 h-lvh flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 bg-black/20 rounded-lg py-4"
+        className="relative z-30 h-full flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 bg-black/20 rounded-lg py-4 pb-20"
       >
         <div className="text-center">
           <ScrollAnimationWrapper direction="top" delay={100}>
@@ -193,13 +230,33 @@ export const Hero = () => {
           </div>
         </div>
       </div>
-      {/* Scroll Down Arrow */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40">
-        <div className="flex flex-col items-center gap-2">
-          <ChevronDown
-            strokeWidth={2.5}
-            className="w-12 h-8 text-white animate-bounce-fade"
-          />
+      <div className="absolute bottom-0 left-0 right-0 z-40 bg-black/30 backdrop-blur-md border-t border-white/10 overflow-hidden py-2">
+        <div className="flex items-center w-full px-4 h-20 sm:h-24 max-w-[100vw] overflow-hidden">
+          <div className="flex-shrink-0 text-white/70 font-semibold text-xs sm:text-sm tracking-widest uppercase mr-6 hidden sm:block">
+            Trusted By
+          </div>
+          
+          {/* Continuous scrolling container */}
+          <div className="flex-1 overflow-hidden relative" style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
+            <div className="flex animate-marquee-fast hover:pause-animation items-center space-x-8 sm:space-x-12">
+              {/* Duplicate the items to create a seamless loop */}
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="flex space-x-8 sm:space-x-12 min-w-max items-center">
+                  {partners.map((partner, index) => (
+                    <a
+                      key={index}
+                      href={partner.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity duration-300 px-4 h-12 min-w-32 max-w-48 bg-white/5 rounded-md backdrop-blur-sm p-2"
+                    >
+                      <img src={partner.src} alt="Partner Logo" className="max-h-10 w-auto object-contain" />
+                    </a>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
