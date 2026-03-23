@@ -243,15 +243,12 @@ export const Hero = () => {
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="flex space-x-8 sm:space-x-12 min-w-max items-center">
                   {partners.map((partner, index) => (
-                    <a
+                    <div
                       key={index}
-                      href={partner.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
                       className="flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity duration-300 px-4 h-12 min-w-32 max-w-48 bg-white/5 rounded-md backdrop-blur-sm p-2"
                     >
                       <img src={partner.src} alt="Partner Logo" className="max-h-10 w-auto object-contain" />
-                    </a>
+                    </div>
                   ))}
                 </div>
               ))}
