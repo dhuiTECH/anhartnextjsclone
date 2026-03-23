@@ -2,7 +2,9 @@ import { Metadata } from 'next';
 import Home from '@/components/Home';
 
 export const metadata: Metadata = {
-  title: 'Anhart | National Non-Profit Affordable Housing Developer | Canada',
+  title: {
+    absolute: 'Anhart | National Non-Profit Affordable Housing Developer | Canada',
+  },
   description:
     'Anhart builds affordable, sustainable housing with a goal of creating 20,000 homes across Canadian provinces. Expert development and financing + free consultation.',
   keywords: 'affordable housing, SROs, modular homes, non-profit housing, low-income housing, subsidized housing, below-market housing, supportive housing, inclusionary housing, affordability, micro-suites, micro-units, vacancy development, derelict homes, single room occupancy, social housing, community housing, rental housing, housing continuum, transitional housing, Vancouver, Toronto, Calgary, Edmonton, Winnipeg, Ottawa, Hamilton, London, BC, Alberta, Manitoba, Ontario, Canada, housing development, housing solutions, community development, sustainable housing, housing policy, housing finance, community planning, affordable housing Vancouver, affordable housing Toronto, affordable housing Calgary, affordable housing Edmonton, affordable housing Winnipeg, SRO conversion Vancouver, SRO conversion Toronto, modular housing BC, modular housing Alberta, modular housing Ontario, micro-suites Vancouver, micro-suites Toronto, supportive housing Calgary, supportive housing Winnipeg, national non-profit housing developer, Canada housing developer',

@@ -2,7 +2,9 @@ import { Metadata } from 'next';
 import About from '@/components/About';
 
 export const metadata: Metadata = {
-  title: 'About Anhart',
+  title: {
+    absolute: 'About Anhart',
+  },
   description: 'Learn about Anhart\'s mission, values, and team dedicated to creating sustainable affordable housing solutions across Canada. Discover our commitment to modular homes, SRO conversions, and community development.',
   keywords: 'about Anhart, affordable housing developer, housing development company, non-profit housing organization, community housing provider, affordable housing mission, housing development values, housing development team, affordable housing history, housing development expertise, community development organization, housing solutions provider, affordable housing Canada, housing developer Vancouver, housing developer Toronto, housing developer Calgary, housing developer Edmonton, modular housing developer, SRO conversion specialist, supportive housing provider',
   authors: [{ name: 'Anhart' }],

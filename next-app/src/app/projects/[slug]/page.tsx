@@ -97,7 +97,7 @@ export async function generateMetadata({
     };
   }
 
-  const title = `${project.title} - Affordable Housing Project | Anhart`;
+  const title = `${project.title} - Affordable Housing Project`;
   const description = project.comprehensive_details || project.brief_description || `Learn more about ${project.title}, an affordable housing project by Anhart located in ${project.location}.`;
   const imageUrl = project.image_url || project.image
     ? ((project.image_url || project.image || '').startsWith('http') 
@@ -106,7 +106,9 @@ export async function generateMetadata({
     : 'https://anhart.ca/images/portfolio-hero.jpg';
 
   return {
-    title,
+    title: {
+      absolute: `${project.title} - Affordable Housing Project | Anhart`,
+    },
     description,
     keywords: [
       project.title,
