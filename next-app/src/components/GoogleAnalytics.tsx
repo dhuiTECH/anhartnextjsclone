@@ -3,8 +3,9 @@
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 
-// Google Analytics configuration
-const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
+// Google Analytics measurement ID (env override; default matches site Google tag)
+const GA_TRACKING_ID =
+  process.env.NEXT_PUBLIC_GA_TRACKING_ID ?? "G-STLCYEZYSB";
 
 // Track page views on route changes
 export const trackPageView = (url: string, title?: string) => {

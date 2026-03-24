@@ -211,6 +211,22 @@ export default function RootLayout({
             `,
           }}
         />
+        {/* Google tag (gtag.js) — GA4 + Google Ads conversion ID */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-STLCYEZYSB"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-STLCYEZYSB');
+              gtag('config', 'AW-17630924755');
+            `,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
