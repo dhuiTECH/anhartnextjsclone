@@ -1,42 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import comBuildImg from "@/assets/partnercarousel/communitybuilder.jpg";
-import AACImg from "@/assets/partnercarousel/AAC.png";
-import GWAImg from "@/assets/partnercarousel/gwa_architecture.png";
-import smartantImg from "@/assets/partnercarousel/smartant.png";
-import FISHImg from "@/assets/FISH.png";
-import PURPOSEImg from "@/assets/Purpose.jpg";
-import QUIXULINImg from "@/assets/QUIXULIN.png";
-import OTTVALImg from "@/assets/OTTVAL.png";
-import SVImg from "@/assets/SV.png";
-import TPOSImg from "@/assets/TPOS.png";
-import GLCImg from "@/assets/GLC.png";
-import ATCOImg from "@/assets/partnercarousel/atco.jpg";
-import LCLAImg from "@/assets/partnercarousel/lcla.jpg";
-import MWGImg from "@/assets/partnercarousel/markwilson.jpg";
-import propestcleanImg from "@/assets/partnercarousel/propestcleanlogo.png";
-
-// Helper to extract .src from Next.js static imports
-const getImageSrc = (img: any): string => typeof img === 'string' ? img : img?.src || '';
-
-const partners = [
-  { src: getImageSrc(propestcleanImg), website: "https://www.propestclean.ca/" },
-  { src: getImageSrc(comBuildImg), website: "https://www.communitybuilders.ca/" },
-  { src: getImageSrc(AACImg), website: "https://anhartconstruction.ca/" },
-  { src: getImageSrc(GWAImg), website: "https://www.gwaarchitecture.com/" },
-  { src: getImageSrc(smartantImg), website: "https://smartant.ca/" },
-  { src: getImageSrc(FISHImg), website: "https://www.facebook.com/p/Fraser-Inclusive-and-Supportive-Housing-Society-100068298222053/" },
-  { src: getImageSrc(PURPOSEImg), website: "https://www.purposeconstruction.ca/" },
-  { src: getImageSrc(QUIXULINImg), website: "https://quixulin.com/" },
-  { src: getImageSrc(OTTVALImg), website: "https://www.ahaov.com/" },
-  { src: getImageSrc(SVImg), website: "https://sustainable-villages.org/" },
-  { src: getImageSrc(TPOSImg), website: "https://thepowerofsmall.net/" },
-  { src: getImageSrc(GLCImg), website: "https://gottalovecanada.ca/" },
-  { src: getImageSrc(ATCOImg), website: "https://www.atco.com/en-ca.html" },
-  { src: getImageSrc(LCLAImg), website: "https://www.lcla.ca/" },
-  { src: getImageSrc(MWGImg), website: "https://markwilsongroup.ca/" },
-];
+import { heroCarouselPartners } from "@/assets/HeroCarousel/heroCarouselPartners";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
 import { useRef, useState } from "react";
 import { useParallax } from "@/hooks/useParallax";
@@ -237,28 +202,33 @@ export const Hero = () => {
       </div>
       <div className="absolute bottom-0 left-0 right-0 z-40 bg-black/30 backdrop-blur-md border-t border-white/10 overflow-hidden py-2">
         <div className="flex items-center w-full px-4 h-20 sm:h-24 max-w-[100vw] overflow-hidden">
-          <div className="flex-shrink-0 text-white/70 font-semibold text-xs sm:text-sm tracking-widest uppercase mr-6 hidden sm:block">
+<div className="flex-shrink-0 text-white/70 font-semibold text-xs sm:text-sm tracking-widest uppercase mr-6 hidden sm:block">
             Trusted By
           </div>
-          
+           
           {/* Continuous scrolling container */}
           <div className="flex-1 overflow-hidden relative" style={{ maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)' }}>
             <div className="flex animate-marquee-fast hover:pause-animation items-center space-x-8 sm:space-x-12">
               {/* Duplicate the items to create a seamless loop */}
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="flex space-x-8 sm:space-x-12 min-w-max items-center">
-                  {partners.map((partner, index) => (
+                  {heroCarouselPartners.map((partner, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity duration-300 px-4 h-12 min-w-32 max-w-48 bg-white/5 rounded-md backdrop-blur-sm p-2"
+                      className="flex h-14 w-36 shrink-0 items-center justify-center rounded-md bg-white/5 px-2 py-1 opacity-70 backdrop-blur-sm transition-opacity duration-300 hover:opacity-100 sm:h-16 sm:w-44"
                     >
-                      <img src={partner.src} alt="Partner Logo" className="max-h-10 w-auto object-contain" />
+                      <img
+                        src={partner.src}
+                        alt="Partner Logo"
+                        className="block max-h-full max-w-full object-contain object-center"
+                      />
                     </div>
                   ))}
                 </div>
               ))}
             </div>
           </div>
+
         </div>
       </div>
     </section>
