@@ -75,6 +75,14 @@ export default function HomePage() {
 
   return (
     <>
+      {/* Mobile: start hero video fetch early (pairs with Hero.tsx preload + useLayoutEffect). */}
+      <link
+        rel="preload"
+        href="/mediaAssets/hero-background-video.mp4"
+        as="video"
+        type="video/mp4"
+        media="(max-width: 767px)"
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}

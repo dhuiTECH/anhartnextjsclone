@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { heroCarouselPartners } from "@/assets/HeroCarousel/heroCarouselPartners";
 import { ScrollAnimationWrapper } from "@/components/animations/ScrollAnimationWrapper";
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useParallax } from "@/hooks/useParallax";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { MOBILE_BREAKPOINT, useIsMobile } from "@/hooks/use-mobile";
 import { logger } from "@/utils/logger";
 import { useScroll, useTransform, motion } from "framer-motion";
 
@@ -51,6 +51,16 @@ export const Hero = () => {
 
   const isMobile = useIsMobile();
   const [videoError, setVideoError] = useState(false);
+
+  // Mobile: eager-fetch video before first paint (metadata-only preload delays autoplay on mobile).
+  useLayoutEffect(() => {
+    const el = videoRef.current;
+    if (!el || typeof window === "undefined") return;
+    if (window.innerWidth >= MOBILE_BREAKPOINT) return;
+    el.preload = "auto";
+    el.setAttribute("fetchpriority", "high");
+    el.load();
+  }, []);
 
   // Apply parallax effect (disabled on mobile)
   useParallax({
@@ -122,7 +132,7 @@ export const Hero = () => {
       {/* Fallback background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary/70 to-primary/90 z-[0.5]" />
       {/* Full-screen background video with extended height for parallax */}
-      {/* Optimized for LCP: Use poster image and lazy load video to improve initial page load */}
+      {/* Desktop: metadata preload keeps bandwidth for LCP. Mobile: auto preload + useLayoutEffect starts fetch early. */}
       <video
         ref={videoRef}
         className={`absolute top-0 left-0 w-full h-full object-cover z-[1] ${videoError ? "hidden" : ""}`}
@@ -135,7 +145,7 @@ export const Hero = () => {
         loop
         muted
         playsInline
-        preload="metadata"
+        preload={isMobile ? "auto" : "metadata"}
         poster=""
         aria-label="Background video showing housing development animation"
         onError={() => {
@@ -212,17 +222,23 @@ export const Hero = () => {
               {/* Duplicate the items to create a seamless loop */}
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="flex space-x-8 sm:space-x-12 min-w-max items-center">
-                  {heroCarouselPartners.map((partner, index) => (
-                    <div
+                  {heroCarouselPartners
+                    .filter((partner) => !partner.hidden)
+                    .map((partner, index) => (
+                    <a
                       key={index}
-                      className="flex h-14 w-36 shrink-0 items-center justify-center rounded-md bg-white/5 px-2 py-1 opacity-70 backdrop-blur-sm transition-opacity duration-300 hover:opacity-100 sm:h-16 sm:w-44"
+                      href={partner.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${partner.name} (opens in new tab)`}
+                      className="flex h-14 w-36 shrink-0 items-center justify-center rounded-md bg-white/5 px-2 py-1 opacity-70 backdrop-blur-sm transition-opacity duration-300 hover:opacity-100 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/80 sm:h-16 sm:w-44"
                     >
                       <img
                         src={partner.src}
-                        alt="Partner Logo"
-                        className="block max-h-full max-w-full object-contain object-center"
+                        alt=""
+                        className="pointer-events-none block max-h-full max-w-full object-contain object-center"
                       />
-                    </div>
+                    </a>
                   ))}
                 </div>
               ))}
