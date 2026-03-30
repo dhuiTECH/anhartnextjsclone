@@ -175,6 +175,19 @@ function isValidEmail(email: string): boolean {
   return EMAIL_REGEX.test(email.trim());
 }
 
+/** Required fields for emailing the simplified TDCE to Anhart (optional flow — user can skip). */
+function canSendSimplifiedLead(data: FormData): boolean {
+  const firstNameTrimmed = data.firstName.trim();
+  const lastNameTrimmed = data.lastName.trim();
+  const orgTrimmed = data.organization.trim();
+  return (
+    firstNameTrimmed.length >= 2 &&
+    lastNameTrimmed.length >= 2 &&
+    isValidEmail(data.email) &&
+    orgTrimmed.length >= 2
+  );
+}
+
 function isValidNumberString(value: string): boolean {
   const cleaned = value.trim().replace(/[^0-9.]/g, '');
   if (!cleaned) return false;
@@ -798,39 +811,34 @@ function StatCard({
   );
 }
 
-function ContactStep({ data, setData, onNext }: { data: FormData; setData: (d: Partial<FormData>) => void; onNext: () => void }) {
-  const [attemptedSubmit, setAttemptedSubmit] = useState(false);
-
-  const firstNameTrimmed = data.firstName.trim();
-  const lastNameTrimmed = data.lastName.trim();
-  const emailTrimmed = data.email.trim();
-  const orgTrimmed = data.organization.trim();
-
-  const errors = {
-    firstName: !firstNameTrimmed ? 'Please enter your first name' : firstNameTrimmed.length < 2 ? 'Please enter a valid first name' : undefined,
-    lastName: !lastNameTrimmed ? 'Please enter your last name' : lastNameTrimmed.length < 2 ? 'Please enter a valid last name' : undefined,
-    email: !emailTrimmed ? 'Please enter your email address' : !isValidEmail(data.email) ? 'Please enter a valid email address' : undefined,
-    organization: !orgTrimmed ? 'Please enter your organization' : orgTrimmed.length < 2 ? 'Please enter a valid organization name' : undefined,
-  };
-
-  const isValid = !errors.firstName && !errors.lastName && !errors.email && !errors.organization;
-
-  const handleNext = () => {
-    setAttemptedSubmit(true);
-    if (isValid) onNext();
-  };
-
+function ContactStep({
+  data,
+  setData,
+  onNext,
+  onBack,
+}: {
+  data: FormData;
+  setData: (d: Partial<FormData>) => void;
+  onNext: () => void;
+  onBack: () => void;
+}) {
   return (
     <>
-      <Counter n={1} total={5} />
-      <Q label="Let's start with you." sub="A few contact details so we can save and follow up on your Total Cost Benchmark." />
+      <BackBtn onClick={onBack} />
+      <Counter n={5} total={5} />
+      <Q
+        label="Want us to follow up?"
+        sub="Optional — share contact details if you’d like someone from our team to reach out. You can view your rough estimate either way."
+      />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 2rem' }}>
-        <UnderlineInput autoFocus placeholder="First name" value={data.firstName} onChange={(v) => setData({ firstName: v })} error={attemptedSubmit ? errors.firstName : undefined} />
-        <UnderlineInput placeholder="Last name" value={data.lastName} onChange={(v) => setData({ lastName: v })} error={attemptedSubmit ? errors.lastName : undefined} />
+        <UnderlineInput autoFocus placeholder="First name (optional)" value={data.firstName} onChange={(v) => setData({ firstName: v })} />
+        <UnderlineInput placeholder="Last name (optional)" value={data.lastName} onChange={(v) => setData({ lastName: v })} />
       </div>
-      <UnderlineInput type="email" placeholder="Email address" value={data.email} onChange={(v) => setData({ email: v })} error={attemptedSubmit ? errors.email : undefined} inputMode="email" />
-      <UnderlineInput placeholder="Organization" value={data.organization} onChange={(v) => setData({ organization: v })} error={attemptedSubmit ? errors.organization : undefined} />
-      <ArrowBtn onClick={handleNext} disabled={false} />
+      <UnderlineInput type="email" placeholder="Email (optional)" value={data.email} onChange={(v) => setData({ email: v })} inputMode="email" />
+      <UnderlineInput placeholder="Organization (optional)" value={data.organization} onChange={(v) => setData({ organization: v })} />
+      <div style={{ marginTop: '2rem' }}>
+        <ArrowBtn onClick={onNext} disabled={false} label="See my estimate" />
+      </div>
     </>
   );
 }
@@ -838,7 +846,7 @@ function ContactStep({ data, setData, onNext }: { data: FormData; setData: (d: P
 function InterestStep({ onYes, onNo }: { onYes: () => void; onNo: () => void }) {
   return (
     <>
-      <Counter n={2} total={5} />
+      <Counter n={1} total={5} />
       <Q label="Do you have a project in mind?" sub="If you do, We can give you a rough estimate right now." />
       <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         {[
@@ -947,7 +955,7 @@ function LandStep({ data, setData, onNext, onBack }: { data: FormData; setData: 
   return (
     <>
       <BackBtn onClick={onBack} />
-      <Counter n={3} total={5} />
+      <Counter n={2} total={5} />
       <Q label="Tell us about the land." />
       <UnderlineTextarea placeholder="Address, neighbourhood, or general area..." value={data.location} onChange={(v) => setData({ location: v })} error={attemptedSubmit ? errors.location : undefined} />
       <UnderlineSelect value={data.province} onChange={(v) => setData({ province: v })} options={PROVINCES} placeholder="Select province or territory" error={attemptedSubmit ? errors.province : undefined} />
@@ -993,7 +1001,7 @@ function ProjectStep({ data, setData, onNext, onBack }: { data: FormData; setDat
   return (
     <>
       <BackBtn onClick={onBack} />
-      <Counter n={4} total={5} />
+      <Counter n={3} total={5} />
       <Q label="Now the proposed building size." />
       <UnderlineInput type="number" inputMode="decimal" placeholder="Land area in square feet" value={data.siteAreaSqFt} onChange={(v) => setData({ siteAreaSqFt: v })} error={attemptedSubmit ? errors.siteAreaSqFt : undefined} />
       <UnderlineInput type="number" inputMode="decimal" placeholder="Total floor area in square feet" value={data.grossFloorAreaSqFt} onChange={(v) => setData({ grossFloorAreaSqFt: v })} error={attemptedSubmit ? errors.grossFloorAreaSqFt : undefined} />
@@ -1033,7 +1041,7 @@ function AffordabilityStep({ data, setData, onNext, onBack }: { data: FormData; 
   return (
     <>
       <BackBtn onClick={onBack} />
-      <Counter n={5} total={5} />
+      <Counter n={4} total={5} />
       <Q label="What kind of housing are you aiming for?" sub="These selections set the rough cost and rent assumptions behind the estimate." />
 
       <SubLabel text="Who are we housing? (select all that apply)" />
@@ -1096,7 +1104,7 @@ function AffordabilityStep({ data, setData, onNext, onBack }: { data: FormData; 
       )}
 
       <div style={{ marginTop: '2.5rem' }}>
-        <ArrowBtn onClick={handleNext} disabled={false} label="Show rough estimate" />
+        <ArrowBtn onClick={handleNext} disabled={false} label="Continue" />
       </div>
     </>
   );
@@ -1118,13 +1126,18 @@ function EstimateStep({
   const output = estimate.output;
   const building = getSelectedBuildingLabel(data);
   const rent = getSelectedRentLabel(data);
+  const canSend = canSendSimplifiedLead(data);
 
   return (
     <>
       <BackBtn onClick={onBack} />
       <Q label="Your development estimate is ready." sub="Contact Anhart for a free consultation on securing your equity gap." compact />
       <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '2rem' }}>
-        <ArrowBtn onClick={onSubmit} disabled={!output || isSubmitting} label={isSubmitting ? 'Sending…' : 'Send this estimate to Anhart'} />
+        <ArrowBtn
+          onClick={onSubmit}
+          disabled={!output || isSubmitting || !canSend}
+          label={isSubmitting ? 'Sending…' : 'Send this estimate to Anhart'}
+        />
         <button
           onClick={onBack}
           style={{
@@ -1147,6 +1160,11 @@ function EstimateStep({
           Adjust inputs
         </button>
       </div>
+      {output && !canSend && (
+        <p style={{ margin: '-1rem 0 1.5rem', fontFamily: 'Roboto, sans-serif', fontSize: '0.88rem', color: textMuted, lineHeight: 1.5, maxWidth: 520 }}>
+          To send this estimate to our team, go back one step and fill in your name, email, and organization. Your numbers above are still yours to keep either way.
+        </p>
+      )}
       {output ? (
         <>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2rem' }}>
@@ -1227,8 +1245,14 @@ function CompleteStep({ data, estimate, onRestart }: { data: FormData; estimate:
         ? 'None'
         : 'Not specified';
 
+  const contactName = [data.firstName, data.lastName].map((s) => s.trim()).filter(Boolean).join(' ');
+  const contactDisplay =
+    contactName || data.email.trim()
+      ? [contactName || undefined, data.email.trim() || undefined].filter(Boolean).join(' · ')
+      : 'Not shared';
+
   const rows = [
-    ['Contact', `${data.firstName} ${data.lastName} · ${data.email}`],
+    ['Contact', contactDisplay],
     ['Location', `${data.location}${data.province ? `, ${data.province}` : ''}`],
     ['Building', getSelectedBuildingLabel(data)],
     ['Rent model', getSelectedRentLabel(data)],
@@ -1242,7 +1266,10 @@ function CompleteStep({ data, estimate, onRestart }: { data: FormData; estimate:
       <p style={{ fontFamily: 'Roboto, sans-serif', fontSize: '0.8rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: brandPrimary, marginBottom: '2rem', fontWeight: 600 }}>
         Done
       </p>
-      <Q label={`Thank you, ${data.firstName}.`} sub="We've received your rough TDCE request and our team will follow up with next-step advice." />
+      <Q
+        label={data.firstName.trim() ? `Thank you, ${data.firstName.trim()}.` : 'Thank you.'}
+        sub="We've received your rough TDCE request and our team will follow up with next-step advice."
+      />
       <div style={{ borderTop: `1px solid ${borderLight}`, paddingTop: '2rem', marginBottom: '3.5rem' }}>
         {rows.map(([label, value]) => (
           <div key={label} style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: '1.2rem', fontFamily: 'Roboto, sans-serif' }}>
@@ -1301,7 +1328,7 @@ function CompleteStep({ data, estimate, onRestart }: { data: FormData; estimate:
 }
 
 export function TdceSimplifiedView({ onBack }: TdceSimplifiedViewProps) {
-  const [step, setStep] = useState<Step>('contact');
+  const [step, setStep] = useState<Step>('interest');
   const [form, setForm] = useState<FormData>(defaultData);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -1315,6 +1342,7 @@ export function TdceSimplifiedView({ onBack }: TdceSimplifiedViewProps) {
   const estimate = useMemo(() => buildHomeownerEstimate(form), [form]);
 
   const handleCompleteSubmit = useCallback(async () => {
+    if (!canSendSimplifiedLead(form)) return;
     setIsSubmitting(true);
     try {
       const body = new URLSearchParams({
@@ -1346,7 +1374,7 @@ export function TdceSimplifiedView({ onBack }: TdceSimplifiedViewProps) {
     }
   }, [estimate, form, toast]);
 
-  const progressSteps: Step[] = ['contact', 'interest', 'land', 'project', 'affordability'];
+  const progressSteps: Step[] = ['interest', 'land', 'project', 'affordability', 'contact'];
   const pct = Math.max(0, (progressSteps.indexOf(step) / (progressSteps.length - 1)) * 100);
   const showProgress = !['no-interest', 'estimate', 'complete'].includes(step);
 
@@ -1394,14 +1422,14 @@ export function TdceSimplifiedView({ onBack }: TdceSimplifiedViewProps) {
         )}
 
         <div key={step} style={{ animation: 'fadeUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both' }}>
-          {step === 'contact' && <ContactStep data={form} setData={update} onNext={() => setStep('interest')} />}
           {step === 'interest' && <InterestStep onYes={() => setStep('land')} onNo={() => setStep('no-interest')} />}
           {step === 'no-interest' && <NoInterestStep />}
           {step === 'land' && <LandStep data={form} setData={update} onNext={() => setStep('project')} onBack={() => setStep('interest')} />}
           {step === 'project' && <ProjectStep data={form} setData={update} onNext={() => setStep('affordability')} onBack={() => setStep('land')} />}
-          {step === 'affordability' && <AffordabilityStep data={form} setData={update} onNext={() => setStep('estimate')} onBack={() => setStep('project')} />}
-          {step === 'estimate' && <EstimateStep data={form} estimate={estimate} onBack={() => setStep('affordability')} onSubmit={handleCompleteSubmit} isSubmitting={isSubmitting} />}
-          {step === 'complete' && <CompleteStep data={form} estimate={estimate} onRestart={() => { setStep('contact'); setForm(defaultData); }} />}
+          {step === 'affordability' && <AffordabilityStep data={form} setData={update} onNext={() => setStep('contact')} onBack={() => setStep('project')} />}
+          {step === 'contact' && <ContactStep data={form} setData={update} onNext={() => setStep('estimate')} onBack={() => setStep('affordability')} />}
+          {step === 'estimate' && <EstimateStep data={form} estimate={estimate} onBack={() => setStep('contact')} onSubmit={handleCompleteSubmit} isSubmitting={isSubmitting} />}
+          {step === 'complete' && <CompleteStep data={form} estimate={estimate} onRestart={() => { setStep('interest'); setForm(defaultData); }} />}
         </div>
       </div>
     </div>
