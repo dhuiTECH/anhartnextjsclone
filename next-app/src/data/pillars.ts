@@ -39,7 +39,7 @@ export const howDoWeDoItPillars = [
     title: "Altruism",
     description:
       "We apply decentralized systems theory to create interconnected housing solutions that strengthen communities and streamline access to financing and capital.",
-    image: "expert-consultation",
+    image: "altriusm",
     backTitle: "Altruism in Action",
     backDescription:
       "A key part of our system involves guiding impact investors to secure patient capital, ensuring financial goals are aligned with long-term community well-being.",

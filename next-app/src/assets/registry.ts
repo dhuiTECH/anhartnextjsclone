@@ -187,6 +187,9 @@ import promotionalVideoThumbnailSm from './baseAssets/promotionalVideoThumbnail-
 import promotionalVideoThumbnailMd from './baseAssets/promotionalVideoThumbnail-384x216.webp';
 import promotionalVideoThumbnailLg from './baseAssets/promotionalVideoThumbnail-512x288.webp';
 import promotionalVideoThumbnailXl from './baseAssets/promotionalVideoThumbnail-640x360.webp';
+import altriusmFallback from './altriusm.jpg';
+import communitychampionsFallback from './communitychampions.jpg';
+import projectsFallback from './projects.jpg';
 import researchHeroSm from './baseAssets/research-hero-640x360.webp';
 import researchHeroMd from './baseAssets/research-hero-768x432.webp';
 import researchHeroLg from './baseAssets/research-hero-1024x576.webp';
@@ -370,6 +373,11 @@ export const imageRegistry: Record<string, ImageEntry> = {
     fallback: expertConsultationSm,
     dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
   },
+  'altriusm': {
+    webp: { sm: altriusmFallback, md: altriusmFallback, lg: altriusmFallback, xl: altriusmFallback },
+    fallback: altriusmFallback,
+    dimensions: { sm: { width: 512, height: 341 }, md: { width: 1024, height: 683 }, lg: { width: 2048, height: 1365 }, xl: { width: 2048, height: 1365 } },
+  },
   'housingafford': {
     webp: { sm: housingaffordSm, md: housingaffordMd, lg: housingaffordLg, xl: housingaffordXl },
     fallback: housingaffordSm,
@@ -415,6 +423,11 @@ export const imageRegistry: Record<string, ImageEntry> = {
     fallback: portfolioHeroSm,
     dimensions: { sm: { width: 640, height: 360 }, md: { width: 768, height: 432 }, lg: { width: 1024, height: 576 }, xl: { width: 1280, height: 720 } },
   },
+  'projects': {
+    webp: { sm: projectsFallback, md: projectsFallback, lg: projectsFallback, xl: projectsFallback },
+    fallback: projectsFallback,
+    dimensions: { sm: { width: 598, height: 448 }, md: { width: 1195, height: 896 }, lg: { width: 2390, height: 1792 }, xl: { width: 2390, height: 1792 } },
+  },
   'programs-hero': {
     webp: { sm: programsHeroSm, md: programsHeroMd, lg: programsHeroLg, xl: programsHeroXl },
     fallback: programsHeroSm,
@@ -456,9 +469,9 @@ export const imageRegistry: Record<string, ImageEntry> = {
     dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
   },
   'communityChampions': {
-    webp: { sm: communityChampionsSm, md: communityChampionsMd, lg: communityChampionsLg, xl: communityChampionsXl },
-    fallback: communityChampionsSm,
-    dimensions: { sm: { width: 320, height: 180 }, md: { width: 384, height: 216 }, lg: { width: 512, height: 288 }, xl: { width: 640, height: 360 } },
+    webp: { sm: communitychampionsFallback, md: communitychampionsFallback, lg: communitychampionsFallback, xl: communitychampionsFallback },
+    fallback: communitychampionsFallback,
+    dimensions: { sm: { width: 300, height: 199 }, md: { width: 600, height: 399 }, lg: { width: 600, height: 399 }, xl: { width: 600, height: 399 } },
   },
   'systemsNetwork': {
     webp: { sm: systemsNetworkSm, md: systemsNetworkMd, lg: systemsNetworkLg, xl: systemsNetworkXl },

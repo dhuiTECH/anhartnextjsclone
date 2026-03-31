@@ -225,20 +225,16 @@ export const Hero = () => {
                   {heroCarouselPartners
                     .filter((partner) => !partner.hidden)
                     .map((partner, index) => (
-                    <a
+                    <div
                       key={index}
-                      href={partner.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${partner.name} (opens in new tab)`}
-                      className="flex h-14 w-36 shrink-0 items-center justify-center rounded-md bg-white/5 px-2 py-1 opacity-70 backdrop-blur-sm transition-opacity duration-300 hover:opacity-100 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/80 sm:h-16 sm:w-44"
+                      className="flex h-14 w-36 shrink-0 items-center justify-center rounded-md bg-white/5 px-2 py-1 opacity-70 backdrop-blur-sm transition-opacity duration-300 sm:h-16 sm:w-44"
                     >
                       <img
                         src={partner.src}
-                        alt=""
+                        alt={partner.name}
                         className="pointer-events-none block max-h-full max-w-full object-contain object-center"
                       />
-                    </a>
+                    </div>
                   ))}
                 </div>
               ))}

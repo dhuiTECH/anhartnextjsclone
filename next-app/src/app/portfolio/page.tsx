@@ -346,7 +346,7 @@ export default function PortfolioPage() {
       <Header />
       <main>
         <HeroBanner 
-          backgroundImage="portfolio-hero" 
+          backgroundImage="projects" 
           title="Our Development Projects" 
           contentPosition="right" 
         />
