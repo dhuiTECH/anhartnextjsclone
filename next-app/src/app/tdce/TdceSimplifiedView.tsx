@@ -1379,7 +1379,7 @@ export function TdceSimplifiedView({ onBack }: TdceSimplifiedViewProps) {
   const showProgress = !['no-interest', 'estimate', 'complete'].includes(step);
 
   return (
-    <div style={{ minHeight: '100vh', padding: '4rem 1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ minHeight: '100vh', padding: '6rem 1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <style>{`
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(20px) }
