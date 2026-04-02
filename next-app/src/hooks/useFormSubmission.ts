@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { logger } from "@/utils/logger";
 
@@ -84,6 +85,7 @@ const isValidGoogleScriptUrl = (url: string | undefined): boolean => {
 export const useFormSubmission = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
 
   // Security: Google Apps Script URL from environment variable
   const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
@@ -208,15 +210,8 @@ export const useFormSubmission = () => {
           throw new Error(data.error ?? "Submission was not accepted.");
         }
 
-        toast({
-          title: "Message Sent Successfully!",
-          description: "Thank you for your submission. We have received your submission and will get back to you as soon as possible.",
-        });
-
-        if (typeof window !== "undefined" && window.gtag) {
-          window.gtag("event", "conversion", { send_to: "AW-17630924755/KUO-CIXqqNgbENOfitdB" });
-        }
-
+        // Thank-you page loads the Google Ads conversion event snippet (single fire, no duplicate with gtag here).
+        router.replace("/thank-you");
         return true;
       } catch (fetchError: unknown) {
         const message = fetchError instanceof Error ? fetchError.message : "Failed to submit form.";

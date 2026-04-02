@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import Link from "next/link";
+import { ThankYouClient } from "./ThankYouClient";
 
 export const metadata: Metadata = {
   title: "Thank you",
@@ -15,18 +15,7 @@ export default function ThankYouPage() {
       <Script id="google-ads-lead-conversion" strategy="afterInteractive">
         {`gtag('event', 'conversion', {'send_to': 'AW-17630924755/KUO-CIXqqNgbENOfitdB'});`}
       </Script>
-      <main className="mx-auto flex min-h-[60vh] max-w-lg flex-col items-center justify-center px-6 py-16 text-center">
-        <h1 className="mb-4 font-semibold text-2xl tracking-tight">Thank you</h1>
-        <p className="mb-8 text-muted-foreground">
-          We have received your message and will get back to you as soon as possible.
-        </p>
-        <Link
-          href="/"
-          className="text-primary underline-offset-4 hover:underline"
-        >
-          Back to home
-        </Link>
-      </main>
+      <ThankYouClient />
     </>
   );
 }
