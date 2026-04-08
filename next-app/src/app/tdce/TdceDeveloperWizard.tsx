@@ -282,7 +282,7 @@ function UnderlineSelect({
 
 /* ── Step Components ── */
 
-function ContactStep({ data, update, onNext }: { data: TdceInput; update: (d: Partial<TdceInput>) => void; onNext: () => void }) {
+function ContactStep({ data, update, onNext, onBack }: { data: TdceInput; update: (d: Partial<TdceInput>) => void; onNext: () => void; onBack: () => void }) {
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
   const parts = (data.meta.contactName || '').trim().split(/\s+/);
@@ -320,6 +320,18 @@ function ContactStep({ data, update, onNext }: { data: TdceInput; update: (d: Pa
     }
   };
 
+  const handleSkipContact = () => {
+    setAttemptedSubmit(false);
+    update({
+      meta: {
+        ...data.meta,
+        contactName: '',
+        contactEmail: '',
+      },
+    });
+    onNext();
+  };
+
   const setFirstName = (v: string) => update({ meta: { ...data.meta, contactName: `${v} ${lastName}`.trim() } });
   const setLastName = (v: string) => update({ meta: { ...data.meta, contactName: `${firstName} ${v}`.trim() } });
   const setEmail = (v: string) => update({ meta: { ...data.meta, contactEmail: v } });
@@ -327,15 +339,39 @@ function ContactStep({ data, update, onNext }: { data: TdceInput; update: (d: Pa
 
   return (
     <>
-      <Counter n={1} total={6} />
-      <Q label="Let's start with you." sub="A few contact details so we can save and follow up on your Total Cost Benchmark." />
+      <BackBtn onClick={onBack} />
+      <Counter n={6} total={6} />
+      <Q
+        label="Almost there—how can we reach you?"
+        sub="Next you'll see a preview of your estimate. You can skip this step if you prefer not to share personal or contact information yet—you can always add it later from the preview. To unlock the full report with our team, you'll use the option on that screen."
+      />
+      <button
+        type="button"
+        onClick={handleSkipContact}
+        style={{
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          color: brandPrimary,
+          fontFamily: 'Roboto, sans-serif',
+          fontSize: '0.95rem',
+          fontWeight: 500,
+          textDecoration: 'underline',
+          textUnderlineOffset: '4px',
+          padding: 0,
+          marginBottom: '2rem',
+          textAlign: 'left',
+        }}
+      >
+        Preview without contact information
+      </button>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 2rem' }}>
         <UnderlineInput autoFocus placeholder="First name" value={firstName} onChange={setFirstName} error={attemptedSubmit ? errors.firstName : undefined} />
         <UnderlineInput placeholder="Last name" value={lastName} onChange={setLastName} error={attemptedSubmit ? errors.lastName : undefined} />
       </div>
       <UnderlineInput type="email" placeholder="Email address" value={email} onChange={setEmail} error={attemptedSubmit ? errors.email : undefined} inputMode="email" />
       <UnderlineInput placeholder="Organization" value={organization} onChange={setOrganization} error={attemptedSubmit ? errors.organization : undefined} />
-      <ArrowBtn onClick={handleNext} disabled={false} />
+      <ArrowBtn onClick={handleNext} disabled={false} label="Preview document" />
     </>
   );
 }
@@ -345,7 +381,7 @@ function ProjectInfoStep({ data, update, onNext }: { data: TdceInput; update: (d
   
   return (
     <>
-      <Counter n={2} total={6} />
+      <Counter n={1} total={6} />
       <Q label="Let's start with project basics." sub="Where is this development located and who is behind it?" />
       <UnderlineInput 
         autoFocus 
@@ -416,7 +452,7 @@ function SiteDetailsStep({ data, update, onNext, onBack }: { data: TdceInput; up
   return (
     <>
       <BackBtn onClick={onBack} />
-      <Counter n={3} total={6} />
+      <Counter n={2} total={6} />
       <Q label="Tell us about the site and building shape." sub="How much land are we working with and what's the building size?" />
       
       <UnderlineSelect 
@@ -497,7 +533,7 @@ function BuildingProgramStep({ data, update, onNext, onBack }: { data: TdceInput
   return (
     <>
       <BackBtn onClick={onBack} />
-      <Counter n={4} total={6} />
+      <Counter n={3} total={6} />
       <Q label="What's the residential program?" sub="How many homes and what type of building is this?" />
       
       <UnderlineInput 
@@ -629,7 +665,7 @@ function FinancialsStep({ data, update, onNext, onBack }: { data: TdceInput; upd
   return (
     <>
       <BackBtn onClick={onBack} />
-      <Counter n={5} total={6} />
+      <Counter n={4} total={6} />
       <Q label="Let's talk dollars." sub="Land acquisition and construction costs are the biggest factors." />
       
       <UnderlineInput 
@@ -752,7 +788,7 @@ function OperationsStep({ data, update, onNext, onBack }: { data: TdceInput; upd
   return (
     <>
       <BackBtn onClick={onBack} />
-      <Counter n={6} total={6} />
+      <Counter n={5} total={6} />
       <Q label="Lastly, operating assumptions." sub="What are the expected rents and expenses?" />
       
       <div style={{ marginBottom: '2.5rem' }}>
@@ -848,14 +884,14 @@ function OperationsStep({ data, update, onNext, onBack }: { data: TdceInput; upd
         />
       </div>
 
-      <ArrowBtn onClick={onNext} label="Review Estimate" />
+      <ArrowBtn onClick={onNext} label="Continue" />
     </>
   );
 }
 
 /* ══ Main Wizard Component ══ */
-export function TdceDeveloperWizard({ onBack, onComplete }: TdceDeveloperWizardProps) {
-  const [step, setStep] = useState<Step>('contact');
+export function TdceDeveloperWizard({ onBack, onComplete, onSubmit }: TdceDeveloperWizardProps) {
+  const [step, setStep] = useState<Step>('project-info');
   const [form, setForm] = useState<TdceInput>(getEmptyTdceInput());
 
   useEffect(() => {
@@ -873,11 +909,11 @@ export function TdceDeveloperWizard({ onBack, onComplete }: TdceDeveloperWizardP
     }));
   }, []);
 
-  const progressSteps: Step[] = ['contact', 'project-info', 'site-details', 'unit-mix', 'financials', 'operations', 'review'];
+  const progressSteps: Step[] = ['project-info', 'site-details', 'unit-mix', 'financials', 'operations', 'contact', 'review'];
   const pct = (progressSteps.indexOf(step) / (progressSteps.length - 1)) * 100;
 
   return (
-    <div style={{ minHeight: '100vh', padding: '4rem 1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ minHeight: '100vh', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch', paddingBottom: '4rem' }}>
       <style>{`
         @keyframes fadeUp { 
           from { opacity: 0; transform: translateY(20px) } 
@@ -885,35 +921,7 @@ export function TdceDeveloperWizard({ onBack, onComplete }: TdceDeveloperWizardP
         }
       `}</style>
 
-      <div style={{ width: '100%', maxWidth: 650 }}>
-        {/* Back to choose path — above the gray line */}
-        <button
-          onClick={onBack}
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            color: textMuted,
-            fontFamily: 'Roboto, sans-serif',
-            fontSize: '0.8rem',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            padding: 0,
-            marginBottom: '1rem',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            transition: 'color 0.2s ease',
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = textDark; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = textMuted; }}
-        >
-          <svg width="18" height="10" viewBox="0 0 18 10" fill="none">
-            <path d="M17 5H1M1 5L5 1M1 5L5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          Back to choose path
-        </button>
-
+      <div style={{ width: '100%', maxWidth: 650, margin: '0 auto', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
         {/* Progress Bar (gray line) */}
         {step !== 'review' && (
           <div style={{ width: '100%', height: 4, background: borderLight, borderRadius: 2, marginBottom: '4rem', position: 'relative', overflow: 'hidden' }}>
@@ -922,22 +930,52 @@ export function TdceDeveloperWizard({ onBack, onComplete }: TdceDeveloperWizardP
         )}
 
         {/* content */}
-        <div key={step} style={{ animation: 'fadeUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both' }}>
-          {step === 'contact' && <ContactStep data={form} update={update} onNext={() => setStep('project-info')} />}
+        <div key={step} style={{ flex: 1, animation: 'fadeUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both' }}>
           {step === 'project-info' && <ProjectInfoStep data={form} update={update} onNext={() => setStep('site-details')} />}
           {step === 'site-details' && <SiteDetailsStep data={form} update={update} onNext={() => setStep('unit-mix')} onBack={() => setStep('project-info')} />}
           {step === 'unit-mix' && <BuildingProgramStep data={form} update={update} onNext={() => setStep('financials')} onBack={() => setStep('site-details')} />}
           {step === 'financials' && <FinancialsStep data={form} update={update} onNext={() => setStep('operations')} onBack={() => setStep('unit-mix')} />}
-          {step === 'operations' && <OperationsStep data={form} update={update} onNext={() => setStep('review')} onBack={() => setStep('financials')} />}
+          {step === 'operations' && <OperationsStep data={form} update={update} onNext={() => setStep('contact')} onBack={() => setStep('financials')} />}
+          {step === 'contact' && <ContactStep data={form} update={update} onNext={() => setStep('review')} onBack={() => setStep('operations')} />}
           {step === 'review' && (
             <TdceReview 
               data={form} 
               onEdit={(targetStep) => setStep(targetStep as Step)} 
               onComplete={() => onComplete(form)}
               onSubmit={() => onSubmit(form)}
-              onBack={() => setStep('operations')}
+              onBack={() => setStep('contact')}
             />
           )}
+        </div>
+
+        {/* Back to choose path — bottom of section */}
+        <div style={{ width: '100%', marginTop: 'auto', paddingTop: '2.5rem' }}>
+          <button
+            type="button"
+            onClick={onBack}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: textMuted,
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '0.8rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              padding: 0,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              transition: 'color 0.2s ease',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = textDark; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = textMuted; }}
+          >
+            <svg width="18" height="10" viewBox="0 0 18 10" fill="none" aria-hidden>
+              <path d="M17 5H1M1 5L5 1M1 5L5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Back to choose path
+          </button>
         </div>
       </div>
     </div>

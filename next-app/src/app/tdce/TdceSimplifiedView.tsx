@@ -822,6 +822,11 @@ function ContactStep({
   onNext: () => void;
   onBack: () => void;
 }) {
+  const handleSkipContact = () => {
+    setData({ firstName: '', lastName: '', email: '', organization: '' });
+    onNext();
+  };
+
   return (
     <>
       <BackBtn onClick={onBack} />
@@ -830,6 +835,37 @@ function ContactStep({
         label="Want us to follow up?"
         sub="Optional — share contact details if you’d like someone from our team to reach out. You can view your rough estimate either way."
       />
+      <button
+        type="button"
+        onClick={handleSkipContact}
+        style={{
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          color: brandPrimary,
+          fontFamily: 'Roboto, sans-serif',
+          fontSize: '0.95rem',
+          fontWeight: 500,
+          textDecoration: 'underline',
+          textUnderlineOffset: '4px',
+          padding: 0,
+          marginBottom: '1.25rem',
+          textAlign: 'left',
+        }}
+      >
+        Continue without contact information
+      </button>
+      <p
+        style={{
+          fontFamily: 'Roboto, sans-serif',
+          fontSize: '0.88rem',
+          color: textMuted,
+          lineHeight: 1.55,
+          margin: '0 0 1.75rem',
+        }}
+      >
+        We won’t ask for name, email, or organization to show your numbers. You can still send the estimate to our team later if you add those details.
+      </p>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 2rem' }}>
         <UnderlineInput autoFocus placeholder="First name (optional)" value={data.firstName} onChange={(v) => setData({ firstName: v })} />
         <UnderlineInput placeholder="Last name (optional)" value={data.lastName} onChange={(v) => setData({ lastName: v })} />
@@ -1013,7 +1049,19 @@ function ProjectStep({ data, setData, onNext, onBack }: { data: FormData; setDat
   );
 }
 
-function AffordabilityStep({ data, setData, onNext, onBack }: { data: FormData; setData: (d: Partial<FormData>) => void; onNext: () => void; onBack: () => void }) {
+function AffordabilityStep({
+  data,
+  setData,
+  onNext,
+  onSkipToEstimate,
+  onBack,
+}: {
+  data: FormData;
+  setData: (d: Partial<FormData>) => void;
+  onNext: () => void;
+  onSkipToEstimate: () => void;
+  onBack: () => void;
+}) {
   const [attemptedSubmit, setAttemptedSubmit] = useState(false);
 
   const toggle = (id: string) => {
@@ -1036,6 +1084,13 @@ function AffordabilityStep({ data, setData, onNext, onBack }: { data: FormData; 
   const handleNext = () => {
     setAttemptedSubmit(true);
     if (isValid) onNext();
+  };
+
+  const handleSkipToEstimate = () => {
+    setAttemptedSubmit(true);
+    if (!isValid) return;
+    setData({ firstName: '', lastName: '', email: '', organization: '' });
+    onSkipToEstimate();
   };
 
   return (
@@ -1103,8 +1158,33 @@ function AffordabilityStep({ data, setData, onNext, onBack }: { data: FormData; 
         </div>
       )}
 
-      <div style={{ marginTop: '2.5rem' }}>
+      <div style={{ marginTop: '2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: '0.5rem' }}>
         <ArrowBtn onClick={handleNext} disabled={false} label="Continue" />
+        <button
+          type="button"
+          onClick={handleSkipToEstimate}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            color: textMuted,
+            fontFamily: 'Roboto, sans-serif',
+            fontSize: '0.88rem',
+            fontWeight: 500,
+            letterSpacing: '0.04em',
+            padding: '10px 0 0',
+            textAlign: 'center',
+            transition: 'color 0.2s ease',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = brandPrimary;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = textMuted;
+          }}
+        >
+          Skip contact — show my estimate now
+        </button>
       </div>
     </>
   );
@@ -1379,7 +1459,7 @@ export function TdceSimplifiedView({ onBack }: TdceSimplifiedViewProps) {
   const showProgress = !['no-interest', 'estimate', 'complete'].includes(step);
 
   return (
-    <div style={{ minHeight: '100vh', padding: '6rem 1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ minHeight: '100vh', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch', paddingBottom: '4rem' }}>
       <style>{`
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(20px) }
@@ -1387,49 +1467,60 @@ export function TdceSimplifiedView({ onBack }: TdceSimplifiedViewProps) {
         }
       `}</style>
 
-      <div style={{ width: '100%', maxWidth: 650 }}>
-        <button
-          onClick={onBack}
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            color: textMuted,
-            fontFamily: 'Roboto, sans-serif',
-            fontSize: '0.8rem',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-            marginBottom: '3rem',
-            padding: 0,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            transition: 'color 0.2s ease',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = textDark)}
-          onMouseLeave={(e) => (e.currentTarget.style.color = textMuted)}
-        >
-          <svg width="18" height="10" viewBox="0 0 18 10" fill="none">
-            <path d="M17 5H1M1 5L5 1M1 5L5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          Back to choose your path
-        </button>
-
+      <div style={{ width: '100%', maxWidth: 650, margin: '0 auto', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
         {showProgress && (
           <div style={{ width: '100%', height: 4, background: borderLight, borderRadius: 2, marginBottom: '4rem', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', top: 0, left: 0, height: '100%', width: `${pct}%`, background: brandPrimary, transition: 'width 0.6s cubic-bezier(0.25, 1, 0.5, 1)' }} />
           </div>
         )}
 
-        <div key={step} style={{ animation: 'fadeUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both' }}>
+        <div key={step} style={{ flex: 1, animation: 'fadeUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both' }}>
           {step === 'interest' && <InterestStep onYes={() => setStep('land')} onNo={() => setStep('no-interest')} />}
           {step === 'no-interest' && <NoInterestStep />}
           {step === 'land' && <LandStep data={form} setData={update} onNext={() => setStep('project')} onBack={() => setStep('interest')} />}
           {step === 'project' && <ProjectStep data={form} setData={update} onNext={() => setStep('affordability')} onBack={() => setStep('land')} />}
-          {step === 'affordability' && <AffordabilityStep data={form} setData={update} onNext={() => setStep('contact')} onBack={() => setStep('project')} />}
+          {step === 'affordability' && (
+            <AffordabilityStep
+              data={form}
+              setData={update}
+              onNext={() => setStep('contact')}
+              onSkipToEstimate={() => setStep('estimate')}
+              onBack={() => setStep('project')}
+            />
+          )}
           {step === 'contact' && <ContactStep data={form} setData={update} onNext={() => setStep('estimate')} onBack={() => setStep('affordability')} />}
           {step === 'estimate' && <EstimateStep data={form} estimate={estimate} onBack={() => setStep('contact')} onSubmit={handleCompleteSubmit} isSubmitting={isSubmitting} />}
           {step === 'complete' && <CompleteStep data={form} estimate={estimate} onRestart={() => { setStep('interest'); setForm(defaultData); }} />}
+        </div>
+
+        {/* Back to choose your path — bottom of section */}
+        <div style={{ width: '100%', marginTop: 'auto', paddingTop: '2.5rem' }}>
+          <button
+            type="button"
+            onClick={onBack}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: textMuted,
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '0.8rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              padding: 0,
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              transition: 'color 0.2s ease',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = textDark)}
+            onMouseLeave={(e) => (e.currentTarget.style.color = textMuted)}
+          >
+            <svg width="18" height="10" viewBox="0 0 18 10" fill="none" aria-hidden>
+              <path d="M17 5H1M1 5L5 1M1 5L5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Back to choose your path
+          </button>
         </div>
       </div>
     </div>
