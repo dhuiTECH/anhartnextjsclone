@@ -36,7 +36,7 @@ const portfolioDropdown = [
       "Explore a few of our affordable housing projects across Canada",
   },
   {
-    name: "TDCE Calculator",
+    name: "Housing Feasibility Calculator",
     href: "/tdce",
     description:
       "Run a full development cost estimate using industry benchmarks and affordable housing parameters",
@@ -134,7 +134,10 @@ export const Header = () => {
         <nav className="w-full flex items-center justify-between px-3 lg:px-12 h-full">
           {/* Left side: Logo - smaller with more breathing room */}
           <div className="flex items-center gap-x-6 h-full pt-1 pb-2">
-            <a href="/" className="flex items-center py-2 px-3 md:py-3 md:px-4 -ml-2 md:-ml-1 rounded-md hover:bg-black/5 transition-colors">
+            <a
+              href="/"
+              className="flex items-center py-2 px-3 md:py-3 md:px-4 -ml-2 md:-ml-1 rounded-md hover:bg-black/5 transition-colors"
+            >
               <picture>
                 <source srcSet={anhartLogoWebp} type="image/webp" />
                 <img
