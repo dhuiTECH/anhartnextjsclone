@@ -43,9 +43,9 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
       
       {/* Header */}
       <div className="text-center mb-16 w-full flex flex-col items-center">
-        <h2 className="text-4xl md:text-5xl font-bold text-gray-900/90 tracking-tight">
-          How can we help you build today?
-        </h2>
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900/90 tracking-tight">
+          Plan Your Housing Project with the TDCE Calculator
+        </h1>
       </div>
 
       {/* Two Cards - Increased max-width and gap for better breathing room */}
