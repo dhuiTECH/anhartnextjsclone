@@ -47,7 +47,7 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
           Real Estate Feasibility & Housing Calculator
         </h1>
         <h2 className="text-xl md:text-2xl font-bold text-gray-900/60 tracking-tight mt-2">
-          Generate Pro-forma Estimates for Your Next Project for Free.
+          Generate Pro-forma Estimates for Your Next Development Project for Free.
         </h2>
       </div>
 

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: {
-    absolute: 'Anhart | Housing Calculator',
+    absolute: 'Anhart | Free Housing Feasibility Calculator',
   },
   description:
     'Plan your housing project with Anhart’s Total Development Cost Estimator. Get feasibility insights and pre-development cost assumptions for municipalities, non-profits, and developers.',
