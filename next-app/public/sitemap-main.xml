@@ -39,6 +39,14 @@
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+
+  <!-- TDCE Housing Calculator -->
+  <url>
+    <loc>https://anhart.ca/tdce</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
   
   <!-- Media Page -->
   <url>
