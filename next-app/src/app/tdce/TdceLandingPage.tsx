@@ -44,8 +44,11 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
       {/* Header */}
       <div className="text-center mb-16 w-full flex flex-col items-center">
         <h1 className="text-4xl md:text-5xl font-bold text-gray-900/90 tracking-tight">
-          Plan Your Housing Project with the TDCE Calculator
+          Real Estate Feasibility & Housing Calculator
         </h1>
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900/60 tracking-tight mt-2">
+          Generate Pro-forma Estimates for Your Next Project for Free.
+        </h2>
       </div>
 
       {/* Two Cards - Increased max-width and gap for better breathing room */}
@@ -64,14 +67,14 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
               <HouseIcon className="w-8 h-8" />
             </div>
             <p className={`text-xs font-bold uppercase tracking-[0.15em] ${brandRedClass} mb-3`}>
-              For Municipalities, Non-profits and Indigenous Organizations
+              For Municipalities, Community, Non-Profit Housing & Indigenous Organizations
             </p>
             {/* Increased Title Size */}
             <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight">
               Affordable Housing Calculator
             </h3>
             <p className="text-base text-gray-500 leading-relaxed mb-8">
-              Get a breakdown of costs, benchmarks, and assumptions for your affordable housing project.
+              Access benchmarks and cost assumptions tailored for non-profit and indigenous housing developments.
             </p>
             
           </div>
@@ -99,10 +102,10 @@ export function TdceLandingPage({ onSelectHomeowners, onSelectDevelopers }: Tdce
             </p>
             {/* Increased Title Size */}
             <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">
-              Check project feasibility
+              Development Feasibility Pro-forma
             </h3>
             <p className="text-base text-gray-400 leading-relaxed mb-8">
-              Run a full development cost estimate using current industry benchmarks and affordable housing parameters.
+              Run deep-dive cost estimates using real-time industry benchmarks and standardized financial parameters.
             </p>
           </div>
 

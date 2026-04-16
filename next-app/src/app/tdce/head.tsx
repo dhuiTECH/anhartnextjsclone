@@ -1,5 +1,5 @@
 export default function Head() {
-  const title = 'TDCE Calculator | Affordable Housing Project Feasibility & Costs';
+  const title = 'Anhart | Housing Calculator';
   const description =
     'Plan your housing project with Anhart’s Total Development Cost Estimator. Get feasibility insights and pre-development cost assumptions for municipalities, non-profits, and developers.';
   const siteUrl = 'https://anhart.ca/tdce'; // Replace with your actual domain
