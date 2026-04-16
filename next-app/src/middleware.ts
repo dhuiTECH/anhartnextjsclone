@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { checkRateLimit, getClientIP } from "@/lib/rate-limit";
 
+const unifiedCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://googleads.g.doubleclick.net https://googleads.googleapis.com https://pagead2.googlesyndication.com https://www.googleadservices.com https://challenges.cloudflare.com https://cdn.cloudflare.com; script-src-elem 'self' 'unsafe-inline' blob: https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://googleads.g.doubleclick.net https://googleads.googleapis.com https://pagead2.googlesyndication.com https://www.googleadservices.com https://challenges.cloudflare.com https://cdn.cloudflare.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com https://googleads.g.doubleclick.net; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: https://maps.gstatic.com https://www.google.com https://googleads.g.doubleclick.net https://www.googleadservices.com https://pagead2.googlesyndication.com; connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://stats.g.doubleclick.net https://maps.googleapis.com https://script.google.com https://*.googleusercontent.com https://*.googleapis.com https://www.google.com https://googleads.g.doubleclick.net https://googleads.googleapis.com https://pagead2.googlesyndication.com https://www.googleadservices.com https://challenges.cloudflare.com https://cdn.cloudflare.com https://api.indexnow.org https://www.bing.com https://yandex.com https://*.supabase.co https://supabase.co; frame-src 'self' https://www.googletagmanager.com https://www.googletagmanager.com/ns.html https://www.youtube.com https://www.youtube-nocookie.com https://challenges.cloudflare.com https://cdn.cloudflare.com https://www.google.com https://maps.google.com https://tpc.googlesyndication.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://td.doubleclick.net; base-uri 'self'; form-action 'self' https://www.googleadservices.com https://googleads.g.doubleclick.net;";
+
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get("host") || "";
   const url = request.nextUrl;
@@ -113,26 +115,19 @@ export function middleware(request: NextRequest) {
     response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
     response.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
     
-    // Additional CSP for admin routes (stricter)
-    // Explicitly set script-src to avoid CSP warnings and allow Turnstile
     response.headers.set(
       'Content-Security-Policy',
-      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.googletagmanager.com https://challenges.cloudflare.com https://challenges.cloudflare.com/turnstile/v0/api.js; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://www.googletagmanager.com https://*.supabase.co https://supabase.co https://challenges.cloudflare.com; frame-src 'self' https://www.googletagmanager.com https://www.googletagmanager.com/ns.html https://challenges.cloudflare.com; base-uri 'self'; form-action 'self';"
+      unifiedCsp
     );
     
     return response;
   }
 
-  // For non-admin routes, ensure CSP allows Supabase connections
-  // This is important for pages like /portfolio that need to connect to Supabase
   const response = NextResponse.next();
   
-  // Must match next.config.js CSP for script-src / script-src-elem / connect-src: multiple
-  // Content-Security-Policy headers are ANDed; a stricter duplicate here blocked Google Ads
-  // (doubleclick, www.google.com pagead) and broke gtag on /Merritt and sitewide.
   response.headers.set(
     'Content-Security-Policy',
-    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://googleads.g.doubleclick.net https://challenges.cloudflare.com https://cdn.cloudflare.com https://www.googleadservices.com; script-src-elem 'self' 'unsafe-inline' blob: https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://googleads.g.doubleclick.net https://challenges.cloudflare.com https://cdn.cloudflare.com https://www.googleadservices.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com https://googleads.g.doubleclick.net; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: https://maps.gstatic.com; connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://script.google.com https://*.googleusercontent.com https://*.googleapis.com https://www.google.com https://challenges.cloudflare.com https://cdn.cloudflare.com https://api.indexnow.org https://www.bing.com https://yandex.com https://*.supabase.co https://supabase.co https://googleads.g.doubleclick.net; frame-src 'self' https://www.googletagmanager.com https://www.googletagmanager.com/ns.html https://www.youtube.com https://www.youtube-nocookie.com https://challenges.cloudflare.com https://cdn.cloudflare.com https://www.google.com https://maps.google.com; base-uri 'self'; form-action 'self';"
+    unifiedCsp
   );
   
   return response;

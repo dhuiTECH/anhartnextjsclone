@@ -59,10 +59,6 @@ const nextConfig = {
             value: 'strict-origin-when-cross-origin',
           },
           {
-            key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://googleads.g.doubleclick.net https://challenges.cloudflare.com https://cdn.cloudflare.com https://www.googleadservices.com; script-src-elem 'self' 'unsafe-inline' blob: https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://googleads.g.doubleclick.net https://challenges.cloudflare.com https://cdn.cloudflare.com https://www.googleadservices.com; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com https://googleads.g.doubleclick.net; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https: https://maps.gstatic.com; connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://maps.googleapis.com https://script.google.com https://*.googleusercontent.com https://*.googleapis.com https://www.google.com https://challenges.cloudflare.com https://cdn.cloudflare.com https://api.indexnow.org https://www.bing.com https://yandex.com https://*.supabase.co https://supabase.co https://googleads.g.doubleclick.net; frame-src 'self' https://www.googletagmanager.com https://www.googletagmanager.com/ns.html https://www.youtube.com https://www.youtube-nocookie.com https://challenges.cloudflare.com https://cdn.cloudflare.com https://www.google.com https://maps.google.com;",
-          },
-          {
             key: 'X-XSS-Protection',
             value: '1; mode=block',
           },
