@@ -1,4 +1,4 @@
-import propestcleanImg from "./propestcleanlogo.png";
+import propestcleanImg from "../partnercarousel/propestcleanlogo.png";
 import comBuildImg from "./CommunityBuilders.png";
 import AACImg from "./AAC.png";
 import gwaImg from "./gwa.svg";
@@ -33,7 +33,6 @@ export const heroCarouselPartners: HeroCarouselPartner[] = [
     src: getImageSrc(propestcleanImg),
     website: "https://www.propestclean.ca/",
     name: "Pro Pest Clean",
-    hidden: true,
   },
   {
     src: getImageSrc(comBuildImg),
