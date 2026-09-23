@@ -7,27 +7,13 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { useParallax } from "@/hooks/useParallax";
 import { MOBILE_BREAKPOINT, useIsMobile } from "@/hooks/use-mobile";
 import { logger } from "@/utils/logger";
-import { useScroll, useTransform, motion } from "framer-motion";
 
 
-// Marquee animation styles - optimized for performance
-// On mobile: start with text visible sooner (0% = left edge) so "Check out our featured project..." appears right away
+// Partner logo marquee animation styles
 const marqueeStyle = `
-  @keyframes marquee {
-    0% { transform: translate3d(100%, 0, 0); }
-    100% { transform: translate3d(-100%, 0, 0); }
-  }
-  @keyframes marquee-mobile {
-    0% { transform: translate3d(0%, 0, 0); }
-    100% { transform: translate3d(-100%, 0, 0); }
-  }
   @keyframes marquee-fast {
     0% { transform: translateX(0); }
     100% { transform: translateX(-33.33%); } /* Adjusted for 3 duplicate sets to scroll exactly one set width */
-  }
-  .animate-marquee {
-    animation: marquee 18s linear infinite;
-    will-change: transform;
   }
   .animate-marquee-fast {
     animation: marquee-fast 60s linear infinite;
@@ -36,12 +22,6 @@ const marqueeStyle = `
   }
   .hover\\:pause-animation:hover {
     animation-play-state: paused;
-  }
-  @media (max-width: 767px) {
-    .animate-marquee {
-      animation-name: marquee-mobile;
-      animation-duration: 18s;
-    }
   }
 `;
 
@@ -72,44 +52,12 @@ export const Hero = () => {
     heroHeightMultiplier: 0.85,
   });
 
-  // Scroll-based opacity fade for promotional banner - fades out as user scrolls down
-  const { scrollYProgress } = useScroll();
-  // Banner fades from full opacity at top to 0 opacity as user scrolls through first 5% of page (very aggressive fade)
-  const bannerOpacity = useTransform(scrollYProgress, [0, 0.05], [1, 0], {
-    clamp: true,
-  });
-
   return (
     <section
       className="relative h-[85vh] sm:h-[95vh] w-full overflow-hidden"
       aria-label="Hero section with affordable housing information"
     >
-      {/* Moving Banner Carousel - Performance Optimized */}
       <style dangerouslySetInnerHTML={{ __html: marqueeStyle }} />
-      <motion.div
-        className="absolute top-0 left-0 right-0 z-40 flex items-center min-h-[2rem] bg-primary text-white overflow-hidden border-b border-primary/90"
-        style={{ opacity: bannerOpacity }}
-      >
-        <div className="animate-marquee whitespace-nowrap py-1">
-          <Link
-            href="/Merritt"
-            className="inline-flex items-center hover:bg-primary/80 transition-colors duration-300 px-4 rounded"
-          >
-            <span className="font-semibold hover:underline">
-              Check out our featured project, Anhart Merritt
-            </span>
-          </Link>
-          <span className="mx-32">•</span>
-          <Link
-            href="/Merritt"
-            className="inline-flex items-center hover:bg-primary/80 transition-colors duration-300 px-4 rounded"
-          >
-            <span className="font-semibold hover:underline">
-              Check out our featured project, Anhart Merritt
-            </span>
-          </Link>
-        </div>
-      </motion.div>
       {/* Anhart logo as backdrop with WebP/PNG fallback */}
       <picture className="absolute inset-0 z-0 flex items-center justify-center opacity-30 pointer-events-none">
         <img

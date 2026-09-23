@@ -12,6 +12,10 @@ export default function robots(): MetadataRoute.Robots {
           '/admin/',
           '/api/',
           '/member/dashboard/',
+          '/Merritt/',
+          '/Merritt',
+          '/realtor-portal/',
+          '/realtor-portal',
           '/_next/static/',
           '/static/',
           '/private/',
@@ -26,60 +30,60 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: 'Googlebot',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/'],
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/Merritt/', '/Merritt', '/realtor-portal/', '/realtor-portal'],
       },
       {
         userAgent: 'Googlebot-Image',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/'],
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/Merritt/', '/Merritt', '/realtor-portal/', '/realtor-portal'],
       },
       {
         userAgent: 'Googlebot-News',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/'],
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/Merritt/', '/Merritt', '/realtor-portal/', '/realtor-portal'],
       },
       // Allow Bingbot full access (including CSS/JS for proper rendering)
       {
         userAgent: 'Bingbot',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/'],
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/Merritt/', '/Merritt', '/realtor-portal/', '/realtor-portal'],
       },
       // Allow additional Bing crawlers (msnbot, adidxbot, BingPreview)
       {
         userAgent: 'msnbot',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/static/'],
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/Merritt/', '/Merritt', '/realtor-portal/', '/realtor-portal', '/_next/static/'],
       },
       {
         userAgent: 'adidxbot',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/static/'],
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/Merritt/', '/Merritt', '/realtor-portal/', '/realtor-portal', '/_next/static/'],
       },
       {
         userAgent: 'BingPreview',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/', '/_next/static/'],
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/Merritt/', '/Merritt', '/realtor-portal/', '/realtor-portal', '/_next/static/'],
       },
       // Allow social media bots
       {
         userAgent: 'Twitterbot',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/'],
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/Merritt/', '/Merritt', '/realtor-portal/', '/realtor-portal'],
       },
       {
         userAgent: 'facebookexternalhit',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/'],
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/Merritt/', '/Merritt', '/realtor-portal/', '/realtor-portal'],
       },
       {
         userAgent: 'LinkedInBot',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/'],
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/Merritt/', '/Merritt', '/realtor-portal/', '/realtor-portal'],
       },
       {
         userAgent: 'WhatsApp',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/member/dashboard/'],
+        disallow: ['/admin/', '/api/', '/member/dashboard/', '/Merritt/', '/Merritt', '/realtor-portal/', '/realtor-portal'],
       },
       // Block problematic/scraper bots
       {

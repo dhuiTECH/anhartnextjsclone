@@ -9,6 +9,17 @@ export const metadata: Metadata = {
   },
   description:
     "Introducing a contemplated townhome community in Merritt, BC. Your accessible path to homeownership within BC's beautiful Nicola Valley landscape.",
+  // Temporarily hide from search engines until the project is ready to promote
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+      noimageindex: true,
+    },
+  },
 };
 
 /**

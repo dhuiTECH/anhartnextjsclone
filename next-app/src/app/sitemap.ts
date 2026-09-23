@@ -72,47 +72,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'never',
       priority: 0.5,
     },
-    // Merritt Townhome Project Pages
-    {
-      url: `${baseUrl}/Merritt`,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/Merritt/contact`,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/Merritt/neighbourhood`,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/Merritt/floorplans`,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/Merritt/interiors`,
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/Merritt/relocation/kamloops`,
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/Merritt/relocation/kelowna`,
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/Merritt/relocation/vancouver`,
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
+    // Merritt pages intentionally omitted (noindex / not ready to promote)
   ];
 
   // Dynamic project pages from database

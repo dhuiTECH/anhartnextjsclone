@@ -129,6 +129,19 @@ export function middleware(request: NextRequest) {
     'Content-Security-Policy',
     unifiedCsp
   );
+
+  // Keep Merritt (and related realtor portal) out of search indexes for now
+  const path = url.pathname;
+  if (
+    path === '/Merritt' ||
+    path.startsWith('/Merritt/') ||
+    path === '/merritt' ||
+    path.startsWith('/merritt/') ||
+    path === '/realtor-portal' ||
+    path.startsWith('/realtor-portal/')
+  ) {
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive, nosnippet, noimageindex');
+  }
   
   return response;
 }
