@@ -244,6 +244,27 @@ const nextConfig = {
         destination: '/portfolio',
         permanent: true,
       },
+      // Removed King's Landing project — keep old URLs from indexing/serving stale pages
+      {
+        source: '/projects/king-s-landing',
+        destination: '/portfolio',
+        permanent: true,
+      },
+      {
+        source: '/projects/kings-landing',
+        destination: '/portfolio',
+        permanent: true,
+      },
+      {
+        source: '/projects/kingslanding',
+        destination: '/portfolio',
+        permanent: true,
+      },
+      {
+        source: '/kingslanding',
+        destination: '/portfolio',
+        permanent: true,
+      },
       {
         source: '/impact',
         destination: '/limited-partnership',
