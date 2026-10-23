@@ -115,21 +115,6 @@ export const staff: StaffMember[] = [
     image: getImageSrc(jessyMarquezImg),
   },
   {
-    name: "Damon Hui",
-    role: "Project Manager",
-    bio: "",
-    isLeadership: false,
-    emailDomain: "anhart.ca",
-    image: "/images/dhuipp.jpg",
-  },
-  {
-    name: "Dillon Hui",
-    role: "Technology & Development",
-    bio: "",
-    isLeadership: false,
-    emailDomain: "anhart.ca",
-  },
-  {
     name: "Ivy Tsai",
     role: "Investments Coordinator",
     bio: "",
