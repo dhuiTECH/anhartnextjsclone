@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { InternalLinksSection } from '@/components/InternalLinksSection';
@@ -16,6 +15,7 @@ import { getPortfolioListingAltText } from '@/lib/altText';
 import { LoadingWithLogo } from '@/components/LoadingWithLogo';
 import { generateProjectSlug } from '@/lib/slug';
 import ImageWithFallback from '@/components/ImageWithFallback';
+import { getPortfolioProjectBySlug } from '@/lib/portfolio-data';
 
 interface ProjectData {
   id: string;
@@ -69,31 +69,27 @@ function normalizeHighlights(highlights: string[] | string | null | undefined): 
 }
 
 /**
- * Fetch project by slug directly from database
+ * Fetch project by slug via shared helper (client memory cache + narrow selects).
  */
 async function fetchProjectBySlug(slug: string): Promise<ProjectData | null> {
-  // Try direct slug lookup first (preferred - O(1))
-  const { data: bySlug, error: slugError } = await supabase
-    .from('portfolio')
-    .select('*')
-    .eq('slug', slug)
-    .single();
-  
-  if (!slugError && bySlug) {
-    return bySlug;
-  }
-  
-  // Fallback: match by generated slug from title
-  const { data: allProjects, error: fetchError } = await supabase
-    .from('portfolio')
-    .select('*')
-    .order('display_order', { ascending: true, nullsFirst: false });
-  
-  if (fetchError || !allProjects) {
-    return null;
-  }
-  
-  return allProjects.find(p => generateProjectSlug(p.title) === slug) || null;
+  const project = await getPortfolioProjectBySlug(slug);
+  if (!project) return null;
+
+  return {
+    id: String(project.id),
+    title: project.title,
+    slug: project.slug ?? null,
+    location: project.location,
+    year: project.year ?? null,
+    completion_date: project.completion_date ?? null,
+    units: project.units ?? null,
+    status: project.status ?? null,
+    type: project.type ?? null,
+    brief_description: project.briefDescription ?? project.description ?? null,
+    comprehensive_details: project.comprehensiveDetails ?? null,
+    highlights: project.highlights ?? null,
+    image_url: project.image ?? null,
+  };
 }
 
 export default function ProjectPageClient() {

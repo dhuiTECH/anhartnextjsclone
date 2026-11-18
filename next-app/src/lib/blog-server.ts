@@ -27,6 +27,11 @@ interface DbBlogPost {
   is_published: boolean;
 }
 
+const BLOG_LIST_SELECT =
+  'id, slug, title, subtitle, excerpt, featured_image, author_name, publish_date, updated_at, category, tags, reading_time, meta_title, meta_description, keywords, is_published';
+
+const BLOG_DETAIL_SELECT = `${BLOG_LIST_SELECT}, content`;
+
 function transformDbPost(dbPost: DbBlogPost): BlogPost & { updatedAt: string } {
   return {
     id: dbPost.id,
@@ -34,7 +39,7 @@ function transformDbPost(dbPost: DbBlogPost): BlogPost & { updatedAt: string } {
     title: dbPost.title,
     subtitle: dbPost.subtitle,
     excerpt: dbPost.excerpt,
-    content: dbPost.content,
+    content: dbPost.content || '',
     featuredImage: dbPost.featured_image,
     author: dbPost.author_name,
     publishDate: dbPost.publish_date,
@@ -56,7 +61,7 @@ export async function getPostBySlugServer(slug: string): Promise<(BlogPost & { u
     try {
       const { data, error } = await supabase
         .from('blog_posts')
-        .select('*')
+        .select(BLOG_DETAIL_SELECT)
         .eq('slug', slug)
         .eq('is_published', true)
         .single();
@@ -73,5 +78,25 @@ export async function getPostBySlugServer(slug: string): Promise<(BlogPost & { u
   };
 
   // Cache per slug for 1 hour to reduce Supabase egress
-  return unstable_cache(fetcher, ['blog-post', slug], { revalidate: 3600 })();
+  return unstable_cache(fetcher, ['blog-post', slug], { revalidate: 3600, tags: ['blog'] })();
+}
+
+export async function getFeaturedPostsServer(limit = 3): Promise<BlogPost[]> {
+  const fetcher = async (): Promise<BlogPost[]> => {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select(BLOG_LIST_SELECT)
+      .eq('is_published', true)
+      .eq('is_featured', true)
+      .order('publish_date', { ascending: false })
+      .limit(limit);
+
+    if (error || !data) return [];
+    return data.map((row) => transformDbPost({ ...(row as DbBlogPost), content: '' }));
+  };
+
+  return unstable_cache(fetcher, ['blog-featured', String(limit)], {
+    revalidate: 3600,
+    tags: ['blog'],
+  })();
 }

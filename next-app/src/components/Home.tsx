@@ -343,10 +343,20 @@ const Home = () => {
   useEffect(() => {
     const fetchPortfolioProjects = async () => {
       try {
-        const projects = await getPortfolioProjects();
-        setPortfolioProjects(projects);
+        // Hit cached Next API (not Supabase directly) to cut egress
+        const res = await fetch("/api/portfolio", { headers: { Accept: "application/json" } });
+        if (!res.ok) throw new Error(`Portfolio API ${res.status}`);
+        const projects = await res.json();
+        setPortfolioProjects(Array.isArray(projects) ? projects : []);
       } catch (error) {
         logger.error("Error fetching portfolio projects", error, { component: "Home" });
+        // Fallback to shared helper (still client-cached)
+        try {
+          const projects = await getPortfolioProjects();
+          setPortfolioProjects(projects);
+        } catch (fallbackError) {
+          logger.error("Portfolio fallback failed", fallbackError, { component: "Home" });
+        }
       }
     };
     fetchPortfolioProjects();

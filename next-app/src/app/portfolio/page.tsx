@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import SEO from '@/components/SEO';
@@ -79,40 +78,24 @@ export default function PortfolioPage() {
           return;
         }
 
-        // Validate Supabase client is properly initialized
-        if (!supabase) {
-          throw new Error('Supabase client is not initialized. This may be due to stale cached code.');
-        }
+        // Prefer cached Next.js API route so browsers do not hit Supabase on every visit
+        const response = await fetch('/api/portfolio', {
+          headers: { Accept: 'application/json' },
+        });
 
-        // Supabase queries don't cache by default, but we ensure fresh data
-        // by not using any cache options and relying on Supabase's built-in behavior
-        const { data, error: fetchError } = await supabase
-          .from('portfolio')
-          .select('id, title, slug, location, year, units, status, type, brief_description, image_url')
-          .order('display_order', { ascending: true, nullsFirst: false })
-          .order('created_at', { ascending: false });
+        if (!response.ok) {
+          const fetchError = {
+            message: `Failed to load portfolio (${response.status})`,
+            code: String(response.status),
+            status: response.status,
+            details: null,
+            hint: null,
+          };
+          console.error('Portfolio API error:', fetchError);
 
-        if (fetchError) {
-          console.error('Supabase error:', fetchError);
-          console.error('Supabase error details:', {
-            message: fetchError.message,
-            code: fetchError.code,
-            status: fetchError.status,
-            details: fetchError.details,
-            hint: fetchError.hint,
-            fullError: JSON.stringify(fetchError, null, 2),
-          });
-          
-          // Check if this is an authentication error that might be due to stale cache
-          const isAuthError = (fetchError.message && fetchError.message.includes('API key')) || 
-                             (fetchError.message && fetchError.message.includes('apikey')) ||
-                             (fetchError.message && fetchError.message.includes('JWT')) ||
-                             (fetchError.message && fetchError.message.includes('authentication')) ||
-                             (fetchError.message && fetchError.message.includes('Invalid API key')) ||
-                             fetchError.code === 'PGRST301' ||
-                             fetchError.code === '42501' ||
-                             fetchError.status === 401 ||
-                             fetchError.status === 403;
+          const isAuthError =
+            response.status === 401 ||
+            response.status === 403;
 
           // Retry on auth errors (might be stale bundle issue)
           if (isAuthError && retryCount < MAX_RETRIES) {
@@ -150,41 +133,34 @@ export default function PortfolioPage() {
           return;
         }
 
-        // Check if data is null/undefined (might indicate silent failure)
-        if (data === null || data === undefined) {
-          console.warn('Supabase returned null data, this might indicate a configuration issue');
-          
-          // Retry if we haven't exhausted retries
+        const payload = await response.json();
+        if (payload === null || payload === undefined) {
+          console.warn('Portfolio API returned null data');
+
           if (retryCount < MAX_RETRIES) {
             const delay = RETRY_DELAYS[retryCount] || 4000;
-            console.log(`Null data received, retrying in ${delay}ms... (attempt ${retryCount + 1}/${MAX_RETRIES})`);
-            
-            if (retryCount === MAX_RETRIES - 1) {
-              console.log('Last retry failed, forcing page reload to get fresh code...');
-              setTimeout(() => {
-                window.location.reload();
-              }, delay);
-              return;
-            }
-            
             await new Promise(resolve => setTimeout(resolve, delay));
             return fetchProjects(retryCount + 1);
           }
-          
-          setError('No data received from database. This may be due to stale cached code. Please refresh the page (Ctrl+Shift+R or Cmd+Shift+R).');
+
+          setError('No data received from portfolio API. Please refresh the page.');
           setLoading(false);
           return;
         }
 
-        const projects = Array.isArray(data) ? data : [];
-
-        // If we get an empty array, it might be legitimate (no projects) or a silent failure
-        // Check if env vars are properly set as a sanity check
-        if (projects.length === 0 && (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)) {
-          setError('Database configuration error. Please refresh the page (Ctrl+Shift+R or Cmd+Shift+R) to get the latest version.');
-          setLoading(false);
-          return;
-        }
+        // API returns ProjectData[]; map to local PortfolioProject shape
+        const projects: PortfolioProject[] = (Array.isArray(payload) ? payload : []).map((p: any) => ({
+          id: String(p.id),
+          title: p.title,
+          slug: p.slug ?? null,
+          location: p.location,
+          year: p.year ?? null,
+          units: p.units ?? null,
+          status: p.status ?? null,
+          type: p.type ?? null,
+          brief_description: p.briefDescription ?? p.description ?? null,
+          image_url: p.image ?? null,
+        }));
 
         // Sort projects by status priority: completed -> in-progress -> planned
         const statusPriority = {

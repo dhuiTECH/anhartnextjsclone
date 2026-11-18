@@ -437,10 +437,13 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
         const fileName = `portfolio-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
         const filePath = `portfolio/${fileName}`;
 
-        // Upload to Supabase storage
+        // Upload to Supabase storage (long browser cache to cut repeat egress)
         const { data, error } = await supabase.storage
           .from("portfolio-images")
-          .upload(filePath, file);
+          .upload(filePath, file, {
+            cacheControl: "31536000",
+            upsert: false,
+          });
 
         if (error) {
           console.error("Upload error:", error);
@@ -514,10 +517,13 @@ export default function PortfolioManagerClient({ user }: PortfolioManagerClientP
         setUploadProgress((prev) => Math.min(prev + 10, 90));
       }, 100);
 
-      // Upload to Supabase storage
+      // Upload to Supabase storage (long browser cache to cut repeat egress)
       const { data, error } = await supabase.storage
         .from("portfolio-images")
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: "31536000",
+          upsert: false,
+        });
 
       clearInterval(progressInterval);
 

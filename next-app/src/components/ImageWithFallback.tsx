@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import Image from 'next/image';
 import { Building } from 'lucide-react';
 
 interface ImageWithFallbackProps {
@@ -12,40 +12,60 @@ interface ImageWithFallbackProps {
 }
 
 /**
- * Constructs the full image URL from a storage path or returns URL as-is
- * Relies on database having correct image_url values
+ * Builds a public image URL. Relative paths are treated as on-site assets
+ * (or storage keys already resolved to full URLs in the DB).
  */
 function getImageUrl(imagePath: string | null): string | null {
   if (!imagePath) return null;
-  
+
   const cleanPath = imagePath.trim();
-  
-  // Already a full URL - return as-is
+  if (!cleanPath) return null;
+
   if (cleanPath.startsWith('http://') || cleanPath.startsWith('https://')) {
     return cleanPath;
   }
-  
-  // Construct Supabase storage URL
-  const { data } = supabase.storage.from('portfolio-images').getPublicUrl(cleanPath);
-  return data.publicUrl;
+
+  if (cleanPath.startsWith('/')) {
+    return cleanPath;
+  }
+
+  // Storage object key → public URL (prefer env project URL)
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (base) {
+    return `${base}/storage/v1/object/public/portfolio-images/${cleanPath.replace(/^\//, '')}`;
+  }
+
+  return null;
+}
+
+function isOptimizableRemote(url: string): boolean {
+  try {
+    const host = new URL(url).hostname;
+    return (
+      host.endsWith('.supabase.co') ||
+      host === 'anhart.ca' ||
+      host === 'www.anhart.ca' ||
+      host === 'images.unsplash.com'
+    );
+  } catch {
+    return false;
+  }
 }
 
 /**
- * ImageWithFallback - Displays project images with graceful error handling
- * 
- * Uses database image_url directly - no hardcoded fallback mappings.
- * If image fails to load, shows placeholder with building icon.
+ * Displays project images via next/image when possible so bytes are served
+ * from the app CDN (not repeatedly from Supabase Storage).
  */
-export default function ImageWithFallback({ 
-  imagePath, 
-  projectTitle, 
-  alt, 
-  className = '' 
+export default function ImageWithFallback({
+  imagePath,
+  projectTitle,
+  alt,
+  className = '',
 }: ImageWithFallbackProps) {
   const [hasError, setHasError] = useState(false);
-  
+
   const imageUrl = getImageUrl(imagePath);
-  
+
   if (hasError || !imageUrl) {
     return (
       <div className={`w-full aspect-video bg-muted flex items-center justify-center rounded-lg ${className}`}>
@@ -56,7 +76,25 @@ export default function ImageWithFallback({
       </div>
     );
   }
-  
+
+  const useNextImage = imageUrl.startsWith('/') || isOptimizableRemote(imageUrl);
+
+  if (useNextImage) {
+    return (
+      <div className={`relative w-full aspect-video overflow-hidden rounded-lg ${className}`}>
+        <Image
+          src={imageUrl}
+          alt={alt}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover"
+          loading="lazy"
+          onError={() => setHasError(true)}
+        />
+      </div>
+    );
+  }
+
   return (
     <img
       src={imageUrl}

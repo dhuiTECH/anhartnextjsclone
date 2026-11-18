@@ -351,10 +351,13 @@ export default function AdminClient({ user }: { user: any }) {
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `${fileName}`;
 
-      // Upload to Supabase Storage bucket "blog-images"
+      // Upload to Supabase Storage bucket "blog-images" (1y cache-control)
       const { error: uploadError } = await supabase.storage
         .from("blog-images")
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: "31536000",
+          upsert: false,
+        });
 
       if (uploadError) throw uploadError;
 
@@ -418,10 +421,13 @@ export default function AdminClient({ user }: { user: any }) {
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `${fileName}`;
 
-      // Upload to Supabase Storage bucket "blog-images"
+      // Upload to Supabase Storage bucket "blog-images" (1y cache-control)
       const { error: uploadError } = await supabase.storage
         .from("blog-images")
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: "31536000",
+          upsert: false,
+        });
 
       if (uploadError) throw uploadError;
 

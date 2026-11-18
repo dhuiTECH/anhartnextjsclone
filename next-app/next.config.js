@@ -26,13 +26,24 @@ const nextConfig = {
     // Fewer sizes = fewer optimized variants = less egress (still covers common breakpoints)
     deviceSizes: [640, 750, 1080, 1200, 1920],
     imageSizes: [96, 128, 256, 384],
-    minimumCacheTTL: 3600,
+    // Long TTL so optimized images stay on the app CDN instead of re-pulling Supabase Storage
+    minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'hxqbbyglhubcgfkbqltu.supabase.co',
+        pathname: '/storage/v1/object/public/**',
       },
     ],
   },

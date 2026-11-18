@@ -356,7 +356,10 @@ export default function AdminClient({ user }: { user: any }) {
       // Upload to Supabase Storage bucket "blog-images"
       const { error: uploadError } = await supabase.storage
         .from("blog-images")
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: "31536000",
+          upsert: false,
+        });
 
       if (uploadError) throw uploadError;
 
@@ -423,7 +426,10 @@ export default function AdminClient({ user }: { user: any }) {
       // Upload to Supabase Storage bucket "blog-images"
       const { error: uploadError } = await supabase.storage
         .from("blog-images")
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: "31536000",
+          upsert: false,
+        });
 
       if (uploadError) throw uploadError;
 

@@ -1,78 +1,11 @@
 import { Metadata } from 'next';
 import { generateProjectSlug } from '@/lib/slug';
-import { createClient } from '@supabase/supabase-js';
+import { getPortfolioProjects, getPortfolioProjectBySlug } from '@/lib/portfolio-data';
 import ProjectPageClient from './ProjectPageClient';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-// Create a server-side Supabase client for metadata generation
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-interface PortfolioProject {
-  id: string;
-  title: string;
-  slug: string | null;
-  location: string;
-  brief_description: string | null;
-  comprehensive_details: string | null;
-  image_url: string | null;
-  image: string | null;
-  type: string | null;
-}
-
-/**
- * Fetch project by slug for metadata generation
- */
-async function getProjectForMetadata(slug: string): Promise<PortfolioProject | null> {
-  // Try direct slug lookup
-  const { data: bySlug, error: slugError } = await supabase
-    .from('portfolio')
-    .select('id, title, slug, location, brief_description, comprehensive_details, image_url, image, type')
-    .eq('slug', slug)
-    .single();
-  
-  if (!slugError && bySlug) {
-    return bySlug;
-  }
-  
-  // Fallback: match by generated slug from title
-  const { data: allProjects } = await supabase
-    .from('portfolio')
-    .select('id, title, slug, location, brief_description, comprehensive_details, image_url, image, type')
-    .order('display_order', { ascending: true, nullsFirst: false });
-  
-  if (allProjects && allProjects.length > 0) {
-    const project = allProjects.find(p => generateProjectSlug(p.title) === slug);
-    if (project) {
-      return project;
-    }
-  }
-  
-  return null;
-}
-
-/**
- * Get all projects for static params generation
- */
-async function getAllProjects(): Promise<PortfolioProject[]> {
-  const { data, error } = await supabase
-    .from('portfolio')
-    .select('id, title, slug, location, brief_description, comprehensive_details, image_url, image, type')
-    .order('display_order', { ascending: true, nullsFirst: false })
-    .order('created_at', { ascending: false });
-  
-  if (error || !data) {
-    console.error('Error fetching projects for static params:', error?.message);
-    return [];
-  }
-  
-  return data;
-}
 
 export async function generateStaticParams() {
   try {
-    const projects = await getAllProjects();
+    const projects = await getPortfolioProjects();
     return projects.map((project) => ({
       slug: project.slug || generateProjectSlug(project.title),
     }));
@@ -88,7 +21,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const project = await getProjectForMetadata(slug);
+  const project = await getPortfolioProjectBySlug(slug);
 
   if (!project) {
     return {
@@ -98,11 +31,16 @@ export async function generateMetadata({
   }
 
   const title = `${project.title} - Affordable Housing Project`;
-  const description = project.comprehensive_details || project.brief_description || `Learn more about ${project.title}, an affordable housing project by Anhart located in ${project.location}.`;
-  const imageUrl = project.image_url || project.image
-    ? ((project.image_url || project.image || '').startsWith('http') 
-        ? (project.image_url || project.image) 
-        : `https://anhart.ca${project.image_url || project.image}`)
+  const description =
+    project.comprehensiveDetails ||
+    project.briefDescription ||
+    project.description ||
+    `Learn more about ${project.title}, an affordable housing project by Anhart located in ${project.location}.`;
+  const rawImage = project.image || '';
+  const imageUrl = rawImage
+    ? rawImage.startsWith('http')
+      ? rawImage
+      : `https://anhart.ca${rawImage}`
     : 'https://anhart.ca/images/portfolio-hero.jpg';
 
   return {
@@ -117,7 +55,9 @@ export async function generateMetadata({
       project.location,
       project.type,
       'Anhart',
-    ].filter(Boolean).join(', '),
+    ]
+      .filter(Boolean)
+      .join(', '),
     authors: [{ name: 'Anhart' }],
     alternates: {
       canonical: `https://anhart.ca/projects/${slug}`,
@@ -160,7 +100,6 @@ export async function generateMetadata({
   };
 }
 
-// Export the client component as the default page component
 export default function ProjectPage() {
   return <ProjectPageClient />;
 }

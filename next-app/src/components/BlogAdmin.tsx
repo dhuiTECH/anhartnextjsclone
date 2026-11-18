@@ -109,7 +109,10 @@ const BlogAdmin = () => {
 
       const { error: uploadError } = await supabase.storage
         .from("blog-images")
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: "31536000",
+          upsert: false,
+        });
 
       if (uploadError) throw uploadError;
 

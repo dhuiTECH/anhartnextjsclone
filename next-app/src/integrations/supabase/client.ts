@@ -39,9 +39,10 @@ if (SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.startsWith('eyJ')) {
 
 // Import the supabase client like this:
 // import { supabase } from "@/integrations/supabase/client";
-
-// createBrowserClient from @supabase/ssr - explicitly configure to ensure API key is sent
-// and disable any internal caching to ensure fresh data on every request
+//
+// Do NOT force Cache-Control: no-store on every request — that defeats browser
+// caching and inflates Supabase egress. Prefer Next.js unstable_cache / route
+// caching for public reads instead.
 export const supabase = createBrowserClient<Database>(
   SUPABASE_URL,
   SUPABASE_ANON_KEY,
@@ -50,38 +51,6 @@ export const supabase = createBrowserClient<Database>(
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
-    },
-    global: {
-      // Ensure fetch requests don't use cached responses
-      // IMPORTANT: Properly handle Headers object to preserve Supabase's apikey header
-      fetch: (url, options = {}) => {
-        // Convert Headers object to plain object if needed, preserving all existing headers
-        const existingHeaders: Record<string, string> = {};
-        if (options.headers) {
-          if (options.headers instanceof Headers) {
-            // Convert Headers object to plain object
-            options.headers.forEach((value, key) => {
-              existingHeaders[key] = value;
-            });
-          } else if (typeof options.headers === 'object') {
-            // Already a plain object
-            Object.assign(existingHeaders, (options.headers as any));
-          }
-        }
-        
-        // Merge headers properly, ensuring apikey and other Supabase headers are preserved
-        const mergedHeaders = {
-          ...existingHeaders,
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache',
-        };
-        
-        return fetch(url, {
-          ...options,
-          cache: 'no-store', // Never use cached responses
-          headers: mergedHeaders,
-        });
-      },
     },
   }
 );

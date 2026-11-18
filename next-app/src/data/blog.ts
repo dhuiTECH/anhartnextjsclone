@@ -61,15 +61,13 @@ interface DbBlogPost {
 }
 
 function transformDbPost(dbPost: DbBlogPost): BlogPost {
-  console.log("transformDbPost - content length:", dbPost.content?.length);
-  console.log("transformDbPost - content start:", dbPost.content?.substring(0, 100));
   return {
     id: dbPost.id,
     slug: dbPost.slug,
     title: dbPost.title,
     subtitle: dbPost.subtitle,
     excerpt: dbPost.excerpt,
-    content: dbPost.content,
+    content: dbPost.content || "",
     featuredImage: dbPost.featured_image,
     author: dbPost.author_name,
     publishDate: dbPost.publish_date,
@@ -1104,11 +1102,17 @@ export const blogPosts: BlogPost[] = [
   },
 ];
 
+/** List/card fields only — omit full HTML `content` to cut database egress. */
+const BLOG_LIST_SELECT =
+  "id, slug, title, subtitle, excerpt, featured_image, author_name, publish_date, updated_at, category, tags, reading_time, meta_title, meta_description, keywords, is_published";
+
+const BLOG_DETAIL_SELECT = `${BLOG_LIST_SELECT}, content`;
+
 // Sort posts by date (newest first)
 export const getSortedPosts = async (): Promise<BlogPost[]> => {
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*")
+    .select(BLOG_LIST_SELECT)
     .eq("is_published", true)
     .order("publish_date", { ascending: false });
 
@@ -1117,14 +1121,14 @@ export const getSortedPosts = async (): Promise<BlogPost[]> => {
     return [];
   }
 
-  return (data || []).map(transformDbPost);
+  return (data || []).map((row) => transformDbPost({ ...row, content: "" } as DbBlogPost));
 };
 
 // Get featured posts (max 3)
 export const getFeaturedPosts = async (): Promise<BlogPost[]> => {
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*")
+    .select(BLOG_LIST_SELECT)
     .eq("is_published", true)
     .eq("is_featured", true)
     .order("publish_date", { ascending: false })
@@ -1145,22 +1149,17 @@ export const getFeaturedPosts = async (): Promise<BlogPost[]> => {
     return [];
   }
 
-  return (data || []).map(transformDbPost);
+  return (data || []).map((row) => transformDbPost({ ...row, content: "" } as DbBlogPost));
 };
 
 // Get post by slug
 export const getPostBySlug = async (slug: string): Promise<BlogPost | undefined> => {
-  console.log("Fetching blog post with slug:", slug);
-  
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*")
+    .select(BLOG_DETAIL_SELECT)
     .eq("slug", slug)
     .eq("is_published", true)
     .maybeSingle();
-
-  console.log("Supabase query result - error:", error);
-  console.log("Supabase query result - data:", data);
 
   if (error) {
     console.error("Error fetching blog post:", error);
@@ -1168,20 +1167,16 @@ export const getPostBySlug = async (slug: string): Promise<BlogPost | undefined>
   }
 
   if (!data) {
-    console.log("No blog post found with slug:", slug);
-    
     // Fallback to static blog data
     const staticPost = blogPosts.find(p => p.slug === slug);
     if (staticPost) {
-      console.log("Found in static data:", staticPost.title);
       return staticPost;
     }
     
     return undefined;
   }
 
-  console.log("Blog post fetched successfully:", data.title);
-  return transformDbPost(data);
+  return transformDbPost(data as DbBlogPost);
 };
 
 // Get related posts (by category)
@@ -1191,7 +1186,7 @@ export const getRelatedPosts = async (
 ): Promise<BlogPost[]> => {
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*")
+    .select(BLOG_LIST_SELECT)
     .eq("category", currentPost.category)
     .eq("is_published", true)
     .neq("id", currentPost.id)
@@ -1202,5 +1197,5 @@ export const getRelatedPosts = async (
     return [];
   }
 
-  return (data || []).map(transformDbPost);
+  return (data || []).map((row) => transformDbPost({ ...row, content: "" } as DbBlogPost));
 };
